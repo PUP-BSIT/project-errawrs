@@ -1,29 +1,42 @@
-# 💳 Bank Application
+# 💳 Team Errawrs Bank Application  
+## 🏦 StackOverCash
 
-A lightweight banking application. This project supports user authentication, internal/external fund transfers, OTP-based multi-factor authentication, and role-based access (Teller and Account Holder).
+A lightweight banking application designed for simple and secure financial transactions. This project features robust authentication, role-based access, and a smooth user experience.
 
 ---
 
 ## 🚀 Features
 
-- ✅ User Registration & Login (Account Holder)
-- ✅ Role-based Access (Account Holder, Teller)
-- ✅ Secure Sessions & Password Hashing
-- ✅ Teller Deposit & Withdrawal
-- ✅ Internal Fund Transfer (Same bank)
-- ✅ External Fund Transfer (Other bank API)
-- ✅ OTP Verification via SMS (Twilio, Semaphore, etc.)
-- ✅ SQLite/MySQL Support
-- ✅ Clean, modular file structure
+- 🔐 **User Authentication** – Secure login system for all users.  
+- 🔁 **Fund Transfers** –  
+  - Internal (within the system)  
+  - External (to other systems)  
+- 🔑 **OTP-Based Multi-Factor Authentication** – Adds an extra layer of security.  
+- 👥 **Role-Based Access Control** –  
+  - Teller  
+  - Account Holder
+
+---
+## 🌐 Live Demo
+
+Visit the application here:  
+**🔗 [Errawrs Web Host](http://54.206.115.2/)**
 
 ---
 
-## 🔧 Requirements
+## 🛠️ Tech Stack
 
-- PHP 8.1+
-- SQLite or MySQL
-- Composer (optional, for autoloading)
-- Web server (Apache/Nginx)
-- SMS Gateway API (for OTP)
+- **Backend:** PHP / JS
+- **Frontend:** HTML / CSS / JS  
+- **Database:** MySQL/PostGres  
+- **Hosting:** AWS EC2 (Ubuntu)  
 
 ---
+
+## ⚙️ Setup Instructions
+
+1. Clone the repository:
+
+   ```bash
+   git clone git@github.com:PUP-BSIT/project-errawrs.git
+   cd project-errawrs
