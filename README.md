@@ -17,21 +17,19 @@ A lightweight banking application designed for simple and secure financial trans
   - Account Holder
 
 ---
-
 ## 🌐 Live Demo
 
 Visit the application here:  
-**🔗 [http://54.206.115.2/](http://54.206.115.2/)**
+**🔗 [Errawrs Web Host](http://54.206.115.2/)**
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend Framework:** Laravel (PHP)  
-- **Frontend:** Blade Templates / HTML / CSS / JS  
-- **Database:** MySQL  
+- **Backend:** PHP 
+- **Frontend:** HTML / CSS / JS  
+- **Database:** MySQL/PostGres  
 - **Hosting:** AWS EC2 (Ubuntu)  
-- **Environment:** XAMPP (for local development)  
 
 ---
 
@@ -40,5 +38,5 @@ Visit the application here:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/PUP-BSIT/project-errawrs.git
+   git clone git@github.com:PUP-BSIT/project-errawrs.git
    cd project-errawrs
