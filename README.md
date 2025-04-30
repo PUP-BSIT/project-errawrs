@@ -76,3 +76,60 @@ Visit the application here:
 - │   └── 📄app.php
 - │
 - └── 📂/logs                <!-- Application logs -->
+
+---
+# 🗂️ Git Workflow Guidelines
+
+## 🌿 Branch Types and Naming Conventions
+--- 
+| Branch Type | Description                            Naming Convention              
+| `main`      | 🔒Stable production-ready branch    - `main`                         
+| `dev`       | 🧪Main development branch           - `dev`                          
+| `feature`   | ✨New feature development           - `feature/<feature-name>`       
+| `bugfix`    | 🐛Fixes for identified bugs         - `bugfix/<issue-description>`   
+| `hotfix`    | 🚑Quick fix for production issues   - `hotfix/<issue>`               
+| `release`   | 🚀Prepares for a new release        - `release/<version>`            
+
+---
+
+## 🔧 Branching Guidelines
+
+- ✅ Create a branch from `dev` for any feature, bugfix, or enhancement.
+
+- ✅ Use **descriptive** branch names (e.g., `feature/user-authentication`).
+
+- ✅ Commit often with meaningful messages.
+
+- ✅ Keep branches focused; one purpose per branch.
+
+---
+
+## 🔀 Merging Guidelines
+
+- 🔁 Use **Pull Requests (PRs)** to merge into `dev` or `main`.
+
+- ✅ Ensure all PRs are reviewed before merging.
+
+- ✅ Test the feature before merging to `dev`.
+
+- 🚫 Never push directly to `main`.
+
+---
+
+## 🧾 Pull Request Template
+
+```md
+### 📝 Summary
+Provide a brief explanation of the changes.
+
+### ✅ Changes Made
+- List of updates, features, or bug fixes
+
+### 📸 Screenshots (if applicable)
+[Insert screenshots here]
+
+### 🔍 How to Test
+Explain how to test the changes manually.
+
+### 📌 Related Issues
+Closes #[issue-number]
