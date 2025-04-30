@@ -41,10 +41,7 @@ Visit the application here:
 ##### │   └── 📄views/           # HTML templates
 ##### │
 ##### ├──📂/modules             # Modular structure
-##### ├──📂/modules             # Modular structure
-##### ├──📂/modules             # Modular structure
 ##### │   ├── 📂auth/            # Login, register, OTP
-##### ├──📂/modules             # Modular structure
 ##### │   │   ├── 📄controller.php
 ##### │   │   ├── 📄model.php
 ##### │   │   └── 📄service.php
