@@ -18,7 +18,7 @@ A lightweight banking application designed for simple and secure financial trans
 ---
 ## 🌐 Live Demo
 
-Visit the application here:  
+Visit the application here:
 **🔗 [Errawrs Web Host: StackOverCash](https://www.stackovercash.site/)**
 
 ---
