@@ -2,20 +2,30 @@
 ## 🏦 StackOverCash
 
 A lightweight banking application designed for simple and secure financial transactions. This project features robust authentication, role-based access, and a smooth user experience.
-
----
-
+--- 
 ## 📚 Table of Contents
+
 - [🚀 Features](#-features)
 - [🌐 Live Demo](#-live-demo)
 - [🛠️ Tech Stack](#️-tech-stack)
-- [📂 Project Folder Structure](#-project-folder-structure)
+- [📁 Project Folder Structure](#-project-folder-structure)
 - [🗂️ Git Workflow Guidelines](#️-git-workflow-guidelines)
   - [🌿 Branch Types and Naming Conventions](#-branch-types-and-naming-conventions)
   - [🔧 Branching Guidelines](#-branching-guidelines)
   - [🔀 Merging Guidelines](#-merging-guidelines)
 - [📜 General Coding Guidelines](#-general-coding-guidelines)
-
+- [🧑‍💻 Contributors](#-contributors)
+- [📝 Developer Documentation](#-developer-documentation)
+  - [🔗 Connecting to EC2 Server](#-connecting-to-ec2-server)
+  - [🧱 Importing / Exporting the Database](#-importing--exporting-the-database)
+  - [📤 Uploading Files to the Server](#-uploading-files-to-the-server)
+  - [⚙️ Environment Configuration](#️-environment-configuration)
+  - [🔐 Environment Variables Management](#-environment-variables-management)
+  - [🚦 CI/CD Deployment Workflow](#-cicd-deployment-workflow)
+  - [🧪 Testing Guide](#-testing-guide)
+  - [📦 Backup & Restore Strategy](#-backup--restore-strategy)
+  - [📋 Server Log Files](#-server-log-files)
+  - [🔎 Debugging Tips](#-debugging-tips)
 ---
 
 ## 🚀 Features
@@ -28,9 +38,8 @@ A lightweight banking application designed for simple and secure financial trans
 - 👥 **Role-Based Access Control** –  
   - Teller  
   - Account Holder
-
----
-
+--- 
+ 
 ## 🌐 Live Demo
 
 Visit the application here:  
@@ -113,3 +122,49 @@ Visit the application here:
 - Show **clear** and **meaningful** error messages  
 
 🔗 [Click here to view full guidelines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)
+
+---
+
+## 🧑‍💻 Contributors
+
+| Name                   | Role                              |
+|------------------------|-----------------------------------|
+| [Gerald Mamasalanang]  | Project Manager/Developer         |
+| [Daniel Victorioso]    | Tech Lead/Developer               |
+| [Simone Jake Reyes]    | UI/UX/Developer                   |
+| [Ivan Delumen]         | Tester/Developer                  |
+## 📝 Developer Documentation
+
+---
+
+### 🔗 Connecting to EC2 Server
+
+
+### 🧱 Importing / Exporting the Database
+
+
+### 📤 Uploading Files to the Server
+
+
+### ⚙️ Environment Configuration
+
+
+### 🔐 Environment Variables Management
+
+
+### 🚦 CI/CD Deployment Workflow
+
+
+### 🧪 Testing Guide
+
+
+### 📦 Backup & Restore Strategy
+
+
+### 📋 Server Log Files
+
+_Where logs are located (e.g., `/var/log/apache2`, Laravel logs), how to read and rotate them._
+
+### 🔎 Debugging Tips
+
+_Common issues and their fixes, debug tools, and enabling/disabling debug mode in production._
