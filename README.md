@@ -26,9 +26,9 @@ Visit the application here:
 
 ## 🛠️ Tech Stack
 
-- **Backend:** PHP / JS
+- **Backend:** PHP
 - **Frontend:** HTML / CSS / JS  
-- **Database:** MySQL/PostGres  
+- **Database:** MySQL
 - **Hosting:** AWS EC2 (Ubuntu)  
 
 ---
