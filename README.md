@@ -41,28 +41,28 @@ Visit the application here:
 - │
 - ├── 📂/modules             <!-- Modular structure -->
 - │   ├── 📂auth/            <!-- Login, register, OTP -->
-- │   - │   ├── 📄controller.php
-- │   - │   ├── 📄model.php
-- │   - │   └── 📄service.php
+- │   │   ├── 📄controller.php
+- │   │   ├── 📄model.php
+- │   │   └── 📄service.php
 - │
 - │   ├── 📂user/            <!-- User management -->
-- │   - │   ├── 📄controller.php
-- │   - │   ├── 📄model.php
-- │   - │   └── 📄service.php
+- │   │   ├── 📄controller.php
+- │   │   ├── 📄model.php
+- │   │   └── 📄service.php
 - │
 - │   ├── 📂account/         <!-- Bank accounts -->
-- │   - │   ├── 📄controller.php
-- │   - │   ├── 📄model.php
-- │   - │   └── 📄service.php
+- │   │   ├── 📄controller.php
+- │   │   ├── 📄model.php
+- │   │   └── 📄service.php
 - │
 - │   ├── 📂transaction/     <!-- Fund transfers, history -->
-- │   - │   ├── 📄controller.php
-- │   - │   ├── 📄model.php
-- │   - │   └── 📄service.php
+- │   │   ├── 📄controller.php
+- │   │   ├── 📄model.php
+- │   │   └── 📄service.php
 - │
 - │   ├── 📂otp/             <!-- OTP generation & validation -->
-- │   - │   ├── 📄service.php
-- │   - │   └── 📄sms_gateway.php
+- │   │   ├── 📄service.php
+- │   │   └── 📄sms_gateway.php
 - │
 - ├── 📂/core                <!-- Core system (reusable code) -->
 - │   ├── 📄database.php     <!-- DB connection -->
@@ -115,4 +115,17 @@ Visit the application here:
 
 - 🚫 Never push directly to `main`.
 
+# General Coding Guidelines
+📜 Comments & Documentation
+💬 Use comments only when necessary
+If the code is clear, comments may not be needed.
 
+📄 Document functions and modules
+Include short descriptions where logic may not be obvious.
+
+💥 Error Handling
+🛑 Handle exceptions gracefully
+Use try/catch blocks and give meaningful error messages.
+
+# Coding Guidelines
+- **🔗 [Click here to view coding gudielines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)** 
