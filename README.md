@@ -107,9 +107,12 @@ Visit the application here:
 ## 🔀 Merging Guidelines
 
 - 🔁 Use **Pull Requests (PRs)** to merge into `dev` or `main`.
-
+  - **Rebase Before Merging**
+  - **🔗 [Rebase Instructions](https://docs.google.com/document/d/1ICTXNdbj2nvUBl-8IEleAM3P-UGcojueomy6kGJ3W5U/edit?usp=sharing)** 
 - ✅ Ensure all PRs are reviewed before merging.
 
 - ✅ Test the feature before merging to `dev`.
 
 - 🚫 Never push directly to `main`.
+
+
