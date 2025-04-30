@@ -82,14 +82,15 @@ Visit the application here:
 
 ## 🌿 Branch Types and Naming Conventions
 --- 
-`| Branch Type| Description              | Naming Convention`   
-`|------------|--------------------------|--------------------------`           
-`| main       | Production-ready branch  | main`                   
-`| dev        | Main dev branch          | dev`                          
-`| feature    | New feature development  | feature/<feature-name>`       
-`| bugfix     | Fixes identified bugs    | bugfix/<issue-description>`   
-`| hotfix     | quick fix for prod issue | hotfix/<issue>`                       
-`|------------|--------------------------|--------------------------`           
+| Branch Type | Description               | Naming Convention           |
+|-------------|---------------------------|-----------------------------|
+| main        | Production-ready branch   | main                        |
+| dev         | Main dev branch           | dev                         |
+| feature     | New feature development   | feature/<feature-name>      |
+| bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
+| hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
+| release     | Prepares for a new release| release/<version>           |
+        
 ---
 
 ## 🔧 Branching Guidelines
