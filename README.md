@@ -34,11 +34,11 @@ Visit the application here:
 ---
 # Project Folder Structure
 
-##### 📂/project-root
+##### 📂/root
 ###### ├── 📂/public              # Public files (entry point)
-###### │   ├── 📄index.php        # Main router or front controller
-###### │   ├── 📄assets/          # CSS, JS, images
-###### │   └── 📄views/           # HTML templates
+###### │   ├── 📄index.html        # Main router or front controller
+###### │   ├── 📂assets/          # CSS, JS, images
+###### │   └── 📂views/           # HTML templates
 ###### │
 ###### ├──📂/modules             # Modular structure
 ###### │   ├── 📂auth/            # Login, register, OTP
