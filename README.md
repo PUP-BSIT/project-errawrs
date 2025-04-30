@@ -127,5 +127,4 @@ Include short descriptions where logic may not be obvious.
 🛑 Handle exceptions gracefully
 Use try/catch blocks and give meaningful error messages.
 
-# Coding Guidelines
-- **🔗 [Click here to view coding gudielines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)** 
+- **🔗 [Click here to view full guidelines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)** 
