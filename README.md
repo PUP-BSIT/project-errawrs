@@ -32,11 +32,48 @@ Visit the application here:
 - **Hosting:** AWS EC2 (Ubuntu)  
 
 ---
+# Project Folder Structure
 
-## ⚙️ Setup Instructions
-
-1. Clone the repository:
-
-   ```bash
-   git clone git@github.com:PUP-BSIT/project-errawrs.git
-   cd project-errawrs
+## 📂/project-root
+### ├── 📂/public              # Public files (entry point)
+### │   ├── 📄index.php        # Main router or front controller
+### │   ├── 📄assets/          # CSS, JS, images
+### │   └── 📄views/           # HTML templates
+### │
+### ├──📂/modules             # Modular structure
+### │   ├── 📂auth/            # Login, register, OTP
+### │   │   ├── 📄controller.php
+### │   │   ├── 📄model.php
+### │   │   └── 📄service.php
+### │
+### │   ├── 📂user/            # User management
+### │   │   ├── 📄controller.php
+### │   │   ├── 📄model.php
+### │   │   └── 📄service.php
+### │
+### │   ├── 📂account/         # Bank accounts
+### │   │   ├── 📄controller.php
+### │   │   ├── 📄model.php
+### │   │   └── 📄service.php
+### │
+### │   ├── 📂transaction/     # Fund transfers, history
+### │   │   ├── 📄controller.php
+### │   │   ├── 📄model.php
+### │   │   └── 📄service.php
+### │
+### │   ├── 📂otp/             # OTP generation & validation
+### │   │   ├── 📄service.php
+### │   │   └── 📄sms_gateway.php
+### │
+### ├── 📂/core                # Core system (reusable code)
+### │   ├── 📄database.php     # DB connection
+### │   ├── 📄router.php       # Simple routing logic
+### │   ├── 📄session.php      # Session/token logic
+### │   └── 📄helpers.php      # Utility functions
+### │
+### ├── 📂/config              # Configuration files
+### │   ├── 📄db.php
+### │   ├── 📄sms.php
+### │   └── 📄app.php
+### │
+### └── 📂/logs                # Application logs
