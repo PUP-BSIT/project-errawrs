@@ -40,25 +40,29 @@ Visit the application here:
 - **Frontend:** HTML / CSS / JS  
 - **Database:** MySQL  
 - **Hosting:** AWS EC2 (Ubuntu)
+- **Server:** NGINX + PHP-FPM
+- **CI/CD:** GitHub Actions (SSH Deploy)
+- **SMS Gateway:**
 
 ---
 
 # 📂 Project Folder Structure
 
 ### 📂/src
-- ├── 📂/public              
-- │   ├── 📄index.html       
-- │   ├── 📂assets/
-- │   └── 📂views/
-- ├── 📂/modules
-- │   ├── 📂auth/
-- │   ├── 📂user/
-- │   ├── 📂account/
-- │   ├── 📂transaction/
+- ├── 📂/public <!-- Presentation Layer (UI & Client-Side) -->
+- │   ├── 📄index.html <!-- Entry point for web interface -->
+- │   ├── 📂assets/ <!--  Static files (CSS, JS, images) -->
+- │   └── 📂views/ <!-- HTML view templates (login, dashboard, etc.) -->
+- ├── 📂/modules <!-- Application Layer (Routing & Controllers) -->
+- │   ├── 📂auth/ 
+- │   ├── 📂user/   
+- │   ├── 📂teller/   
+- │   ├── 📂account/ 
+- │   ├── 📂transaction/ 
 - │   └── 📂otp/
-- ├── 📂/core
-- ├── 📂/config
-- └── 📂/logs
+- ├── 📂/core <!-- Contains reusable components and shared logic. -->
+- ├── 📂/config <!-- Environment variables, database credentials, SMS gateway configs, etc. -->
+- └── 📂/logs <!-- Stores error logs, request logs, and system events for debugging -->
 
 ---
 
@@ -72,6 +76,7 @@ Visit the application here:
 | feature     | New feature development   | feature/<feature-name>      |
 | bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
 | hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
+| docs        | Document related branch   | docs/<description>          |
 
 ---
 
@@ -114,18 +119,18 @@ Visit the application here:
 
 # 🧑‍💻 Contributors
 
-| Name                   | Role                              |
-|------------------------|-----------------------------------|
-| [Gerald Mamasalanang]  | Project Manager/Developer         |
-| [Daniel Victorioso]    | Tech Lead/Developer               |
-| [Simone Jake Reyes]    | UI/UX/Developer                   |
-| [Ivan Delumen]         | Tester/Developer                  |
+| Name                 | Role                              |
+|----------------------|-----------------------------------|
+| Gerald Mamasalanang  | Project Manager/Developer         |
+| Daniel Victorioso    | Tech Lead/Developer               |
+| Simone Jake Reyes    | UI/UX/Developer                   |
+| Ivan Delumen         | Tester/Developer                  |
 
 # 📝 Developer Documentation
 
-- [🔗 Connecting to EC2 Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?usp=sharing)
-- [🧱 Importing / Exporting the Database](link-to-importing-exporting-database)
-- [📤 Uploading Files to the Server](link-to-uploading-files)
+- [🔗 Connecting to EC2 Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?tab=t.0)
+- [🧱 Importing / Exporting the Database](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?tab=t.uw32i3q4gyyi) 
+- [📤 Uploading Files to the Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?tab=t.eub15elq4m21)
 - [🔐 Environment Variables Management](link-to-env-vars-management)
 - [🚦 CI/CD Deployment Workflow](link-to-cicd-workflow)
 - [🧪 Testing Guide](link-to-testing-guide)
