@@ -43,92 +43,10 @@ Visit the application here:
 
 ---
 
-# 📂 Project Folder Structure
+## ⚙️ Setup Instructions
 
-### 📂/src
-- ├── 📂/public              
-- │   ├── 📄index.html       
-- │   ├── 📂assets/
-- │   └── 📂views/
-- ├── 📂/modules
-- │   ├── 📂auth/
-- │   ├── 📂user/
-- │   ├── 📂account/
-- │   ├── 📂transaction/
-- │   └── 📂otp/
-- ├── 📂/core
-- ├── 📂/config
-- └── 📂/logs
+1. Clone the repository:
 
----
-
-# 🗂️ Git Workflow Guidelines
-
-## 🌿 Branch Types and Naming Conventions
-| Branch Type | Description               | Naming Convention           |
-|-------------|---------------------------|-----------------------------|
-| main        | Production-ready branch   | main                        |
-| dev         | Main dev branch           | dev                         |
-| feature     | New feature development   | feature/<feature-name>      |
-| bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
-| hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
-
----
-
-## 🔧 Branching Guidelines
-
-- ✅ Create a branch from `dev` for any feature, bugfix, or enhancement.
-- ✅ Use **descriptive** branch names (e.g., `feature/user-authentication`).
-- ✅ Commit often with meaningful messages.
-- ✅ Keep branches focused; one purpose per branch.
-
----
-
-## 🔀 Merging Guidelines
-
-- 🔁 Use **Pull Requests (PRs)** to merge into `dev` or `main`.
-  - **Rebase Before Merging**
-  - 🔗 [Rebase Instructions](https://docs.google.com/document/d/1ICTXNdbj2nvUBl-8IEleAM3P-UGcojueomy6kGJ3W5U/edit?usp=sharing)
-- ✅ Ensure all PRs are reviewed before merging.
-- ✅ Test the feature before merging to `dev`.
-- 🚫 Never push directly to `main`.
-
----
-
-# 📜 General Coding Guidelines
-
-### 💬 Comments & Documentation  
-- Use comments only when necessary.  
-- Document complex logic or non-obvious implementation.
-
-### 📄 Function & Module Docs  
-- Add short descriptions to explain the purpose of each module or method.  
-
-### 💥 Error Handling  
-- Use `try/catch` blocks  
-- Show **clear** and **meaningful** error messages  
-
-🔗 [Click here to view full guidelines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)
-
----
-
-# 🧑‍💻 Contributors
-
-| Name                   | Role                              |
-|------------------------|-----------------------------------|
-| [Gerald Mamasalanang]  | Project Manager/Developer         |
-| [Daniel Victorioso]    | Tech Lead/Developer               |
-| [Simone Jake Reyes]    | UI/UX/Developer                   |
-| [Ivan Delumen]         | Tester/Developer                  |
-
-# 📝 Developer Documentation
-
-- [🔗 Connecting to EC2 Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?usp=sharing)
-- [🧱 Importing / Exporting the Database](link-to-importing-exporting-database)
-- [📤 Uploading Files to the Server](link-to-uploading-files)
-- [🔐 Environment Variables Management](link-to-env-vars-management)
-- [🚦 CI/CD Deployment Workflow](link-to-cicd-workflow)
-- [🧪 Testing Guide](link-to-testing-guide)
-- [📦 Backup & Restore Strategy](link-to-backup-restore)
-- [📋 Server Log Files](link-to-server-log-files)
-- [🔎 Debugging Tips](link-to-debugging-tips)
+   ```bash
+   git clone git@github.com:PUP-BSIT/project-errawrs.git
+   cd project-errawrs
