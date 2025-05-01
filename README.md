@@ -10,22 +10,9 @@ A lightweight banking application designed for simple and secure financial trans
 - [🛠️ Tech Stack](#️-tech-stack)
 - [📁 Project Folder Structure](#-project-folder-structure)
 - [🗂️ Git Workflow Guidelines](#️-git-workflow-guidelines)
-  - [🌿 Branch Types and Naming Conventions](#-branch-types-and-naming-conventions)
-  - [🔧 Branching Guidelines](#-branching-guidelines)
-  - [🔀 Merging Guidelines](#-merging-guidelines)
 - [📜 General Coding Guidelines](#-general-coding-guidelines)
 - [🧑‍💻 Contributors](#-contributors)
 - [📝 Developer Documentation](#-developer-documentation)
-  - [🔗 Connecting to EC2 Server](#-connecting-to-ec2-server)
-  - [🧱 Importing / Exporting the Database](#-importing--exporting-the-database)
-  - [📤 Uploading Files to the Server](#-uploading-files-to-the-server)
-  - [⚙️ Environment Configuration](#️-environment-configuration)
-  - [🔐 Environment Variables Management](#-environment-variables-management)
-  - [🚦 CI/CD Deployment Workflow](#-cicd-deployment-workflow)
-  - [🧪 Testing Guide](#-testing-guide)
-  - [📦 Backup & Restore Strategy](#-backup--restore-strategy)
-  - [📋 Server Log Files](#-server-log-files)
-  - [🔎 Debugging Tips](#-debugging-tips)
 ---
 
 ## 🚀 Features
@@ -58,7 +45,7 @@ Visit the application here:
 
 # 📂 Project Folder Structure
 
-### 📂/root
+### 📂/src
 - ├── 📂/public              
 - │   ├── 📄index.html       
 - │   ├── 📂assets/          
@@ -125,7 +112,7 @@ Visit the application here:
 
 ---
 
-## 🧑‍💻 Contributors
+# 🧑‍💻 Contributors
 
 | Name                   | Role                              |
 |------------------------|-----------------------------------|
@@ -133,38 +120,15 @@ Visit the application here:
 | [Daniel Victorioso]    | Tech Lead/Developer               |
 | [Simone Jake Reyes]    | UI/UX/Developer                   |
 | [Ivan Delumen]         | Tester/Developer                  |
-## 📝 Developer Documentation
 
----
+# 📝 Developer Documentation
 
-### 🔗 Connecting to EC2 Server
-
-
-### 🧱 Importing / Exporting the Database
-
-
-### 📤 Uploading Files to the Server
-
-
-### ⚙️ Environment Configuration
-
-
-### 🔐 Environment Variables Management
-
-
-### 🚦 CI/CD Deployment Workflow
-
-
-### 🧪 Testing Guide
-
-
-### 📦 Backup & Restore Strategy
-
-
-### 📋 Server Log Files
-
-_Where logs are located (e.g., `/var/log/apache2`, Laravel logs), how to read and rotate them._
-
-### 🔎 Debugging Tips
-
-_Common issues and their fixes, debug tools, and enabling/disabling debug mode in production._
+- [🔗 Connecting to EC2 Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?usp=sharing)
+- [🧱 Importing / Exporting the Database](link-to-importing-exporting-database)
+- [📤 Uploading Files to the Server](link-to-uploading-files)
+- [🔐 Environment Variables Management](link-to-env-vars-management)
+- [🚦 CI/CD Deployment Workflow](link-to-cicd-workflow)
+- [🧪 Testing Guide](link-to-testing-guide)
+- [📦 Backup & Restore Strategy](link-to-backup-restore)
+- [📋 Server Log Files](link-to-server-log-files)
+- [🔎 Debugging Tips](link-to-debugging-tips)
