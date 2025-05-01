@@ -2,11 +2,21 @@
 ## 🏦 StackOverCash
 
 A lightweight banking application designed for simple and secure financial transactions. This project features robust authentication, role-based access, and a smooth user experience.
+--- 
+## 📚 Table of Contents
 
+- [🚀 Features](#-features)
+- [🌐 Live Demo](#-live-demo)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📁 Project Folder Structure](#-project-folder-structure)
+- [🗂️ Git Workflow Guidelines](#️-git-workflow-guidelines)
+- [📜 General Coding Guidelines](#-general-coding-guidelines)
+- [🧑‍💻 Contributors](#-contributors)
+- [📝 Developer Documentation](#-developer-documentation)
 ---
 
 ## 🚀 Features
-
+- 🏗️ **Modular Monolith Structure**
 - 🔐 **User Authentication** – Secure login system for all users.  
 - 🔁 **Fund Transfers** –  
   - Internal (within the system)  
@@ -15,28 +25,110 @@ A lightweight banking application designed for simple and secure financial trans
 - 👥 **Role-Based Access Control** –  
   - Teller  
   - Account Holder
-
----
+--- 
+ 
 ## 🌐 Live Demo
 
 Visit the application here:  
-**🔗 [Errawrs Web Host](http://54.206.115.2/)**
+**🔗 [Errawrs Web Host: StackOverCash](https://www.stackovercash.site/)**
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** PHP / JS
+- **Backend:** PHP  
 - **Frontend:** HTML / CSS / JS  
-- **Database:** MySQL/PostGres  
-- **Hosting:** AWS EC2 (Ubuntu)  
+- **Database:** MySQL  
+- **Hosting:** AWS EC2 (Ubuntu)
 
 ---
 
-## ⚙️ Setup Instructions
+# 📂 Project Folder Structure
 
-1. Clone the repository:
+### 📂/src
+- ├── 📂/public              
+- │   ├── 📄index.html       
+- │   ├── 📂assets/          
+- │   └── 📂views/           
+- ├── 📂/modules             
+- │   ├── 📂auth/            
+- │   ├── 📂user/            
+- │   ├── 📂account/         
+- │   ├── 📂transaction/     
+- │   └── 📂otp/             
+- ├── 📂/core                
+- ├── 📂/config              
+- └── 📂/logs                
 
-   ```bash
-   git clone git@github.com:PUP-BSIT/project-errawrs.git
-   cd project-errawrs
+---
+
+# 🗂️ Git Workflow Guidelines
+
+## 🌿 Branch Types and Naming Conventions
+| Branch Type | Description               | Naming Convention           |
+|-------------|---------------------------|-----------------------------|
+| main        | Production-ready branch   | main                        |
+| dev         | Main dev branch           | dev                         |
+| feature     | New feature development   | feature/<feature-name>      |
+| bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
+| hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
+
+---
+
+## 🔧 Branching Guidelines
+
+- ✅ Create a branch from `dev` for any feature, bugfix, or enhancement.
+- ✅ Use **descriptive** branch names (e.g., `feature/user-authentication`).
+- ✅ Commit often with meaningful messages.
+- ✅ Keep branches focused; one purpose per branch.
+
+---
+
+## 🔀 Merging Guidelines
+
+- 🔁 Use **Pull Requests (PRs)** to merge into `dev` or `main`.
+  - **Rebase Before Merging**
+  - 🔗 [Rebase Instructions](https://docs.google.com/document/d/1ICTXNdbj2nvUBl-8IEleAM3P-UGcojueomy6kGJ3W5U/edit?usp=sharing)
+- ✅ Ensure all PRs are reviewed before merging.
+- ✅ Test the feature before merging to `dev`.
+- 🚫 Never push directly to `main`.
+
+---
+
+# 📜 General Coding Guidelines
+
+### 💬 Comments & Documentation  
+- Use comments only when necessary.  
+- Document complex logic or non-obvious implementation.
+
+### 📄 Function & Module Docs  
+- Add short descriptions to explain the purpose of each module or method.  
+
+### 💥 Error Handling  
+- Use `try/catch` blocks  
+- Show **clear** and **meaningful** error messages  
+
+🔗 [Click here to view full guidelines](https://docs.google.com/document/d/1BbBcsGIdrAxlEc2rwTTQiuniiTPAqPuISj7KjDpHQYE/edit?usp=sharing)
+
+---
+
+# 🧑‍💻 Contributors
+
+| Name                   | Role                              |
+|------------------------|-----------------------------------|
+| [Gerald Mamasalanang]  | Project Manager/Developer         |
+| [Daniel Victorioso]    | Tech Lead/Developer               |
+| [Simone Jake Reyes]    | UI/UX/Developer                   |
+| [Ivan Delumen]         | Tester/Developer                  |
+
+# 📝 Developer Documentation
+
+- [🔗 Connecting to EC2 Server](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?usp=sharing)
+- [🧱 Importing / Exporting the Database](link-to-importing-exporting-database)
+- [📤 Uploading Files to the Server](link-to-uploading-files)
+- [🔐 Environment Variables Management](link-to-env-vars-management)
+- [🚦 CI/CD Deployment Workflow](link-to-cicd-workflow)
+- [🧪 Testing Guide](link-to-testing-guide)
+- [📦 Backup & Restore Strategy](link-to-backup-restore)
+- [📋 Server Log Files](link-to-server-log-files)
+- [🔎 Debugging Tips](link-to-debugging-tips)
