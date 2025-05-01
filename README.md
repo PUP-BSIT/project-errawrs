@@ -76,6 +76,7 @@ Visit the application here:
 | feature     | New feature development   | feature/<feature-name>      |
 | bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
 | hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
+| docs        | Document related branch   | docs/<description>          |
 
 ---
 
