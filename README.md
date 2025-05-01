@@ -71,12 +71,14 @@ Visit the application here:
 ## 🌿 Branch Types and Naming Conventions
 | Branch Type | Description               | Naming Convention           |
 |-------------|---------------------------|-----------------------------|
-| main        | Production-ready branch   | main                        |
+| main        | Production branch         | main                        |
+| staging     | ready to deploy branch    | staging                     |
 | dev         | Main dev branch           | dev                         |
 | feature     | New feature development   | feature/<feature-name>      |
 | bugfix      | Fixes identified bugs     | bugfix/<issue-description>  |
 | hotfix      | Quick fix for prod issue  | hotfix/<issue>              |
 | docs        | Document related branch   | docs/<description>          |
+
 
 ---
 
