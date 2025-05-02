@@ -139,3 +139,4 @@ Visit the application here:
 - [📦 Backup & Restore Strategy](link-to-backup-restore)
 - [📋 Server Log Files](link-to-server-log-files)
 - [🔎 Debugging Tips](link-to-debugging-tips)
+- [📘 API Documentation](https://docs.google.com/document/d/1Rpfxkkk4i7dfuglXVY4cVu4eBFNeLran0i2tSET3Mkk/edit?tab=t.6tgtc3itblj)

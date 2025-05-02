@@ -1,0 +1,1108 @@
+openapi: 3.0.3
+info:
+  title: StackOverCash Banking API
+  description: |
+    Official API specification for the Team Errawrs Bank Application (StackOverCash), 
+    supporting account management, fund transfers with OTP verification, and role-based access control.
+    
+    This lightweight banking API enables secure financial transactions with robust authentication
+    and a modular design structure.
+  version: 1.0.0
+  contact:
+    name: Team Errawrs
+    
+servers:
+  - url: 'https://api.stackovercash.example.com/v1'
+    description: Production Server
+  - url: 'https://dev-api.stackovercash.example.com/v1'
+    description: Development Server
+  - url: 'http://localhost:8080/v1'
+    description: Local Development Server
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Account
+    description: Account management endpoints
+  - name: Transfers
+    description: Fund transfer endpoints
+  - name: Teller
+    description: Teller-specific operations
+  - name: Transactions
+    description: Transaction history and management
+  - name: OTP
+    description: One-Time Password verification operations
+
+paths:
+  /register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new account holder
+      description: |
+        Allows new users to register as account holders in the StackOverCash system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Login to the system
+      description: |
+        Authenticates users (account holders and tellers) into the StackOverCash system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many failed login attempts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout from the system
+      description: |
+        Invalidates the current user session/token.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Successfully logged out"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /account-balance:
+    get:
+      tags:
+        - Account
+      summary: Get account balance
+      description: |
+        Retrieves the balance for a specified account.
+      parameters:
+        - name: account_no
+          in: query
+          description: Account number to query
+          required: true
+          schema:
+            type: number
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /deposit:
+    post:
+      tags:
+        - Teller
+      summary: Deposit funds into an account
+      description: |
+        Allows tellers to deposit funds into customer accounts.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+      responses:
+        '200':
+          description: Deposit completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized for teller operations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /withdraw:
+    post:
+      tags:
+        - Teller
+      summary: Withdraw funds from an account
+      description: |
+        Allows tellers to withdraw funds from customer accounts.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        '200':
+          description: Withdrawal completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Invalid request or insufficient funds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized for teller operations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /fund-transfer:
+    post:
+      tags:
+        - Transfers
+      summary: Transfer funds internally
+      description: |
+        Transfers funds between accounts within the same bank,
+        with OTP verification.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundTransferRequest'
+      responses:
+        '202':
+          description: Transfer initiated, OTP verification required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /fund-transfer-external:
+    post:
+      tags:
+        - Transfers
+      summary: Transfer funds to external banks
+      description: |
+        Transfers funds from an internal account to an external bank,
+        with OTP verification.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalFundTransferRequest'
+      responses:
+        '202':
+          description: Transfer initiated, OTP verification required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /receive-external-transfer:
+    post:
+      tags:
+        - Transfers
+      summary: Receive funds from external banks
+      description: |
+        Receives funds from an external bank into an internal account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveExternalTransferRequest'
+      responses:
+        '200':
+          description: Transfer received successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiveExternalTransferResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /verify-otp:
+    post:
+      tags:
+        - OTP
+      summary: Verify OTP for transfer
+      description: |
+        Verifies the OTP sent to the user for fund transfer authorization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTPRequest'
+      responses:
+        '200':
+          description: OTP verified, transfer completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          description: Invalid OTP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: OTP expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get transaction history
+      description: |
+        Retrieves transaction history for a specified account.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: account_no
+          in: query
+          description: Account number
+          required: true
+          schema:
+            type: number
+        - name: from_date
+          in: query
+          description: Start date for filtering transactions (ISO format)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          description: End date for filtering transactions (ISO format)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: transaction_type
+          in: query
+          description: Filter by transaction type
+          required: false
+          schema:
+            type: string
+            enum: [deposit, withdraw, transfer_in, transfer_out]
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Number of records per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Transaction history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionHistoryResponse'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/profile:
+    get:
+      tags:
+        - Account
+      summary: Get user profile
+      description: |
+        Retrieves the profile information for the authenticated user.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Account
+      summary: Update user profile
+      description: |
+        Updates profile information for the authenticated user.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/change-password:
+    post:
+      tags:
+        - Authentication
+      summary: Change user password
+      description: |
+        Changes the password for the authenticated user.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password changed successfully"
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized or incorrect old password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    RegistrationRequest:
+      type: object
+      required:
+        - name
+        - email
+        - phone_number
+        - password
+        - password_confirmation
+      properties:
+        name:
+          type: string
+          description: Full name of the account holder
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: Email address
+          example: "john.doe@example.com"
+        phone_number:
+          type: string
+          description: Phone number for OTP verification
+          example: "+1234567890"
+        password:
+          type: string
+          format: password
+          description: Account password
+          example: "securePassword123"
+        password_confirmation:
+          type: string
+          format: password
+          description: Confirm password
+          example: "securePassword123"
+        address:
+          type: string
+          description: User's address (optional)
+          example: "123 Main St, Anytown, USA"
+
+    RegistrationResponse:
+      type: object
+      properties:
+        user_id:
+          type: number
+          description: User ID
+          example: 12345
+        account_number:
+          type: number
+          description: Generated account number
+          example: 9876543210
+        message:
+          type: string
+          description: Success message
+          example: "User registered successfully"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "john.doe@example.com"
+        password:
+          type: string
+          format: password
+          description: User's password
+          example: "securePassword123"
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Authentication token (JWT)
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user_id:
+          type: number
+          description: User ID
+          example: 12345
+        role:
+          type: string
+          description: User role
+          enum: [account_holder, teller]
+          example: "account_holder"
+        account_number:
+          type: number
+          description: Account number (for account holders only)
+          example: 9876543210
+        name:
+          type: string
+          description: User's name
+          example: "John Doe"
+
+    BalanceResponse:
+      type: object
+      properties:
+        account_number:
+          type: number
+          description: Account number
+          example: 9876543210
+        balance:
+          type: number
+          description: Current balance
+          example: 5000.75
+        currency:
+          type: string
+          description: Currency code
+          example: "USD"
+        last_updated:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-05-01T12:34:56Z"
+
+    DepositRequest:
+      type: object
+      required:
+        - account_no
+        - amount
+      properties:
+        account_no:
+          type: number
+          description: Account number to deposit to
+          example: 9876543210
+        amount:
+          type: number
+          description: Amount to deposit
+          minimum: 0.01
+          example: 500.00
+        description:
+          type: string
+          description: Optional description
+          example: "Monthly deposit"
+
+    WithdrawRequest:
+      type: object
+      required:
+        - account_no
+        - amount
+      properties:
+        account_no:
+          type: number
+          description: Account number to withdraw from
+          example: 9876543210
+        amount:
+          type: number
+          description: Amount to withdraw
+          minimum: 0.01
+          example: 200.00
+        description:
+          type: string
+          description: Optional description
+          example: "ATM withdrawal"
+
+    TransactionResponse:
+      type: object
+      properties:
+        transaction_id:
+          type: number
+          description: Transaction ID
+          example: 87654321
+        account_number:
+          type: number
+          description: Account number
+          example: 9876543210
+        amount:
+          type: number
+          description: Transaction amount
+          example: 500.00
+        balance_after:
+          type: number
+          description: Balance after transaction
+          example: 5500.75
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp
+          example: "2025-05-01T12:34:56Z"
+        transaction_type:
+          type: string
+          description: Type of transaction
+          enum: [deposit, withdraw, transfer_in, transfer_out]
+          example: "deposit"
+        description:
+          type: string
+          description: Transaction description
+          example: "Monthly deposit"
+        status:
+          type: string
+          description: Transaction status
+          enum: [completed, pending, failed]
+          example: "completed"
+
+    FundTransferRequest:
+      type: object
+      required:
+        - transaction_amount
+        - source_account_no
+        - recipient_account_no
+      properties:
+        transaction_amount:
+          type: number
+          description: The amount to be transferred
+          minimum: 0.01
+          example: 1000.00
+        source_account_no:
+          type: number
+          description: The source account number
+          example: 9876543210
+        recipient_account_no:
+          type: number
+          description: The recipient account number
+          example: 1234567890
+        description:
+          type: string
+          description: Optional transaction description
+          example: "Rent payment"
+        redirect_url:
+          type: string
+          description: A URL to redirect after successful transaction (optional)
+          example: "https://stackovercash.example.com/transfer-success"
+
+    ExternalFundTransferRequest:
+      type: object
+      required:
+        - transaction_amount
+        - source_account_no
+        - recipient_bank_code
+        - recipient_account_no
+      properties:
+        transaction_amount:
+          type: number
+          description: The amount to be transferred
+          minimum: 0.01
+          example: 1000.00
+        source_account_no:
+          type: number
+          description: The source (internal) account number
+          example: 9876543210
+        recipient_bank_code:
+          type: string
+          description: The bank code for the recipient (external) account
+          example: "EXTBANK123"
+        recipient_account_no:
+          type: number
+          description: The recipient account (external) number
+          example: 1234567890
+        recipient_name:
+          type: string
+          description: Name of the recipient (optional)
+          example: "Jane Smith"
+        description:
+          type: string
+          description: Optional transaction description
+          example: "Car payment"
+        redirect_url:
+          type: string
+          description: A URL to redirect after successful transaction (optional)
+          example: "https://stackovercash.example.com/transfer-success"
+
+    ReceiveExternalTransferRequest:
+      type: object
+      required:
+        - transaction_amount
+        - source_account_no
+        - source_bank_code
+        - recipient_account_no
+      properties:
+        transaction_amount:
+          type: number
+          description: The amount to be transferred
+          minimum: 0.01
+          example: 1000.00
+        source_account_no:
+          type: number
+          description: The source (external) account number
+          example: 1234567890
+        source_bank_code:
+          type: string
+          description: The bank code for the source (external) account
+          example: "EXTBANK123"
+        source_name:
+          type: string
+          description: Name of the sender (optional)
+          example: "Jane Smith"
+        recipient_account_no:
+          type: number
+          description: The recipient (internal) account number
+          example: 9876543210
+        description:
+          type: string
+          description: Optional transaction description
+          example: "Invoice payment"
+
+    ReceiveExternalTransferResponse:
+      type: object
+      properties:
+        fund_transfer_success:
+          type: boolean
+          description: A boolean indicator whether the transaction is successful or not
+          example: true
+        transaction_id:
+          type: number
+          description: Generated ID of the transaction
+          example: 29485420343
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp
+          example: "2025-05-01T12:34:56Z"
+        recipient_account_no:
+          type: number
+          description: The recipient (internal) account number
+          example: 9876543210
+        balance_after:
+          type: number
+          description: Balance after transaction
+          example: 6000.75
+
+    OTPResponse:
+      type: object
+      properties:
+        transaction_reference:
+          type: string
+          description: Reference ID for the pending transaction
+          example: "TRX-123456789"
+        otp_sent:
+          type: boolean
+          description: Indicates if OTP was sent successfully
+          example: true
+        otp_medium:
+          type: string
+          description: Method used to send OTP
+          enum: [sms, email]
+          example: "sms"
+        expires_at:
+          type: string
+          format: date-time
+          description: OTP expiration time
+          example: "2025-05-01T12:39:56Z"
+        redirect_url:
+          type: string
+          description: URL to redirect for OTP input (if provided in request)
+          example: "https://stackovercash.example.com/otp-verify"
+
+    VerifyOTPRequest:
+      type: object
+      required:
+        - transaction_reference
+        - otp_code
+      properties:
+        transaction_reference:
+          type: string
+          description: Reference ID for the pending transaction
+          example: "TRX-123456789"
+        otp_code:
+          type: string
+          description: The OTP code received by the user
+          example: "123456"
+
+    TransactionHistoryResponse:
+      type: object
+      properties:
+        account_number:
+          type: number
+          description: Account number
+          example: 9876543210
+        transactions:
+          type: array
+          description: List of transactions
+          items:
+            type: object
+            properties:
+              transaction_id:
+                type: number
+                description: Transaction ID
+                example: 87654321
+              amount:
+                type: number
+                description: Transaction amount
+                example: 500.00
+              timestamp:
+                type: string
+                format: date-time
+                description: Transaction timestamp
+                example: "2025-05-01T12:34:56Z"
+              transaction_type:
+                type: string
+                description: Type of transaction
+                enum: [deposit, withdraw, transfer_in, transfer_out]
+                example: "deposit"
+              description:
+                type: string
+                description: Transaction description
+                example: "Monthly deposit"
+              balance_after:
+                type: number
+                description: Balance after transaction
+                example: 5500.75
+              status:
+                type: string
+                description: Transaction status
+                enum: [completed, pending, failed]
+                example: "completed"
+              counterparty:
+                type: object
+                description: Information about the other party in the transaction (if applicable)
+                properties:
+                  account_no:
+                    type: number
+                    description: Account number of counterparty
+                    example: 1234567890
+                  bank_code:
+                    type: string
+                    description: Bank code (for external transfers)
+                    example: "EXTBANK123"
+                  name:
+                    type: string
+                    description: Name of the counterparty (if available)
+                    example: "Jane Smith"
+        pagination:
+          type: object
+          properties:
+            total_records:
+              type: integer
+              description: Total number of records
+              example: 42
+            total_pages:
+              type: integer
+              description: Total number of pages
+              example: 5
+            current_page:
+              type: integer
+              description: Current page number
+              example: 1
+            limit:
+              type: integer
+              description: Records per page
+              example: 10
+
+    UserProfileResponse:
+      type: object
+      properties:
+        user_id:
+          type: number
+          description: User ID
+          example: 12345
+        name:
+          type: string
+          description: User's name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: User's email
+          example: "john.doe@example.com"
+        phone_number:
+          type: string
+          description: User's phone number
+          example: "+1234567890"
+        address:
+          type: string
+          description: User's address
+          example: "123 Main St, Anytown, USA"
+        role:
+          type: string
+          description: User role
+          enum: [account_holder, teller]
+          example: "account_holder"
+        account_number:
+          type: number
+          description: Account number (for account holders only)
+          example: 9876543210
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation date
+          example: "2025-01-15T10:30:00Z"
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: User's name
+          example: "John Doe"
+        phone_number:
+          type: string
+          description: User's phone number
+          example: "+1234567890"
+        address:
+          type: string
+          description: User's address
+          example: "123 Main St, Anytown, USA"
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - current_password
+        - new_password
+        - new_password_confirmation
+      properties:
+        current_password:
+          type: string
+          format: password
+          description: Current password
+          example: "currentSecurePass123"
+        new_password:
+          type: string
+          format: password
+          description: New password
+          example: "newSecurePass456"
+        new_password_confirmation:
+          type: string
+          format: password
+          description: Confirm new password
+          example: "newSecurePass456"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Insufficient funds"
+        error_code:
+          type: string
+          description: Error code for programmatic handling
+          example: "INSUFFICIENT_FUNDS"
+        details:
+          type: array
+          description: Additional error details if available
+          items:
+            type: string
+          example: ["Account balance is 500.00, requested amount is 1000.00"]
