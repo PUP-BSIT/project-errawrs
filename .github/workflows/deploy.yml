@@ -13,14 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up SSH key
+      - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/aws_key
-          chmod 600 ~/.ssh/aws_key
+          echo "${{ secrets.EC2_SSH_KEY_SIM }}" > ~/.ssh/aws_key_sim
+          echo "${{ secrets.EC2_SSH_KEY_IVAN }}" > ~/.ssh/aws_key_ivan
+          chmod 600 ~/.ssh/aws_key ~/.ssh/aws_key_sim ~/.ssh/aws_key_ivan
           ssh-keyscan -H ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
-      - name: Clean and Deploy to EC2
+      - name: Clean and Deploy to EC2 using default key
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'rm -rf /var/www/html/errawrs/project-errawrs/*'
           scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./ ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/var/www/html/errawrs/project-errawrs
