@@ -1,0 +1,256 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background: radial-gradient(
+          ellipse at 30% 20%,
+          #fff 40%,
+          var(--color-bg-gradient-start) 70%,
+          var(--color-bg-gradient-end) 100%);
+    color: var(--color-primary-black);
+    min-height: 100vh;
+}
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    background: var(--color-primary-black);
+    padding: 1rem 0;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-size: 0; 
+}
+
+.logo span {
+  display: inline-block;
+  font-size: 1.6rem;
+}
+
+.white {
+    color: var(--color-white);
+}
+
+.green {
+    color: var(--color-lime-green);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--color-white);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--color-lime-green);
+}
+
+.login-btn {
+    background: var(--color-lime-green);
+    color: var(--color-primary-black);
+    padding: 0.6rem 1.3rem;
+    border: none;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-btn:hover {
+    background: #d4f3ad;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 0;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.hero-text {
+    max-width: 500px;
+    position: relative;
+    padding-bottom: 10rem;
+}
+
+.hero-text h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero-text p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 90%;
+    line-height: 1.5;
+    color: #333;
+}
+
+.learn-more {
+    background: #111;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 0;
+}
+
+.learn-more:hover {
+    background: #222;
+}
+
+.hero-visual {
+    display: flex;
+    position: relative;
+}
+
+.card-stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-right: -30px;
+    z-index: 2;
+}
+
+.card {
+    background: #222;
+    color: #fff;
+    border-radius: 14px;
+    width: 280px;
+    padding: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    font-size: 0.8rem;
+}
+
+.chip {
+    width: 35px;
+    height: 24px;
+    background: linear-gradient(135deg, #e0c36e 60%, #fffbe6 100%);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.top-row,
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.number {
+    letter-spacing: 1.5px;
+    margin: 1rem 0;
+    font-size: 1rem;
+}
+
+.transaction {
+    background: #fff;
+    color: var(--color-primary-black);
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.transaction.payment .amount {
+    color: #666;
+}
+
+.transaction.received .amount {
+    color: var(--color-mint);
+    font-weight: bold;
+}
+
+.user-image {
+    position: relative;
+    z-index: 1;
+    margin-top: 1rem;
+}
+
+.user-image img {
+    width: 300px;
+    height: auto;
+}
+
+.mint-shape {
+    position: absolute;
+    width: 80%;
+    height: 95%;
+    background-color: #8eecc1;
+    border-radius: 50px;
+    bottom: -20px;
+    right: -20px;
+    z-index: -1;
+}
+
+@media (max-width: 1024px) {
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero-visual {
+        margin-top: 2rem;
+        align-self: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-visual {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-stack {
+        margin-right: 0;
+        margin-bottom: 3rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+}
