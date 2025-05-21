@@ -73,41 +73,6 @@ mysqli_close($conn);
     <title>Admin Dashboard - StackOverCash Bank</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
-        .sidebar {
-            background-color: #2c3e50;
-            color: white;
-            min-height: 100vh;
-            padding-top: 20px;
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 10px 20px;
-            margin: 5px 0;
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-            background-color: rgba(255,255,255,0.1);
-        }
-        .sidebar .nav-link.active {
-            color: white;
-            background-color: rgba(255,255,255,0.2);
-        }
-        .content-area {
-            padding: 20px;
-        }
-        .dashboard-title {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 10px;
-        }
-        .search-box {
-            margin-bottom: 20px;
-        }
-        .action-btns {
-            white-space: nowrap;
-        }
-    </style>
 </head>
 <body>
     <div class="container-fluid">
