@@ -1,8 +1,6 @@
 <?php
-// Start session
 session_start();
 
-// Check if logged in
 if (!isset($_SESSION['admin_id'])) {
     header("Location: index.php");
     exit();
@@ -11,54 +9,93 @@ if (!isset($_SESSION['admin_id'])) {
 require_once '../../config/db_config.php';
 $conn = getDBConnection();
 
-// Process search
-$search_query = '';
+$search_input = '';   // Raw user input (no %)
 $search_results = [];
-if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search_query = mysqli_real_escape_string($conn, $_GET['search']);
-    $search_sql = "SELECT * FROM teller 
-                  WHERE teller_number LIKE '%$search_query%' 
-                  OR first_name LIKE '%$search_query%' 
-                  OR last_name LIKE '%$search_query%' 
-                  OR email LIKE '%$search_query%'
-                  ORDER BY teller_number";
-} else {
-    // Default: get all tellers
-    $search_sql = "SELECT * FROM teller ORDER BY teller_number";
-}
+$delete_success = null;
+$delete_error = null;
 
-$result = mysqli_query($conn, $search_sql);
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $search_results[] = $row;
+// Handle search
+if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
+    $search_input = trim($_GET['search']);
+    $like_search = "%" . $search_input . "%";
+
+    $stmt = $conn->prepare("SELECT * FROM teller 
+                            WHERE first_name LIKE ? 
+                            OR last_name LIKE ? 
+                            OR email LIKE ? 
+                            OR CAST(teller_number AS CHAR) LIKE ? 
+                            ORDER BY teller_number");
+    $stmt->bind_param("ssss", $like_search, $like_search, $like_search, $like_search);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $search_results[] = $row;
+        }
+    }
+} else {
+    $sql = "SELECT * FROM teller ORDER BY teller_number";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $search_results[] = $row;
+        }
     }
 }
 
-// Process teller deletion
+// Handle deletion
 if (isset($_POST['delete_teller']) && !empty($_POST['teller_id'])) {
-    $teller_id = mysqli_real_escape_string($conn, $_POST['teller_id']);
-    
-    // Log the action first
-    $admin_id = $_SESSION['admin_id'];
+    $teller_id = intval($_POST['teller_id']);
+    $admin_id = intval($_SESSION['admin_id']);
+
+    // Log admin action
     $log_sql = "INSERT INTO admin_activity_log (admin_id, action_type, affected_teller, details) 
-                VALUES ($admin_id, 'suspend_teller', $teller_id, 'Teller deleted by admin')";
-    mysqli_query($conn, $log_sql);
-    
-    // Delete the teller
-    $delete_sql = "DELETE FROM teller WHERE teller_number = $teller_id";
-    if (mysqli_query($conn, $delete_sql)) {
+                VALUES (?, 'suspend_teller', ?, 'Teller deleted by admin')";
+    $log_stmt = $conn->prepare($log_sql);
+    $log_stmt->bind_param("ii", $admin_id, $teller_id);
+    $log_stmt->execute();
+
+    // Delete teller
+    $delete_stmt = $conn->prepare("DELETE FROM teller WHERE teller_number = ?");
+    $delete_stmt->bind_param("i", $teller_id);
+    $delete_stmt->execute();
+
+    if ($delete_stmt->affected_rows > 0) {
         $delete_success = "Teller #$teller_id has been deleted successfully.";
-        
-        // Refresh search results
-        $result = mysqli_query($conn, $search_sql);
+    } else {
+        $delete_error = "Error deleting teller or teller not found.";
+    }
+
+    // Refresh search results after deletion
+    if ($search_input !== '') {
+        $like_search = "%" . $search_input . "%";
+        $stmt = $conn->prepare("SELECT * FROM teller 
+                                WHERE first_name LIKE ? 
+                                OR last_name LIKE ? 
+                                OR email LIKE ? 
+                                OR CAST(teller_number AS CHAR) LIKE ? 
+                                ORDER BY teller_number");
+        $stmt->bind_param("ssss", $like_search, $like_search, $like_search, $like_search);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         $search_results = [];
+        if ($result) {
+            while ($row = $result->fetch_assoc()) {
+                $search_results[] = $row;
+            }
+        }
+    } else {
+        $search_results = [];
+        $sql = "SELECT * FROM teller ORDER BY teller_number";
+        $result = mysqli_query($conn, $sql);
         if ($result) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $search_results[] = $row;
             }
         }
-    } else {
-        $delete_error = "Error deleting teller: " . mysqli_error($conn);
     }
 }
 
@@ -68,18 +105,18 @@ mysqli_close($conn);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin Dashboard - StackOverCash Bank</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <div class="text-center mb-4">
+            <!-- Sidebar omitted for brevity, same as before -->
+            <div class="col-md-2 sidebar bg-light vh-100">
+                <div class="text-center my-4">
                     <h4>StackOverCash</h4>
                     <p>Admin Portal</p>
                 </div>
@@ -101,28 +138,28 @@ mysqli_close($conn);
                     </li>
                 </ul>
             </div>
-            
+
             <!-- Main Content -->
-            <div class="col-md-10 content-area">
-                <h2 class="dashboard-title">Teller Management</h2>
+            <div class="col-md-10 content-area p-4">
+                <h2 class="dashboard-title mb-4">Teller Management</h2>
                 
-                <?php if(isset($delete_success)): ?>
-                    <div class="alert alert-success"><?php echo $delete_success; ?></div>
+                <?php if ($delete_success): ?>
+                    <div class="alert alert-success"><?php echo htmlspecialchars($delete_success); ?></div>
                 <?php endif; ?>
                 
-                <?php if(isset($delete_error)): ?>
-                    <div class="alert alert-danger"><?php echo $delete_error; ?></div>
+                <?php if ($delete_error): ?>
+                    <div class="alert alert-danger"><?php echo htmlspecialchars($delete_error); ?></div>
                 <?php endif; ?>
                 
                 <!-- Search Box -->
-                <div class="search-box">
+                <div class="search-box mb-3">
                     <form method="GET" action="" class="form-inline">
                         <div class="input-group w-100">
                             <input type="text" class="form-control" placeholder="Search tellers by name, ID, or email" 
-                                   name="search" value="<?php echo htmlspecialchars($search_query); ?>">
+                                   name="search" value="<?php echo htmlspecialchars($search_input); ?>">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">Search</button>
-                                <?php if(!empty($search_query)): ?>
+                                <?php if ($search_input !== ''): ?>
                                     <a href="dashboard.php" class="btn btn-secondary">Clear</a>
                                 <?php endif; ?>
                             </div>
@@ -132,7 +169,7 @@ mysqli_close($conn);
                 
                 <!-- Tellers Table -->
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Teller Number</th>
@@ -145,35 +182,36 @@ mysqli_close($conn);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(empty($search_results)): ?>
+                            <?php if (empty($search_results)): ?>
                                 <tr>
                                     <td colspan="7" class="text-center">No tellers found</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach($search_results as $teller): ?>
+                                <?php foreach ($search_results as $teller): ?>
                                     <tr>
-                                        <td><?php echo $teller['teller_number']; ?></td>
-                                        <td><?php echo $teller['first_name'] . ' ' . $teller['last_name']; ?></td>
-                                        <td><?php echo $teller['email'] ? $teller['email'] : 'N/A'; ?></td>
+                                        <td><?php echo htmlspecialchars($teller['teller_number']); ?></td>
+                                        <td><?php echo htmlspecialchars($teller['first_name'] . ' ' . $teller['last_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($teller['email'] ?: 'N/A'); ?></td>
                                         <td>
-                                            <?php if($teller['status'] == 'active'): ?>
+                                            <?php if ($teller['status'] === 'active'): ?>
                                                 <span class="badge badge-success">Active</span>
-                                            <?php elseif($teller['status'] == 'inactive'): ?>
+                                            <?php elseif ($teller['status'] === 'inactive'): ?>
                                                 <span class="badge badge-warning">Inactive</span>
                                             <?php else: ?>
                                                 <span class="badge badge-danger">Suspended</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?php echo date('M d, Y', strtotime($teller['created_at'])); ?></td>
-                                        <td><?php echo $teller['last_login'] ? date('M d, Y', strtotime($teller['last_login'])) : 'Never'; ?></td>
+                                        <td><?php echo htmlspecialchars(date('M d, Y', strtotime($teller['created_at']))); ?></td>
+                                        <td><?php echo $teller['last_login'] ? htmlspecialchars(date('M d, Y', strtotime($teller['last_login']))) : 'Never'; ?></td>
                                         <td class="action-btns">
-                                            <a href="edit_teller.php?id=<?php echo $teller['teller_number']; ?>" class="btn btn-sm btn-info">
+                                            <a href="edit_teller.php?id=<?php echo urlencode($teller['teller_number']); ?>" class="btn btn-sm btn-info" title="Edit Teller">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button" class="btn btn-sm btn-danger" 
                                                     data-toggle="modal" data-target="#deleteModal" 
-                                                    data-teller-id="<?php echo $teller['teller_number']; ?>"
-                                                    data-teller-name="<?php echo $teller['first_name'] . ' ' . $teller['last_name']; ?>">
+                                                    data-teller-id="<?php echo htmlspecialchars($teller['teller_number']); ?>"
+                                                    data-teller-name="<?php echo htmlspecialchars($teller['first_name'] . ' ' . $teller['last_name']); ?>"
+                                                    title="Delete Teller">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -186,8 +224,8 @@ mysqli_close($conn);
             </div>
         </div>
     </div>
-    
-    <!-- Delete Confirmation Modal -->
+
+    <!-- Delete Confirmation Modal (same as before) -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -203,30 +241,18 @@ mysqli_close($conn);
                 </div>
                 <div class="modal-footer">
                     <form method="POST" action="">
-                        <input type="hidden" name="teller_id" id="tellerIdToDelete">
+                        <input type="hidden" name="teller_id" id="tellerIdToDelete" required>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" name="delete_teller" class="btn btn-danger">Delete Teller</button>
+                        <button type="submit" name="delete_teller" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#deleteModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var tellerId = button.data('teller-id');
-                var tellerName = button.data('teller-name');
-                
-                var modal = $(this);
-                modal.find('#tellerIdToDelete').val(tellerId);
-                modal.find('#tellerToDelete').text('#' + tellerId + ' - ' + tellerName);
-            });
-        });
-    </script>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/scripts/dashboard.js"></script>
 </body>
 </html>
