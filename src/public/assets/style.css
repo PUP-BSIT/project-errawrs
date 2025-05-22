@@ -70,6 +70,12 @@ body {
     display: block;
 }
 
+.avatar-section img {
+    width: 90px;
+    height: 90px;
+    border-radius: 45px;
+}
+
 .sidebar-section {
     display: flex;
     flex-direction: column;
