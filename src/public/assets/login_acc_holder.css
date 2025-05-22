@@ -1,0 +1,240 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background: radial-gradient(
+        ellipse at 30% 20%,
+        #fff 40%,
+        var(--color-bg-gradient-start) 70%,
+        var(--color-bg-gradient-end) 100%
+    );
+    color: var(--color-primary-black);
+    min-height: 100vh;
+}
+
+/* Navigation Styles */
+header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    z-index: 10;
+    padding: 1rem 2rem;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--color-primary-black);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--color-login-button);
+}
+
+/* Login Layout */
+.login-page {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.login-form-container {
+    background-color: var(--color-primary-black);
+    width: 40%;
+    min-width: 320px;
+    max-width: 450px;
+    padding: 2rem 2rem;
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.login-header-top {
+    margin-bottom: 2rem;
+}
+
+.login-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-white);
+}
+
+.green {
+    color: var(--color-lime-green);
+}
+
+.welcome-text {
+    font-size: 1.6rem;
+    margin: 0.5rem 0 2rem 0;
+    font-weight: 400;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.form-group {
+    position: relative;
+}
+
+.login-input {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: var(--color-white);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-button {
+    background-color: var(--color-login-button);
+    color: var(--color-white);
+    border: none;
+    border-radius: 4px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 3rem;
+}
+
+.login-button:hover {
+    background-color: #f26a4b;
+}
+
+.forgot-links {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-gray);
+}
+
+.forgot-link {
+    color: #2eb086;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #333;
+}
+
+.divider-text {
+    padding: 0 1rem;
+    color: var(--color-gray);
+    font-size: 0.9rem;
+}
+
+.register-button {
+    background-color: var(--color-white);
+    color: var(--color-primary-black);
+    border-radius: 4px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
+    margin-top: 3rem;
+}
+
+
+.register-button:hover {
+    background-color: #ddd;
+}
+
+.login-illustration {
+    flex-grow: 1;
+    background: radial-gradient(
+        ellipse at 30% 20%,
+        #fff 40%,
+        var(--color-bg-gradient-start) 70%,
+        var(--color-bg-gradient-end) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.login-illustration img {
+    max-width: 80%;
+    max-height: 70%;
+    display: block;
+    margin: 0 auto;
+}
