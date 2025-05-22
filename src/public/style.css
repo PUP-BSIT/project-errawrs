@@ -1,0 +1,133 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background: radial-gradient(
+        ellipse at 30% 20%,
+        #fff 40%,
+        var(--color-bg-gradient-start) 70%,
+        var(--color-bg-gradient-end) 100%);
+    color: var(--color-primary-black);
+    min-height: 100vh;
+}
+
+#container_box {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+
+#container-nav {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    background-color: var(--color-primary-black);
+}
+
+.title-section {
+    background-color: var(--color-primary-black);
+    padding: 30px 30px 15px 30px;
+    text-align: center;
+}
+
+#white {
+    font-weight:650;
+    color: var(--color-white);
+    font-size: 1.8rem;
+}
+
+#green{
+    font-weight:700;
+    color: var(--color-lime-green);
+    font-size: 1.8rem;
+}
+
+.avatar-section {
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+#username {
+    color: var(--color-white);
+    font-size: 2rem;
+    font-weight:700;
+    display: block;
+}
+
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-txt {
+    color: var(--color-white);
+    padding: 30px;
+    font-size: 1.5rem;
+    font-weight:500;
+    pointer-events: none;
+}
+
+.sidebar-section span {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+#logout::after {
+    content: "⍈";
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.nav-txt:first-child{
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
+    font-weight: 700;
+    border-radius: 25px;
+    margin: 0 5px 0px 5px;
+}
+
+.sidebar-section strong:hover:not(:first-child) {
+    background-color: rgba(175, 175, 175, 0.156);
+    border-radius: 4px;
+}
+
+#container_content {
+    flex: auto;
+    padding: 20px 40px;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    background-color: var(--color-mint);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.notice-section {
+    width: 300px;
+    background-color: var(--color-bg-gradient-start);
+}
