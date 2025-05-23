@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Holder Navigation</title>
+    <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
           rel="stylesheet">
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
-    <div id="container_box">
-        <div id="container-nav">
+    <div id="box_container">
+        <div id="nav_container">
             <div class="title-section">
                 <span id="white">Stack</span>
                 <span id="green">Overcash</span>
@@ -29,12 +33,12 @@
                     </span></strong>
             </div>
         </div>
-
-        <div id="container_content">
-            <div class="top-bar">
-                <div class="icon"></div>
-                <div class="icon"></div>
-                <div class="icon"></div>
+        
+        <div id="content_container">
+            <div class="top-bar-section">
+                <div class="icon"><i class="fa-regular fa-bell"></i></div>
+                <div class="icon"><i class="fa-regular fa-square-plus"></i></div>
+                <div class="icon"><i class="fa-solid fa-headset"></i></div>
             </div>
 
             <div class="notice-section">
@@ -43,32 +47,49 @@
                   Online banking services will remain available.</p>
             </div>
 
-            <div class="greeting-section">
-                <b>Hello</b>
-                <strong>John Doe!</strong>
-            </div>
+            <div id="body_container">
+                <div id="greeting_balance_container">
+                    <div class="greeting-section">
+                    <b>Hello</b>
+                    <strong>John Doe!</strong>
+                    </div>
+                    <div class="balance-section">
+                        <b>Balance</b>
+                        <strong>₱ 7,600.00</strong>
+                    </div>
+                    <div class="buttons-section">
+                        <button class="btn">Deposit Now</button>
+                        <button class="btn">Transfer Now</button>
+                    </div>
+                </div>
 
-            <div class="balance-section">
-                <strong>Balance</strong>
-                <span>₱ 7,600.00</span>
-            </div>
-
-            <div class="offer-section">
-                <p>Saving 10% of your income helps build long-term wealth</p>
-            </div>
-
-            <div class="recent-transac-section">
-                <p>Recent Transaction</p>
-            </div>
-            
-            <div class="buttons-section">
-                <button class="btn">Deposit Now</button>
-                <button class="btn">Transfer Now</button>
+                <div id="offer_transac_container">
+                    <div class="offer-section">
+                        <p>Saving 10% of your income helps 
+                            build long-term wealth</p>
+                    </div>
+                    <div class="recent-transac-section">
+                        <p>Recent Transaction</p>
+                        <div class="recent-transac">
+                            <div id="transac-date">Date</div>
+                            <div id="transac-amount">Amount</div>
+                        </div>
+                        <div id="transac_details">
+                            <div class="date">
+                                <p>2025-05-02</p>
+                                <p>2025-05-02</p>
+                                <p>2025-05-02</p>
+                            </div>
+                            <div class="amount">
+                                <p>+₱30,000.00</p>
+                                <p>-₱10,000.00</p>
+                                <p>+₱5,000.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <img
-          src="" alt="">
-        <div></div>
 </body>
 </html>

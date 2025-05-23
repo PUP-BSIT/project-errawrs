@@ -16,7 +16,6 @@
 }
 
 body {
-    margin: 0;
     font-family: var(--font-main);
     background: radial-gradient(
         ellipse at 30% 20%,
@@ -27,22 +26,22 @@ body {
     min-height: 100vh;
 }
 
-#container_box {
+#box_container {
     display: flex;
     flex-direction: row;
-    min-height: 100vh;
 }
 
-#container-nav {
+#nav_container {
     display: flex;
     flex-direction: column;
     width: 300px;
+    height: 775px;
     background-color: var(--color-primary-black);
 }
 
 .title-section {
     background-color: var(--color-primary-black);
-    padding: 30px 30px 15px 30px;
+    padding: 50px 30px 20px 30px;
     text-align: center;
 }
 
@@ -68,6 +67,7 @@ body {
     font-size: 2rem;
     font-weight:700;
     display: block;
+    margin-bottom: 35px;
 }
 
 .avatar-section img {
@@ -87,6 +87,7 @@ body {
     font-size: 1.5rem;
     font-weight:500;
     pointer-events: none;
+    text-align: center;
 }
 
 .sidebar-section span {
@@ -97,7 +98,6 @@ body {
 #logout::after {
     content: "⍈";
     margin-left: 5px;
-    cursor: pointer;
 }
 
 .nav-txt:first-child{
@@ -113,27 +113,176 @@ body {
     border-radius: 4px;
 }
 
-#container_content {
-    flex: auto;
-    padding: 20px 40px;
+#content_container {
+    padding: 15px 30px;
 }
 
-.top-bar {
+.top-bar-section {
     display: flex;
     justify-content: flex-end;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 18px;
+    margin: 25px 40px 30px 0px;
 }
 
 .icon {
     width: 30px;
     height: 30px;
-    background-color: var(--color-mint);
     border-radius: 4px;
+    font-size: 1.8rem;
     cursor: pointer;
+    color: var(--color-mint);
 }
 
 .notice-section {
-    width: 300px;
-    background-color: var(--color-bg-gradient-start);
+    width: 1100px;
+    padding: 15px;
+    margin: 20px;
+    font-size: 1.5rem;
+    font-weight:900;
+    border-radius: 15px;
+    border: solid 1px black;
+    background-color: var(--color-white);
+}
+#body_container {
+    display: flex;
+    flex-direction: row;
+    
+}
+#greeting_balance_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.greeting-section {
+    width: 550px;
+    font-size: 3.5rem;
+    margin: 30px;
+}
+
+.greeting-section b {
+    display: block;
+}
+
+.greeting-section strong {
+    margin-left: 50px;
+}
+
+.offer-section {
+    width: 500px;
+    font-size: 2rem;
+    font-weight:800;
+    padding: 20px;
+    margin: 20px 15px 20px 10px;
+    border-radius: 15px;
+    border: solid 1px black;
+    background-color: var(--color-white);
+}
+
+.balance-section {  
+    display: flex;
+    flex-direction: column;
+    width: 470px;
+    height: 165px;
+    margin: 10px 30px 40px 30px;
+    padding: 30px;
+    font-size: 2rem;
+    border-radius: 15px;
+    color: var(--color-white);
+    background-color: var(--color-mint)
+}
+
+.balance-section b {
+    margin-bottom: 35px;
+}
+
+.buttons-section {
+    width: 470px;
+    margin-left: 30px;
+}
+
+.btn {
+    width: 210px;
+    padding: 10px 25px 10px 25px;
+    margin: 10px;
+    font-size: 1.5rem;
+    border-radius: 15px;
+    border: none;
+    color: var(--color-white);
+    background-color: var(--color-primary-black);
+}
+
+.btn:hover {
+    background-color: var(--color-mint);
+    cursor: pointer;
+}
+
+#offer_transac_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-transac-section {
+    width: 510px;
+    height: 35vh;
+    padding: 8px 15px 15px 15px;
+    font-size: 2rem;
+    font-weight:600;
+    border-radius: 15px;
+    border: solid 1px black;
+    background-color: var(--color-white);
+}
+
+.recent-transac {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 15px;
+}
+
+#transac-date {
+    width: 200px;
+    color: var(--color-white);
+    text-align: center;
+    border-radius: 20px;
+    font-weight:500;
+    background-color: var(--color-primary-black);
+}
+
+#transac-amount {
+    width: 200px;
+    color: var(--color-white);
+    text-align: center;
+    border-radius: 20px;
+    font-weight:500;
+    background-color: var(--color-primary-black);
+}
+
+#transac_details {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 65px;
+}
+
+.date {
+    font-size: 1.5rem;
+    width: 200px;
+    text-align: center;
+    margin: 10px 0px 10px 0px;
+}
+
+.date p {
+    margin-top: 12px;
+}
+
+.amount {
+    font-size: 1.5rem;
+    width: 200px;
+    text-align: center;
+    margin: 10px 0px 10px 0px;
+}
+
+.amount p {
+    margin-top: 12px;
 }
