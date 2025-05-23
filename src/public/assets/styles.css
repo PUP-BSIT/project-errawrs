@@ -7,6 +7,7 @@
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
 }
 
 body {
@@ -20,6 +21,7 @@ body {
     color: var(--color-primary-black);
     min-height: 100vh;
 }
+
 .container {
     width: 90%;
     max-width: 1200px;
@@ -31,20 +33,24 @@ header {
     padding: 1rem 0;
 }
 
-.nav {
+.container-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
+
 .logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  font-size: 0; 
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-size: 0; 
 }
 
 .logo span {
-  display: inline-block;
-  font-size: 1.6rem;
+    display: inline-block;
+    font-size: 1.6rem;
 }
 
 .white {
@@ -83,34 +89,38 @@ header {
     font-weight: 700;
     cursor: pointer;
     transition: background 0.3s;
+    text-decoration: none;
 }
 
 .login-btn:hover {
     background: #d4f3ad;
 }
 
-.hero {
+.container-hero {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 4rem 0;
     flex-wrap: wrap;
     gap: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.hero-text {
+.hero-content {
     max-width: 500px;
     position: relative;
     padding-bottom: 10rem;
 }
 
-.hero-text h1 {
+.hero-content h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     font-weight: 700;
 }
 
-.hero-text p {
+.hero-content p {
     font-size: 1.1rem;
     margin-bottom: 2rem;
     max-width: 90%;
@@ -118,7 +128,7 @@ header {
     color: #333;
 }
 
-.learn-more {
+.learn-more-btn {
     background: #111;
     color: #fff;
     padding: 1rem 2.5rem;
@@ -133,7 +143,7 @@ header {
     bottom: 0;
 }
 
-.learn-more:hover {
+.learn-more-btn:hover {
     background: #222;
 }
 
@@ -196,22 +206,22 @@ header {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.transaction.payment .amount {
+.transaction-payment .amount {
     color: #666;
 }
 
-.transaction.received .amount {
+.transaction-received .amount {
     color: var(--color-mint);
     font-weight: bold;
 }
 
-.user-image {
+.user-profile {
     position: relative;
     z-index: 1;
     margin-top: 1rem;
 }
 
-.user-image img {
+.user-profile img {
     width: 300px;
     height: auto;
 }
@@ -225,32 +235,4 @@ header {
     bottom: -20px;
     right: -20px;
     z-index: -1;
-}
-
-@media (max-width: 1024px) {
-    .hero {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .hero-visual {
-        margin-top: 2rem;
-        align-self: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-visual {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .card-stack {
-        margin-right: 0;
-        margin-bottom: 3rem;
-    }
-
-    .nav-links {
-        display: none;
-    }
 }
