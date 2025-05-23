@@ -54,6 +54,7 @@ Visit the application here:
 - │   ├── 📂assets/ <!--  Static files (CSS, JS, images) -->
 - │   └── 📂views/ <!-- HTML view templates (login, dashboard, etc.) -->
 - ├── 📂/modules <!-- Application Layer (Routing & Controllers) -->
+- │   ├── 📂admin/ 
 - │   ├── 📂auth/ 
 - │   ├── 📂user/   
 - │   ├── 📂teller/   
