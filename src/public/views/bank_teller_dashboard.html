@@ -6,21 +6,27 @@
     <title>Bank Teller</title>
     <link 
           rel="stylesheet" 
+          href="../assets/bank_teller.css">
+    <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+          rel="stylesheet"/>
+    <link 
+          rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div id="container_box">
         <div id="container-nav">
-            <div class="title-section">
+            <div class="title-container">
                 <span id="white">Stack</span>
                 <span id="green">Overcash</span>
             </div>
-            <div class="avatar-section">
-                <img src="./assets/images/profile_bank_teller.jpg" 
+            <div class="avatar-container">
+                <img src="../assets/images/profile_bank_teller.jpg" 
                       alt="Avatar Picture">
-                <strong id="username">John Doe</strong>
+                <strong id="username">Jovani Avi</strong>
             </div>
-            <div class="sidebar-section">
+            <div class="sidebar-container">
                 <strong class="nav-txt"><span>Dashboard</span></strong>
                 <strong class="nav-txt"><span>Transfer</span></strong>
                 <strong class="nav-txt"><span>Transaction</span></strong>
@@ -32,38 +38,70 @@
 
         <div id="container_content">
             <div class="top-bar">
-                <div class="icon"></div>
-                <div class="icon"></div>
-                <div class="icon"></div>
+                <div class="icon"><i class="fa-regular fa-bell"></i></div>
+                <div class="icon"><i class="fa-regular fa-square-plus"></i></div>
             </div>
 
-            <div class="notice-section">
+            <div class="notice-container">
             <p>[📢 Notice] Our bank will be closed on May 13, 2025 
                   (Tuesday) in observance of a national holiday. 
                   Online banking services will remain available.</p>
             </div>
 
-            <div class="greeting-section">
-                <b>Hello</b>
-                <strong>John Doe!</strong>
+            <div class="body-container">
+                <div class="greeting-container">
+                    <div id="hello"> <b>Hello</b> </div>
+                    <div id="name"> <strong>Jovani Avi!</strong> </div>
+                </div>
+                <div class="search-container"> 
+                    <label>Search Account</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Account Number">
+                    </div>
+                </div>
             </div>
 
-            <div class="balance-section">
-                <strong>Balance</strong>
-                <span>₱ 7,600.00</span>
-            </div>
-
-            <div class="offer-section">
-                <p>Saving 10% of your income helps build long-term wealth</p>
-            </div>
-
-            <div class="recent-transac-section">
-                <p>Recent Transaction</p>
-            </div>
-            
-            <div class="buttons-section">
-                <button class="btn">Deposit Now</button>
-                <button class="btn">Transfer Now</button>
+            <div class="summary-container">
+                <p>Summary</p>
+                <div class="summary-section">
+                    <div class="icn">
+                        <div class="summary-box">Icon</div>
+                        <div class="icn-content"></div>
+                            <div>💸</div>
+                            <div>🔁</div>
+                            <div>🌐</div>
+                            <div>⏳</div>
+                            <div>📊</div>
+                    </div>
+                    <div class="title">
+                        <div class="summary-box">Title</div>
+                        <div class="title-content"></div>
+                            <div>Total Deposits Today</div>
+                            <div>Total Internal Transfers</div>
+                            <div>Total External Transfers</div>
+                            <div>Pending External Requests</div>
+                            <div>Total Transactions Processed</div>
+                    </div>
+                    <div class="amount">
+                        <div class="summary-box">Amount/Count</div>
+                        <div class="amount-content"></div>
+                            <div>₱152,000.00</div>
+                            <div>12 Transfers</div>
+                            <div>₱85,000.00</div>
+                            <div>5 Pending</div>
+                            <div>35 Transactions</div>
+                    </div>
+                    <div class="update">
+                        <div class="summary-box">Last Updated</div>
+                        <div class="update-content"></div>
+                            <div>2:45 PM</div>
+                            <div>2:30 PM</div>
+                            <div>2:30 PM</div>
+                            <div>2:40 PM</div>
+                            <div>2:50 PM</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
