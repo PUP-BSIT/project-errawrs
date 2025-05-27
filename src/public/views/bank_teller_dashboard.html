@@ -3,103 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Teller</title>
+    <title>Bank Teller - Dashboard</title>
     <link 
-          rel="stylesheet" 
-          href="../assets/bank_teller.css">
-    <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-          rel="stylesheet"/>
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
+          rel="stylesheet">
     <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/bank_teller.css">
 </head>
 <body>
-    <div id="container_box">
-        <div id="container-nav">
-            <div class="title-container">
-                <span id="white">Stack</span>
-                <span id="green">Overcash</span>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <h1><span class="stack">Stack</span>
+                    <span class="overcash">Overcash</span>
+                </h1>
             </div>
-            <div class="avatar-container">
-                <img src="../assets/images/profile_bank_teller.jpg" 
-                      alt="Avatar Picture">
-                <strong id="username">Jovani Avi</strong>
+            
+            <div class="user-profile">
+                <img src="../assets/images/profile_bank_teller.jpg"
+                     alt="User Avatar" class="user-avatar">
+                <div class="user-name">Jovani Avi</div>
             </div>
-            <div class="sidebar-container">
-                <strong class="nav-txt"><span>Dashboard</span></strong>
-                <strong class="nav-txt"><span>Transfer</span></strong>
-                <strong class="nav-txt"><span>Transaction</span></strong>
-                <strong class="nav-txt"><span>Account</span></strong>
-                <strong class="nav-txt"><span id="logout">Log out
-                    </span></strong>
+            
+            <div class="nav-menu">
+                <div class="nav-selected">Dashboard</div>
+                <div class="nav-item">Search Account</div>
+                <div class="nav-item">History</div>
+                <div class="nav-item">Account</div>
+                <div class="nav-logout">
+                    Log out<i class="fa-solid fa-right-from-bracket"></i></div>
             </div>
         </div>
 
-        <div id="container_content">
+        <div class="main-content">
             <div class="top-bar">
-                <div class="icon"><i class="fa-regular fa-bell"></i></div>
-                <div class="icon"><i class="fa-regular fa-square-plus"></i></div>
+                <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
+                <div class="top-icon">
+                    <i class="fa-regular fa-square-plus"></i></div>
             </div>
 
-            <div class="notice-container">
-            <p>[📢 Notice] Our bank will be closed on May 13, 2025 
-                  (Tuesday) in observance of a national holiday. 
-                  Online banking services will remain available.</p>
+            <div class="notice-section">
+                <p>[📢 Notice] Our bank will be closed on May 13, 2025 
+                   (Tuesday) in observance of a national holiday. 
+                   Online banking services will remain available.</p>
             </div>
 
-            <div class="body-container">
+            <div class="welcome-section">
                 <div class="greeting-container">
-                    <div id="hello"> <b>Hello</b> </div>
-                    <div id="name"> <strong>Jovani Avi!</strong> </div>
+                    <div class="hello-text">Hello</div>
+                    <div class="name-text">Jovani Avi!</div>
                 </div>
                 <div class="search-container"> 
-                    <label>Search Account</label>
-                    <div class="input-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Account Number">
+                    <label class="search-label">Search Account</label>
+                    <div class="search-input-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" 
+                              placeholder="Account Number">
                     </div>
                 </div>
             </div>
 
-            <div class="summary-container">
-                <p>Summary</p>
-                <div class="summary-section">
-                    <div class="icn">
-                        <div class="summary-box">Icon</div>
-                        <div class="icn-content"></div>
-                            <div>💸</div>
-                            <div>🔁</div>
-                            <div>🌐</div>
-                            <div>⏳</div>
-                            <div>📊</div>
+            <div class="summary-section">
+                <div class="summary-title">Summary</div>
+                <div class="summary-table">
+                    <div class="summary-header">
+                        <div class="summary-header-cell">Icon</div>
+                        <div class="summary-header-cell">Title</div>
+                        <div class="summary-header-cell">Amount/Count</div>
+                        <div class="summary-header-cell">Last Updated</div>
                     </div>
-                    <div class="title">
-                        <div class="summary-box">Title</div>
-                        <div class="title-content"></div>
-                            <div>Total Deposits Today</div>
-                            <div>Total Internal Transfers</div>
-                            <div>Total External Transfers</div>
-                            <div>Pending External Requests</div>
-                            <div>Total Transactions Processed</div>
-                    </div>
-                    <div class="amount">
-                        <div class="summary-box">Amount/Count</div>
-                        <div class="amount-content"></div>
-                            <div>₱152,000.00</div>
-                            <div>12 Transfers</div>
-                            <div>₱85,000.00</div>
-                            <div>5 Pending</div>
-                            <div>35 Transactions</div>
-                    </div>
-                    <div class="update">
-                        <div class="summary-box">Last Updated</div>
-                        <div class="update-content"></div>
-                            <div>2:45 PM</div>
-                            <div>2:30 PM</div>
-                            <div>2:30 PM</div>
-                            <div>2:40 PM</div>
-                            <div>2:50 PM</div>
+                    <div class="summary-body">
+                        <div class="summary-row">
+                            <div class="summary-cell icon-cell">💸</div>
+                            <div class="summary-cell">Total Deposits Today</div>
+                            <div class="summary-cell amount-cell">₱152,000.00</div>
+                            <div class="summary-cell">2:45 PM</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-cell icon-cell">🔁</div>
+                            <div class="summary-cell">Total Internal Transfers</div>
+                            <div class="summary-cell amount-cell">12 Transfers</div>
+                            <div class="summary-cell">2:30 PM</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-cell icon-cell">🌐</div>
+                            <div class="summary-cell">Total External Transfers</div>
+                            <div class="summary-cell amount-cell">₱85,000.00</div>
+                            <div class="summary-cell">2:30 PM</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-cell icon-cell">⏳</div>
+                            <div class="summary-cell">Pending External Requests</div>
+                            <div class="summary-cell amount-cell">5 Pending</div>
+                            <div class="summary-cell">2:40 PM</div>
+                        </div>
+                        <div class="summary-row">
+                            <div class="summary-cell icon-cell">📊</div>
+                            <div class="summary-cell">Total Transactions Processed</div>
+                            <div class="summary-cell amount-cell">35 Transactions</div>
+                            <div class="summary-cell">2:50 PM</div>
+                        </div>
                     </div>
                 </div>
             </div>
