@@ -265,7 +265,7 @@ body {
 .search-history {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 25px;
+    padding: 10px 25px 25px 25px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     flex: 1;
     display: flex;
@@ -273,8 +273,8 @@ body {
 }
 
 .history-title {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
 }
