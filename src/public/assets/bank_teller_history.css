@@ -7,9 +7,12 @@
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
+    --color-success: #22c55e;
+    --color-pending: #f59e0b;
+    --color-failed: #ef4444;
 }
 
-*{
+* {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
@@ -26,6 +29,7 @@ body {
     color: var(--color-primary-black);
     min-height: 100vh;
 }
+
 .container {
     display: flex;
     height: 100vh;
@@ -131,4 +135,213 @@ body {
 
 .nav-logout:hover {
     background: var(--color-gray);
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    padding: 20px 40px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.history-table-container {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 70px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.history-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 20px;
+}
+
+/* Table Structure with Divs */
+.table-header {
+    margin-bottom: 15px;
+}
+
+.header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr 1.5fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-cell {
+    background: #7ed957;
+    padding: 15px 20px;
+    border-radius: 25px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--color-primary-black);
+}
+
+.table-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 2fr 1.5fr;
+    gap: 20px;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--color-bg-gradient-end);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.table-row:hover {
+    background: var(--color-bg-gradient-end);
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-cell {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-success);
+}
+
+.status-pending {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-pending);
+}
+
+.status-failed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-failed);
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.status-success .status-icon {
+    background: var(--color-success);
+}
+
+.status-pending .status-icon {
+    background: var(--color-pending);
+}
+
+.status-failed .status-icon {
+    background: var(--color-failed);
+}
+
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding: 0 10px;
+}
+
+.pagination-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagination-btn {
+    padding: 10px 15px;
+    border: 2px solid var(--color-bg-gradient-start);
+    background: var(--color-white);
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover {
+    background: var(--color-bg-gradient-start);
+}
+
+.pagination-btn.active {
+    background: var(--color-mint);
+    color: var(--color-white);
+    border-color: var(--color-mint);
+    font-weight: 600;
+}
+
+.pagination-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.per-page-select {
+    padding: 8px 12px;
+    border: 2px solid var(--color-bg-gradient-start);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.per-page-select:focus {
+    border-color: var(--color-mint);
+}
+
+.go-btn {
+    padding: 8px 15px;
+    background: var(--color-mint);
+    color: var(--color-white);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.go-btn:hover {
+    background: #6bc949;
 }
