@@ -54,81 +54,33 @@
                         <div class="header-cell">Status</div>
                     </div>
                 </div>
-                <div class="table-body">
-                    <div class="table-row">
-                        <div class="table-cell">2025-05-02</div>
-                        <div class="table-cell">Deposit</div>
-                        <div class="table-cell">₱5,000.00</div>
-                        <div class="table-cell">Over-the-counter</div>
-                        <div class="status-success">
-                            <div class="status-icon">✓</div>
-                            Success
-                        </div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-cell">2025-05-02</div>
-                        <div class="table-cell">Transfer</div>
-                        <div class="table-cell">₱12,000.00</div>
-                        <div class="table-cell">To Acc: #203567890</div>
-                        <div class="status-success">
-                            <div class="status-icon">✓</div>
-                            Success
-                        </div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-cell">2025-05-01</div>
-                        <div class="table-cell">Transfer</div>
-                        <div class="table-cell">₱3,500.00</div>
-                        <div class="table-cell">To: BDO - #11733344</div>
-                        <div class="status-success">
-                            <div class="status-icon">✓</div>
-                            Success
-                        </div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-cell">2025-04-30</div>
-                        <div class="table-cell">Deposit</div>
-                        <div class="table-cell">₱1,000.00</div>
-                        <div class="table-cell">Cheque Deposit</div>
-                        <div class="status-pending">
-                            <div class="status-icon">⏳</div>
-                            Pending
-                        </div>
-                    </div>
-                    <div class="table-row">
-                        <div class="table-cell">2025-04-29</div>
-                        <div class="table-cell">Transfer</div>
-                        <div class="table-cell">₱4,000.00</div>
-                        <div class="table-cell">To Acc: #203344556</div>
-                        <div class="status-failed">
-                            <div class="status-icon">✗</div>
-                            Failed
-                        </div>
-                    </div>
+                <div id="table-body" class="table-body">
+                    <!-- Table rows will be populated by JavaScript -->
                 </div>
                 
                 <div class="pagination-container">
                     <div class="pagination-left">
-                        <button class="pagination-btn">Previous</button>
-                        <button class="pagination-btn">1</button>
-                        <button class="pagination-btn">2</button>
-                        <button class="pagination-btn">3</button>
-                        <button class="pagination-btn">Next</button>
+                        <button id="prev-btn" class="pagination-btn" onclick="goToPreviousPage()">Previous</button>
+                        <button id="page-1" class="pagination-btn" onclick="goToPage(1)">1</button>
+                        <button id="page-2" class="pagination-btn" onclick="goToPage(2)">2</button>
+                        <button id="page-3" class="pagination-btn" onclick="goToPage(3)">3</button>
+                        <button id="next-btn" class="pagination-btn" onclick="goToNextPage()">Next</button>
                     </div>
                     
                     <div class="pagination-right">
                         <span>Per Page</span>
-                        <select class="per-page-select">
-                            <option>05</option>
-                            <option>10</option>
-                            <option>20</option>
+                        <select id="per-page-select" class="per-page-select" onchange="changeItemsPerPage()">
+                            <option value="5">05</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
                         </select>
-                        <span>Showing 1 to 05 of 15</span>
-                        <button class="go-btn">Go</button>
+                        <span id="showing-text">Showing 1 to 05 of 15</span>
+                        <button id="go-btn" class="go-btn" onclick="applyPaginationSettings()">Go</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../assets/teller_history.js"></script>
 </body>
 </html>

@@ -27,7 +27,8 @@ body {
         var(--color-bg-gradient-start) 70%,
         var(--color-bg-gradient-end) 100%);
     color: var(--color-primary-black);
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .container {
@@ -43,6 +44,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 0 20px;
+    flex-shrink: 0;
 }
 
 .logo {
@@ -159,10 +161,11 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 20px 40px 20px 40px;
+    padding: 20px 40px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .history-table-container {
@@ -173,6 +176,8 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 130px);
+    overflow: hidden;
 }
 
 .history-title {
@@ -180,11 +185,13 @@ body {
     font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
+    flex-shrink: 0;
 }
 
 /* Table Structure with Divs */
 .table-header {
     margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
 .header-row {
@@ -207,6 +214,9 @@ body {
 .table-body {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    overflow-x: auto;
+    min-height: 0;
 }
 
 .table-row {
@@ -217,7 +227,8 @@ body {
     padding: 15px 0;
     border-bottom: 1px solid var(--color-bg-gradient-end);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .table-row:hover {
@@ -226,6 +237,11 @@ body {
 
 .table-row:last-child {
     border-bottom: none;
+}
+
+.table-row.selected {
+    background-color: rgba(126, 217, 87, 0.2);
+    border-left: 4px solid #7ed957;
 }
 
 .table-cell {
@@ -295,8 +311,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 30px;
-    padding: 0 10px;
+    margin-top: 20px;
+    padding: 20px 10px 0;
+    border-top: 1px solid var(--color-bg-gradient-end);
+    flex-shrink: 0;
 }
 
 .pagination-left {
@@ -316,8 +334,13 @@ body {
     transition: all 0.3s ease;
 }
 
-.pagination-btn:hover {
+.pagination-btn:hover:not(:disabled) {
     background: var(--color-bg-gradient-start);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .pagination-btn.active {
