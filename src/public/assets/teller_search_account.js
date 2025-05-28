@@ -48,7 +48,6 @@ function searchAccount() {
 
     if (accountNumber.length >= 10) {
         const account = accountDatabase[accountNumber];
-
         if (account) {
             displayAccountDetails(account);
             // Hide dropdown when new account is searched
@@ -100,24 +99,22 @@ function displayAccountDetails(account) {
     accountDetails.offsetHeight; // Trigger reflow
     accountDetails.style.animation = "slideIn 0.5s ease forwards";
 
-    // Reset dropdown state
+    // Reset dropdown state and hide dropdown icon
     isDropdownOpen = false;
     const dropdownIcon = document.getElementById("dropdownIcon");
-    dropdownIcon.classList.remove("rotated");
+    dropdownIcon.style.display = "none"; // Hide the dropdown arrow icon
 }
 
 // Hide account details
 function hideAccountDetails() {
     document.getElementById("accountDetails").style.display = "none";
-    hideAccountActions();
+    hideAccountActions(); // Make sure to hide actions when hiding details
+    currentAccount = null;
 }
 
 // Toggle account actions dropdown
 function toggleAccountActions() {
     if (!currentAccount) return;
-
-    const dropdown = document.getElementById("accountActionsDropdown");
-    const dropdownIcon = document.getElementById("dropdownIcon");
 
     if (isDropdownOpen) {
         hideAccountActions();
@@ -128,38 +125,99 @@ function toggleAccountActions() {
 
 // Show account actions dropdown
 function showAccountActions() {
-    const dropdown = document.getElementById("accountActionsDropdown");
-    const dropdownIcon = document.getElementById("dropdownIcon");
+    const accountDetails = document.querySelector(".account-details");
+    const mainContent = document.querySelector(".main-content");
+    
+    // Check if action buttons container already exists
+    let actionContainer = mainContent.querySelector(".account-actions-inline");
+    if (actionContainer) {
+        actionContainer.remove(); // Remove existing container
+    }
 
-    dropdown.style.display = "flex";
-    dropdownIcon.classList.add("rotated");
+    // Create action buttons HTML
+    const actionButtonsHTML = `
+        <div class="account-actions-inline">
+            <button class="action-option deposit-option" onclick="showDepositForm()" style="display: flex;">
+                <i class="fas fa-plus"></i>
+                Deposit
+            </button>
+            <button class="action-option withdraw-option" onclick="showWithdrawForm()" style="display: flex;">
+                <i class="fas fa-minus"></i>
+                Withdraw
+            </button>
+            <button class="action-option close-option" onclick="closeAccount()" style="display: flex;">
+                <i class="fas fa-times-circle"></i>
+                Close Account
+            </button>
+            <button class="action-option reopen-option" onclick="reopenAccount()" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                Re-open Account
+            </button>
+        </div>
+    `;
+
+    // Insert the action buttons container after the account details container
+    accountDetails.insertAdjacentHTML('afterend', actionButtonsHTML);
+
+    // Get the newly created container
+    actionContainer = mainContent.querySelector(".account-actions-inline");
+    
+    // Style the container to appear as a separate box to the right
+    actionContainer.style.background = "var(--color-white)";
+    actionContainer.style.borderRadius = "15px";
+    actionContainer.style.padding = "20px";
+    actionContainer.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.08)";
+    actionContainer.style.display = "flex";
+    actionContainer.style.flexDirection = "column";
+    actionContainer.style.gap = "15px";
+    actionContainer.style.maxWidth = "250px";
+    actionContainer.style.marginTop = "0";
+    actionContainer.style.animation = "slideIn 0.3s ease forwards";
+
+    // Style all buttons consistently
+    const buttons = actionContainer.querySelectorAll(".action-option");
+    buttons.forEach((btn) => {
+        btn.style.minWidth = "auto";
+        btn.style.padding = "12px 20px";
+        btn.style.fontSize = "1rem";
+        btn.style.fontWeight = "600";
+        btn.style.borderRadius = "20px";
+        btn.style.border = "none";
+        btn.style.cursor = "pointer";
+        btn.style.transition = "all 0.3s ease";
+        btn.style.justifyContent = "center";
+        btn.style.alignItems = "center";
+        btn.style.gap = "8px";
+        btn.style.width = "100%";
+    });
+
     isDropdownOpen = true;
 
-    // Reset animation
-    dropdown.style.animation = "none";
-    dropdown.offsetHeight; // Trigger reflow
-    dropdown.style.animation = "slideDown 0.3s ease forwards";
-
-    // Update button visibility based on account status
-    updateActionButtonsVisibility();
+    // Update action buttons based on account status
+    updateActionButtons();
 }
 
 // Hide account actions dropdown
 function hideAccountActions() {
-    const dropdown = document.getElementById("accountActionsDropdown");
-    const dropdownIcon = document.getElementById("dropdownIcon");
-
-    dropdown.style.display = "none";
-    dropdownIcon.classList.remove("rotated");
+    const accountSection = document.querySelector(".account-section");
+    if (accountSection) {
+        const actionContainer = accountSection.querySelector(".account-actions-inline");
+        if (actionContainer) {
+            actionContainer.remove();
+        }
+    }
     isDropdownOpen = false;
 }
 
-// Update action buttons visibility based on account status
-function updateActionButtonsVisibility() {
-    const depositBtn = document.querySelector(".deposit-option");
-    const withdrawBtn = document.querySelector(".withdraw-option");
-    const closeBtn = document.querySelector(".close-option");
-    const reopenBtn = document.querySelector(".reopen-option");
+// Update action buttons based on account status
+function updateActionButtons() {
+    const actionContainer = document.querySelector(".account-actions-inline");
+    if (!actionContainer) return;
+
+    const depositBtn = actionContainer.querySelector(".deposit-option");
+    const withdrawBtn = actionContainer.querySelector(".withdraw-option");
+    const closeBtn = actionContainer.querySelector(".close-option");
+    const reopenBtn = actionContainer.querySelector(".reopen-option");
 
     if (currentAccount.status === "Active") {
         depositBtn.style.display = "flex";
@@ -176,119 +234,44 @@ function updateActionButtonsVisibility() {
 
 // Show deposit form
 function showDepositForm() {
-    if (currentAccount.status !== "Active") {
-        alert("Cannot perform deposit on inactive account");
-        return;
-    }
-
     currentTransactionType = "deposit";
-    document.getElementById("formTitle").textContent = "Deposit";
-    document.getElementById("formAccountNumber").textContent =
-        currentAccount.number;
-    document.getElementById("confirmBtnText").textContent = "Confirm Deposit";
-    document.getElementById("transactionAmount").placeholder = "₱10,000.0";
-    document.getElementById("transactionAmount").value = "";
-
-    const transactionForm = document.getElementById("transactionForm");
-    transactionForm.style.display = "block";
-
-    // Reset animation
-    transactionForm.style.animation = "none";
-    transactionForm.offsetHeight; // Trigger reflow
-    transactionForm.style.animation = "slideIn 0.5s ease forwards";
-
-    hideAccountActions();
+    showTransactionForm("Deposit", "Confirm Deposit");
+    hideAccountActions(); // This will restore the original account info
 }
 
 // Show withdraw form
 function showWithdrawForm() {
-    if (currentAccount.status !== "Active") {
-        alert("Cannot perform withdrawal on inactive account");
-        return;
-    }
-
     currentTransactionType = "withdraw";
-    document.getElementById("formTitle").textContent = "Withdraw";
+    showTransactionForm("Withdraw", "Confirm Withdraw");
+    hideAccountActions(); // This will restore the original account info
+}
+
+// Show transaction form
+function showTransactionForm(title, confirmText) {
+    document.getElementById("formTitle").textContent = title;
     document.getElementById("formAccountNumber").textContent =
         currentAccount.number;
-    document.getElementById("confirmBtnText").textContent =
-        "Confirm Withdrawal";
-    document.getElementById("transactionAmount").placeholder = "₱10,000.0";
+    document.getElementById("confirmBtnText").textContent = confirmText;
     document.getElementById("transactionAmount").value = "";
 
-    const transactionForm = document.getElementById("transactionForm");
-    transactionForm.style.display = "block";
-
-    // Reset animation
-    transactionForm.style.animation = "none";
-    transactionForm.offsetHeight; // Trigger reflow
-    transactionForm.style.animation = "slideIn 0.5s ease forwards";
-
-    hideAccountActions();
-}
-
-// Close account
-function closeAccount() {
-    if (currentAccount.status !== "Active") {
-        alert("Account is already inactive");
-        return;
-    }
-
-    if (
-        confirm(
-            `Are you sure you want to close account ${currentAccount.number}?`
-        )
-    ) {
-        currentAccount.status = "Closed";
-        accountDatabase[currentAccount.number] = currentAccount;
-        displayAccountDetails(currentAccount);
-        hideAccountActions();
-
-        // Show success message
-        alert(`Account ${currentAccount.number} has been closed successfully`);
-    }
-}
-
-// Reopen account
-function reopenAccount() {
-    if (currentAccount.status === "Active") {
-        alert("Account is already active");
-        return;
-    }
-
-    if (
-        confirm(
-            `Are you sure you want to reopen account ${currentAccount.number}?`
-        )
-    ) {
-        currentAccount.status = "Active";
-        accountDatabase[currentAccount.number] = currentAccount;
-        displayAccountDetails(currentAccount);
-        hideAccountActions();
-
-        // Show success message
-        alert(
-            `Account ${currentAccount.number} has been reopened successfully`
-        );
-    }
+    const form = document.getElementById("transactionForm");
+    form.style.display = "block";
+    form.style.animation = "slideIn 0.5s ease forwards";
 }
 
 // Hide transaction form
 function hideTransactionForm() {
     document.getElementById("transactionForm").style.display = "none";
-    if (currentAccount) {
-        showAccountActions();
-    }
+    currentTransactionType = null;
 }
 
 // Confirm transaction
 function confirmTransaction() {
-    const amount = parseFloat(
-        document.getElementById("transactionAmount").value
-    );
+    const amountInput = document.getElementById("transactionAmount");
+    const amount = parseFloat(amountInput.value);
 
     if (!amount || amount <= 0) {
-        alert("Please enter a valid amount");
+        alert("Please enter a valid amount.");
         return;
     }
 
@@ -296,104 +279,192 @@ function confirmTransaction() {
         currentTransactionType === "withdraw" &&
         amount > currentAccount.balance
     ) {
-        alert("Insufficient funds");
+        alert("Insufficient funds.");
         return;
     }
 
     // Update account balance
     if (currentTransactionType === "deposit") {
         currentAccount.balance += amount;
-    } else {
+        accountDatabase[currentAccount.number].balance = currentAccount.balance;
+    } else if (currentTransactionType === "withdraw") {
         currentAccount.balance -= amount;
+        accountDatabase[currentAccount.number].balance = currentAccount.balance;
     }
 
-    // Update database
-    accountDatabase[currentAccount.number] = currentAccount;
-
     // Update display
-    displayAccountDetails(currentAccount);
+    document.getElementById(
+        "accountBalance"
+    ).textContent = `₱${currentAccount.balance.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+    })}`;
 
     // Show success modal
     showSuccessModal(amount);
-
-    // Hide transaction form
     hideTransactionForm();
 }
 
 // Show success modal
 function showSuccessModal(amount) {
-    const successTitle = document.getElementById("successTitle");
-    const successMessage = document.getElementById("successMessage");
+    const modal = document.getElementById("successModal");
+    const title = document.getElementById("successTitle");
+    const message = document.getElementById("successMessage");
 
     const actionText =
         currentTransactionType === "deposit"
             ? "deposited to"
             : "withdrawn from";
-    const amountFormatted = `₱${amount.toLocaleString("en-US", {
+    const titleText =
+        currentTransactionType === "deposit"
+            ? "Deposit Successful"
+            : "Withdrawal Successful";
+
+    title.textContent = titleText;
+    message.textContent = `₱${amount.toLocaleString("en-US", {
         minimumFractionDigits: 2,
-    })}`;
+    })} has been ${actionText} account ${currentAccount.number}`;
 
-    successTitle.textContent = `${
-        currentTransactionType.charAt(0).toUpperCase() +
-        currentTransactionType.slice(1)
-    } Successful`;
-    successMessage.textContent = `${amountFormatted} has been ${actionText} account ${currentAccount.number}`;
-
-    const successModal = document.getElementById("successModal");
-    successModal.style.display = "flex";
-
-    // Reset animation
-    successModal.style.animation = "none";
-    successModal.offsetHeight; // Trigger reflow
-    successModal.style.animation = "fadeIn 0.3s ease forwards";
+    modal.style.display = "flex";
+    modal.style.animation = "fadeIn 0.3s ease forwards";
 }
 
 // Hide success modal
 function hideSuccessModal() {
     document.getElementById("successModal").style.display = "none";
-    if (currentAccount) {
-        showAccountActions();
+}
+
+// Close account
+function closeAccount() {
+    if (
+        confirm(
+            `Are you sure you want to close account ${currentAccount.number}?`
+        )
+    ) {
+        currentAccount.status = "Inactive";
+        accountDatabase[currentAccount.number].status = "Inactive";
+
+        // Update status display
+        const statusElement = document.getElementById("accountStatus");
+        statusElement.innerHTML = `
+            <div class="status-icon">✗</div>
+            ${currentAccount.status}
+        `;
+        statusElement.className = "status-inactive";
+
+        hideAccountActions();
+        alert("Account has been closed successfully.");
+    }
+}
+
+// Reopen account
+function reopenAccount() {
+    if (
+        confirm(
+            `Are you sure you want to reopen account ${currentAccount.number}?`
+        )
+    ) {
+        currentAccount.status = "Active";
+        accountDatabase[currentAccount.number].status = "Active";
+
+        // Update status display
+        const statusElement = document.getElementById("accountStatus");
+        statusElement.innerHTML = `
+            <div class="status-icon">✓</div>
+            ${currentAccount.status}
+        `;
+        statusElement.className = "status-active";
+
+        hideAccountActions();
+        alert("Account has been reopened successfully.");
     }
 }
 
 // Add to search history
 function addToSearchHistory(name, accountNumber) {
-    // This function would typically add to a database or local storage
-    // For this demo, we'll just update the display if needed
-    console.log(`Added to history: ${name} - ${accountNumber}`);
+    const historyBody = document.getElementById("historyBody");
+    const existingRows = historyBody.querySelectorAll(".history-row");
+
+    // Check if this account is already in history
+    let accountExists = false;
+    existingRows.forEach((row) => {
+        const accountCell = row.children[2];
+        if (accountCell && accountCell.textContent === accountNumber) {
+            accountExists = true;
+        }
+    });
+
+    if (!accountExists) {
+        const newRowNumber = existingRows.length + 1;
+        const newRow = document.createElement("div");
+        newRow.className = "history-row";
+        newRow.onclick = () => selectFromHistory(name, accountNumber);
+        newRow.innerHTML = `
+            <div class="history-value">${newRowNumber}</div>
+            <div class="history-value">${name}</div>
+            <div class="history-value">${accountNumber}</div>
+        `;
+
+        historyBody.appendChild(newRow);
+
+        // Limit history to 10 items
+        if (existingRows.length >= 10) {
+            historyBody.removeChild(existingRows[0]);
+            // Update row numbers
+            updateHistoryNumbers();
+        }
+    }
+}
+
+// Update history row numbers
+function updateHistoryNumbers() {
+    const historyBody = document.getElementById("historyBody");
+    const rows = historyBody.querySelectorAll(".history-row");
+
+    rows.forEach((row, index) => {
+        row.children[0].textContent = index + 1;
+    });
 }
 
 // Select from history
 function selectFromHistory(name, accountNumber) {
-    document.getElementById("searchInput").value = accountNumber;
+    const searchInput = document.getElementById("searchInput");
+    searchInput.value = accountNumber;
     searchAccount();
 }
 
-// Close dropdown when clicking outside
+// Handle Enter key press in search input
+document
+    .getElementById("searchInput")
+    .addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            searchAccount();
+        }
+    });
+
+// Close dropdowns when clicking outside
 document.addEventListener("click", function (event) {
     const accountDetails = document.getElementById("accountDetails");
     const dropdown = document.getElementById("accountActionsDropdown");
+    const transactionForm = document.getElementById("transactionForm");
 
     if (
-        isDropdownOpen &&
         !accountDetails.contains(event.target) &&
         !dropdown.contains(event.target)
     ) {
-        hideAccountActions();
+        if (isDropdownOpen && !transactionForm.style.display === "block") {
+            hideAccountActions();
+        }
     }
 });
 
-// Initialize the page
-function initializePage() {
-    // Clear any existing data
-    hideAccountDetails();
-    hideAccountActions();
-    document.getElementById("transactionForm").style.display = "none";
-    document.getElementById("successModal").style.display = "none";
-
+// Initialize page
+document.addEventListener("DOMContentLoaded", function () {
     // Focus on search input
     document.getElementById("searchInput").focus();
-}
 
-// Call initialization when page loads
-window.onload = initializePage;
+    // Hide all forms and modals initially
+    document.getElementById("accountDetails").style.display = "none";
+    document.getElementById("accountActionsDropdown").style.display = "none";
+    document.getElementById("transactionForm").style.display = "none";
+    document.getElementById("successModal").style.display = "none";
+});
