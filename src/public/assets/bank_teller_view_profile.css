@@ -131,6 +131,10 @@ body {
     padding-left: 10px;
 }
 
+.nav-logout i {
+    padding-left: 15px;
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
