@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller View Profile</title>
     <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" 
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" 
           rel="stylesheet">
     <link 
           rel="stylesheet" 
@@ -22,8 +22,10 @@
             </div>
             
             <div class="user-profile">
-                <img src="../assets/images/profile_bank_teller.jpg"
-                     alt="User Avatar" class="user-avatar">
+                <div class="user-avatar">
+                    <img src="../assets/images/profile_bank_teller.jpg" 
+                          alt="user-profile" />
+                </div>
                 <div class="user-name">Jovani Avi</div>
             </div>
             
@@ -31,12 +33,48 @@
                 <div class="nav-item">Dashboard</div>
                 <div class="nav-item">Search Account</div>
                 <div class="nav-item">History</div>
-                <div class="nav-logout">
-                    Log out<i class="fa-solid fa-right-from-bracket"></i></div>
+            </div>
+            
+            <div class="nav-logout">
+                Log out <i class="fa-solid fa-right-from-bracket"></i>
             </div>
         </div>
 
         <div class="main-content">
+            <div class="page-header">
+                <span>View Account</span>
+            </div>
+            
+            <div class="account-card">
+                <div class="account-info">
+                    <h2>Account</h2>
+                    
+                    <div class="info-row">
+                        <span class="label">First Name</span>
+                        <span class="value">John</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Last Name</span>
+                        <span class="value">Doe</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Email Address</span>
+                        <span class="value">johndoe@gmail.com</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Status</span>
+                        <span class="status-active">Active</span>
+                    </div>
+                </div>
+                
+                <div class="account-avatar">
+                    <img src="../assets/images/profile_bank_teller.jpg" 
+                        alt="user-profile" />
+                </div>
+            </div>
         </div>
     </div>
 </body>
