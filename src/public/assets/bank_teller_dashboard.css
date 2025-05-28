@@ -9,7 +9,7 @@
     --color-gray: #a3a3a3;
 }
 
-*{
+* {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
@@ -338,12 +338,13 @@ body {
     color: var(--color-primary-black);
 }
 
-.icon-cell {
+.summary-icon {
     text-align: center;
     font-size: 1.5rem;
 }
 
-.amount-cell {
+.summary-amount {
+    font-size: 1rem;
     font-weight: 600;
     color: var(--color-mint);
 }
