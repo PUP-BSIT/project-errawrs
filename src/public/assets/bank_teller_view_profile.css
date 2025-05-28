@@ -126,6 +126,11 @@ body {
     gap: 10px;
 }
 
+.nav-logout a {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
 .nav-logout:hover {
     background: rgba(255, 255, 255, 0.1);
     padding-left: 10px;

@@ -129,6 +129,11 @@ body {
     margin-bottom: 30px;
 }
 
+.nav-logout a {
+    color: var(--color-white);
+    text-decoration: none;
+}
+
 .nav-logout i {
     padding-left: 15px;
 }
