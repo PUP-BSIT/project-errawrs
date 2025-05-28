@@ -39,10 +39,11 @@ body {
     color: var(--color-white);
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
 }
 
 .logo {
-    padding: 30px 25px;
+    padding: 30px 5px;
 }
 
 .logo h1 {
@@ -62,16 +63,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 20px 0;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .user-avatar {
     width: 80px;
     height: 80px;
-    border-radius: 50px;
-    margin-bottom: 10px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -82,23 +89,9 @@ body {
 }
 
 .nav-menu {
-    flex: 1;
     display: flex;
     flex-direction: column;
-}
-
-.nav-item {
-    padding: 18px 20px;
-    color: var(--color-white);
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.nav-item:hover {
-    background: var(--color-gray);
+    gap: 5px;
 }
 
 .nav-selected {
@@ -114,8 +107,24 @@ body {
     margin: 0px 10px;
 }
 
+.nav-item {
+    padding: 15px 0;
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 10px;
+}
+
 .nav-logout {
-    padding: 18px 20px;
+    padding: 15px 0;
     color: var(--color-white);
     text-decoration: none;
     font-size: 1.5rem;
@@ -124,6 +133,10 @@ body {
     cursor: pointer;
     margin-top: auto;
     margin-bottom: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .nav-logout a {
@@ -131,12 +144,13 @@ body {
     text-decoration: none;
 }
 
-.nav-logout i {
-    padding-left: 15px;
+.nav-logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 10px;
 }
 
-.nav-logout:hover {
-    background: var(--color-gray);
+.nav-logout i {
+    padding-left: 15px;
 }
 
 /* Main Content Styles */
