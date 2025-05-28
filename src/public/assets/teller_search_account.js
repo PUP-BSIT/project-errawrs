@@ -179,7 +179,7 @@ function showAccountActions() {
     buttons.forEach((btn) => {
         btn.style.minWidth = "auto";
         btn.style.padding = "12px 20px";
-        btn.style.fontSize = "1rem";
+        btn.style.fontSize = "1.3rem";
         btn.style.fontWeight = "600";
         btn.style.borderRadius = "20px";
         btn.style.border = "none";

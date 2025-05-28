@@ -47,49 +47,51 @@
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" class="search-input" id="searchInput"
-                          placeholder="2023123456" onkeyup="searchAccount()">
+                          placeholder="Search Account Number" onkeyup="searchAccount()">
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </div>
             </div>
 
-            <div class="account-details" id="accountDetails" style="display: none;" onclick="toggleAccountActions()">
-                <div class="account-left">
-                    <div class="account-field">
-                        <div class="account-label">Account Number</div>
+            <div class="account-container">
+                <div class="account-details" id="accountDetails" style="display: none;" onclick="toggleAccountActions()">
+                    <div class="account-left">
+                        <div class="account-field">
+                            <div class="account-label">Account Number</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-label">Account Holder Name</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-label">Account Type</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-label">Current Balance</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-label">Account Status</div>
+                        </div>
                     </div>
-                    <div class="account-field">
-                        <div class="account-label">Account Holder Name</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="account-label">Account Type</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="account-label">Current Balance</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="account-label">Account Status</div>
-                    </div>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="account-right">
-                    <div class="account-field">
-                        <div class="account-value" id="accountNumber">2023123456</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="account-value" id="accountName">Juan Dela Cruz</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="account-value" id="accountType">Savings</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="balance-value" id="accountBalance">₱25,750.00</div>
-                    </div>
-                    <div class="account-field">
-                        <div class="status-active" id="accountStatus">
-                            <div class="status-icon">✓</div>
-                            Active
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="account-right">
+                        <div class="account-field">
+                            <div class="account-value" id="accountNumber">2023123456</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-value" id="accountName">Juan Dela Cruz</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="account-value" id="accountType">Savings</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="balance-value" id="accountBalance">₱25,750.00</div>
+                        </div>
+                        <div class="account-field">
+                            <div class="status-active" id="accountStatus">
+                                <div class="status-icon">✓</div>
+                                Active
+                            </div>
                         </div>
                     </div>
                 </div>
