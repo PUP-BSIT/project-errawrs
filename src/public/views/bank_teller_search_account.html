@@ -46,13 +46,13 @@
             <div class="search-section">
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" 
-                          placeholder="2023123456">
+                    <input type="text" class="search-input" id="searchInput"
+                          placeholder="2023123456" onkeyup="searchAccount()">
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </div>
             </div>
 
-            <div class="account-details">
+            <div class="account-details" id="accountDetails" style="display: none;" onclick="selectAccount()">
                 <div class="account-left">
                     <div class="account-field">
                         <div class="account-label">Account Number</div>
@@ -75,23 +75,76 @@
                 
                 <div class="account-right">
                     <div class="account-field">
-                        <div class="account-value">2023123456</div>
+                        <div class="account-value" id="accountNumber">2023123456</div>
                     </div>
                     <div class="account-field">
-                        <div class="account-value">Juan Dela Cruz</div>
+                        <div class="account-value" id="accountName">Juan Dela Cruz</div>
                     </div>
                     <div class="account-field">
-                        <div class="account-value">Savings</div>
+                        <div class="account-value" id="accountType">Savings</div>
                     </div>
                     <div class="account-field">
-                        <div class="balance-value">₱25,750.00</div>
+                        <div class="balance-value" id="accountBalance">₱25,750.00</div>
                     </div>
                     <div class="account-field">
-                        <div class="status-active">
+                        <div class="status-active" id="accountStatus">
                             <div class="status-icon">✓</div>
                             Active
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons Section -->
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+                <button class="action-btn deposit-btn" onclick="showDepositForm()">
+                    <i class="fas fa-plus"></i>
+                    Deposit
+                </button>
+                <button class="action-btn withdraw-btn" onclick="showWithdrawForm()">
+                    <i class="fas fa-minus"></i>
+                    Withdraw
+                </button>
+            </div>
+
+            <!-- Transaction Form -->
+            <div class="transaction-form" id="transactionForm" style="display: none;">
+                <div class="form-header">
+                    <h3 id="formTitle">Deposit</h3>
+                    <div class="form-account-info">
+                        <span>Account Number: </span>
+                        <span id="formAccountNumber">3315746283</span>
+                    </div>
+                </div>
+                
+                <div class="form-content">
+                    <div class="form-group">
+                        <label for="transactionAmount">Enter Amount</label>
+                        <input type="number" id="transactionAmount" placeholder="₱10,000.0" step="0.01" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="form-btn cancel-btn" onclick="hideTransactionForm()">
+                        Cancel
+                    </button>
+                    <button class="form-btn confirm-btn" onclick="confirmTransaction()">
+                        <span id="confirmBtnText">Confirm</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Modal -->
+            <div class="success-modal" id="successModal" style="display: none;">
+                <div class="success-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h3 id="successTitle">Deposit Successful</h3>
+                    <p id="successMessage">₱10,000.00 has been deposited to account 3315746283</p>
+                    <button class="success-btn" onclick="hideSuccessModal()">
+                        Back
+                    </button>
                 </div>
             </div>
 
@@ -103,18 +156,18 @@
                         <div class="history-header-value">Account Name</div>
                         <div class="history-header-value">Account Number</div>
                     </div>
-                    <div class="history-body">
-                        <div class="history-row">
+                    <div class="history-body" id="historyBody">
+                        <div class="history-row" onclick="selectFromHistory('Maria Santos', '2023987654')">
                             <div class="history-value">1</div>
                             <div class="history-value">Maria Santos</div>
                             <div class="history-value">2023987654</div>
                         </div>
-                        <div class="history-row">
+                        <div class="history-row" onclick="selectFromHistory('Carlo Mendoza', '2023567890')">
                             <div class="history-value">2</div>
                             <div class="history-value">Carlo Mendoza</div>
                             <div class="history-value">2023567890</div>
                         </div>
-                        <div class="history-row">
+                        <div class="history-row" onclick="selectFromHistory('Robert Lim', '2023344556')">
                             <div class="history-value">3</div>
                             <div class="history-value">Robert Lim</div>
                             <div class="history-value">2023344556</div>
@@ -124,5 +177,7 @@
             </div>
         </div>
     </div>
+
+    <script src="../assets/teller_search_account.js"></script>
 </body>
 </html>
