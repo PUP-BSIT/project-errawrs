@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="account-details" id="accountDetails" style="display: none;" onclick="selectAccount()">
+            <div class="account-details" id="accountDetails" style="display: none;" onclick="toggleAccountActions()">
                 <div class="account-left">
                     <div class="account-field">
                         <div class="account-label">Account Number</div>
@@ -93,17 +93,29 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="account-dropdown-icon">
+                    <i class="fas fa-chevron-down" id="dropdownIcon"></i>
+                </div>
             </div>
 
-            <!-- Action Buttons Section -->
-            <div class="action-buttons" id="actionButtons" style="display: none;">
-                <button class="action-btn deposit-btn" onclick="showDepositForm()">
+            <!-- Account Actions Dropdown -->
+            <div class="account-actions-dropdown" id="accountActionsDropdown" style="display: none;">
+                <button class="action-option deposit-option" onclick="showDepositForm()">
                     <i class="fas fa-plus"></i>
                     Deposit
                 </button>
-                <button class="action-btn withdraw-btn" onclick="showWithdrawForm()">
+                <button class="action-option withdraw-option" onclick="showWithdrawForm()">
                     <i class="fas fa-minus"></i>
                     Withdraw
+                </button>
+                <button class="action-option close-option" onclick="closeAccount()">
+                    <i class="fas fa-times-circle"></i>
+                    Close Account
+                </button>
+                <button class="action-option reopen-option" onclick="reopenAccount()">
+                    <i class="fas fa-check-circle"></i>
+                    Re-open Account
                 </button>
             </div>
 
