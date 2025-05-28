@@ -1,0 +1,140 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Inter', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-success: #22c55e;
+    --color-pending: #f59e0b;
+    --color-failed: #ef4444;
+    --color-text-dark: #374151;
+    --color-text-light: #6b7280;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background: radial-gradient(
+        ellipse at 30% 20%,
+        #fff 40%,
+        var(--color-bg-gradient-start) 70%,
+        var(--color-bg-gradient-end) 100%);
+    color: var(--color-primary-black);
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background: var(--color-primary-black);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+}
+
+.logo {
+    padding: 30px 0;
+}
+
+.logo h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.logo .stack {
+    color: var(--color-white);
+}
+
+.logo .overcash {
+    color: var(--color-mint);
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.nav-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-item {
+    padding: 15px 0;
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 10px;
+}
+
+.nav-logout {
+    padding: 15px 0;
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 10px;
+}
+
+
