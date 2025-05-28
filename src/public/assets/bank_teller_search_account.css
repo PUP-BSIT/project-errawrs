@@ -206,6 +206,7 @@ body {
 
 /* Account Details - Updated Layout */
 .account-details {
+    width: 700px;
     background: var(--color-white);
     border-radius: 15px;
     padding: 30px;
