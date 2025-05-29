@@ -9,13 +9,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
 
-    $sql = "SELECT admin_id, username, password, first_name, last_name FROM admin WHERE username = '$username'";
+    $sql = "SELECT admin_id, username, password_hash, first_name, last_name FROM admin WHERE username = '$username'";
     $result = mysqli_query($conn, $sql);
+
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
 
     if (mysqli_num_rows($result) == 1) {
         $row = mysqli_fetch_assoc($result);
 
-        if ($password == $row['password']) {
+        if (password_verify($password, $row['password_hash'])) {
             $_SESSION['admin_id'] = $row['admin_id'];
             $_SESSION['admin_username'] = $row['username'];
             $_SESSION['admin_name'] = $row['first_name'] . " " . $row['last_name'];
