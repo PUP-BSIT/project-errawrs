@@ -22,12 +22,15 @@
                     <p class="welcome-text">Welcome !</p>
                 </div>
 
-                <form class="login-form">
+                <form class="login-form" id="loginForm" onsubmit="return handleLogin()">
                     <div class="form-group">
                         <input
                             type="text"
-                            placeholder="Username"
-                            class="login-input"/>
+                            placeholder="Teller Number"
+                            class="login-input"
+                            id="tellerNumber"
+                            name="tellerNumber"
+                            required/>
                     </div>
 
                     <div class="form-group">
@@ -35,8 +38,10 @@
                             type="password"
                             placeholder="Password"
                             class="login-input"
-                            id="passwordInput"/>
-                        <button type="button" class="password-toggle">
+                            id="passwordInput"
+                            name="password"
+                            required/>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
                             <i class="fa-solid fa-eye-slash" id="toggleIcon">
                             </i>
                         </button>
@@ -46,12 +51,13 @@
 
                     <div class="forgot-links">
                         <span>Forgot</span>
-                        <a href="#" class="forgot-link">username</a>
+                        <a href="#" class="forgot-link" onclick="handleForgotUsername()">username</a>
                         <span>or</span>
-                        <a href="#" class="forgot-link">password</a>
+                        <a href="#" class="forgot-link" onclick="handleForgotPassword()">password</a>
                     </div>
                 </form>
             </div>
         </div>
+        <script src="../assets/teller_login.js"></script>
     </body>
 </html>

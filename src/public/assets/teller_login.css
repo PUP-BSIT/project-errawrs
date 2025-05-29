@@ -132,6 +132,10 @@ body {
     color: #666;
 }
 
+.password-toggle:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
 .login-button {
     background-color: var(--color-login-button);
     color: var(--color-white);
@@ -141,13 +145,17 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
     margin-top: 12px;
     font-family: var(--font-main);
 }
 
 .login-button:hover {
     background-color: #f26a4b;
+}
+
+.login-button:active {
+    transform: translateY(1px);
 }
 
 .forgot-links {
@@ -163,4 +171,12 @@ body {
 .forgot-link {
     color: #2eb086;
     font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.forgot-link:hover {
+    color: var(--color-lime-green);
+    text-decoration: underline;
 }
