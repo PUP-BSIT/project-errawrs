@@ -133,3 +133,22 @@ try {
     ];
     
     echo json_encode($response);
+
+    } catch (Exception $e) {
+    // Rollback on error
+    mysqli_rollback($conn);
+    error_log("Withdrawal error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Transaction failed. Please try again.']);
+} finally {
+    // Clean up statements
+    if (isset($teller_stmt)) mysqli_stmt_close($teller_stmt);
+    if (isset($account_stmt)) mysqli_stmt_close($account_stmt);
+    if (isset($update_stmt)) mysqli_stmt_close($update_stmt);
+    if (isset($transaction_stmt)) mysqli_stmt_close($transaction_stmt);
+    
+    // Restore autocommit and close connection
+    mysqli_autocommit($conn, true);
+    mysqli_close($conn);
+}
+?>
