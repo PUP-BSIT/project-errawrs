@@ -166,26 +166,24 @@ body {
 
 .account-card {
     background: var(--color-white);
-    width: 750px;
+    width: 710px;
     border-radius: 16px;
-    padding: 40px 40px 10px 40px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 100px rgba(0, 0, 0, 0.123);
     display: flex;
-    align-items: center;
-}
-
-.account-info h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--color-primary-black);
-    margin-bottom: 30px;
+    flex-direction: row-reverse;
 }
 
 .info-row {
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     align-items: center;
-    gap: 20px;
+    padding: 25px;
+    border-radius: 25px;
+}
+
+.account-info span {
+    display: flex;
+    justify-items: center;
 }
 
 .label {
@@ -209,19 +207,24 @@ body {
 }
 
 .account-avatar {
-    display: flex;
-    justify-content: center;
+    width: 220px;
     align-items: center;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-left: 40px;
-    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.account-avatar h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    padding-top: 10px;
+    color: var(--color-primary-black);
+    margin-bottom: 70px;
 }
 
 .account-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 100px;
 }
