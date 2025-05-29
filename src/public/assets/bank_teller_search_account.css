@@ -48,7 +48,7 @@ body {
 }
 
 .logo h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
 }
 
@@ -194,14 +194,14 @@ body {
     position: absolute;
     left: 18px;
     color: var(--color-gray);
-    font-size: 16px;
+    font-size: 1.5rem;
 }
 
 .dropdown-icon {
     position: absolute;
     right: 18px;
     color: var(--color-gray);
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 /* Account Details */
@@ -429,81 +429,118 @@ body {
 .account-actions-inline {
     background: var(--color-white);
     border-radius: 15px;
-    width: 230px;
     padding: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 15px;
-    transform: translateX(20px);
-    animation: slideInRight 0.3s ease forwards;
+    max-width: 250px;
+    margin-top: 0;
+    animation: slideIn 0.3s ease forwards;
 }
 
-@keyframes slideInRight {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.account-actions-inline .action-option {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
 }
 
-/* Transaction Form */
-.transaction-form {
+/* Account Actions States */
+.account-actions-inline .action-option {
+    display: none;
+}
+
+.account-status-active .deposit-option,
+.account-status-active .withdraw-option,
+.account-status-active .close-option {
+    display: flex;
+}
+
+.account-status-inactive .reopen-option {
+    display: flex;
+}
+
+/* Transaction Overlay */
+.transaction-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.transaction-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.transaction-container {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    max-width: 500px;
-    margin: 0 auto;
-    display: none;
-    opacity: 0;
-    transform: translateY(20px);
+    padding: 25px;
+    width: 450px;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
 }
 
-.transaction-form.show {
-    display: block;
-    animation: slideIn 0.5s ease forwards;
+.transaction-overlay.show .transaction-container {
+    transform: translateY(0);
 }
 
-.form-header {
-    text-align: center;
-    margin-bottom: 30px;
+.transaction-header {
+    text-align: left;
+    margin-bottom: 20px;
 }
 
-.form-header h3 {
-    font-size: 2rem;
-    font-weight: 700;
+.transaction-header h2 {
+    font-size: 2.2rem;
+    font-weight: 600;
     color: var(--color-primary-black);
     margin-bottom: 10px;
 }
 
-.form-account-info {
-    font-size: 1.1rem;
-    color: var(--color-gray);
-}
-
-.form-content {
-    margin-bottom: 30px;
+.transaction-form {
+    display: block;
+    margin-bottom: 20px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-primary-black);
 }
 
 .form-group input {
-    padding: 15px;
-    border: 2px solid var(--color-bg-gradient-start);
-    border-radius: 10px;
-    font-size: 1.1rem;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.2rem;
     outline: none;
-    transition: border-color 0.3s ease;
 }
 
 .form-group input:focus {
@@ -512,18 +549,19 @@ body {
 
 .form-actions {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
 }
 
 .form-btn {
-    padding: 12px 25px;
+    flex: 1;
+    padding: 12px;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     min-width: 120px;
 }
 
@@ -532,20 +570,14 @@ body {
     color: var(--color-white);
 }
 
-.cancel-btn:hover {
-    background: #8a8a8a;
-    transform: translateY(-2px);
-}
-
 .confirm-btn {
     background: var(--color-mint);
     color: var(--color-primary-black);
 }
 
-.confirm-btn:hover {
-    background: #6bc740;
+.cancel-btn:hover, .confirm-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(126, 217, 87, 0.4);
+    opacity: 0.9;
 }
 
 /* Success Modal */
@@ -592,16 +624,20 @@ body {
 }
 
 .success-icon {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background: var(--color-mint);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    font-size: 2rem;
     color: var(--color-white);
+    font-size: 2rem;
+}
+
+.success-icon i {
+    font-size: 2.5rem;
 }
 
 .success-content h3 {
@@ -632,6 +668,12 @@ body {
 .success-btn:hover {
     background: #6bc740;
     transform: translateY(-2px);
+}
+
+.transaction-header p {
+    color: var(--color-gray);
+    margin-top: 10px;
+    font-size: 1.2rem;
 }
 
 /* Search History */
@@ -695,4 +737,203 @@ body {
 /* Hidden state classes */
 .hidden {
     display: none !important;
+}
+
+/* Receipt Styles */
+.receipt-content {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border: 2px solid var(--color-bg-gradient-start);
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-bg-gradient-start);
+    font-size: 1.2rem;
+}
+
+.receipt-item:last-child {
+    border-bottom: none;
+}
+
+.receipt-item.total {
+    border-top: 2px solid var(--color-bg-gradient-start);
+    margin-top: 10px;
+    padding-top: 15px;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+/* Transaction Complete View */
+.transaction-header .success-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--color-mint);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: var(--color-white);
+    font-size: 2rem;
+}
+
+.transaction-header p {
+    color: var(--color-gray);
+    font-size: 1.3rem;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.transaction-summary {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    margin: 30px 0;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    font-size: 1.3rem;
+}
+
+.summary-item + .summary-item {
+    border-top: 1px solid #e9ecef;
+}
+
+.summary-item.total {
+    margin-top: 15px;
+    padding-top: 20px;
+    border-top: 2px solid var(--color-mint);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Adjust form actions for completion view */
+.transaction-container .form-actions {
+    margin-top: 30px;
+}
+
+.transaction-container .form-actions .form-btn {
+    padding: 15px;
+    font-size: 1.2rem;
+}
+
+/* Add chevron icon styles */
+.account-chevron {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--color-gray);
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+    transform: rotate(0deg); /* Start facing right */
+}
+
+.account-chevron.rotated {
+    transform: rotate(90deg); /* Rotate to face down */
+}
+
+/* Account Actions */
+.actions-container {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 250px;
+    margin-top: 0;
+    animation: slideIn 0.3s ease forwards;
+}
+
+.action-deposit {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.action-withdraw {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--color-red);
+    color: var(--color-white);
+}
+
+.action-close {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: #ff6b6b;
+    color: var(--color-white);
+}
+
+.action-reopen {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: #4ecdc4;
+    color: var(--color-white);
+}
+
+/* Account Status States */
+.status-active .action-deposit,
+.status-active .action-withdraw,
+.status-active .action-close {
+    display: flex;
+}
+
+.status-inactive .action-reopen {
+    display: flex;
 }
