@@ -27,29 +27,29 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           # Backup .env if it exists
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/src/.env ]; then cp /var/www/html/errawrs/project-errawrs/src/.env /tmp/.env.backup; fi'
-          # Remove old files
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo rm -rf /var/www/html/errawrs/project-errawrs/*'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/src/.env ]; then cp /var/www/html/errawrs/project-errawrs/src/.env /var/www/html/errawrs/project-errawrs/.env.bak; fi'
+          # Remove all files except .env.bak
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'find /var/www/html/errawrs/project-errawrs/ -mindepth 1 ! -name ".env.bak" -exec sudo rm -rf {} +'
           # Copy new files
           scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-prod/
           # Move new files into place
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-prod/* /var/www/html/errawrs/project-errawrs/ && sudo chown -R www-data:www-data /var/www/html/errawrs/project-errawrs && sudo chmod -R 755 /var/www/html/errawrs/project-errawrs'
           # Restore .env
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /tmp/.env.backup ]; then mv /tmp/.env.backup /var/www/html/errawrs/project-errawrs/src/.env; fi'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/.env.bak ]; then mv /var/www/html/errawrs/project-errawrs/.env.bak /var/www/html/errawrs/project-errawrs/src/.env; fi'
 
       - name: Deploy to Development (dev branch)
         if: github.ref == 'refs/heads/dev'
         run: |
           # Backup .env if it exists
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/src/.env ]; then cp /var/www/dev/src/.env /tmp/.env.backup; fi'
-          # Remove old files
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo rm -rf /var/www/dev/*'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/src/.env ]; then cp /var/www/dev/src/.env /var/www/dev/.env.bak; fi'
+          # Remove all files except .env.bak
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'find /var/www/dev/ -mindepth 1 ! -name ".env.bak" -exec sudo rm -rf {} +'
           # Copy new files
           scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-dev/
           # Move new files into place
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-dev/* /var/www/dev/ && sudo chown -R www-data:www-data /var/www/dev && sudo chmod -R 755 /var/www/dev'
           # Restore .env
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /tmp/.env.backup ]; then mv /tmp/.env.backup /var/www/dev/src/.env; fi'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/.env.bak ]; then mv /var/www/dev/.env.bak /var/www/dev/src/.env; fi'
 
       - name: Deployment Summary
         run: |
