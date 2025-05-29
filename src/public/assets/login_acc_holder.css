@@ -161,6 +161,13 @@ header {
     background-color: #f26a4b;
 }
 
+.login-link-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+
 .forgot-links {
     display: flex;
     gap: 0.5rem;
