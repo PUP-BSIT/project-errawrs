@@ -52,7 +52,7 @@
             </div>
 
             <div class="account-container">
-                <div class="account-details" id="accountDetails" style="display: none;" onclick="toggleAccountActions()">
+                <div class="account-details account-details-hidden" id="accountDetails" onclick="toggleAccountActions()">
                     <div class="account-left">
                         <div class="account-field">
                             <div class="account-label">Account Number</div>
@@ -101,7 +101,7 @@
             </div>
 
             <!-- Account Actions Dropdown -->
-            <div class="account-actions-dropdown" id="accountActionsDropdown" style="display: none;">
+            <div class="account-actions-dropdown account-actions-hidden" id="accountActionsDropdown">
                 <button class="action-option deposit-option" onclick="showDepositForm()">
                     <i class="fas fa-plus"></i>
                     Deposit
@@ -121,7 +121,7 @@
             </div>
 
             <!-- Transaction Form -->
-            <div class="transaction-form" id="transactionForm" style="display: none;">
+            <div class="transaction-form transaction-form-hidden" id="transactionForm">
                 <div class="form-header">
                     <h3 id="formTitle">Deposit</h3>
                     <div class="form-account-info">
@@ -148,7 +148,7 @@
             </div>
 
             <!-- Success Modal -->
-            <div class="success-modal" id="successModal" style="display: none;">
+            <div class="success-modal success-modal-hidden" id="successModal">
                 <div class="success-content">
                     <div class="success-icon">
                         <i class="fas fa-check"></i>

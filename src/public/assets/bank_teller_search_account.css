@@ -205,7 +205,7 @@ body {
 }
 
 /* Account Details */
-.account-container{
+.account-container {
     display: flex;
     flex-direction: row;
     gap: 15px;
