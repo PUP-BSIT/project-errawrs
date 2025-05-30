@@ -21,13 +21,10 @@
 body {
     margin: 0;
     font-family: var(--font-main);
-    background: radial-gradient(
-        ellipse at 30% 20%,
-        #fff 40%,
-        var(--color-bg-gradient-start) 70%,
-        var(--color-bg-gradient-end) 100%);
-    color: var(--color-primary-black);
-    height: 100vh;
+    background: linear-gradient(135deg, 
+                var(--color-bg-gradient-start) 0%, 
+                var(--color-bg-gradient-end) 100%);
+    min-height: 100vh;
     overflow: hidden;
 }
 
