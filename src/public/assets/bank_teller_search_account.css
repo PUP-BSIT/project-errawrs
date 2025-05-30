@@ -686,6 +686,8 @@ body {
 /* Search History */
 .search-history {
     background: var(--color-white);
+    width: 1150px;
+    margin-left: 30px;
     border-radius: 15px;
     padding: 10px 25px 0px 25px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
