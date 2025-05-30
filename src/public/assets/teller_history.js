@@ -394,29 +394,11 @@ function showNotification(message, type = "info") {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
 
-    // Inline styles for notification
-    notification.style.position = "fixed";
-    notification.style.top = "20px";
-    notification.style.right = "20px";
-    notification.style.padding = "12px 20px";
-    notification.style.color = "white";
-    notification.style.borderRadius = "4px";
-    notification.style.zIndex = "1000";
-    notification.style.transition = "all 0.3s ease";
-
-    if (type === "success") {
-        notification.style.background = "#4CAF50";
-    } else if (type === "error") {
-        notification.style.background = "#f44336";
-    } else {
-        notification.style.background = "#2196F3";
-    }
-
     document.body.appendChild(notification);
 
     // Auto remove after 3 seconds
     setTimeout(function () {
-        notification.style.opacity = "0";
+        notification.classList.add('fade-out');
         setTimeout(function () {
             if (notification.parentNode) {
                 document.body.removeChild(notification);
@@ -485,14 +467,3 @@ function selectAllVisibleRows() {
         });
     });
 }
-
-// Error handling
-window.addEventListener("error", function (event) {
-    console.error("Application Error:", event.error);
-    showNotification("An error occurred. Please refresh the page.", "error");
-});
-
-window.addEventListener("unhandledrejection", function (event) {
-    console.error("Unhandled Promise Rejection:", event.reason);
-    showNotification("An unexpected error occurred.", "error");
-});
