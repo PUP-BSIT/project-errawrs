@@ -51,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($password !== $confirm_password) {
             $error_message = "Passwords do not match.";
         } else {
-            $password_update = ", password = '$password'";
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $password_update = ", password_hash = '$hashed_password'";
         }
     }
     

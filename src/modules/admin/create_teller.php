@@ -31,38 +31,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Passwords do not match.";
     } elseif (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error_message = "Please enter a valid email address.";
-    } else {
-        // Check if email already exists (if provided)
-        if (!empty($email)) {
-            $check_email = "SELECT teller_number FROM teller WHERE email = '$email'";
-            $result = mysqli_query($conn, $check_email);
-            
-            if (mysqli_num_rows($result) > 0) {
-                $error_message = "Email address is already in use by another teller.";
-            }
+    }
+
+    // Check if email already exists (if provided)
+    if (empty($error_message) && !empty($email)) {
+        $check_email = "SELECT teller_number FROM teller WHERE email = '$email'";
+        $result = mysqli_query($conn, $check_email);
+        if (mysqli_num_rows($result) > 0) {
+            $error_message = "Email address is already in use by another teller.";
         }
-        
-        // If no errors, proceed with creation
-        if (empty($error_message)) {
-            $admin_id = $_SESSION['admin_id'];
-            
-            // Insert the new teller
-            $email_value = !empty($email) ? "'$email'" : "NULL";
-            $insert_sql = "INSERT INTO teller (first_name, last_name, email, password, created_by, status) 
-                          VALUES ('$first_name', '$last_name', $email_value, '$password', $admin_id, '$status')";
-            
-            if (mysqli_query($conn, $insert_sql)) {
-                $new_teller_id = mysqli_insert_id($conn);
-                
-                // Log the action
-                $log_sql = "INSERT INTO admin_activity_log (admin_id, action_type, affected_teller, details) 
-                            VALUES ($admin_id, 'create_teller', $new_teller_id, 'New teller created')";
-                mysqli_query($conn, $log_sql);
-                
-                $success_message = "Teller account created successfully! Teller ID: $new_teller_id";
-            } else {
-                $error_message = "Error creating teller: " . mysqli_error($conn);
-            }
+    }
+
+    // If no errors, proceed with creation
+    if (empty($error_message)) {
+        $admin_id = $_SESSION['admin_id'];
+        $email_value = !empty($email) ? "'$email'" : "NULL";
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // Insert the new teller
+        $insert_sql = "INSERT INTO teller (first_name, last_name, email, password_hash, created_by, status) 
+                      VALUES ('$first_name', '$last_name', $email_value, '$hashed_password', $admin_id, '$status')";
+        if (mysqli_query($conn, $insert_sql)) {
+            $new_teller_id = mysqli_insert_id($conn);
+            // Log the action
+            $log_sql = "INSERT INTO admin_activity_log (admin_id, action_type, affected_teller, details) 
+                        VALUES ($admin_id, 'create_teller', $new_teller_id, 'New teller created')";
+            mysqli_query($conn, $log_sql);
+            $success_message = "Teller account created successfully! Teller ID: $new_teller_id";
+        } else {
+            $error_message = "Error creating teller: " . mysqli_error($conn);
         }
     }
 }

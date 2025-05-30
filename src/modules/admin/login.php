@@ -1,9 +1,9 @@
 <?php
 session_start();
-if (isset($_SESSION['admin_id'])) {
-    header("Location: dashboard.php");
-    exit();
-}
+// if (isset($_SESSION['admin_id'])) {
+//     header("Location: login.php");
+//     exit();
+// }
 $error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
 unset($_SESSION['error']);
 ?>
