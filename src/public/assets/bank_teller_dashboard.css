@@ -396,3 +396,81 @@ body {
     font-size: 1.1rem;
     text-align: center;
 }
+
+/* Account Card Styles */
+.account-card {
+    background: var(--color-white);
+    border-radius: 20px;
+    padding: 24px;
+    margin: 20px auto;
+    width: 1000px;
+    box-shadow: var(--box-shadow-light);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.account-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.account-header h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    letter-spacing: -0.3px;
+}
+
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.status-badge.active {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.status-badge.inactive {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.account-details {
+    display: grid;
+    gap: 16px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    width: 200px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.detail-row .value {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-primary-black);
+    font-size: 1.1rem;
+}
