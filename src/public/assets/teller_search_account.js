@@ -432,35 +432,39 @@ function addToSearchHistory(name, accountNumber) {
     const historyBody = document.getElementById("historyBody");
     const existingRows = historyBody.querySelectorAll(".history-row");
 
-    // Check if this account is already in history
-    let accountExists = false;
+    // Remove if this account already exists in history
     existingRows.forEach((row) => {
         const accountCell = row.children[2];
         if (accountCell && accountCell.textContent === accountNumber) {
-            accountExists = true;
+            row.remove();
         }
     });
 
-    if (!accountExists) {
-        const newRowNumber = existingRows.length + 1;
-        const newRow = document.createElement("div");
-        newRow.className = "history-row";
-        newRow.onclick = () => selectFromHistory(name, accountNumber);
-        newRow.innerHTML = `
-            <div class="history-value">${newRowNumber}</div>
-            <div class="history-value">${name}</div>
-            <div class="history-value">${accountNumber}</div>
-        `;
+    // Create new row for the searched account
+    const newRow = document.createElement("div");
+    newRow.className = "history-row";
+    newRow.onclick = () => selectFromHistory(name, accountNumber);
+    newRow.innerHTML = `
+        <div class="history-value">1</div>
+        <div class="history-value">${name}</div>
+        <div class="history-value">${accountNumber}</div>
+    `;
 
+    // Insert at the beginning of history
+    if (historyBody.firstChild) {
+        historyBody.insertBefore(newRow, historyBody.firstChild);
+    } else {
         historyBody.appendChild(newRow);
-
-        // Limit history to 10 items
-        if (existingRows.length >= 10) {
-            historyBody.removeChild(existingRows[0]);
-            // Update row numbers
-            updateHistoryNumbers();
-        }
     }
+
+    // Limit history to 10 items
+    const updatedRows = historyBody.querySelectorAll(".history-row");
+    if (updatedRows.length > 10) {
+        historyBody.removeChild(updatedRows[updatedRows.length - 1]);
+    }
+
+    // Update row numbers
+    updateHistoryNumbers();
 }
 
 // Update history row numbers
