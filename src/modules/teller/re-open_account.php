@@ -103,18 +103,18 @@ try {
     
     $account = mysqli_fetch_assoc($account_result);
     
-    // Check if account is already closed
-    if ($account['status'] === 'closed') {
+    // Check if account is already active
+    if ($account['status'] === 'active') {
         http_response_code(400);
-        echo json_encode(['error' => 'Account is already closed.']);
+        echo json_encode(['error' => 'Account is already active.']);
         mysqli_rollback($conn);
         exit();
     }
     
-    // Check account status - must be active to close
-    if ($account['status'] !== 'active') {
+    // Check account status - must be closed to reopen
+    if ($account['status'] !== 'closed') {
         http_response_code(403);
-        echo json_encode(['error' => 'Only active accounts can be closed.']);
+        echo json_encode(['error' => 'Only closed accounts can be reopened.']);
         mysqli_rollback($conn);
         exit();
     }
@@ -127,29 +127,18 @@ try {
         exit();
     }
     
-    // Check if balance is zero - account can only be closed if balance is zero
-    if ($account['balance'] != 0.00) {
-        http_response_code(400);
-        echo json_encode([
-            'error' => 'Account balance must be zero to close the account.',
-            'current_balance' => number_format($account['balance'], 2)
-        ]);
-        mysqli_rollback($conn);
-        exit();
-    }
-    
-    // Update account status to closed
-    $update_sql = "UPDATE account SET status = 'closed' WHERE account_number = ?";
+    // Update account status to active
+    $update_sql = "UPDATE account SET status = 'active' WHERE account_number = ?";
     $update_stmt = mysqli_prepare($conn, $update_sql);
     mysqli_stmt_bind_param($update_stmt, "s", $account_number);
     
     if (!mysqli_stmt_execute($update_stmt)) {
-        throw new Exception('Failed to close account');
+        throw new Exception('Failed to reopen account');
     }
     
     // Insert transaction record into teller_transaction table
     $transaction_sql = "INSERT INTO teller_transaction (teller_number, account_number, transaction_type, amount, timestamp) 
-                        VALUES (?, ?, 'close_account', 0.00, NOW())";
+                        VALUES (?, ?, 'reopen_account', 0.00, NOW())";
     $transaction_stmt = mysqli_prepare($conn, $transaction_sql);
     mysqli_stmt_bind_param($transaction_stmt, "is", $teller_number, $account_number);
     
@@ -165,12 +154,12 @@ try {
     // Success response
     $response = [
         'success' => true,
-        'message' => 'Account closed successfully',
+        'message' => 'Account reopened successfully',
         'transaction_id' => $transaction_id,
         'account_number' => $account_number,
-        'previous_status' => 'active',
-        'new_status' => 'closed',
-        'final_balance' => '0.00',
+        'previous_status' => 'closed',
+        'new_status' => 'active',
+        'current_balance' => number_format($account['balance'], 2),
         'transaction_date' => date('Y-m-d H:i:s'),
         'teller_number' => $teller_number
     ];
@@ -180,7 +169,7 @@ try {
 } catch (Exception $e) {
     // Rollback on error
     mysqli_rollback($conn);
-    error_log("Close account error: " . $e->getMessage());
+    error_log("Reopen account error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['error' => 'Transaction failed. Please try again.']);
 } finally {
