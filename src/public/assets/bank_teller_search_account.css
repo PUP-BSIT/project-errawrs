@@ -1098,3 +1098,106 @@ body {
 .notification.fade-out {
     animation: fade-out 0.3s ease forwards;
 }
+
+/* Animation Classes */
+.slide-in {
+    animation: slideIn 0.5s ease forwards;
+}
+
+.fade-in {
+    opacity: 0;
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-scale {
+    transform: scale(0.8);
+    animation: modalScale 0.3s ease 0.1s forwards;
+}
+
+/* Display State Classes */
+.display-none {
+    display: none;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-flex {
+    display: flex;
+}
+
+/* Account Details Animation */
+.account-details.animate {
+    animation: none;
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Chevron Rotation */
+.account-chevron {
+    transition: transform 0.3s ease;
+    transform: rotate(0deg);
+}
+
+.account-chevron.rotated {
+    transform: rotate(90deg);
+}
+
+/* Transaction Form States */
+.transaction-form.show {
+    opacity: 1;
+    display: block;
+}
+
+/* Notification Animation States */
+.notification.fade-out {
+    animation: fade-out 0.3s ease forwards;
+}
+
+/* Account Actions Container */
+.actions-container {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 250px;
+    margin-top: 0;
+    animation: slideIn 0.3s ease forwards;
+}
+
+/* Transaction Form Display States */
+.transaction-form {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.transaction-form.visible {
+    display: block;
+}
+
+/* Account Status Specific Styles */
+.status-active .action-deposit,
+.status-active .action-withdraw,
+.status-active .action-close {
+    display: flex;
+}
+
+.status-inactive .action-reopen {
+    display: flex;
+}
+
+/* Account Details Display */
+.account-details {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.account-details.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}

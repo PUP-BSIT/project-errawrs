@@ -72,9 +72,7 @@ function displayAccountDetails(account) {
     document.getElementById("account_number").textContent = account.number;
     document.getElementById("account_name").textContent = account.name;
     document.getElementById("account_type").textContent = account.type;
-    document.getElementById(
-        "account_balance"
-    ).textContent = `₱${account.balance.toLocaleString("en-US", {
+    document.getElementById("account_balance").textContent = `₱${account.balance.toLocaleString("en-US", {
         minimumFractionDigits: 2,
     })}`;
 
@@ -102,12 +100,8 @@ function displayAccountDetails(account) {
         accountDetails.appendChild(chevron);
     }
 
-    accountDetails.style.display = "flex";
-
-    // Reset animation
-    accountDetails.style.animation = "none";
-    accountDetails.offsetHeight; // Trigger reflow
-    accountDetails.style.animation = "slideIn 0.5s ease forwards";
+    accountDetails.classList.remove('display-none');
+    accountDetails.classList.add('display-flex', 'visible');
 
     // Add click event listener to the account details card
     accountDetails.onclick = function() {
@@ -119,7 +113,9 @@ function displayAccountDetails(account) {
 
 // Hide account details
 function hideAccountDetails() {
-    document.getElementById("account_details").style.display = "none";
+    const accountDetails = document.getElementById("account_details");
+    accountDetails.classList.remove('display-flex', 'visible');
+    accountDetails.classList.add('display-none');
     hideAccountActions();
     currentAccount = null;
 }
@@ -186,12 +182,19 @@ function hideAccountActions() {
     isDropdownOpen = false;
 }
 
+// Show transaction form
+function showTransactionForm() {
+    const transactionForm = document.getElementById('transaction_form');
+    transactionForm.classList.add('visible', 'show');
+    document.getElementById('transaction_amount').focus();
+}
+
 // Hide transaction form
 function hideTransactionForm() {
     const transactionForm = document.getElementById('transaction_form');
     transactionForm.classList.remove('show');
     setTimeout(() => {
-        transactionForm.style.display = 'none';
+        transactionForm.classList.remove('visible');
         // Reset the form to its initial state
         const container = transactionForm.querySelector('.transaction-container');
         container.innerHTML = `
@@ -237,9 +240,7 @@ function showDepositForm() {
         </div>
     `;
 
-    transactionForm.style.display = 'block';
-    setTimeout(() => transactionForm.classList.add('show'), 10);
-    document.getElementById('transaction_amount').focus();
+    showTransactionForm();
 }
 
 // Show withdraw form
@@ -265,16 +266,14 @@ function showWithdrawForm() {
         </div>
     `;
 
-    transactionForm.style.display = 'block';
-    setTimeout(() => transactionForm.classList.add('show'), 10);
-    document.getElementById('transaction_amount').focus();
+    showTransactionForm();
 }
 
 // Notification System
 function showNotification(message, type = 'info') {
     const container = document.getElementById('notification_container');
     const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+    notification.className = `notification ${type} fade-in`;
     
     let icon = '';
     switch(type) {
