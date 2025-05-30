@@ -355,6 +355,11 @@ function showWithdrawForm() {
 
 // Close account
 function closeAccount() {
+    if (currentAccount.balance > 0) {
+        alert(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`);
+        return;
+    }
+
     if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
         currentAccount.status = "Inactive";
         accountDatabase[currentAccount.number].status = "Inactive";
