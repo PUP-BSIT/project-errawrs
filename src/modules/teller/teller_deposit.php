@@ -1,6 +1,22 @@
 <?php
+// Enable CORS for localhost development
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
-require_once '../../config/db_config.php';
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Include database configuration
+require_once __DIR__ . '/../config/db_config.php';
+
+// Add error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -144,7 +160,7 @@ try {
     
     echo json_encode($response);
 
-    } catch (Exception $e) {
+} catch (Exception $e) {
     // Rollback on error
     mysqli_rollback($conn);
     error_log("Deposit error: " . $e->getMessage());
