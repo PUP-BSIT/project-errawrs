@@ -579,12 +579,3 @@ function selectFromHistory(name, accountNumber) {
     searchAccount();
     }
 }
-
-// Handle Enter key press in search input
-document
-    .getElementById("search_input")
-    .addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            searchAccount();
-        }
-    });
