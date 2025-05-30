@@ -1,0 +1,397 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+    --color-input-bg: #e5e5e5;
+    --color-border: #ddd;
+    --color-text-muted: #666;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+    --color-warning: #ffc107;
+    --color-info: #17a2b8;
+    --color-success-bg: #d4edda;
+    --color-error-bg: #f8d7da;
+    --color-warning-bg: #fff3cd;
+    --color-info-bg: #d1ecf1;
+    --border-radius-small: 8px;
+    --border-radius-medium: 20px;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+    --spacing-xl: 3rem;
+    --box-shadow-light: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --transition-default: 0.3s ease;
+}
+
+/* Existing base styles from user-dashboard.css might be included via the link tag */
+
+/* Specific styles for Account page */
+.account-content {
+    padding: 20px;
+    background-color: var(--color-white);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-light);
+    max-width: 700px; /* Adjust as needed */
+    margin: 24px auto; /* Center the container */
+}
+
+.account-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.account-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.account-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-input-bg); /* Light gray background */
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-group {
+    display: flex;
+    align-items: center;
+}
+
+.info-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-right: 10px;
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.account-actions {
+    position: relative; /* Needed for absolute positioning of the menu */
+}
+
+.three-dots-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--color-gray);
+    cursor: pointer;
+    padding: 5px; /* Increase clickable area */
+}
+
+.three-dots-button:hover {
+    color: var(--color-primary-black);
+}
+
+.action-menu {
+    position: absolute;
+    top: 100%; /* Position below the button */
+    right: 0;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow-light);
+    overflow: hidden; /* Clip rounded corners */
+    z-index: 10; /* Ensure it's above other content */
+    min-width: 120px; /* Minimum width for the menu */
+}
+
+.action-menu.hidden {
+    display: none;
+}
+
+.menu-item {
+    display: block; /* Make each item a block */
+    width: 100%;
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 600; /* Make text bold */
+    color: var(--color-primary-black);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.menu-item.transfer-button:hover {
+    background-color: var(--color-mint); /* Green background on hover */
+    color: var(--color-white); /* White text on hover */
+}
+
+.menu-item.unlink-button:hover {
+    background-color: var(--color-info); /* Blue background on hover */
+    color: var(--color-white); /* White text on hover */
+}
+
+.menu-item.close-button:hover {
+    background-color: var(--color-error); /* Red background on hover */
+    color: var(--color-white); /* White text on hover */
+}
+
+/* Notification Container */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.notification {
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.notification.success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.notification.info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info);
+}
+
+.notification.error {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.notification i {
+    font-size: 20px;
+}
+
+/* Ensure 80 column width */
+/* This is handled by the editor's formatting, not CSS */
+
+/* Styling for Account Status */
+.account-status {
+    font-weight: 600;
+}
+
+.account-status.active {
+    color: var(--color-success); /* Green color for Active status */
+}
+
+.account-status.closed {
+    color: var(--color-error); /* Red color for Closed status */
+}
+
+/* New styles for Add Account button and Modals */
+.add-account-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 24px auto; /* Center below heading, add space */
+    padding: 10px 20px;
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-default);
+}
+
+.add-account-btn:hover {
+    background-color: var(--color-mint);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Below notifications but above content */
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: var(--color-white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-heavy);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--color-primary-black);
+}
+
+.modal-content p {
+    font-size: 16px;
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+}
+
+/* Custom Checkbox Styling */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 25px; /* Space for the custom checkbox */
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    user-select: none;
+    text-align: left;
+}
+
+.checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: var(--color-input-bg); /* Light gray background */
+    border-radius: 4px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc; /* Darker gray on hover */
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: var(--color-lime-green); /* Green when checked */
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.modal-content .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-default), opacity var(--transition-default);
+    margin: 5px; /* Space between buttons */
+}
+
+.modal-content .primary-btn {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.modal-content .primary-btn:hover:not(:disabled) {
+     background-color: var(--color-mint);
+}
+
+.modal-content .secondary-btn {
+    background-color: var(--color-gray);
+    color: var(--color-white);
+}
+
+.modal-content .secondary-btn:hover {
+    background-color: #888; /* Darker gray on hover */
+}
+
+.modal-content .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-content .form-input {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 15px auto 20px auto;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 16px;
+}
+
+/* New style for the add account placeholder */
+.add-account-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 2px dashed var(--color-gray); /* Dashed border */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color var(--transition-default);
+    font-size: 24px; /* Size of the plus icon */
+    color: var(--color-gray);
+}
+
+.add-account-placeholder:hover {
+    border-color: var(--color-mint); /* Change border color on hover */
+    color: var(--color-mint); /* Change icon color on hover */
+} 
