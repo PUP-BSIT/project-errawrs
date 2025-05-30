@@ -187,64 +187,88 @@ function hideAccountActions() {
     isDropdownOpen = false;
 }
 
-// Create and show transaction form
-function createTransactionOverlay(type) {
-    // Remove existing overlay if any
-    const existingOverlay = document.querySelector('.transaction-overlay');
-    if (existingOverlay) {
-        existingOverlay.remove();
-    }
+// Hide transaction form
+function hideTransactionForm() {
+    const overlay = document.getElementById('transactionOverlay');
+    overlay.classList.remove('show');
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        // Reset the form to its initial state
+        const container = overlay.querySelector('.transaction-container');
+        container.innerHTML = `
+            <div class="transaction-header">
+                <h2>Deposit</h2>
+                <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+            </div>
+            <div class="transaction-form">
+                <div class="form-group">
+                    <label for="overlayAmount">Enter Amount</label>
+                    <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+                </div>
+                <div class="form-actions">
+                    <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
+                    <button class="form-btn confirm-btn" onclick="showTransactionReceipt('deposit')">Confirm</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('overlayAmount').value = ''; // Clear input
+    }, 300);
+}
 
-    // Create overlay elements
-    const overlay = document.createElement('div');
-    overlay.className = 'transaction-overlay';
-
-    const container = document.createElement('div');
-    container.className = 'transaction-container';
-
-    const header = document.createElement('div');
-    header.className = 'transaction-header';
-    header.innerHTML = `
-        <h2>${type === 'deposit' ? 'Deposit' : 'Withdraw'}</h2>
-        <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+// Show deposit form
+function showDepositForm() {
+    const overlay = document.getElementById('transactionOverlay');
+    const container = overlay.querySelector('.transaction-container');
+    
+    // Reset the form to deposit state
+    container.innerHTML = `
+        <div class="transaction-header">
+            <h2>Deposit</h2>
+            <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+        </div>
+        <div class="transaction-form">
+            <div class="form-group">
+                <label for="overlayAmount">Enter Amount</label>
+                <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+            </div>
+            <div class="form-actions">
+                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
+                <button class="form-btn confirm-btn" onclick="showTransactionReceipt('deposit')">Confirm</button>
+            </div>
+        </div>
     `;
 
-    const form = document.createElement('div');
-    form.className = 'transaction-form';
-    form.innerHTML = `
-        <div class="form-group">
-            <label for="overlayAmount">Enter Amount</label>
-            <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
-        </div>
-        <div class="form-actions">
-            <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-            <button class="form-btn confirm-btn" onclick="showTransactionReceipt('${type}')">Confirm</button>
-        </div>
-    `;
-
-    // Assemble overlay
-    container.appendChild(header);
-    container.appendChild(form);
-    overlay.appendChild(container);
-
-    // Insert after account details
-    const accountDetails = document.querySelector('.account-details');
-    accountDetails.parentNode.insertBefore(overlay, accountDetails.nextSibling);
-
-    // Show overlay with animation
+    overlay.style.display = 'block';
     setTimeout(() => overlay.classList.add('show'), 10);
-
-    // Focus amount input
     document.getElementById('overlayAmount').focus();
 }
 
-// Hide transaction form
-function hideTransactionForm() {
-    const overlay = document.querySelector('.transaction-overlay');
-    if (overlay) {
-        overlay.classList.remove('show');
-        setTimeout(() => overlay.remove(), 300);
-    }
+// Show withdraw form
+function showWithdrawForm() {
+    const overlay = document.getElementById('transactionOverlay');
+    const container = overlay.querySelector('.transaction-container');
+    
+    // Reset the form to withdraw state
+    container.innerHTML = `
+        <div class="transaction-header">
+            <h2>Withdraw</h2>
+            <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+        </div>
+        <div class="transaction-form">
+            <div class="form-group">
+                <label for="overlayAmount">Enter Amount</label>
+                <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+            </div>
+            <div class="form-actions">
+                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
+                <button class="form-btn confirm-btn" onclick="showTransactionReceipt('withdraw')">Confirm</button>
+            </div>
+        </div>
+    `;
+
+    overlay.style.display = 'block';
+    setTimeout(() => overlay.classList.add('show'), 10);
+    document.getElementById('overlayAmount').focus();
 }
 
 // Show transaction receipt for confirmation
@@ -266,10 +290,9 @@ function showTransactionReceipt(type) {
         currentAccount.balance + amount : 
         currentAccount.balance - amount;
 
-    const overlay = document.querySelector('.transaction-overlay');
+    const overlay = document.getElementById('transactionOverlay');
     const container = overlay.querySelector('.transaction-container');
 
-    // Show receipt preview
     container.innerHTML = `
         <div class="transaction-header">
             <h2>Transaction Receipt</h2>
@@ -301,8 +324,58 @@ function showTransactionReceipt(type) {
             </div>
         </div>
         <div class="form-actions">
-            <button class="form-btn cancel-btn" onclick="document.querySelector('.transaction-overlay').remove()">Cancel</button>
+            <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
             <button class="form-btn confirm-btn" onclick="processTransaction('${type}', ${amount})">Submit</button>
+        </div>
+    `;
+}
+
+// Process transaction and complete
+function processTransaction(type, amount) {
+    const oldBalance = currentAccount.balance;
+    const newBalance = type === 'deposit' ? oldBalance + amount : oldBalance - amount;
+
+    // Update account balance
+    currentAccount.balance = newBalance;
+    accountDatabase[currentAccount.number].balance = newBalance;
+
+    // Add transaction to history
+    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)} - Acc: #${currentAccount.number}`;
+    addTransactionToHistory(type, amount, reference);
+
+    // Update display
+    document.getElementById('accountBalance').textContent = `₱${newBalance.toLocaleString('en-US', {
+        minimumFractionDigits: 2
+    })}`;
+
+    // Show completion message
+    const overlay = document.getElementById('transactionOverlay');
+    const container = overlay.querySelector('.transaction-container');
+
+    container.innerHTML = `
+        <div class="transaction-header">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Transaction Complete</h2>
+            <p>Your ${type === 'deposit' ? 'deposit' : 'withdrawal'} has been processed successfully.</p>
+        </div>
+        <div class="transaction-summary">
+            <div class="summary-item">
+                <span>Transaction Type:</span>
+                <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</span>
+            </div>
+            <div class="summary-item">
+                <span>Amount:</span>
+                <span>₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+            </div>
+            <div class="summary-item total">
+                <span>New Balance:</span>
+                <span>₱${newBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="form-btn confirm-btn" onclick="hideTransactionForm()">Done</button>
         </div>
     `;
 }
@@ -330,68 +403,6 @@ function addTransactionToHistory(type, amount, reference, status = "Success") {
     
     // Store updated history
     localStorage.setItem('transactionHistory', JSON.stringify(historyData));
-}
-
-// Process transaction and complete
-function processTransaction(type, amount) {
-    const oldBalance = currentAccount.balance;
-    const newBalance = type === 'deposit' ? oldBalance + amount : oldBalance - amount;
-
-    // Update account balance
-    currentAccount.balance = newBalance;
-    accountDatabase[currentAccount.number].balance = newBalance;
-
-    // Add transaction to history
-    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)} - Acc: #${currentAccount.number}`;
-    addTransactionToHistory(type, amount, reference);
-
-    // Update display
-    document.getElementById('accountBalance').textContent = `₱${newBalance.toLocaleString('en-US', {
-        minimumFractionDigits: 2
-    })}`;
-
-    // Show completion message
-    const overlay = document.querySelector('.transaction-overlay');
-    const container = overlay.querySelector('.transaction-container');
-
-    container.innerHTML = `
-        <div class="transaction-header">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>Transaction Complete</h2>
-            <p>Your ${type === 'deposit' ? 'deposit' : 'withdrawal'} has been processed successfully.</p>
-        </div>
-        <div class="transaction-summary">
-            <div class="summary-item">
-                <span>Transaction Type:</span>
-                <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</span>
-            </div>
-            <div class="summary-item">
-                <span>Amount:</span>
-                <span>₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div class="summary-item total">
-                <span>New Balance:</span>
-                <span>₱${newBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-            </div>
-        </div>
-        <div class="form-actions">
-            <button class="form-btn confirm-btn" onclick="document.querySelector('.transaction-overlay').remove()">Done</button>
-        </div>
-    `;
-}
-
-// Update show deposit form function
-function showDepositForm() {
-    createTransactionOverlay('deposit');
-    hideAccountActions();
-}
-
-// Update show withdraw form function
-function showWithdrawForm() {
-    createTransactionOverlay('withdraw');
-    hideAccountActions();
 }
 
 // Close account

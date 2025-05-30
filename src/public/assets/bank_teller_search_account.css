@@ -480,7 +480,7 @@ body {
 /* Transaction Section */
 .transaction-overlay {
     width: 1150px;
-    margin: 0 auto;
+    margin: 15px auto;
     display: none;
     opacity: 0;
     transition: all 0.3s ease;
@@ -933,4 +933,54 @@ body {
 
 .status-inactive .action-reopen {
     display: flex;
+}
+
+/* New Transaction Options */
+.new-transaction-options {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--color-bg-gradient-start);
+}
+
+.new-transaction-options h3 {
+    font-size: 1.4rem;
+    color: var(--color-primary-black);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.new-transaction-options .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.new-transaction-options .deposit-btn {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-transaction-options .withdraw-btn {
+    background: var(--color-red);
+    color: var(--color-white);
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-transaction-options .deposit-btn:hover {
+    background: #6bc740;
+    transform: translateY(-2px);
+}
+
+.new-transaction-options .withdraw-btn:hover {
+    background: #e63946;
+    transform: translateY(-2px);
 }
