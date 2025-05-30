@@ -1,6 +1,52 @@
 <?php
+// Enable CORS for localhost development
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
-require_once '../../config/db_config.php';
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Database connection function
+function getDBConnection() {
+    // Read .env file manually
+    $envFile = __DIR__ . '/../.env';
+    if (!file_exists($envFile)) {
+        die(json_encode(['error' => '.env file not found']));
+    }
+    
+    $envVars = [];
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos($line, '#') === 0) continue; // Skip comments
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $envVars[trim($key)] = trim($value);
+        }
+    }
+    
+    // Get database configuration
+    $host = $envVars['DB_HOST'] ?? 'localhost';
+    $db_name = $envVars['DB_NAME'] ?? '';
+    $username = $envVars['DB_USER'] ?? 'root';
+    $password = $envVars['DB_PASS'] ?? '';
+    
+    // Create connection
+    $conn = mysqli_connect($host, $username, $password, $db_name);
+    if (!$conn) {
+        die(json_encode(['error' => 'Connection failed: ' . mysqli_connect_error()]));
+    }
+    
+    return $conn;
+}
+
+// Add error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -28,6 +74,22 @@ if (empty($account_number) || $amount <= 0 || empty($teller_number) || empty($pi
 if (round($amount, 2) != $amount) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid amount format.']);
+    exit();
+}
+
+// Set maximum withdrawal limit (optional - adjust as needed)
+$max_withdrawal = 10000.00;
+if ($amount > $max_withdrawal) {
+    http_response_code(400);
+    echo json_encode(['error' => "Withdrawal amount exceeds maximum limit of $" . number_format($max_withdrawal, 2)]);
+    exit();
+}
+
+// Set minimum withdrawal limit (optional)
+$min_withdrawal = 1.00;
+if ($amount < $min_withdrawal) {
+    http_response_code(400);
+    echo json_encode(['error' => "Withdrawal amount must be at least $" . number_format($min_withdrawal, 2)]);
     exit();
 }
 
@@ -86,14 +148,29 @@ try {
         http_response_code(400);
         echo json_encode([
             'error' => 'Insufficient funds.',
-            'current_balance' => number_format($account['balance'], 2)
+            'current_balance' => number_format($account['balance'], 2),
+            'requested_amount' => number_format($amount, 2)
         ]);
         mysqli_rollback($conn);
         exit();
     }
     
-    // Calculate new balance
+    // Optional: Check minimum balance requirement (e.g., $10 must remain)
+    $min_balance_required = 0.00; // Adjust as needed
     $new_balance = $account['balance'] - $amount;
+    
+    if ($new_balance < $min_balance_required) {
+        http_response_code(400);
+        echo json_encode([
+            'error' => 'Withdrawal would leave balance below minimum required amount.',
+            'current_balance' => number_format($account['balance'], 2),
+            'requested_amount' => number_format($amount, 2),
+            'minimum_balance_required' => number_format($min_balance_required, 2),
+            'maximum_withdrawal_allowed' => number_format($account['balance'] - $min_balance_required, 2)
+        ]);
+        mysqli_rollback($conn);
+        exit();
+    }
     
     // Update account balance
     $update_sql = "UPDATE account SET balance = ? WHERE account_number = ?";
@@ -134,7 +211,7 @@ try {
     
     echo json_encode($response);
 
-    } catch (Exception $e) {
+} catch (Exception $e) {
     // Rollback on error
     mysqli_rollback($conn);
     error_log("Withdrawal error: " . $e->getMessage());
