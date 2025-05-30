@@ -189,15 +189,15 @@ function goToNextPage() {
 function changeItemsPerPage() {
     const selectElement = document.getElementById("per-page-select");
     const newItemsPerPage = parseInt(selectElement.value);
-
+    
     itemsPerPage = newItemsPerPage;
-    totalPages = Math.ceil(totalItems / itemsPerPage);
-
+    totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    
     // Reset to page 1 if current page is now out of bounds
     if (currentPage > totalPages) {
         currentPage = 1;
     }
-
+    
     updatePaginationDisplay();
     updateTableDisplay();
 }
@@ -209,26 +209,49 @@ function applyPaginationSettings() {
 
 // Update pagination display
 function updatePaginationDisplay() {
-    // Update active page button
-    for (let i = 1; i <= 3; i++) {
-        const pageBtn = document.getElementById("page-" + i);
-        if (pageBtn) {
-            pageBtn.classList.remove("active");
-            if (i === currentPage) {
-                pageBtn.classList.add("active");
-            }
+    const pageNumbersContainer = document.getElementById("page-numbers");
+    pageNumbersContainer.innerHTML = "";
+
+    // Calculate the range of page numbers to show
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    // Adjust the range to show at least 5 pages if possible
+    if (endPage - startPage < 4) {
+        if (startPage === 1) {
+            endPage = Math.min(5, totalPages);
+        } else if (endPage === totalPages) {
+            startPage = Math.max(1, totalPages - 4);
         }
     }
 
-    // Update "Showing X to Y of Z" text
+    // Add first page if not in range
+    if (startPage > 1) {
+        addPageButton(1);
+        if (startPage > 2) {
+            addEllipsis();
+        }
+    }
+
+    // Add page numbers
+    for (let i = startPage; i <= endPage; i++) {
+        addPageButton(i);
+    }
+
+    // Add last page if not in range
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            addEllipsis();
+        }
+        addPageButton(totalPages);
+    }
+
+    // Update showing text
     const startItem = (currentPage - 1) * itemsPerPage + 1;
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(
-            endItem
-        ).padStart(2, "0")} of ${totalItems}`;
+        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
     }
 
     // Enable/disable navigation buttons
@@ -238,10 +261,26 @@ function updatePaginationDisplay() {
     if (prevBtn) {
         prevBtn.disabled = currentPage === 1;
     }
-
     if (nextBtn) {
         nextBtn.disabled = currentPage === totalPages;
     }
+}
+
+function addPageButton(pageNum) {
+    const pageNumbersContainer = document.getElementById("page-numbers");
+    const button = document.createElement("button");
+    button.className = `pagination-btn${pageNum === currentPage ? " active" : ""}`;
+    button.textContent = pageNum;
+    button.onclick = () => goToPage(pageNum);
+    pageNumbersContainer.appendChild(button);
+}
+
+function addEllipsis() {
+    const pageNumbersContainer = document.getElementById("page-numbers");
+    const ellipsis = document.createElement("span");
+    ellipsis.className = "page-ellipsis";
+    ellipsis.textContent = "...";
+    pageNumbersContainer.appendChild(ellipsis);
 }
 
 // Get current page data
@@ -279,16 +318,34 @@ function createTableRow(transaction) {
     const statusClass = `status-${transaction.status.toLowerCase()}`;
     const statusIcon = getStatusIcon(transaction.status);
 
-    row.innerHTML = `
-        <div class="table-cell">${transaction.date}</div>
-        <div class="table-cell">${transaction.type}</div>
-        <div class="table-cell">${transaction.amount}</div>
-        <div class="table-cell">${transaction.reference}</div>
-        <div class="${statusClass}">
-            <div class="status-icon">${statusIcon}</div>
-            ${transaction.status}
-        </div>
+    const dateCell = document.createElement("div");
+    dateCell.className = "table-cell date";
+    dateCell.textContent = transaction.date;
+
+    const typeCell = document.createElement("div");
+    typeCell.className = "table-cell";
+    typeCell.textContent = transaction.type;
+
+    const amountCell = document.createElement("div");
+    amountCell.className = "table-cell currency";
+    amountCell.textContent = transaction.amount;
+
+    const referenceCell = document.createElement("div");
+    referenceCell.className = "table-cell";
+    referenceCell.textContent = transaction.reference;
+
+    const statusCell = document.createElement("div");
+    statusCell.className = statusClass;
+    statusCell.innerHTML = `
+        <div class="status-icon">${statusIcon}</div>
+        ${transaction.status}
     `;
+
+    row.appendChild(dateCell);
+    row.appendChild(typeCell);
+    row.appendChild(amountCell);
+    row.appendChild(referenceCell);
+    row.appendChild(statusCell);
 
     return row;
 }
@@ -319,15 +376,11 @@ function updateTableDisplay() {
 // Row interaction functions
 function handleRowClick(event, row, transactionId) {
     if (event.ctrlKey || event.metaKey) {
-        // Multi-select with Ctrl/Cmd
         toggleRowSelection(row, transactionId);
     } else {
-        // Single select
         clearAllSelections();
         selectRow(row, transactionId);
     }
-
-    console.log("Selected rows:", Array.from(selectedRows));
 }
 
 function selectRow(row, rowId) {
@@ -349,9 +402,7 @@ function deselectRow(row, rowId) {
 }
 
 function clearAllSelections() {
-    const selectedRowElements = document.querySelectorAll(
-        ".table-row.selected"
-    );
+    const selectedRowElements = document.querySelectorAll(".table-row.selected");
     selectedRowElements.forEach(function (row) {
         row.classList.remove("selected");
     });
@@ -406,17 +457,17 @@ function sortData(sortKey, direction = "asc") {
 // Utility functions
 function showNotification(message, type = "info") {
     const notification = document.createElement("div");
-    notification.className = `notification notification-${type}`;
+    notification.className = `notification ${type}`;
     notification.textContent = message;
 
-    document.body.appendChild(notification);
+    const container = document.getElementById("notification_container");
+    container.appendChild(notification);
 
-    // Auto remove after 3 seconds
     setTimeout(function () {
-        notification.classList.add('fade-out');
+        notification.classList.add("fade-out");
         setTimeout(function () {
             if (notification.parentNode) {
-                document.body.removeChild(notification);
+                container.removeChild(notification);
             }
         }, 300);
     }, 3000);

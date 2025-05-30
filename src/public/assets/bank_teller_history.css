@@ -490,3 +490,62 @@ body {
 .notification.fade-out {
     animation: fade-out 0.3s ease forwards;
 }
+
+/* Table Row Selection Styles */
+.table-row.selected {
+    background-color: var(--color-mint);
+    color: var(--color-white);
+}
+
+.table-row.selected .table-cell {
+    color: var(--color-white);
+}
+
+/* Notification Animation Styles */
+.notification.fade-out {
+    animation: fade-out 0.3s ease forwards;
+}
+
+@keyframes fade-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Currency Format Styles */
+.currency {
+    font-family: var(--font-main);
+}
+
+/* Date Format Styles */
+.date {
+    font-family: var(--font-main);
+}
+
+/* Page Numbers Container */
+.page-numbers {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.page-numbers .pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Ellipsis style */
+.page-ellipsis {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    padding: 0 4px;
+}
