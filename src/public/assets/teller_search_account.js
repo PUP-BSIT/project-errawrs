@@ -187,7 +187,7 @@ function hideAccountActions() {
     isDropdownOpen = false;
 }
 
-// Create and show transaction overlay
+// Create and show transaction form
 function createTransactionOverlay(type) {
     // Remove existing overlay if any
     const existingOverlay = document.querySelector('.transaction-overlay');
@@ -217,7 +217,7 @@ function createTransactionOverlay(type) {
             <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
         </div>
         <div class="form-actions">
-            <button class="form-btn cancel-btn" onclick="document.querySelector('.transaction-overlay').remove()">Cancel</button>
+            <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
             <button class="form-btn confirm-btn" onclick="showTransactionReceipt('${type}')">Confirm</button>
         </div>
     `;
@@ -226,13 +226,25 @@ function createTransactionOverlay(type) {
     container.appendChild(header);
     container.appendChild(form);
     overlay.appendChild(container);
-    document.body.appendChild(overlay);
+
+    // Insert after account details
+    const accountDetails = document.querySelector('.account-details');
+    accountDetails.parentNode.insertBefore(overlay, accountDetails.nextSibling);
 
     // Show overlay with animation
     setTimeout(() => overlay.classList.add('show'), 10);
 
     // Focus amount input
     document.getElementById('overlayAmount').focus();
+}
+
+// Hide transaction form
+function hideTransactionForm() {
+    const overlay = document.querySelector('.transaction-overlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        setTimeout(() => overlay.remove(), 300);
+    }
 }
 
 // Show transaction receipt for confirmation
