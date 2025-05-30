@@ -120,7 +120,7 @@ function displayAccountDetails(account) {
 // Hide account details
 function hideAccountDetails() {
     document.getElementById("account_details").style.display = "none";
-    hideAccountActions(); // Make sure to hide actions when hiding details
+    hideAccountActions();
     currentAccount = null;
 }
 
@@ -172,7 +172,6 @@ function showAccountActions() {
         </div>
     `;
 
-    // Insert the action buttons container after the account details container
     accountDetails.insertAdjacentHTML('afterend', actionButtonsHTML);
 
     isDropdownOpen = true;
@@ -277,7 +276,6 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     
-    // Set icon based on notification type
     let icon = '';
     switch(type) {
         case 'error':
@@ -356,21 +354,28 @@ function showTransactionReceipt(type) {
                 </div>
                 <div class="receipt-item">
                     <span>Current Balance:</span>
-                    <span>₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                    <span>₱${currentAccount.balance.toLocaleString('en-US', 
+                          { minimumFractionDigits: 2 })}</span>
                 </div>
                 <div class="receipt-item">
-                    <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'} Amount:</span>
-                    <span>₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                    <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'} 
+                          Amount:</span>
+                    <span>₱${amount.toLocaleString('en-US', 
+                          { minimumFractionDigits: 2 })}</span>
                 </div>
                 <div class="receipt-item total">
                     <span>New Balance:</span>
-                    <span>₱${newBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                    <span>₱${newBalance.toLocaleString('en-US', 
+                          { minimumFractionDigits: 2 })}</span>
                 </div>
             </div>
         </div>
         <div class="form-actions">
-            <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-            <button class="form-btn confirm-btn" onclick="processTransaction('${type}', ${amount})">Submit</button>
+            <button class="form-btn cancel-btn" 
+              onclick="hideTransactionForm()">Cancel</button>
+            <button class="form-btn confirm-btn" 
+              onclick="processTransaction('${type}', 
+              ${amount})">Submit</button>
         </div>
     `;
 }
@@ -378,11 +383,15 @@ function showTransactionReceipt(type) {
 // Update closeAccount to use notifications
 function closeAccount() {
     if (currentAccount.balance > 0) {
-        showNotification(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 'error');
+        showNotification(`Cannot close account ${currentAccount.number}. 
+            Account balance must be zero. Current balance: 
+            ₱${currentAccount.balance.toLocaleString('en-US', 
+            { minimumFractionDigits: 2 })}`, 'error');
         return;
     }
 
-    if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
+    if (confirm(`Are you sure you want to close account 
+          ${currentAccount.number}?`)) {
         currentAccount.status = "Inactive";
         accountDatabase[currentAccount.number].status = "Inactive";
 
@@ -404,7 +413,8 @@ function closeAccount() {
 
 // Update reopenAccount to use notifications
 function reopenAccount() {
-    if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
+    if (confirm(`Are you sure you want to reopen account 
+          ${currentAccount.number}?`)) {
         currentAccount.status = "Active";
         accountDatabase[currentAccount.number].status = "Active";
 
@@ -427,18 +437,21 @@ function reopenAccount() {
 // Update processTransaction to use notifications
 function processTransaction(type, amount) {
     const oldBalance = currentAccount.balance;
-    const newBalance = type === 'deposit' ? oldBalance + amount : oldBalance - amount;
+    const newBalance = type === 'deposit' ? 
+      oldBalance + amount : oldBalance - amount;
 
     // Update account balance
     currentAccount.balance = newBalance;
     accountDatabase[currentAccount.number].balance = newBalance;
 
     // Add transaction to history
-    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)} - Acc: #${currentAccount.number}`;
+    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)}
+       - Acc: #${currentAccount.number}`;
     addTransactionToHistory(type, amount, reference);
 
     // Update display
-    document.getElementById('account_balance').textContent = `₱${newBalance.toLocaleString('en-US', {
+    document.getElementById('account_balance').textContent
+       = `₱${newBalance.toLocaleString('en-US', {
         minimumFractionDigits: 2
     })}`;
 
@@ -452,7 +465,8 @@ function processTransaction(type, amount) {
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2>Transaction Complete</h2>
-            <p>Your ${type === 'deposit' ? 'deposit' : 'withdrawal'} has been processed successfully.</p>
+            <p>Your ${type === 'deposit' ? 'deposit' : 'withdrawal'} 
+              has been processed successfully.</p>
         </div>
         <div class="transaction-summary">
             <div class="summary-item">
@@ -461,19 +475,23 @@ function processTransaction(type, amount) {
             </div>
             <div class="summary-item">
                 <span>Amount:</span>
-                <span>₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                <span>₱${amount.toLocaleString('en-US', 
+                      { minimumFractionDigits: 2 })}</span>
             </div>
             <div class="summary-item total">
                 <span>New Balance:</span>
-                <span>₱${newBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                <span>₱${newBalance.toLocaleString('en-US', 
+                      { minimumFractionDigits: 2 })}</span>
             </div>
         </div>
         <div class="form-actions">
-            <button class="form-btn confirm-btn" onclick="hideTransactionForm()">Done</button>
+            <button class="form-btn confirm-btn" 
+              onclick="hideTransactionForm()">Done</button>
         </div>
     `;
 
-    showNotification(`${type === 'deposit' ? 'Deposit' : 'Withdrawal'} completed successfully.`, 'success');
+    showNotification(`${type === 'deposit' ? 'Deposit' : 'Withdrawal'} 
+          completed successfully.`, 'success');
 }
 
 // Function to add transaction to history
@@ -485,14 +503,16 @@ function addTransactionToHistory(type, amount, reference, status = "Success") {
     const newTransaction = {
         id: Date.now(), // Use timestamp as unique ID
         date: today,
-        type: type.charAt(0).toUpperCase() + type.slice(1), // Capitalize first letter
-        amount: `₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+        type: type.charAt(0).toUpperCase() + type.slice(1),
+        amount: `₱${amount.toLocaleString('en-US', 
+              { minimumFractionDigits: 2 })}`,
         reference: reference || 'Over-the-counter',
         status: status
     };
 
     // Get existing history data
-    let historyData = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
+    let historyData = JSON.parse(localStorage.getItem
+          ('transactionHistory') || '[]');
     
     // Add new transaction at the beginning of the array
     historyData.unshift(newTransaction);

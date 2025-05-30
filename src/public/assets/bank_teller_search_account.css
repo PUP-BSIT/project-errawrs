@@ -823,7 +823,6 @@ body {
     font-size: 1.2rem;
 }
 
-/* Add chevron icon styles */
 .account-chevron {
     position: absolute;
     top: 20px;
@@ -831,11 +830,11 @@ body {
     color: var(--color-gray);
     font-size: 1.5rem;
     transition: transform 0.3s ease;
-    transform: rotate(0deg); /* Start facing right */
+    transform: rotate(0deg);
 }
 
 .account-chevron.rotated {
-    transform: rotate(90deg); /* Rotate to face down */
+    transform: rotate(90deg);
 }
 
 /* Account Actions */
@@ -1027,7 +1026,6 @@ body {
     color: var(--color-white);
 }
 
-/* Update Notification Container Position */
 .notification-container {
     position: fixed;
     top: 85px;

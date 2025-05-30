@@ -361,7 +361,9 @@ function clearAllSelections() {
 function showTransactionDetails(transaction) {
     if (transaction) {
         alert(
-            `Transaction Details:\n\nDate: ${transaction.date}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nReference: ${transaction.reference}\nStatus: ${transaction.status}`
+            `Transaction Details:\n\nDate: ${transaction.date}\nType: 
+            ${transaction.type}\nAmount: ${transaction.amount}\nReference: 
+            ${transaction.reference}\nStatus: ${transaction.status}`
         );
     }
 }
