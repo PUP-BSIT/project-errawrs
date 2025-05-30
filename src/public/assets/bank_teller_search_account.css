@@ -478,7 +478,7 @@ body {
 }
 
 /* Transaction Section */
-.transaction-overlay {
+.transaction-form {
     width: 1150px;
     margin: 15px auto;
     display: none;
@@ -486,7 +486,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.transaction-overlay.show {
+.transaction-form.show {
     opacity: 1;
     display: block;
 }
@@ -500,6 +500,11 @@ body {
     transition: all 0.3s ease;
 }
 
+.transaction-form-content {
+    display: block;
+    margin-bottom: 20px;
+}
+
 .transaction-header {
     text-align: left;
     margin-bottom: 20px;
@@ -510,11 +515,6 @@ body {
     font-weight: 600;
     color: var(--color-primary-black);
     margin-bottom: 10px;
-}
-
-.transaction-form {
-    display: block;
-    margin-bottom: 20px;
 }
 
 .form-group {

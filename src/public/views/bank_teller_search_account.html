@@ -46,19 +46,22 @@
             <div class="search-section">
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="searchInput"
-                          placeholder="Search Account Number" onkeyup="searchAccount()">
+                    <input type="text" class="search-input" id="search_input"
+                          placeholder="Search Account Number" 
+                          onkeyup="searchAccount()">
                 </div>
             </div>
 
             <div class="account-container">
-                <div class="account-details" id="accountDetails" onclick="toggleAccountActions()">
+                <div class="account-details" id="account_details" 
+                      onclick="toggleAccountActions()">
                     <div class="account-left">
                         <div class="account-field">
                             <div class="account-label">Account Number</div>
                         </div>
                         <div class="account-field">
-                            <div class="account-label">Account Holder Name</div>
+                            <div class="account-label">Account Holder Name
+                            </div>
                         </div>
                         <div class="account-field">
                             <div class="account-label">Account Type</div>
@@ -75,19 +78,23 @@
                     
                     <div class="account-right">
                         <div class="account-field">
-                            <div class="account-value" id="accountNumber">2023123456</div>
+                            <div class="account-value" id="account_number">
+                                2023123456</div>
                         </div>
                         <div class="account-field">
-                            <div class="account-value" id="accountName">Juan Dela Cruz</div>
+                            <div class="account-value" id="account_name">
+                                Juan Dela Cruz</div>
                         </div>
                         <div class="account-field">
-                            <div class="account-value" id="accountType">Savings</div>
+                            <div class="account-value" id="account_type">
+                                Savings</div>
                         </div>
                         <div class="account-field">
-                            <div class="balance-value" id="accountBalance">₱25,750.00</div>
+                            <div class="balance-value" id="account_balance">
+                                ₱25,750.00</div>
                         </div>
                         <div class="account-field">
-                            <div class="status-active" id="accountStatus">
+                            <div class="status-active" id="account_status">
                                 <div class="status-icon">✓</div>
                                 Active
                             </div>
@@ -102,11 +109,13 @@
 
             <!-- Account Actions Dropdown -->
             <div class="account-actions-dropdown" id="accountActionsDropdown">
-                <button class="action-option deposit-option" onclick="showDepositForm()">
+                <button class="action-option deposit-option" 
+                    onclick="showDepositForm()">
                     <i class="fas fa-plus"></i>
                     Deposit
                 </button>
-                <button class="action-option withdraw-option" onclick="showWithdrawForm()">
+                <button class="action-option withdraw-option"
+                     onclick="showWithdrawForm()">
                     <i class="fas fa-minus"></i>
                     Withdraw
                 </button>
@@ -120,22 +129,27 @@
                 </button>
             </div>
 
-            <!-- Transaction Form Overlay -->
-            <div class="transaction-overlay" id="transactionOverlay">
+            <!-- Transaction Form -->
+            <div class="transaction-form" id="transaction_form">
                 <div class="transaction-container">
                     <div class="transaction-header">
                         <h2>Deposit</h2>
                         <p>Current Balance: ₱25,750.00</p>
                     </div>
-                    <div class="transaction-form">
+                    <div class="transaction-form-content">
                         <div class="form-group">
-                            <label for="overlayAmount">Enter Amount</label>
-                            <input type="number" id="overlayAmount" 
+                            <label for="transaction_amount">Enter Amount
+                            </label>
+                            <input type="number" id="transaction_amount" 
                                   placeholder="₱0.00" step="0.01" min="0">
                         </div>
                         <div class="form-actions">
-                            <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-                            <button class="form-btn confirm-btn" onclick="showTransactionReceipt('deposit')">Confirm</button>
+                            <button class="form-btn cancel-btn" 
+                                  onclick="hideTransactionForm()">
+                                Cancel</button>
+                            <button class="form-btn confirm-btn" 
+                                  onclick="showTransactionReceipt('deposit')">
+                                Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -149,18 +163,21 @@
                         <div class="history-header-value">Account Name</div>
                         <div class="history-header-value">Account Number</div>
                     </div>
-                    <div class="history-body" id="historyBody">
-                        <div class="history-row" onclick="selectFromHistory('Maria Santos', '2023987654')">
+                    <div class="history-body" id="history_body">
+                        <div class="history-row" onclick="selectFromHistory
+                              ('Maria Santos', '2023987654')">
                             <div class="history-value">1</div>
                             <div class="history-value">Maria Santos</div>
                             <div class="history-value">2023987654</div>
                         </div>
-                        <div class="history-row" onclick="selectFromHistory('Carlo Mendoza', '2023567890')">
+                        <div class="history-row" onclick="selectFromHistory
+                              ('Carlo Mendoza', '2023567890')">
                             <div class="history-value">2</div>
                             <div class="history-value">Carlo Mendoza</div>
                             <div class="history-value">2023567890</div>
                         </div>
-                        <div class="history-row" onclick="selectFromHistory('Robert Lim', '2023344556')">
+                        <div class="history-row" onclick="selectFromHistory
+                              ('Robert Lim', '2023344556')">
                             <div class="history-value">3</div>
                             <div class="history-value">Robert Lim</div>
                             <div class="history-value">2023344556</div>

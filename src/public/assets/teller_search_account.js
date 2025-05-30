@@ -43,7 +43,7 @@ let isDropdownOpen = false;
 
 // Search account function
 function searchAccount() {
-    const searchInput = document.getElementById("searchInput");
+    const searchInput = document.getElementById("search_input");
     const accountNumber = searchInput.value.trim();
 
     if (accountNumber.length >= 10) {
@@ -69,16 +69,16 @@ function searchAccount() {
 function displayAccountDetails(account) {
     currentAccount = account;
 
-    document.getElementById("accountNumber").textContent = account.number;
-    document.getElementById("accountName").textContent = account.name;
-    document.getElementById("accountType").textContent = account.type;
+    document.getElementById("account_number").textContent = account.number;
+    document.getElementById("account_name").textContent = account.name;
+    document.getElementById("account_type").textContent = account.type;
     document.getElementById(
-        "accountBalance"
+        "account_balance"
     ).textContent = `₱${account.balance.toLocaleString("en-US", {
         minimumFractionDigits: 2,
     })}`;
 
-    const statusElement = document.getElementById("accountStatus");
+    const statusElement = document.getElementById("account_status");
     if (account.status === "Active") {
         statusElement.innerHTML = `
             <div class="status-icon">✓</div>
@@ -93,7 +93,7 @@ function displayAccountDetails(account) {
         statusElement.className = "status-inactive";
     }
 
-    const accountDetails = document.getElementById("accountDetails");
+    const accountDetails = document.getElementById("account_details");
     
     // Add chevron icon if it doesn't exist
     if (!accountDetails.querySelector('.account-chevron')) {
@@ -119,7 +119,7 @@ function displayAccountDetails(account) {
 
 // Hide account details
 function hideAccountDetails() {
-    document.getElementById("accountDetails").style.display = "none";
+    document.getElementById("account_details").style.display = "none";
     hideAccountActions(); // Make sure to hide actions when hiding details
     currentAccount = null;
 }
@@ -189,21 +189,21 @@ function hideAccountActions() {
 
 // Hide transaction form
 function hideTransactionForm() {
-    const overlay = document.getElementById('transactionOverlay');
-    overlay.classList.remove('show');
+    const transactionForm = document.getElementById('transaction_form');
+    transactionForm.classList.remove('show');
     setTimeout(() => {
-        overlay.style.display = 'none';
+        transactionForm.style.display = 'none';
         // Reset the form to its initial state
-        const container = overlay.querySelector('.transaction-container');
+        const container = transactionForm.querySelector('.transaction-container');
         container.innerHTML = `
             <div class="transaction-header">
                 <h2>Deposit</h2>
                 <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
             </div>
-            <div class="transaction-form">
+            <div class="transaction-form-content">
                 <div class="form-group">
-                    <label for="overlayAmount">Enter Amount</label>
-                    <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+                    <label for="transaction_amount">Enter Amount</label>
+                    <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
                 </div>
                 <div class="form-actions">
                     <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
@@ -211,14 +211,14 @@ function hideTransactionForm() {
                 </div>
             </div>
         `;
-        document.getElementById('overlayAmount').value = ''; // Clear input
+        document.getElementById('transaction_amount').value = ''; // Clear input
     }, 300);
 }
 
 // Show deposit form
 function showDepositForm() {
-    const overlay = document.getElementById('transactionOverlay');
-    const container = overlay.querySelector('.transaction-container');
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
     
     // Reset the form to deposit state
     container.innerHTML = `
@@ -226,10 +226,10 @@ function showDepositForm() {
             <h2>Deposit</h2>
             <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
         </div>
-        <div class="transaction-form">
+        <div class="transaction-form-content">
             <div class="form-group">
-                <label for="overlayAmount">Enter Amount</label>
-                <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+                <label for="transaction_amount">Enter Amount</label>
+                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
             </div>
             <div class="form-actions">
                 <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
@@ -238,15 +238,15 @@ function showDepositForm() {
         </div>
     `;
 
-    overlay.style.display = 'block';
-    setTimeout(() => overlay.classList.add('show'), 10);
-    document.getElementById('overlayAmount').focus();
+    transactionForm.style.display = 'block';
+    setTimeout(() => transactionForm.classList.add('show'), 10);
+    document.getElementById('transaction_amount').focus();
 }
 
 // Show withdraw form
 function showWithdrawForm() {
-    const overlay = document.getElementById('transactionOverlay');
-    const container = overlay.querySelector('.transaction-container');
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
     
     // Reset the form to withdraw state
     container.innerHTML = `
@@ -254,10 +254,10 @@ function showWithdrawForm() {
             <h2>Withdraw</h2>
             <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
         </div>
-        <div class="transaction-form">
+        <div class="transaction-form-content">
             <div class="form-group">
-                <label for="overlayAmount">Enter Amount</label>
-                <input type="number" id="overlayAmount" placeholder="₱0.00" step="0.01" min="0">
+                <label for="transaction_amount">Enter Amount</label>
+                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
             </div>
             <div class="form-actions">
                 <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
@@ -266,14 +266,14 @@ function showWithdrawForm() {
         </div>
     `;
 
-    overlay.style.display = 'block';
-    setTimeout(() => overlay.classList.add('show'), 10);
-    document.getElementById('overlayAmount').focus();
+    transactionForm.style.display = 'block';
+    setTimeout(() => transactionForm.classList.add('show'), 10);
+    document.getElementById('transaction_amount').focus();
 }
 
 // Show transaction receipt for confirmation
 function showTransactionReceipt(type) {
-    const amountInput = document.getElementById('overlayAmount');
+    const amountInput = document.getElementById('transaction_amount');
     const amount = parseFloat(amountInput.value);
 
     if (!amount || amount <= 0) {
@@ -290,8 +290,8 @@ function showTransactionReceipt(type) {
         currentAccount.balance + amount : 
         currentAccount.balance - amount;
 
-    const overlay = document.getElementById('transactionOverlay');
-    const container = overlay.querySelector('.transaction-container');
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
 
     container.innerHTML = `
         <div class="transaction-header">
@@ -344,13 +344,13 @@ function processTransaction(type, amount) {
     addTransactionToHistory(type, amount, reference);
 
     // Update display
-    document.getElementById('accountBalance').textContent = `₱${newBalance.toLocaleString('en-US', {
+    document.getElementById('account_balance').textContent = `₱${newBalance.toLocaleString('en-US', {
         minimumFractionDigits: 2
     })}`;
 
     // Show completion message
-    const overlay = document.getElementById('transactionOverlay');
-    const container = overlay.querySelector('.transaction-container');
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
 
     container.innerHTML = `
         <div class="transaction-header">
@@ -417,7 +417,7 @@ function closeAccount() {
         accountDatabase[currentAccount.number].status = "Inactive";
 
         // Update status display
-        const statusElement = document.getElementById("accountStatus");
+        const statusElement = document.getElementById("account_status");
         statusElement.innerHTML = `
             <div class="status-icon">✗</div>
             ${currentAccount.status}
@@ -437,7 +437,7 @@ function reopenAccount() {
         accountDatabase[currentAccount.number].status = "Active";
 
         // Update status display
-        const statusElement = document.getElementById("accountStatus");
+        const statusElement = document.getElementById("account_status");
         statusElement.innerHTML = `
             <div class="status-icon">✓</div>
             ${currentAccount.status}
@@ -452,7 +452,7 @@ function reopenAccount() {
 
 // Add to search history
 function addToSearchHistory(name, accountNumber) {
-    const historyBody = document.getElementById("historyBody");
+    const historyBody = document.getElementById("history_body");
     const existingRows = historyBody.querySelectorAll(".history-row");
 
     // Remove if this account already exists in history
@@ -492,7 +492,7 @@ function addToSearchHistory(name, accountNumber) {
 
 // Update history row numbers
 function updateHistoryNumbers() {
-    const historyBody = document.getElementById("historyBody");
+    const historyBody = document.getElementById("history_body");
     const rows = historyBody.querySelectorAll(".history-row");
 
     rows.forEach((row, index) => {
@@ -504,7 +504,7 @@ function updateHistoryNumbers() {
 function selectFromHistory(name, accountNumber) {
     // Only proceed if selecting a different account
     if (!currentAccount || currentAccount.number !== accountNumber) {
-    const searchInput = document.getElementById("searchInput");
+    const searchInput = document.getElementById("search_input");
     searchInput.value = accountNumber;
     searchAccount();
     }
@@ -512,7 +512,7 @@ function selectFromHistory(name, accountNumber) {
 
 // Handle Enter key press in search input
 document
-    .getElementById("searchInput")
+    .getElementById("search_input")
     .addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             searchAccount();
