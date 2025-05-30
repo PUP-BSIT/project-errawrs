@@ -984,3 +984,77 @@ body {
     background: #e63946;
     transform: translateY(-2px);
 }
+
+/* Notification Styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: var(--color-white);
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slide-in 0.3s ease forwards;
+    cursor: pointer;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.notification.error {
+    background-color: var(--color-red);
+}
+
+.notification.success {
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.notification.warning {
+    background-color: #ffa502;
+}
+
+.notification.info {
+    background-color: #70a1ff;
+}
+
+.notification i {
+    font-size: 1.2rem;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification.fade-out {
+    animation: fade-out 0.3s ease forwards;
+}

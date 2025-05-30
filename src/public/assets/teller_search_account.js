@@ -271,18 +271,63 @@ function showWithdrawForm() {
     document.getElementById('transaction_amount').focus();
 }
 
-// Show transaction receipt for confirmation
+// Notification System
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('notification_container');
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    
+    // Set icon based on notification type
+    let icon = '';
+    switch(type) {
+        case 'error':
+            icon = 'fa-circle-exclamation';
+            break;
+        case 'success':
+            icon = 'fa-circle-check';
+            break;
+        case 'warning':
+            icon = 'fa-triangle-exclamation';
+            break;
+        default:
+            icon = 'fa-circle-info';
+    }
+    
+    notification.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+    `;
+
+    // Add click handler to dismiss notification
+    notification.onclick = () => dismissNotification(notification);
+
+    container.appendChild(notification);
+
+    // Auto dismiss after 5 seconds
+    setTimeout(() => dismissNotification(notification), 5000);
+}
+
+function dismissNotification(notification) {
+    notification.classList.add('fade-out');
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.parentElement.removeChild(notification);
+        }
+    }, 300);
+}
+
+// Update showTransactionReceipt to use notifications
 function showTransactionReceipt(type) {
     const amountInput = document.getElementById('transaction_amount');
     const amount = parseFloat(amountInput.value);
 
     if (!amount || amount <= 0) {
-        alert('Please enter a valid amount.');
+        showNotification('Please enter a valid amount.', 'error');
         return;
     }
 
     if (type === 'withdraw' && amount > currentAccount.balance) {
-        alert('Insufficient funds.');
+        showNotification('Insufficient funds.', 'error');
         return;
     }
 
@@ -330,7 +375,56 @@ function showTransactionReceipt(type) {
     `;
 }
 
-// Process transaction and complete
+// Update closeAccount to use notifications
+function closeAccount() {
+    if (currentAccount.balance > 0) {
+        showNotification(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 'error');
+        return;
+    }
+
+    if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
+        currentAccount.status = "Inactive";
+        accountDatabase[currentAccount.number].status = "Inactive";
+
+        // Update status display
+        const statusElement = document.getElementById("account_status");
+        statusElement.innerHTML = `
+            <div class="status-icon">✗</div>
+            ${currentAccount.status}
+        `;
+        statusElement.className = "status-inactive";
+
+        // Hide current actions and show updated actions
+        hideAccountActions();
+        showAccountActions();
+        
+        showNotification('Account has been closed successfully.', 'success');
+    }
+}
+
+// Update reopenAccount to use notifications
+function reopenAccount() {
+    if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
+        currentAccount.status = "Active";
+        accountDatabase[currentAccount.number].status = "Active";
+
+        // Update status display
+        const statusElement = document.getElementById("account_status");
+        statusElement.innerHTML = `
+            <div class="status-icon">✓</div>
+            ${currentAccount.status}
+        `;
+        statusElement.className = "status-active";
+
+        // Hide current actions and show updated actions
+        hideAccountActions();
+        showAccountActions();
+        
+        showNotification('Account has been reopened successfully.', 'success');
+    }
+}
+
+// Update processTransaction to use notifications
 function processTransaction(type, amount) {
     const oldBalance = currentAccount.balance;
     const newBalance = type === 'deposit' ? oldBalance + amount : oldBalance - amount;
@@ -378,6 +472,8 @@ function processTransaction(type, amount) {
             <button class="form-btn confirm-btn" onclick="hideTransactionForm()">Done</button>
         </div>
     `;
+
+    showNotification(`${type === 'deposit' ? 'Deposit' : 'Withdrawal'} completed successfully.`, 'success');
 }
 
 // Function to add transaction to history
@@ -403,51 +499,6 @@ function addTransactionToHistory(type, amount, reference, status = "Success") {
     
     // Store updated history
     localStorage.setItem('transactionHistory', JSON.stringify(historyData));
-}
-
-// Close account
-function closeAccount() {
-    if (currentAccount.balance > 0) {
-        alert(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`);
-        return;
-    }
-
-    if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
-        currentAccount.status = "Inactive";
-        accountDatabase[currentAccount.number].status = "Inactive";
-
-        // Update status display
-        const statusElement = document.getElementById("account_status");
-        statusElement.innerHTML = `
-            <div class="status-icon">✗</div>
-            ${currentAccount.status}
-        `;
-        statusElement.className = "status-inactive";
-
-        // Hide current actions and show updated actions
-        hideAccountActions();
-        showAccountActions();
-    }
-}
-
-// Reopen account
-function reopenAccount() {
-    if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
-        currentAccount.status = "Active";
-        accountDatabase[currentAccount.number].status = "Active";
-
-        // Update status display
-        const statusElement = document.getElementById("account_status");
-        statusElement.innerHTML = `
-            <div class="status-icon">✓</div>
-            ${currentAccount.status}
-        `;
-        statusElement.className = "status-active";
-
-        // Hide current actions and show updated actions
-        hideAccountActions();
-        showAccountActions();
-    }
 }
 
 // Add to search history
