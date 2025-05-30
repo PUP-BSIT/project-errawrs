@@ -155,7 +155,7 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 20px 40px;
+    padding: 24px 32px;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -374,4 +374,119 @@ body {
 
 .status-failed .status-icon {
     background: var(--color-failed);
+}
+
+/* Top Bar Styles */
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.top-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.top-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-icon i {
+    font-size: 1.4rem;
+    color: var(--color-primary-black);
+}
+
+.top-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    background: var(--color-mint);
+}
+
+.top-icon:hover i {
+    color: var(--color-white);
+}
+
+/* Notification Styles */
+.notification-container {
+    position: fixed;
+    top: 85px;
+    right: 32px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: var(--color-white);
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slide-in 0.3s ease forwards;
+    cursor: pointer;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.notification.error {
+    background-color: var(--color-failed);
+}
+
+.notification.success {
+    background-color: var(--color-success);
+}
+
+.notification.warning {
+    background-color: var(--color-pending);
+}
+
+.notification.info {
+    background-color: #70a1ff;
+}
+
+.notification i {
+    font-size: 1.2rem;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification.fade-out {
+    animation: fade-out 0.3s ease forwards;
 }

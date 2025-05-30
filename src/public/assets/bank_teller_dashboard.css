@@ -349,13 +349,13 @@ body {
 }
 
 .summary-header-cell {
-    background: var(--color-primary-black);
-    color: var(--color-white);
+    background: #7ed957;
+    color: var(--color-primary-black);
     padding: 12px 24px;
     border-radius: 20px;
     text-align: center;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 800;
+    font-size: 1rem;
     letter-spacing: -0.1px;
 }
 

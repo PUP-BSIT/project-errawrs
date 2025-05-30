@@ -985,11 +985,53 @@ body {
     transform: translateY(-2px);
 }
 
-/* Notification Styles */
+/* Top Bar Styles */
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.top-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.top-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-icon i {
+    font-size: 1.4rem;
+    color: var(--color-primary-black);
+}
+
+.top-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    background: var(--color-mint);
+}
+
+.top-icon:hover i {
+    color: var(--color-white);
+}
+
+/* Update Notification Container Position */
 .notification-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 85px;
+    right: 32px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
