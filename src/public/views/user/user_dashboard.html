@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Banking Dashboard</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
@@ -12,7 +12,7 @@
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="../assets/user_dashboard.css"/>
+        <link rel="stylesheet" href="../../assets/styles/user_dashboard.css" />
     </head>
     <body>
         <div class="dashboard-container">
@@ -28,7 +28,7 @@
                 <div class="user-profile">
                     <div class="avatar">
                         <img
-                            src="../assets/images/john_doe.png"
+                            src="../../assets/images/john_doe.png"
                             alt="Jhon Doe"
                             id="user_avatar"/>
                     </div>
@@ -38,35 +38,43 @@
                 <nav class="sidebar-nav">
                     <ul class="nav-list">
                         <li class="nav-item active">
-                            <a href="#" class="nav-link" data-page="dashboard">
+                            <a
+                                href="../user/user_dashboard.html"
+                                class="nav-link">
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="transfer">
+                            <a
+                                href="../user/transfer.html"
+                                class="nav-link"
+                                data-page="transfer">
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
                             <a
-                                href="#"
+                                href="../user/transaction.html"
                                 class="nav-link"
                                 data-page="transaction">
                                 Transaction
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-page="account">
+                            <a
+                                href="../user/account.html"
+                                class="nav-link"
+                                data-page="account">
                                 Account
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button class="logout-btn" id="logout_btn">
+                    <a href="/src/public/index.html" class="logout-btn" id="logout_btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Log out
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -106,11 +114,12 @@
                 <div class="dashboard-content">
                     <div class="left-section">
                         <div class="welcome-section">
-                            <h1 class="welcome-title">Hello<br/>Jhon Doe!</h1>
+                            <h1 class="welcome-title">Hello<br />Jhon Doe!</h1>
                         </div>
 
                         <div class="balance-card">
-                            <h2 class="balance-label">Balance</h2>
+                            <div id="account-display-container">
+                            </div>
                             <div class="balance-amount" id="account_balance">
                                 ₱ 7,610.10
                             </div>
@@ -136,27 +145,31 @@
 
                             <div class="transaction-header">
                                 <span class="header-tag date-tag">Date</span>
-                                <span class="header-tag amount-tag">Amount
-                                    </span>
+                                <span class="header-tag amount-tag"
+                                    >Amount
+                                </span>
                             </div>
 
                             <div class="transaction-list" id="transaction_list">
                                 <div class="transaction-item">
-                                    <span class="transaction-date">2025-05-02
-                                        </span>
+                                    <span class="transaction-date"
+                                        >2025-05-02
+                                    </span>
                                     <span class="transaction-amount positive">
                                         +₱30,000.00
                                     </span>
                                 </div>
                                 <div class="transaction-item">
-                                    <span class="transaction-date">2025-05-01
+                                    <span class="transaction-date"
+                                        >2025-05-01
                                     </span>
                                     <span class="transaction-amount negative">
                                         -₱5,000.00
                                     </span>
                                 </div>
                                 <div class="transaction-item">
-                                    <span class="transaction-date">2025-04-31
+                                    <span class="transaction-date"
+                                        >2025-04-31
                                     </span>
                                     <span class="transaction-amount negative">
                                         -₱10,000.00
@@ -168,6 +181,6 @@
                 </div>
             </div>
         </div>
-        <script src="../assets/user_dashboard.js"></script>
+        <script src="../../assets/script/user_dashboard.js"></script>
     </body>
 </html>
