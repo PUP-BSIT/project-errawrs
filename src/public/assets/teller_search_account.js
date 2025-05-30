@@ -295,6 +295,31 @@ function showTransactionReceipt(type) {
     `;
 }
 
+// Function to add transaction to history
+function addTransactionToHistory(type, amount, reference, status = "Success") {
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Create new transaction object
+    const newTransaction = {
+        id: Date.now(), // Use timestamp as unique ID
+        date: today,
+        type: type.charAt(0).toUpperCase() + type.slice(1), // Capitalize first letter
+        amount: `₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+        reference: reference || 'Over-the-counter',
+        status: status
+    };
+
+    // Get existing history data
+    let historyData = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
+    
+    // Add new transaction at the beginning of the array
+    historyData.unshift(newTransaction);
+    
+    // Store updated history
+    localStorage.setItem('transactionHistory', JSON.stringify(historyData));
+}
+
 // Process transaction and complete
 function processTransaction(type, amount) {
     const oldBalance = currentAccount.balance;
@@ -303,6 +328,10 @@ function processTransaction(type, amount) {
     // Update account balance
     currentAccount.balance = newBalance;
     accountDatabase[currentAccount.number].balance = newBalance;
+
+    // Add transaction to history
+    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)} - Acc: #${currentAccount.number}`;
+    addTransactionToHistory(type, amount, reference);
 
     // Update display
     document.getElementById('accountBalance').textContent = `₱${newBalance.toLocaleString('en-US', {

@@ -24,128 +24,141 @@ function initializeApplication() {
 
 // Initialize table data
 function initializeTableData() {
-    tableData = [
-        {
-            id: 1,
-            date: "2025-05-02",
-            type: "Deposit",
-            amount: "₱5,000.00",
-            reference: "Over-the-counter",
-            status: "Success",
-        },
-        {
-            id: 2,
-            date: "2025-05-02",
-            type: "Transfer",
-            amount: "₱12,000.00",
-            reference: "To Acc: #203567890",
-            status: "Success",
-        },
-        {
-            id: 3,
-            date: "2025-05-01",
-            type: "Transfer",
-            amount: "₱3,500.00",
-            reference: "To: BDO - #11733344",
-            status: "Success",
-        },
-        {
-            id: 4,
-            date: "2025-04-30",
-            type: "Deposit",
-            amount: "₱1,000.00",
-            reference: "Cheque Deposit",
-            status: "Pending",
-        },
-        {
-            id: 5,
-            date: "2025-04-29",
-            type: "Transfer",
-            amount: "₱4,000.00",
-            reference: "To Acc: #203344556",
-            status: "Failed",
-        },
-        {
-            id: 6,
-            date: "2025-04-28",
-            type: "Withdrawal",
-            amount: "₱2,500.00",
-            reference: "ATM Withdrawal",
-            status: "Success",
-        },
-        {
-            id: 7,
-            date: "2025-04-27",
-            type: "Deposit",
-            amount: "₱8,000.00",
-            reference: "Online Transfer",
-            status: "Success",
-        },
-        {
-            id: 8,
-            date: "2025-04-26",
-            type: "Transfer",
-            amount: "₱1,500.00",
-            reference: "To Acc: #445566778",
-            status: "Success",
-        },
-        {
-            id: 9,
-            date: "2025-04-25",
-            type: "Deposit",
-            amount: "₱3,200.00",
-            reference: "Cash Deposit",
-            status: "Success",
-        },
-        {
-            id: 10,
-            date: "2025-04-24",
-            type: "Transfer",
-            amount: "₱6,700.00",
-            reference: "To: Union Bank - #99887766",
-            status: "Pending",
-        },
-        {
-            id: 11,
-            date: "2025-04-23",
-            type: "Withdrawal",
-            amount: "₱1,800.00",
-            reference: "Over-the-counter",
-            status: "Success",
-        },
-        {
-            id: 12,
-            date: "2025-04-22",
-            type: "Transfer",
-            amount: "₱9,500.00",
-            reference: "To Acc: #112233445",
-            status: "Failed",
-        },
-        {
-            id: 13,
-            date: "2025-04-21",
-            type: "Deposit",
-            amount: "₱4,400.00",
-            reference: "Mobile Banking",
-            status: "Success",
-        },
-        {
-            id: 14,
-            date: "2025-04-20",
-            type: "Transfer",
-            amount: "₱2,100.00",
-            reference: "To Acc: #998877665",
-            status: "Success",
-        },
-        {
-            id: 15,
-            date: "2025-04-19",
-            type: "Deposit",
-            amount: "₱5,800.00",
-            reference: "Salary Deposit",
-            status: "Success",
-        },
-    ];
+    // Load data from localStorage
+    const savedData = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
+    
+    // If no saved data, use sample data
+    if (savedData.length === 0) {
+        tableData = [
+            {
+                id: 1,
+                date: "2025-05-02",
+                type: "Deposit",
+                amount: "₱5,000.00",
+                reference: "Over-the-counter",
+                status: "Success",
+            },
+            {
+                id: 2,
+                date: "2025-05-02",
+                type: "Transfer",
+                amount: "₱12,000.00",
+                reference: "To Acc: #203567890",
+                status: "Success",
+            },
+            {
+                id: 3,
+                date: "2025-05-01",
+                type: "Transfer",
+                amount: "₱3,500.00",
+                reference: "To: BDO - #11733344",
+                status: "Success",
+            },
+            {
+                id: 4,
+                date: "2025-04-30",
+                type: "Deposit",
+                amount: "₱1,000.00",
+                reference: "Cheque Deposit",
+                status: "Pending",
+            },
+            {
+                id: 5,
+                date: "2025-04-29",
+                type: "Transfer",
+                amount: "₱4,000.00",
+                reference: "To Acc: #203344556",
+                status: "Failed",
+            },
+            {
+                id: 6,
+                date: "2025-04-28",
+                type: "Withdrawal",
+                amount: "₱2,500.00",
+                reference: "ATM Withdrawal",
+                status: "Success",
+            },
+            {
+                id: 7,
+                date: "2025-04-27",
+                type: "Deposit",
+                amount: "₱8,000.00",
+                reference: "Online Transfer",
+                status: "Success",
+            },
+            {
+                id: 8,
+                date: "2025-04-26",
+                type: "Transfer",
+                amount: "₱1,500.00",
+                reference: "To Acc: #445566778",
+                status: "Success",
+            },
+            {
+                id: 9,
+                date: "2025-04-25",
+                type: "Deposit",
+                amount: "₱3,200.00",
+                reference: "Cash Deposit",
+                status: "Success",
+            },
+            {
+                id: 10,
+                date: "2025-04-24",
+                type: "Transfer",
+                amount: "₱6,700.00",
+                reference: "To: Union Bank - #99887766",
+                status: "Pending",
+            },
+            {
+                id: 11,
+                date: "2025-04-23",
+                type: "Withdrawal",
+                amount: "₱1,800.00",
+                reference: "Over-the-counter",
+                status: "Success",
+            },
+            {
+                id: 12,
+                date: "2025-04-22",
+                type: "Transfer",
+                amount: "₱9,500.00",
+                reference: "To Acc: #112233445",
+                status: "Failed",
+            },
+            {
+                id: 13,
+                date: "2025-04-21",
+                type: "Deposit",
+                amount: "₱4,400.00",
+                reference: "Mobile Banking",
+                status: "Success",
+            },
+            {
+                id: 14,
+                date: "2025-04-20",
+                type: "Transfer",
+                amount: "₱2,100.00",
+                reference: "To Acc: #998877665",
+                status: "Success",
+            },
+            {
+                id: 15,
+                date: "2025-04-19",
+                type: "Deposit",
+                amount: "₱5,800.00",
+                reference: "Salary Deposit",
+                status: "Success",
+            },
+        ];
+    } else {
+        tableData = savedData;
+    }
+
+    // Update filtered data and total items
+    filteredData = [...tableData];
+    totalItems = tableData.length;
+    totalPages = Math.ceil(totalItems / itemsPerPage);
 }
 
 // Pagination functions (called by onclick)
