@@ -35,7 +35,8 @@ function initializeTableData() {
                 date: "2025-05-02",
                 type: "Deposit",
                 amount: "₱5,000.00",
-                reference: "Over-the-counter",
+                accountNo: "1234-5678-9012",
+                accountName: "John Michael Smith",
                 status: "Success",
             },
             {
@@ -43,7 +44,8 @@ function initializeTableData() {
                 date: "2025-05-02",
                 type: "Transfer",
                 amount: "₱12,000.00",
-                reference: "To Acc: #203567890",
+                accountNo: "2345-6789-0123",
+                accountName: "Maria Elena Santos",
                 status: "Success",
             },
             {
@@ -51,7 +53,8 @@ function initializeTableData() {
                 date: "2025-05-01",
                 type: "Transfer",
                 amount: "₱3,500.00",
-                reference: "To: BDO - #11733344",
+                accountNo: "3456-7890-1234",
+                accountName: "Robert James Wilson",
                 status: "Success",
             },
             {
@@ -59,15 +62,17 @@ function initializeTableData() {
                 date: "2025-04-30",
                 type: "Deposit",
                 amount: "₱1,000.00",
-                reference: "Cheque Deposit",
-                status: "Pending",
+                accountNo: "4567-8901-2345",
+                accountName: "Sarah Jane Parker",
+                status: "Failed",
             },
             {
                 id: 5,
                 date: "2025-04-29",
                 type: "Transfer",
                 amount: "₱4,000.00",
-                reference: "To Acc: #203344556",
+                accountNo: "5678-9012-3456",
+                accountName: "David Lee Cooper",
                 status: "Failed",
             },
             {
@@ -75,7 +80,8 @@ function initializeTableData() {
                 date: "2025-04-28",
                 type: "Withdrawal",
                 amount: "₱2,500.00",
-                reference: "ATM Withdrawal",
+                accountNo: "6789-0123-4567",
+                accountName: "Emily Rose Taylor",
                 status: "Success",
             },
             {
@@ -83,7 +89,8 @@ function initializeTableData() {
                 date: "2025-04-27",
                 type: "Deposit",
                 amount: "₱8,000.00",
-                reference: "Online Transfer",
+                accountNo: "7890-1234-5678",
+                accountName: "William Henry Brown",
                 status: "Success",
             },
             {
@@ -91,7 +98,8 @@ function initializeTableData() {
                 date: "2025-04-26",
                 type: "Transfer",
                 amount: "₱1,500.00",
-                reference: "To Acc: #445566778",
+                accountNo: "8901-2345-6789",
+                accountName: "Anna Marie Johnson",
                 status: "Success",
             },
             {
@@ -99,7 +107,8 @@ function initializeTableData() {
                 date: "2025-04-25",
                 type: "Deposit",
                 amount: "₱3,200.00",
-                reference: "Cash Deposit",
+                accountNo: "9012-3456-7890",
+                accountName: "Christopher Lee",
                 status: "Success",
             },
             {
@@ -107,15 +116,17 @@ function initializeTableData() {
                 date: "2025-04-24",
                 type: "Transfer",
                 amount: "₱6,700.00",
-                reference: "To: Union Bank - #99887766",
-                status: "Pending",
+                accountNo: "0123-4567-8901",
+                accountName: "Patricia Ann Davis",
+                status: "Failed",
             },
             {
                 id: 11,
                 date: "2025-04-23",
                 type: "Withdrawal",
                 amount: "₱1,800.00",
-                reference: "Over-the-counter",
+                accountNo: "1234-5678-9012",
+                accountName: "Thomas James White",
                 status: "Success",
             },
             {
@@ -123,7 +134,8 @@ function initializeTableData() {
                 date: "2025-04-22",
                 type: "Transfer",
                 amount: "₱9,500.00",
-                reference: "To Acc: #112233445",
+                accountNo: "2345-6789-0123",
+                accountName: "Elizabeth Grace",
                 status: "Failed",
             },
             {
@@ -131,7 +143,8 @@ function initializeTableData() {
                 date: "2025-04-21",
                 type: "Deposit",
                 amount: "₱4,400.00",
-                reference: "Mobile Banking",
+                accountNo: "3456-7890-1234",
+                accountName: "Michael Scott Chen",
                 status: "Success",
             },
             {
@@ -139,7 +152,8 @@ function initializeTableData() {
                 date: "2025-04-20",
                 type: "Transfer",
                 amount: "₱2,100.00",
-                reference: "To Acc: #998877665",
+                accountNo: "4567-8901-2345",
+                accountName: "Jennifer Rose Kim",
                 status: "Success",
             },
             {
@@ -147,7 +161,8 @@ function initializeTableData() {
                 date: "2025-04-19",
                 type: "Deposit",
                 amount: "₱5,800.00",
-                reference: "Salary Deposit",
+                accountNo: "5678-9012-3456",
+                accountName: "Richard Paul Clark",
                 status: "Success",
             },
         ];
@@ -295,8 +310,6 @@ function getStatusIcon(status) {
     switch (status.toLowerCase()) {
         case "success":
             return "✓";
-        case "pending":
-            return "⏳";
         case "failed":
             return "✗";
         default:
@@ -330,9 +343,13 @@ function createTableRow(transaction) {
     amountCell.className = "table-cell currency";
     amountCell.textContent = transaction.amount;
 
-    const referenceCell = document.createElement("div");
-    referenceCell.className = "table-cell";
-    referenceCell.textContent = transaction.reference;
+    const accountNoCell = document.createElement("div");
+    accountNoCell.className = "table-cell";
+    accountNoCell.textContent = transaction.accountNo;
+
+    const accountNameCell = document.createElement("div");
+    accountNameCell.className = "table-cell";
+    accountNameCell.textContent = transaction.accountName;
 
     const statusCell = document.createElement("div");
     statusCell.className = statusClass;
@@ -344,7 +361,8 @@ function createTableRow(transaction) {
     row.appendChild(dateCell);
     row.appendChild(typeCell);
     row.appendChild(amountCell);
-    row.appendChild(referenceCell);
+    row.appendChild(accountNoCell);
+    row.appendChild(accountNameCell);
     row.appendChild(statusCell);
 
     return row;
@@ -412,9 +430,7 @@ function clearAllSelections() {
 function showTransactionDetails(transaction) {
     if (transaction) {
         alert(
-            `Transaction Details:\n\nDate: ${transaction.date}\nType: 
-            ${transaction.type}\nAmount: ${transaction.amount}\nReference: 
-            ${transaction.reference}\nStatus: ${transaction.status}`
+            `Transaction Details:\n\nDate: ${transaction.date}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nAccount No.: ${transaction.accountNo}\nAccount Name: ${transaction.accountName}\nStatus: ${transaction.status}`
         );
     }
 }
