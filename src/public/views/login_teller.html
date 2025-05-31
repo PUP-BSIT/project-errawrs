@@ -19,30 +19,35 @@
                     <p class="welcome-text">Welcome !</p>
                 </div>
 
-                <form class="login-form">
+                <!-- Error message container -->
+                <div id="error-message" class="error-message" style="display: none; color: red; margin-bottom: 15px; text-align: center;"></div>
+
+                <form class="login-form" id="login-form" action="../../modules/teller/teller_login.php" method="POST">
                     <div class="form-group">
                         <input
-                            type="text"
-                            placeholder="Username"
-                            class="login-input"/>
+                            type="number"
+                            name="teller_number"
+                            placeholder="Teller Number"
+                            class="login-input"
+                            required/>
                     </div>
 
                     <div class="form-group">
                         <input
                             type="password"
+                            name="password"
                             placeholder="Password"
-                            class="login-input"/>
-                        <button type="button" class="password-toggle"></button>
+                            class="login-input"
+                            required/>
+                        <button type="button" class="password-toggle" id="password-toggle"></button>
                     </div>
 
-                    <button type="submit" class="login-button">log in</button>
-
+                    <button type="submit" class="login-button">Log In</button>
 
                     <div class="forgot-links">
-                        <span>Forgot</span>
-                        <a href="#" class="forgot-link">username</a>
-                        <span>or</span>
-                        <a href="#" class="forgot-link">password</a>
+                        <span>Contact</span>
+                        <a href="#" class="forgot-link">administrator</a>
+                        <span>for account issues</span>
                     </div>
                 </form>
             </div>
@@ -62,5 +67,58 @@
                     alt="Person with account statistics"/>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Password toggle functionality
+                const passwordToggle = document.getElementById('password-toggle');
+                const passwordInput = document.querySelector('input[name="password"]');
+                
+                passwordToggle.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('show');
+                });
+
+                // Form submission handling
+                const form = document.getElementById('login-form');
+                const errorMessage = document.getElementById('error-message');
+
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    errorMessage.style.display = 'none';
+
+                    try {
+                        const formData = new FormData(form);
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                teller_number: formData.get('teller_number'),
+                                password: formData.get('password')
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            // Store teller info in sessionStorage
+                            sessionStorage.setItem('teller', JSON.stringify(data.teller));
+                            // Redirect to teller dashboard
+                            window.location.href = '../views/teller_dashboard.html';
+                        } else {
+                            errorMessage.textContent = data.error || 'Login failed. Please try again.';
+                            errorMessage.style.display = 'block';
+                        }
+                    } catch (error) {
+                        errorMessage.textContent = 'An error occurred. Please try again later.';
+                        errorMessage.style.display = 'block';
+                        console.error('Login error:', error);
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
