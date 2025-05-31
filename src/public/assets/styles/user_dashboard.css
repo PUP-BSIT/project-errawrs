@@ -83,6 +83,7 @@ body {
 .user-profile {
     text-align: center;
     margin-bottom: 48px;
+    position: relative;
 }
 
 .avatar {
@@ -92,12 +93,56 @@ body {
     overflow: hidden;
     margin: 0 auto 16px;
     border: 3px solid var(--color-mint);
+    background-color: var(--color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    position: relative;
 }
 
 .avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    display: none;
+}
+
+/* Edit Icon Styles */
+.edit-icon {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for the icon's size to truly center it */
+    background-color: rgba(182, 255, 74, 0.8); /* Lime green with some transparency */
+    color: var(--color-primary-black); /* Icon color */
+    width: 40px; /* Increase size slightly for better 클릭 experience */
+    height: 40px;
+    border-radius: 50%; /* Make it round */
+    display: flex; /* Ensure it's a flex container */
+    justify-content: center;
+    align-items: center;
+    font-size: 18px; /* Increase pen icon size */
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+    z-index: 10; /* Increase z-index to ensure it's on top */
+}
+
+.edit-icon.hidden {
+    opacity: 0; /* Hide by making it transparent */
+    pointer-events: none; /* Disable clicks when hidden */
+}
+
+/* Ensure pointer events are auto when not hidden */
+.edit-icon:not(.hidden) {
+    pointer-events: auto;
+}
+
+/* Add a subtle effect to the avatar on hover to indicate interactivity */
+.avatar:hover {
+    cursor: pointer; /* Indicate it's clickable/interactive */
+    box-shadow: 0 0 15px rgba(126, 217, 87, 0.6); /* Add a glow effect */
+    transition: box-shadow 0.3s ease; /* Smooth the glow effect */
 }
 
 .username {
@@ -179,6 +224,7 @@ body {
     flex: 1;
     padding: 24px 32px;
     overflow-y: auto;
+    transition: opacity 0.5s ease;
 }
 
 /* Header Styles */
@@ -308,13 +354,7 @@ body {
 }
 
 .balance-label {
-    font-size: 22px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    opacity: 0.9;
-    letter-spacing: -0.2px;
-    position: relative;
-    z-index: 1;
+    /* Removed - Keeping the rule block for context, but properties are gone */
 }
 
 .balance-amount {
@@ -325,6 +365,61 @@ body {
     position: relative;
     z-index: 1;
     text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles for dynamic account display in balance card */
+#account-display-container {
+    margin-bottom: 20px; /* Increased space between account info and balance */
+    min-height: 30px; /* Ensure space even when empty and accommodate larger text */
+    /* Position at the top */
+}
+
+.account-number-display {
+    font-size: 24px; /* Increased font size */
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
+    margin-bottom: 5px;
+}
+
+.account-select-container {
+    position: relative;
+    display: inline-block;
+    color: var(--color-primary-black);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.account-select-container select {
+    padding: 2px 25px 2px 5px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 24px; /* Increased font size */
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-weight: 600;
+}
+
+.account-select-container select option {
+    background-color: var(--color-white); /* White background for options */
+    color: var(--color-primary-black); /* Black text color for options */
+    padding: 5px 10px; /* Add some padding to options */
+}
+
+.account-select-container .select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.95); /* Match arrow color to text color */
+    pointer-events: none;
+    font-size: 14px;
 }
 
 /* Transfer Button - UPDATED - Matching wider size */
@@ -343,7 +438,7 @@ body {
     max-width: 560px;
     min-width: 480px;
     letter-spacing: -0.2px;
-    margin-top: auto;
+    margin-top: 20px; /* Adjust top margin to move it up */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
@@ -402,10 +497,12 @@ body {
     letter-spacing: -0.3px;
 }
 
+/* Transaction Header */
 .transaction-header {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     margin-bottom: 32px;
+    padding: 0 8px;
 }
 
 .header-tag {
@@ -423,6 +520,7 @@ body {
 
 .amount-tag {
     background-color: var(--color-primary-black);
+    margin-left: auto;
 }
 
 /* Transaction List */
@@ -431,31 +529,30 @@ body {
     flex-direction: column;
     gap: 24px;
     flex: 1;
-    justify-content: space-evenly;
+    padding: 10px 0;
 }
 
 /* Transaction Items */
 .transaction-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 16px 8px;
-    text-align: center;
 }
 
 .transaction-date {
     color: var(--color-text-muted);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: -0.2px;
-    text-align: center;
+    text-align: left;
 }
 
 .transaction-amount {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: -0.2px;
-    text-align: center;
+    text-align: right;
+    margin-left: auto;
 }
 
 .transaction-amount.positive {
@@ -594,4 +691,69 @@ body {
         font-size: 14px;
         padding: 10px 16px;
     }
+}
+
+/* Modal Styles (already existed, but adding form-group styles) */
+.modal-content .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.modal-content .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary-black);
+    margin-bottom: 5px;
+}
+
+.modal-content .form-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    background-color: var(--color-input-bg);
+    outline: none;
+}
+
+.modal-content .form-input::placeholder {
+    color: var(--color-gray);
+}
+
+.modal-content .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-default), opacity var(--transition-default);
+    margin: 5px;
+}
+
+.modal-content .primary-btn {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.modal-content .primary-btn:hover:not(:disabled) {
+     background-color: var(--color-mint);
+}
+
+.modal-content .secondary-btn {
+    background-color: var(--color-gray);
+    color: var(--color-white);
+}
+
+.modal-content .secondary-btn:hover {
+    background-color: #888;
+}
+
+.modal-content .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

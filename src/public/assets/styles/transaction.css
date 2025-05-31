@@ -1,0 +1,259 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+    --color-input-bg: #e5e5e5;
+    --color-border: #ddd;
+    --color-text-muted: #666;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+    --color-warning: #ffc107;
+    --color-info: #17a2b8;
+    --color-success-bg: #d4edda;
+    --color-error-bg: #f8d7da;
+    --color-warning-bg: #fff3cd;
+    --color-info-bg: #d1ecf1;
+    --border-radius-small: 8px;
+    --border-radius-medium: 20px;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+    --spacing-xl: 3rem;
+    --box-shadow-light: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --transition-default: 0.3s ease;
+}
+
+/* Existing base styles from user-dashboard.css might be included via the link tag */
+
+/* Specific styles for Transaction History page */
+.transaction-history-content {
+    padding: 20px;
+    background-color: var(--color-white);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-light);
+    max-width: 900px; /* Adjusted to maximize space */
+    margin: 24px auto; /* Center the container */
+}
+
+.transaction-history-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.transaction-table-container {
+    margin-bottom: 20px;
+    overflow-x: auto; /* Add horizontal scroll if needed */
+}
+
+.transaction-table {
+    width: 100%;
+    border-collapse: separate; /* Use separate for border-spacing */
+    border-spacing: 0 8px; /* Space between rows */
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.transaction-table th {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-table thead th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.transaction-table thead th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.transaction-table tbody tr {
+    background-color: var(--color-input-bg); /* Light gray background for rows */
+    border-radius: 8px; /* Rounded corners for rows */
+}
+
+.transaction-table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.transaction-table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.transaction-table tbody tr:hover {
+    background-color: #e0e0e0; /* Darker gray on hover */
+}
+
+.status-success i {
+    color: var(--color-success);
+    margin-right: 5px;
+}
+
+.status-failed i {
+    color: var(--color-error);
+    margin-right: 5px;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px; /* Align with table content */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.pagination-buttons {
+    display: flex; /* Use flex to align Previous, Page Numbers, and Next */
+    align-items: center;
+}
+
+.pagination-buttons button {
+    background-color: var(--color-primary-black);
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px; /* Slightly less rounded than image, match page numbers */
+    cursor: pointer;
+    margin: 0; /* Remove margin to place them next to page numbers */
+    font-family: var(--font-main);
+    font-size: 14px;
+}
+
+.pagination-buttons button:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.pagination-buttons button:last-child {
+     border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+    background-color: #333;
+}
+
+.pagination-buttons button:disabled {
+    background-color: var(--color-gray);
+    cursor: not-allowed;
+}
+
+.page-numbers {
+     display: flex; /* Use flex for page number buttons */
+     align-items: center;
+}
+
+.page-numbers button {
+    background-color: transparent;
+    color: var(--color-primary-black);
+    border: 1px solid var(--color-border);
+    /* Adjust margin to create space between page numbers and surrounding buttons */
+    margin: 0 3px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: 14px;
+}
+
+.page-numbers button:first-child {
+    margin-left: 5px; /* Add slight margin to separate from Previous */
+}
+
+.page-numbers button:last-child {
+     margin-right: 5px; /* Add slight margin to separate from Next */
+}
+
+.page-numbers button.active {
+    background-color: var(--color-mint);
+    color: var(--color-white);
+    border-color: var(--color-mint);
+}
+
+.page-numbers button:hover:not(.active) {
+    background-color: var(--color-input-bg);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pagination-controls span {
+    font-size: 14px;
+    color: var(--color-primary-black);
+}
+
+.pagination-controls select {
+    padding: 6px 25px 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 14px;
+    background-color: var(--color-input-bg);
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.pagination-controls .custom-select {
+     position: relative;
+}
+
+.pagination-controls .custom-select select {
+    padding-right: 25px;
+}
+
+.pagination-controls .select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    color: var(--color-gray);
+    pointer-events: none;
+    font-size: 12px;
+}
+
+.pagination-controls #go-button {
+    background-color: var(--color-mint);
+    color: var(--color-white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: 14px;
+}
+
+.pagination-controls #go-button:hover {
+     background-color: #67bf45;
+}
+
+/* Ensure 80 column width */
+/* This is handled by the editor's formatting, not CSS */ 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>StackOvercash - Profile</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+            rel="stylesheet"/>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link rel="stylesheet" href="../../assets/styles/user_dashboard.css"/> <!-- Keep some base styles -->
+        <link rel="stylesheet" href="../../assets/styles/profile.css"/> <!-- New profile specific styles -->
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <span class="logo-stack">Stack</span>
+                        <span class="logo-overcash">Overcash</span>
+                    </div>
+                </div>
+
+                <div class="user-profile">
+                    <div class="avatar" id="user_avatar_container">
+                        <!-- User initial will go here -->
+                         <div class="edit-icon hidden" id="edit_profile_icon">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                    </div>
+                    <h3 class="username" id="user_name">Jhon Doe</h3>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="../user/user_dashboard.html" class="nav-link" data-page="dashboard">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../user/transfer.html" class="nav-link" data-page="transfer">
+                                Transfer
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../user/transaction.html" class="nav-link" data-page="transaction">
+                                Transaction
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../user/account.html" class="nav-link" data-page="account">
+                                Account
+                            </a>
+                        </li>
+                         <li class="nav-item active">
+                            <a href="../user/profile.html" class="nav-link" data-page="profile">
+                                Profile
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="logout-btn" id="logout_btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Log out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Header -->
+                <header class="main-header">
+                    <div class="header-actions">
+                        <button
+                            class="icon-btn notification-btn"
+                            id="notification_btn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button class="icon-btn add-btn" id="add_btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="icon-btn help-btn" id="help_btn">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Profile Content -->
+                <div class="profile-content">
+                    <h2>Edit Profile</h2>
+
+                    <div class="profile-form-container">
+                        <!-- Edit form fields will go here -->
+                         <div class="form-group">
+                            <label for="edit_first_name">First Name</label>
+                            <input type="text" id="edit_first_name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_last_name">Last Name</label>
+                            <input type="text" id="edit_last_name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_username">Desired Username</label>
+                            <input type="text" id="edit_username" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_password">Password</label>
+                            <input type="text" id="edit_password" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_confirm_password">Confirm Password</label>
+                            <input type="text" id="edit_confirm_password" class="form-input">
+                        </div>
+                         <div class="form-group">
+                            <label for="edit_phone_number">Phone Number</label>
+                            <input type="text" id="edit_phone_number" class="form-input">
+                        </div>
+
+                        <button id="save_profile_button" class="btn primary-btn">Save</button>
+                        <button id="cancel_edit_button" class="btn secondary-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notification-container"></div>
+
+        <script src="../../assets/script/profile.js"></script>
+    </body>
+</html> 

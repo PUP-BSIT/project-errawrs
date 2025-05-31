@@ -47,6 +47,7 @@ body {
     );
     min-height: 100vh;
     color: var(--color-primary-black);
+    overflow-y: hidden; /* Prevent vertical scrolling */
 }
 
 /* Header */
@@ -249,76 +250,73 @@ body {
     font-size: 0.9rem;
 }
 
-/* Alert Styles */
+/* Notification Styles */
 .notification-alert {
+    position: relative;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: var(--spacing-medium);
-    border-radius: var(--border-radius-small);
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    gap: 10px;
+    font-size: 1rem;
     font-weight: 500;
-    animation: slideInDown 0.3s ease;
+    box-shadow: var(--box-shadow-light);
+    animation: slideInDown 0.5s ease-out;
+    overflow: hidden; /* Hide overflow */
 }
 
 .alert-success {
     background-color: var(--color-success-bg);
     color: var(--color-success);
-    border-left: 4px solid var(--color-success);
 }
 
 .alert-error {
     background-color: var(--color-error-bg);
     color: var(--color-error);
-    border-left: 4px solid var(--color-error);
 }
 
 .alert-warning {
     background-color: var(--color-warning-bg);
     color: var(--color-warning);
-    border-left: 4px solid var(--color-warning);
 }
 
 .alert-info {
     background-color: var(--color-info-bg);
     color: var(--color-info);
-    border-left: 4px solid var(--color-info);
 }
 
 .alert-close-button {
     background: none;
     border: none;
     color: inherit;
+    font-size: 1rem;
     cursor: pointer;
     margin-left: auto;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+    padding: 0 5px; /* Add some padding for easier clicking */
 }
 
 .alert-close-button:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    opacity: 0.7;
 }
 
-/* Animations */
 @keyframes slideInDown {
-    from {
-        transform: translateY(-20px);
+    0% {
+        transform: translateY(-100%);
         opacity: 0;
     }
-    to {
+    100% {
         transform: translateY(0);
         opacity: 1;
     }
 }
 
 @keyframes fadeInUp {
-    from {
-        transform: translateY(30px);
+    0% {
+        transform: translateY(20px);
         opacity: 0;
     }
-    to {
+    100% {
         transform: translateY(0);
         opacity: 1;
     }
@@ -327,54 +325,101 @@ body {
 .contact-form-wrapper,
 .contact-info-section {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
 }
 
 .contact-form-wrapper.animate-in,
 .contact-info-section.animate-in {
     opacity: 1;
-    transform: translateY(0);
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .content-container {
         flex-direction: column;
-        gap: var(--spacing-large);
-        margin: var(--spacing-large) auto;
+        align-items: center;
+        margin: 1rem auto; /* Reduced top/bottom margin */
+        gap: var(--spacing-medium); /* Revert to a slightly larger gap */
     }
-
+    
     .contact-form-wrapper {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
+        width: 100%; /* Make form take full width */
+        max-width: 450px; /* Keep a max-width if needed */
+        padding: var(--spacing-large); /* Increased padding slightly for readability */
+        margin-bottom: var(--spacing-large); /* Ensure good separation */
     }
-
+    
     .illustration-wrapper {
-        padding: var(--spacing-large);
+        padding: var(--spacing-large); /* Increased padding slightly */
+        margin-bottom: var(--spacing-large); /* Ensure good separation */
     }
-
+    
     .contact-illustration-image {
-        width: 280px;
-        height: 220px;
+        width: 100%; /* Make image responsive */
+        height: auto;
     }
-
+    
     .contact-details-container {
-        flex-direction: column;
-        gap: var(--spacing-large);
+        flex-direction: column; /* Stack contact details */
+        gap: var(--spacing-medium); /* Reduced gap */
     }
-
+    
     .main-header {
-        padding: var(--spacing-medium);
+        padding: 1rem var(--spacing-medium); /* Adjust header padding */
+    }
+    
+    .main-nav {
+        gap: 1.5rem; /* Reduced nav gap */
+    }
+    
+    .notification-alert {
+         width: calc(100% - 40px); /* Adjust alert width to fit with padding */
+    }
+}
+
+/* Add media query for smaller phones */
+@media (max-width: 480px) {
+    .main-header {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem var(--spacing-small);
     }
 
     .main-nav {
-        gap: var(--spacing-medium);
+        margin-top: 10px;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
-    .notification-alert {
-        padding: 0.75rem;
-        font-size: 0.85rem;
+    .site-logo {
+         margin-bottom: 10px; /* Add space below logo when stacked */
+    }
+
+    .content-container {
+        padding: 1rem var(--spacing-small); /* Simplified padding */
+        gap: var(--spacing-medium); /* Added gap for small screens */
+    }
+
+    .contact-form-wrapper,
+    .illustration-wrapper {
+        padding: var(--spacing-medium); /* Adjusted padding */
+        margin-bottom: var(--spacing-small); /* Reduced margin below sections */
+    }
+
+     .notification-alert {
+         width: calc(100% - 20px); /* Adjust alert width */
+    }
+
+    .contact-details-container {
+        gap: var(--spacing-small); /* Reduced gap for contact details */
+        margin-bottom: var(--spacing-medium); /* Add some space below contact details */
+    }
+
+    .contact-detail-item {
+        margin-bottom: 0; /* Ensure no extra bottom margin on individual items */
     }
 }
+
+/* Ensure 80 column width */
+/* This is handled by the editor's formatting, not CSS */
