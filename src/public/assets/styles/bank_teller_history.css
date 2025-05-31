@@ -8,7 +8,6 @@
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
     --color-success: #22c55e;
-    --color-pending: #f59e0b;
     --color-failed: #ef4444;
 }
 
@@ -331,16 +330,6 @@ body {
     color: var(--color-success);
 }
 
-.status-pending {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--color-pending);
-}
-
 .status-failed {
     display: flex;
     align-items: center;
@@ -366,10 +355,6 @@ body {
 
 .status-success .status-icon {
     background: var(--color-success);
-}
-
-.status-pending .status-icon {
-    background: var(--color-pending);
 }
 
 .status-failed .status-icon {

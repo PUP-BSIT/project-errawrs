@@ -60,7 +60,7 @@ function initializeTableData() {
                 type: "Deposit",
                 amount: "₱1,000.00",
                 reference: "Cheque Deposit",
-                status: "Pending",
+                status: "Failed",
             },
             {
                 id: 5,
@@ -108,7 +108,7 @@ function initializeTableData() {
                 type: "Transfer",
                 amount: "₱6,700.00",
                 reference: "To: Union Bank - #99887766",
-                status: "Pending",
+                status: "Failed",
             },
             {
                 id: 11,
@@ -295,8 +295,6 @@ function getStatusIcon(status) {
     switch (status.toLowerCase()) {
         case "success":
             return "✓";
-        case "pending":
-            return "⏳";
         case "failed":
             return "✗";
         default:
