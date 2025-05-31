@@ -308,13 +308,7 @@ body {
 }
 
 .balance-label {
-    font-size: 22px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    opacity: 0.9;
-    letter-spacing: -0.2px;
-    position: relative;
-    z-index: 1;
+    /* Removed - Keeping the rule block for context, but properties are gone */
 }
 
 .balance-amount {
@@ -325,6 +319,61 @@ body {
     position: relative;
     z-index: 1;
     text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles for dynamic account display in balance card */
+#account-display-container {
+    margin-bottom: 20px; /* Increased space between account info and balance */
+    min-height: 30px; /* Ensure space even when empty and accommodate larger text */
+    /* Position at the top */
+}
+
+.account-number-display {
+    font-size: 24px; /* Increased font size */
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
+    margin-bottom: 5px;
+}
+
+.account-select-container {
+    position: relative;
+    display: inline-block;
+    color: var(--color-primary-black);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.account-select-container select {
+    padding: 2px 25px 2px 5px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 24px; /* Increased font size */
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-weight: 600;
+}
+
+.account-select-container select option {
+    background-color: var(--color-white); /* White background for options */
+    color: var(--color-primary-black); /* Black text color for options */
+    padding: 5px 10px; /* Add some padding to options */
+}
+
+.account-select-container .select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.95); /* Match arrow color to text color */
+    pointer-events: none;
+    font-size: 14px;
 }
 
 /* Transfer Button - UPDATED - Matching wider size */
@@ -343,7 +392,7 @@ body {
     max-width: 560px;
     min-width: 480px;
     letter-spacing: -0.2px;
-    margin-top: auto;
+    margin-top: 20px; /* Adjust top margin to move it up */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
 }
 
@@ -402,10 +451,12 @@ body {
     letter-spacing: -0.3px;
 }
 
+/* Transaction Header */
 .transaction-header {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     margin-bottom: 32px;
+    padding: 0 8px;
 }
 
 .header-tag {
@@ -423,6 +474,7 @@ body {
 
 .amount-tag {
     background-color: var(--color-primary-black);
+    margin-left: auto;
 }
 
 /* Transaction List */
@@ -431,31 +483,30 @@ body {
     flex-direction: column;
     gap: 24px;
     flex: 1;
-    justify-content: space-evenly;
+    padding: 10px 0;
 }
 
 /* Transaction Items */
 .transaction-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding: 16px 8px;
-    text-align: center;
 }
 
 .transaction-date {
     color: var(--color-text-muted);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: -0.2px;
-    text-align: center;
+    text-align: left;
 }
 
 .transaction-amount {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: -0.2px;
-    text-align: center;
+    text-align: right;
+    margin-left: auto;
 }
 
 .transaction-amount.positive {

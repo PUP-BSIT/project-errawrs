@@ -17,7 +17,7 @@ const NOTIFICATION_TYPES = {
 
 const STEPS = {
     ENROLLMENT: 1,
-    ACCOUNT_CREATION: 2,
+    VERIFICATION: 2,
     SUCCESS: 3
 };
 
@@ -61,18 +61,18 @@ class RegistrationManager {
 
     bindEvents() {
         // Form submissions
-        const enrollmentForm = document.getElementById('enrollment_form');
-        const accountForm = document.getElementById('account_form');
+        const detailsForm = document.getElementById('details_form');
+        const otpForm = document.getElementById('otp_form');
         
-        if (enrollmentForm) {
-            enrollmentForm.addEventListener('submit', (e) => {
-                this.handleEnrollmentSubmit(e);
+        if (detailsForm) {
+            detailsForm.addEventListener('submit', (e) => {
+                this.handleDetailsSubmit(e);
             });
         }
 
-        if (accountForm) {
-            accountForm.addEventListener('submit', (e) => {
-                this.handleAccountSubmit(e);
+        if (otpForm) {
+            otpForm.addEventListener('submit', (e) => {
+                this.handleOtpSubmit(e);
             });
         }
 
@@ -115,6 +115,15 @@ class RegistrationManager {
         if (dashboardBtn) {
             dashboardBtn.addEventListener('click', () => {
                 this.goToDashboard();
+            });
+        }
+
+        // Login button on success page
+        const loginNowBtn = document.getElementById('login_now_btn');
+        if (loginNowBtn) {
+            loginNowBtn.addEventListener('click', () => {
+                this.showNotification('Redirecting to login page...', NOTIFICATION_TYPES.INFO);
+                console.log('Simulating redirect to login page.');
             });
         }
 
@@ -197,6 +206,7 @@ class RegistrationManager {
     }
 
     validatePassword(input) {
+        console.log('validatePassword called.');
         const value = input.value;
         const hasMinLength = 
             value.length >= FORM_VALIDATION.PASSWORD_MIN_LENGTH;
@@ -210,10 +220,12 @@ class RegistrationManager {
             `${FORM_VALIDATION.PASSWORD_MIN_LENGTH} characters with ` +
             `uppercase, lowercase, and number`;
         this.setInputValidation(input, isValid, errorMsg);
+        console.log('validatePassword result:', isValid);
         return isValid;
     }
 
     validatePasswordMatch(passwordInput, confirmPasswordInput) {
+        console.log('validatePasswordMatch called.');
         const passwordValue = passwordInput.value;
         const confirmPasswordValue = confirmPasswordInput.value;
         const isValid = passwordValue === confirmPasswordValue && 
@@ -221,10 +233,12 @@ class RegistrationManager {
         
         this.setInputValidation(confirmPasswordInput, isValid, 
             'Passwords do not match');
+        console.log('validatePasswordMatch result:', isValid);
         return isValid;
     }
 
     validateUsername(input) {
+        console.log('validateUsername called.');
         const value = input.value;
         const usernameRegex = new RegExp(
             `^[a-zA-Z0-9_]{${FORM_VALIDATION.USERNAME_MIN_LENGTH},` +
@@ -236,15 +250,18 @@ class RegistrationManager {
             `${FORM_VALIDATION.USERNAME_MAX_LENGTH} characters ` +
             `(letters, numbers, underscore only)`;
         this.setInputValidation(input, isValid, errorMsg);
+        console.log('validateUsername result:', isValid);
         return isValid;
     }
 
     validateName(input, minLength) {
+        console.log('validateName called.');
         const value = input.value.trim();
         const isValid = value.length >= minLength;
         
         const errorMsg = `Name must be at least ${minLength} characters`;
         this.setInputValidation(input, isValid, errorMsg);
+        console.log('validateName result:', isValid);
         return isValid;
     }
 
@@ -277,34 +294,8 @@ class RegistrationManager {
         }
     }
 
-    handleEnrollmentSubmit(e) {
-        e.preventDefault();
-        
-        const accountNumberInput = document.getElementById('account_number');
-        const smsCodeInput = document.getElementById('sms_code');
-        
-        if (!accountNumberInput || !smsCodeInput) return;
-        
-        const isAccountValid = this.validateAccountNumber(accountNumberInput);
-        const isSmsValid = this.validateSmsCode(smsCodeInput);
-        
-        if (isAccountValid && isSmsValid) {
-            this.showLoadingState('enrollment_form');
-            
-            // Simulate API call
-            setTimeout(() => {
-                this.hideLoadingState('enrollment_form');
-                this.goToStep(STEPS.ACCOUNT_CREATION);
-                this.showNotification('Verification successful!',
-                    NOTIFICATION_TYPES.SUCCESS);
-            }, TIMER_SETTINGS.API_SIMULATION_DELAY_MEDIUM);
-        } else {
-            this.showNotification('Please fill in all fields correctly',
-                NOTIFICATION_TYPES.ERROR);
-        }
-    }
-
-    handleAccountSubmit(e) {
+    handleDetailsSubmit(e) {
+        console.log('handleDetailsSubmit triggered.');
         e.preventDefault();
         
         const firstNameInput = document.getElementById('first_name');
@@ -313,58 +304,103 @@ class RegistrationManager {
         const passwordInput = document.getElementById('password');
         const confirmPasswordInput = 
             document.getElementById('confirm_password');
+        const phoneNumberInput = document.getElementById('phone_number');
         
         if (!firstNameInput || !lastNameInput || !usernameInput || 
-            !passwordInput || !confirmPasswordInput) return;
+            !passwordInput || !confirmPasswordInput || !phoneNumberInput) {
+            console.error('One or more input elements not found in Details form.');
+            this.showNotification('An internal error occurred.', NOTIFICATION_TYPES.ERROR);
+            return;
+        }
         
         // Validate all fields
         const isFirstNameValid = this.validateName(firstNameInput,
             FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
+        console.log('isFirstNameValid:', isFirstNameValid);
         const isLastNameValid = this.validateName(lastNameInput,
             FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
+        console.log('isLastNameValid:', isLastNameValid);
         const isUsernameValid = this.validateUsername(usernameInput);
+        console.log('isUsernameValid:', isUsernameValid);
         const isPasswordValid = this.validatePassword(passwordInput);
+        console.log('isPasswordValid:', isPasswordValid);
         const isPasswordMatchValid = this.validatePasswordMatch(
             passwordInput, confirmPasswordInput);
+        console.log('isPasswordMatchValid:', isPasswordMatchValid);
+        const isPhoneNumberValid = this.validatePhoneNumber(phoneNumberInput);
+        console.log('isPhoneNumberValid:', isPhoneNumberValid);
         
         const allFieldsValid = isFirstNameValid && isLastNameValid &&
-            isUsernameValid && isPasswordValid && isPasswordMatchValid;
+            isUsernameValid && isPasswordValid && isPasswordMatchValid && isPhoneNumberValid;
+        
+        console.log('allFieldsValid:', allFieldsValid);
         
         if (allFieldsValid) {
-            this.showLoadingState('account_form');
+            console.log('All fields are valid. Proceeding.');
+            this.showLoadingState('details_form');
             
-            // Update account holder name in success page
-            const fullName = `${firstNameInput.value.trim()} ` +
-                `${lastNameInput.value.trim()}`;
-            const accountHolderElement = 
-                document.getElementById('account_holder_name');
-            if (accountHolderElement) {
-                accountHolderElement.textContent = fullName;
-            }
+            // Store form data (optional, but good for later steps)
+            this.formData = {
+                firstName: firstNameInput.value.trim(),
+                lastName: lastNameInput.value.trim(),
+                username: usernameInput.value.trim(),
+                password: passwordInput.value, // Keep password for potential re-submission, though ideally not stored long-term
+                phoneNumber: phoneNumberInput.value.trim()
+            };
             
-            // Generate and set member ID
-            const memberId = this.generateMemberId(
-                firstNameInput.value.trim(),
-                lastNameInput.value.trim());
-            const memberIdElement = document.getElementById('member_id');
-            if (memberIdElement) {
-                memberIdElement.textContent = memberId;
-            }
-            
-            // Simulate API call
+            // Simulate sending OTP and going to the next step
             setTimeout(() => {
-                this.hideLoadingState('account_form');
-                this.goToStep(STEPS.SUCCESS);
-                this.showNotification('Account created successfully!',
-                    NOTIFICATION_TYPES.SUCCESS);
-            }, TIMER_SETTINGS.API_SIMULATION_DELAY_LONG);
+                console.log('Simulated API call complete. Hiding loading state and going to next step.');
+                this.hideLoadingState('details_form');
+                this.goToStep(STEPS.VERIFICATION); // Move to the OTP verification step
+                this.showNotification('Details saved. Please verify your phone number.', NOTIFICATION_TYPES.SUCCESS);
+                this.startOtpTimer(); // Start the OTP resend timer
+            }, TIMER_SETTINGS.API_SIMULATION_DELAY_MEDIUM);
         } else {
-            this.showNotification('Please fill in all fields correctly',
-                NOTIFICATION_TYPES.ERROR);
+            console.log('Validation failed. Showing error notification.');
+            this.showNotification('Please fill in all fields correctly.', NOTIFICATION_TYPES.ERROR);
+        }
+    }
+
+    handleOtpSubmit(e) {
+        e.preventDefault();
+        
+        const otpCodeInput = document.getElementById('otp_code');
+        if (!otpCodeInput) {
+            console.error('OTP input element not found.');
+            this.showNotification('An internal error occurred.', NOTIFICATION_TYPES.ERROR);
+            return;
+        }
+        
+        const otpCode = otpCodeInput.value.trim();
+        // Basic OTP validation (e.g., check length)
+        const isOtpValid = otpCode.length === FORM_VALIDATION.SMS_CODE_LENGTH; // Reusing SMS_CODE_LENGTH for OTP
+        
+        if (isOtpValid) {
+            this.showLoadingState('otp_form');
+            
+            // Simulate OTP verification API call
+            setTimeout(() => {
+                this.hideLoadingState('otp_form');
+                
+                // Simulate successful verification
+                const isVerificationSuccessful = true; // Replace with actual verification logic
+                
+                if (isVerificationSuccessful) {
+                    this.goToStep(STEPS.SUCCESS);
+                    this.showNotification('Phone number verified successfully!', NOTIFICATION_TYPES.SUCCESS);
+                    this.populateSuccessPage(); // Populate the success page with generated info
+                } else {
+                    this.showNotification('Invalid OTP. Please try again.', NOTIFICATION_TYPES.ERROR);
+                }
+            }, TIMER_SETTINGS.API_SIMULATION_DELAY_MEDIUM);
+        } else {
+            this.showNotification(`Please enter a valid ${FORM_VALIDATION.SMS_CODE_LENGTH}-digit OTP.`, NOTIFICATION_TYPES.ERROR);
         }
     }
 
     goToStep(step) {
+        console.log('goToStep called with step:', step);
         const isValidStep = step >= STEPS.ENROLLMENT && step <= this.maxStep;
         if (!isValidStep) return;
         
@@ -392,7 +428,7 @@ class RegistrationManager {
         switch (step) {
             case STEPS.ENROLLMENT:
                 return 'one';
-            case STEPS.ACCOUNT_CREATION:
+            case STEPS.VERIFICATION:
                 return 'two';
             case STEPS.SUCCESS:
                 return 'three';
@@ -519,17 +555,49 @@ class RegistrationManager {
         });
     }
 
-    generateMemberId(firstName, lastName) {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
+    generateAccountNumber() {
+        // Simple timestamp-based account number
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000);
+        return `SAC${timestamp}${random}`.substring(0, 12); // Example format, adjust as needed
+    }
+
+    populateSuccessPage() {
+        const usernameElement = document.getElementById('registered_username');
+        const accountNumberElement = document.getElementById('generated_account_number');
         
-        const initials = 
-            (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-        const lastNameUpper = lastName.toUpperCase().substring(0, 3);
+        if (usernameElement && accountNumberElement) {
+            // Use data from the details form (assuming it's stored in this.formData)
+            usernameElement.textContent = this.formData.username || 'N/A'; // Display the username entered in step 1
+            const newAccountNumber = this.generateAccountNumber(); // Generate a new account number
+            accountNumberElement.textContent = newAccountNumber;
+        } else {
+            console.error('Success page elements not found.');
+        }
+    }
+
+    startOtpTimer() {
+        const resendLink = document.getElementById('resend_otp');
+        if (!resendLink) return;
         
-        return `${lastNameUpper}${year}${month}${day}`;
+        this.resendCountdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
+        resendLink.style.pointerEvents = 'none';
+        resendLink.style.opacity = '0.5';
+        
+        resendLink.textContent = `Resend OTP in ${this.resendCountdown}s`;
+        
+        this.resendTimer = setInterval(() => {
+            this.resendCountdown--;
+            resendLink.textContent = `Resend OTP in ${this.resendCountdown}s`;
+            
+            if (this.resendCountdown <= 0) {
+                clearInterval(this.resendTimer);
+                this.resendTimer = null;
+                resendLink.textContent = 'Resend OTP';
+                resendLink.style.pointerEvents = 'auto';
+                resendLink.style.opacity = '1';
+            }
+        }, 1000);
     }
 
     showNotification(message, type = NOTIFICATION_TYPES.INFO) {
@@ -606,6 +674,20 @@ class RegistrationManager {
         setTimeout(() => {
             window.location.href = '/dashboard';
         }, 1000);
+    }
+
+    validatePhoneNumber(input) {
+        console.log('validatePhoneNumber called.');
+        const value = input.value.trim();
+        // Basic validation: starts with +, contains only digits and spaces/hyphens
+        // In a real app, use a more robust regex based on expected formats
+        const phoneRegex = /^\+?\d[\d\s-]{7,}/;
+        const isValid = phoneRegex.test(value);
+        
+        const errorMsg = 'Please enter a valid phone number (e.g., +1 555 123 4567)';
+        this.setInputValidation(input, isValid, errorMsg);
+        console.log('validatePhoneNumber result:', isValid);
+        return isValid;
     }
 }
 
