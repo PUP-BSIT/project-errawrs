@@ -22,23 +22,24 @@ function generateOtp($length = 6) {
 }
 
 /**
- * Sends an OTP to a specified phone number using the Semaphore API.
+ * Sends an OTP to a specified phone number (simulated for demo).
  * Stores the OTP and its expiry time in the session.
  *
- * @param string $phoneNumber The phone number to send the OTP to.
- * @return array An associative array indicating success or failure.
+ * @param string $phoneNumber The phone number associated with the OTP.
+ * @return array An associative array indicating simulated success or failure.
  */
 function sendOtp($phoneNumber) {
-    // Validate phone number format (basic validation - 11 digits)
-    if (!preg_match('/^[0-9]{11}$/', $phoneNumber)) {
+    // Validate phone number format (11 digits starting with 0, or 12 digits starting with 63)
+    if (!preg_match('/^(09|639)[0-9]{9}$/', $phoneNumber)) {
         return [
             'success' => false,
-            'error' => 'Invalid phone number format. Must be 11 digits.'
+            'error' => 'Invalid phone number format. Must be 11 digits (09xxxxxxxxx) or 12 digits (639xxxxxxxxx).'
         ];
     }
 
-    $otp = generateOtp(); // Generate a 6-digit OTP
-    $expiry_time = time() + (3 * 60); // OTP valid for 5 minutes
+    // --- Demo Mode: Use predefined OTP instead of generating ---
+    $otp = '123456'; // Predefined OTP for demo purposes
+    $expiry_time = time() + (5 * 60); // OTP valid for 5 minutes
 
     // Store OTP and expiry in session linked to the phone number
     $_SESSION['otp_' . $phoneNumber] = [
@@ -46,13 +47,62 @@ function sendOtp($phoneNumber) {
         'expiry' => $expiry_time
     ];
 
-    // --- Semaphore API Call ---
-    // TODO: Implement the actual API call to Semaphore to send the SMS.
-    $semaphore_api_key = 'SEMAPHORE_API_KEY';
-    $semaphore_sender_id = 'SEMAPHORE_SENDER_ID';
-    $semaphore_api_url = 'https://semaphore.co/api/v4/messages';
+    // --- Semaphore API Call (Commented out for Demo) ---
+    /*
+    // Read environment variables directly from the .env file
+    $envFilePath = __DIR__ . '/../../.env'; // Adjust path to your project root
+    $envVars = [];
 
-    $message_text = "Your OTP is: " . $otp . ". It is valid for 5 minutes.";
+    if (file_exists($envFilePath)) {
+        $lines = file($envFilePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($lines as $line) {
+            // Skip comments
+            if (str_starts_with(trim($line), '#')) {
+                continue;
+            }
+
+            // Split the line at the first equals sign
+            $parts = explode('=', $line, 2);
+
+            if (count($parts) === 2) {
+                $key = trim($parts[0]);
+                $value = trim($parts[1]);
+
+                // Remove quotes from value if present
+                if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+                    $value = substr($value, 1, -1);
+                } elseif (str_starts_with($value, '\'') && str_ends_with($value, '\'')) {
+                     $value = substr($value, 1, -1);
+                }
+
+                $envVars[$key] = $value;
+            }
+        }
+    }
+
+    // Retrieve API key, sender ID, and API URL from the loaded environment variables
+    $semaphore_api_key = $envVars['SEMAPHORE_API_KEY'] ?? null;
+    $semaphore_sender_id = $envVars['SEMAPHORE_SENDER_ID'] ?? null;
+    $semaphore_api_url = $envVars['SEMAPHORE_API_URL'] ?? null;
+
+    // Check if required environment variables are set
+    if (!$semaphore_api_key || !$semaphore_sender_id || !$semaphore_api_url) {
+        $missing = [];
+        if (!$semaphore_api_key) $missing[] = 'SEMAPHORE_API_KEY';
+        if (!$semaphore_sender_id) $missing[] = 'SEMAPHORE_SENDER_ID';
+        if (!$semaphore_api_url) $missing[] = 'SEMAPHORE_API_URL';
+
+        error_log("Missing Semaphore environment variables: " . implode(', ', $missing));
+        return [
+            'success' => false,
+            'error' => 'Semaphore API configuration missing.',
+            'details' => 'Missing environment variables: ' . implode(', ', $missing)
+        ];
+    }
+
+    // Use the {otp} placeholder as specified by the API documentation
+    $message_text = "Your One Time Password is: {otp}. Please use it within 5 minutes.";
 
     $curl = curl_init();
 
@@ -69,7 +119,8 @@ function sendOtp($phoneNumber) {
           'apikey' => $semaphore_api_key,
           'number' => $phoneNumber,
           'message' => $message_text,
-          'sendername' => $semaphore_sender_id
+          'sendername' => $semaphore_sender_id,
+          'code' => $otp // Pass our generated code for the API to use
       ),
       CURLOPT_HTTPHEADER => array(
         'Accept: application/json',
@@ -83,7 +134,7 @@ function sendOtp($phoneNumber) {
     curl_close($curl);
 
     if ($err) {
-        // TODO: Log the cURL error.
+        error_log("Semaphore cURL Error for phone number " . $phoneNumber . ": " . $err);
         return [
             'success' => false,
             'error' => 'cURL Error #' . $err,
@@ -92,16 +143,13 @@ function sendOtp($phoneNumber) {
     } else {
         $response_data = json_decode($response, true);
 
-        // TODO: Check the actual response from Semaphore API to confirm success.
-        // Semaphore API usually returns an array of message statuses.
-        if ($http_status === 200 && !empty($response_data)) {
-             // Assuming the API returns a non-empty array on success
+        if ($http_status === 200 && !empty($response_data) && isset($response_data[0]['status'])) {
             return [
                 'success' => true,
                 'message' => 'OTP sent successfully.'
             ];
         } else {
-            // TODO: Log the Semaphore API error response for debugging.
+            error_log("Semaphore API Error Response for phone number " . $phoneNumber . ": " . print_r($response_data, true));
             return [
                 'success' => false,
                 'error' => 'Semaphore API error or unexpected response.',
@@ -109,18 +157,27 @@ function sendOtp($phoneNumber) {
             ];
         }
     }
+    */
+
+    // --- End Demo Mode ---
+
+    // Simulate a successful API call response for demo
+    return [
+        'success' => true,
+        'message' => 'OTP sent successfully (Simulated).',
+        'simulated_otp' => $otp
+    ];
 }
 
 // Direct API call handling (for backward compatibility or direct use)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
     $request_data = json_decode(file_get_contents('php://input'), true);
 
-    // Check if phone_number is provided in the request payload
     if (isset($request_data['phone_number'])) {
         $phone_number_from_request = $request_data['phone_number'];
         $send_result = sendOtp($phone_number_from_request);
 
-        header('Content-Type: application/json');
         if ($send_result['success'] === true) {
             http_response_code(200);
         } else {
@@ -128,6 +185,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         echo json_encode($send_result);
         exit();
+    } else {
+         http_response_code(400);
+         echo json_encode([
+             'success' => false,
+             'error' => 'Missing required field: phone_number.'
+         ]);
+         exit();
     }
 }
 
