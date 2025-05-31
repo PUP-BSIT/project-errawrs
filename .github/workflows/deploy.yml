@@ -17,39 +17,85 @@ jobs:
       - name: Set up SSH keys
         run: |
           mkdir -p ~/.ssh
+          # Set up keys from secrets
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/aws_key
           echo "${{ secrets.EC2_SSH_KEY_SIM }}" > ~/.ssh/aws_key_sim
           echo "${{ secrets.EC2_SSH_KEY_IVAN }}" > ~/.ssh/aws_key_ivan
-          chmod 600 ~/.ssh/aws_key ~/.ssh/aws_key_sim ~/.ssh/aws_key_ivan
+          echo "${{ secrets.EC2_SSH_KEY_GERALD }}" > ~/.ssh/aws_key_gerald # Add the new key
+          # Set correct permissions
+          chmod 600 ~/.ssh/aws_key ~/.ssh/aws_key_sim ~/.ssh/aws_key_ivan ~/.ssh/aws_key_gerald
+          # Add host to known_hosts to avoid interactive prompts - Make sure the IP/hostname is correct
           ssh-keyscan -H ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: Deploy to Production (main branch)
         if: github.ref == 'refs/heads/main'
         run: |
-          # Backup .env if it exists
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/src/.env ]; then cp /var/www/html/errawrs/project-errawrs/src/.env /var/www/html/errawrs/project-errawrs/.env.bak; fi'
-          # Remove all files except .env.bak
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'find /var/www/html/errawrs/project-errawrs/ -mindepth 1 ! -name ".env.bak" -exec sudo rm -rf {} +'
-          # Copy new files
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-prod/
-          # Move new files into place
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-prod/* /var/www/html/errawrs/project-errawrs/ && sudo chown -R www-data:www-data /var/www/html/errawrs/project-errawrs && sudo chmod -R 755 /var/www/html/errawrs/project-errawrs'
-          # Restore .env
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/.env.bak ]; then mv /var/www/html/errawrs/project-errawrs/.env.bak /var/www/html/errawrs/project-errawrs/src/.env; fi'
+          SSH_KEY=~/.ssh/aws_key # Key for deployment (can be any of the set up keys)
+          REMOTE_USER=ubuntu
+          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          DEPLOY_PATH=/var/www/html/errawrs/project-errawrs
+          TMP_PATH=/tmp/errawrs_deploy_prod # Temporary path for new files
+          ENV_BACKUP_PATH=/tmp/errawrs_env_backup_prod # Dedicated temporary path for .env backup
+
+          # Ensure temporary paths exist
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
+
+          # Safely backup .env to a separate temporary location
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/src/.env ]; then cp ${DEPLOY_PATH}/src/.env ${ENV_BACKUP_PATH}/.env.bak; else echo 'No .env file found at production path to backup.'; fi"
+
+          # Clean the deployment directory (remove all files/folders)
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*" # Remove all contents
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}" # Ensure directory exists after cleanup
+
+          # Copy new files to the temporary path on EC2
+          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${TMP_PATH}/
+
+          # Move new files into the deployment path and set permissions
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
+
+          # Restore .env from the temporary backup location
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/src/.env; else echo 'No .env backup found to restore.'; fi"
+
+          # Clean up temporary backup path (optional, can keep if needed for debugging)
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
+
 
       - name: Deploy to Development (dev branch)
         if: github.ref == 'refs/heads/dev'
         run: |
-          # Backup .env if it exists
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/src/.env ]; then cp /var/www/dev/src/.env /var/www/dev/.env.bak; fi'
-          # Remove all files except .env.bak
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'find /var/www/dev/ -mindepth 1 ! -name ".env.bak" -exec sudo rm -rf {} +'
-          # Copy new files
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-dev/
-          # Move new files into place
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-dev/* /var/www/dev/ && sudo chown -R www-data:www-data /var/www/dev && sudo chmod -R 755 /var/www/dev'
-          # Restore .env
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/.env.bak ]; then mv /var/www/dev/.env.bak /var/www/dev/src/.env; fi'
+          SSH_KEY=~/.ssh/aws_key # Key for deployment (can be any of the set up keys)
+          REMOTE_USER=ubuntu
+          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com # Assuming same host for dev, change if different
+          DEPLOY_PATH=/var/www/dev # Deployment path for development
+          TMP_PATH=/tmp/errawrs_deploy_dev # Temporary path for new files
+          ENV_BACKUP_PATH=/tmp/errawrs_env_backup_dev # Dedicated temporary path for .env backup
+
+
+          # Ensure temporary paths exist
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
+
+          # Safely backup .env to a separate temporary location
+          # Adjust the source path of .env if it's not directly under DEPLOY_PATH/src
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/src/.env ]; then cp ${DEPLOY_PATH}/src/.env ${ENV_BACKUP_PATH}/.env.bak; else echo 'No .env file found at development path to backup.'; fi"
+
+          # Clean the deployment directory (remove all files/folders)
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*" # Remove all contents
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}" # Ensure directory exists after cleanup
+
+
+          # Copy new files to the temporary path on EC2
+          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${TMP_PATH}/
+
+          # Move new files into the deployment path and set permissions
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
+
+          # Restore .env from the temporary backup location
+          # Adjust the destination path of .env if it's not directly under DEPLOY_PATH/src
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/src/.env; else echo 'No .env backup found to restore.'; fi"
+
+          # Clean up temporary backup path (optional, can keep if needed for debugging)
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
+
 
       - name: Deployment Summary
         run: |
