@@ -26,11 +26,11 @@
                 </div>
 
                 <div class="user-profile">
-                    <div class="avatar">
-                        <img
-                            src="../../assets/images/john_doe.png"
-                            alt="Jhon Doe"
-                            id="user_avatar"/>
+                    <div class="avatar" id="user_avatar_container">
+                        <!-- User initial will go here -->
+                        <div class="edit-icon hidden" id="edit_profile_icon">
+                            <i class="fas fa-pen"></i>
+                        </div>
                     </div>
                     <h3 class="username" id="user_name">Jhon Doe</h3>
                 </div>
@@ -66,6 +66,11 @@
                                 class="nav-link"
                                 data-page="account">
                                 Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../user/profile.html" class="nav-link" data-page="profile">
+                                Profile
                             </a>
                         </li>
                     </ul>

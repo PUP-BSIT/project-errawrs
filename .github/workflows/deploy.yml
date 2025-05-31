@@ -18,6 +18,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           # Set up keys from secrets
+          # Set up keys from secrets
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/aws_key
           echo "${{ secrets.EC2_SSH_KEY_SIM }}" > ~/.ssh/aws_key_sim
           echo "${{ secrets.EC2_SSH_KEY_IVAN }}" > ~/.ssh/aws_key_ivan
