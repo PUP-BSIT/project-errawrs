@@ -2,7 +2,7 @@
 // Enable CORS for development
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
 
 // Handle preflight requests
@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once '../../config/db_config.php';
+require_once '../../utils/jwt_helper.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -77,7 +78,10 @@ try {
     mysqli_stmt_bind_param($update_stmt, "i", $teller_number);
     mysqli_stmt_execute($update_stmt);
 
-    // Success: return teller details (excluding password_hash)
+    // Generate JWT token
+    $token = JWTHelper::generateToken($teller);
+
+    // Success: return teller details and token
     $response = [
         'teller_number' => $teller['teller_number'],
         'first_name' => $teller['first_name'],
@@ -88,6 +92,7 @@ try {
 
     echo json_encode([
         'success' => true,
+        'token' => $token,
         'teller' => $response
     ]);
 
