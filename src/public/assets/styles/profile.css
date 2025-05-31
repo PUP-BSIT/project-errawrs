@@ -1,0 +1,159 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+    --color-input-bg: #e5e5e5;
+    --color-border: #ddd;
+    --color-text-muted: #666;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+    --color-warning: #ffc107;
+    --color-info: #17a2b8;
+    --color-success-bg: #d4edda;
+    --color-error-bg: #f8d7da;
+    --color-warning-bg: #fff3cd;
+    --color-info-bg: #d1ecf1;
+    --border-radius-small: 8px;
+    --border-radius-medium: 20px;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+    --spacing-xl: 3rem;
+    --box-shadow-light: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --transition-default: 0.3s ease;
+}
+
+/* Specific styles for Profile page */
+.profile-content {
+    padding: 20px;
+    background-color: var(--color-white);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-light);
+    max-width: 600px; /* Adjust as needed for the form */
+    margin: 24px auto; /* Center the container */
+}
+
+.profile-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.profile-form-container {
+    padding: 0 20px;
+}
+
+/* Styling for form groups and inputs (similar to registration/modal forms) */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-primary-black);
+    margin-bottom: 5px;
+}
+
+.form-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    background-color: var(--color-input-bg);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--color-gray);
+}
+
+/* Styling for buttons (similar to existing buttons) */
+.btn {
+    display: inline-block; /* Allow buttons to be next to each other */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--transition-default);
+    margin-top: 15px; /* Space above buttons */
+    margin-right: 10px; /* Space between buttons */
+}
+
+.primary-btn {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.primary-btn:hover {
+     background-color: var(--color-mint);
+}
+
+.secondary-btn {
+    background-color: var(--color-gray);
+    color: var(--color-white);
+}
+
+.secondary-btn:hover {
+    background-color: #888;
+}
+
+/* Notification Container (for consistency) */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.notification {
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.notification.success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.notification.info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info);
+}
+
+.notification.error {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.notification i {
+    font-size: 20px;
+} 
