@@ -23,6 +23,7 @@ A lightweight banking application designed for simple and secure financial trans
   - External (to other systems)  
 - 🔑 **OTP-Based Multi-Factor Authentication** – Adds an extra layer of security.  
 - 👥 **Role-Based Access Control** –  
+  - Admin
   - Teller  
   - Account Holder
 --- 
@@ -48,22 +49,39 @@ Visit the application here:
 
 # 📂 Project Folder Structure
 
-### 📂/src
-- ├── 📂/public <!-- Presentation Layer (UI & Client-Side) -->
-- │   ├── 📄index.html <!-- Entry point for web interface -->
-- │   ├── 📂assets/ <!--  Static files (CSS, JS, images) -->
-- │   └── 📂views/ <!-- HTML view templates (login, dashboard, etc.) -->
-- ├── 📂/modules <!-- Application Layer (Routing & Controllers) -->
-- │   ├── 📂admin/ 
-- │   ├── 📂auth/ 
-- │   ├── 📂user/   
-- │   ├── 📂teller/   
-- │   ├── 📂account/ 
-- │   ├── 📂transaction/ 
-- │   └── 📂otp/
-- ├── 📂/core <!-- Contains reusable components and shared logic. -->
-- ├── 📂/config <!-- Environment variables, database credentials, SMS gateway configs, etc. -->
-- └── 📂/logs <!-- Stores error logs, request logs, and system events for debugging -->
+### 📂Root
+- ├── 📂/public <!-- Public accessible files -->
+- │   ├── 📂/admin <!-- Admin interface -->
+- │   │   ├── 📂/css
+- │   │   ├── 📂/js
+- │   │   └── 📄login_admin.html
+- │   ├── 📂/teller <!-- Teller interface -->
+- │   │   ├── 📂/css
+- │   │   ├── 📂/js
+- │   │   └── 📄login_teller.html
+- │   ├── 📂/user <!-- User/Account Holder interface -->
+- │   │   ├── 📂/css
+- │   │   ├── 📂/js
+- │   │   └── 📄login_account_holder.html
+- │   ├── 📂/assets <!-- Shared assets -->
+- │   │   ├── 📂/images
+- │   │   ├── 📂/fonts
+- │   │   └── 📂/icons
+- │   └── 📄index.html
+- ├── 📂/src <!-- Backend source code -->
+- │   ├── 📂/api <!-- API endpoints -->
+- │   │   ├── 📂/admin
+- │   │   ├── 📂/auth
+- │   │   ├── 📂/teller
+- │   │   └── 📂/user
+- │   ├── 📂/config <!-- Configuration files -->
+- │   │   ├── 📄database.php
+- │   │   └── 📄config.php
+- │   ├── 📂/auth <!-- Authentication functionality -->
+- │   │   ├── 📄auth.php
+- │   │   └── 📄session.php
+- │   └── 📂/logs <!-- System logs -->
+- └── 📄README.md
 
 ---
 

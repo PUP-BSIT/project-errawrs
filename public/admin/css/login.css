@@ -1,0 +1,246 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+    --color-input-bg: #e5e5e5;
+    --color-border: #ddd;
+    --color-text-muted: #666;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: linear-gradient(
+        135deg,
+        var(--color-bg-gradient-start) 0%,
+        var(--color-bg-gradient-end) 100%
+    );
+    min-height: 100vh;
+    color: var(--color-primary-black);
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Main Content */
+.main {
+    width: 100%;
+    padding: 40px 0;
+}
+
+/* Logo */
+.logo {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    background-color: var(--color-primary-black);
+    margin: -40px -40px 30px -40px;
+    padding: 30px;
+    border-radius: 15px 15px 0 0;
+}
+
+.logo-stack {
+    color: var(--color-white);
+}
+
+.logo-overcash {
+    color: var(--color-lime-green);
+}
+
+/* Login Container */
+.login-container {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.form-header p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+/* Form Styles */
+.login-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-primary-black);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    background-color: var(--color-input-bg);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: var(--font-main);
+    color: var(--color-primary-black);
+    transition: background-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    background-color: #ddd;
+}
+
+.form-group input::placeholder {
+    color: var(--color-gray);
+}
+
+/* Password Group */
+.password-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-25%);
+    background: none;
+    border: none;
+    color: var(--color-gray);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: var(--color-primary-black);
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 30px;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-mint);
+}
+
+/* Form Footer */
+.form-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+
+/* Loading Spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+    background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+}
+
+.notification-error {
+    border-left: 4px solid var(--color-error);
+}
+
+.notification-error i {
+    color: var(--color-error);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+    
+    .logo {
+        font-size: 1.4rem;
+    }
+} 
