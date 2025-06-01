@@ -37,7 +37,7 @@ class AdminLogin {
 		try {
 			console.log('Attempting admin login with:', { username }); // Don't log password
 			
-			const response = await fetch('../../src/api/auth/login.php', {
+			const response = await fetch('/project-errawrs/src/api/auth/login.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
