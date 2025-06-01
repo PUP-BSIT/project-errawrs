@@ -27,22 +27,20 @@ Authenticates a user (admin, teller, or user) based on provided credentials. Ret
 
 ```json
 {
-  "login_type": {
-    "type": "string",
-    "allowed_values": ["admin", "user", "teller"],
-    "required": true
+  "admin": {
+    "login_type": "admin",
+    "username": "your_admin_username",
+    "password": "your_password_here"
   },
-  "username": {
-    "type": "string",
-    "required_if": ["login_type=admin", "login_type=user"]
+  "user": {
+    "login_type": "user",
+    "username": "your_user_username",
+    "password": "your_password_here"
   },
-  "teller_number": {
-    "type": "string",
-    "required_if": ["login_type=teller"]
-  },
-  "password": {
-    "type": "string",
-    "min_length": 8,
-    "required": true
+  "teller": {
+    "login_type": "teller",
+    "teller_number": "your_teller_number",
+    "password": "your_password_here"
   }
 }
+
