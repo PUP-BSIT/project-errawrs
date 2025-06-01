@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>StackOvercash - Account</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+            rel="stylesheet"/>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link rel="stylesheet" href="./css/user_dashboard.css" />
+        <!-- Keep some base styles -->
+        <link rel="stylesheet" href="./css/account.css" />
+        <!-- New account specific styles -->
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <span class="logo-stack">Stack</span>
+                        <span class="logo-overcash">Overcash</span>
+                    </div>
+                </div>
+
+                <div class="user-profile">
+                    <div class="avatar" id="user_avatar_container">
+                        <!-- User initial will go here -->
+                        <div class="edit-icon hidden" id="edit_profile_icon">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                    </div>
+                    <h3 class="username" id="user_name">Jhon Doe</h3>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a
+                                href="./user_dashboard.html"
+                                class="nav-link"
+                                data-page="dashboard">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                href="./transfer.html"
+                                class="nav-link"
+                                data-page="transfer">
+                                Transfer
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                href="./transaction.html"
+                                class="nav-link"
+                                data-page="transaction">
+                                Transaction
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <!-- Active class for Account -->
+                            <a
+                                href="./account.html"
+                                class="nav-link"
+                                data-page="account">
+                                Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./profile.html" class="nav-link" data-page="profile">
+                                Profile
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="logout-btn" id="logout_btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Log out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Header -->
+                <header class="main-header">
+                    <div class="header-actions">
+                        <button
+                            class="icon-btn notification-btn"
+                            id="notification_btn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button class="icon-btn add-btn" id="add_btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="icon-btn help-btn" id="help_btn">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Account Content -->
+                <div class="account-content">
+                    <h2>View Account</h2>
+                    <div class="account-list-container">
+                        <!-- Sample Account Item -->
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">527491759361</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 3,691.00</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value account-status">
+                                        Active</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Repeat account-item for more accounts -->
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">123456789012</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 10,500.50</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">987654321098</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 500.25</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Adding more sample accounts -->
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">456789123456</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 15,000.00</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">789012345678</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 7,200.75</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="account-item">
+                            <div class="account-info">
+                                <div class="info-group">
+                                    <span class="info-label">Account No.</span>
+                                    <span class="info-value">321098765432</span>
+                                </div>
+                                <div class="info-group">
+                                    <span class="info-label">Balance</span>
+                                    <span class="info-value">₱ 2,900.00</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button class="three-dots-button">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu hidden">
+                                    <button class="menu-item transfer-button">
+                                        Transfer
+                                    </button>
+                                    <button class="menu-item unlink-button">
+                                        Unlink
+                                    </button>
+                                    <button class="menu-item close-button">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notification-container"></div>
+        <div id="confirmation_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Confirmation</h3>
+                <p>
+                    You're about to open another account. Would you like to
+                    continue?
+                </p>
+                <label class="checkbox-container">
+                    <input type="checkbox" id="confirm_add_account_checkbox" />
+                    <span class="checkmark"></span>
+                    I understand and agree.
+                </label>
+                <button
+                    id="proceed_add_account_button"
+                    class="btn primary-btn"
+                    disabled>
+                    Proceed
+                </button>
+                <button
+                    id="cancel_add_account_button"
+                    class="btn secondary-btn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- OTP Verification Modal -->
+        <div id="otp_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>OTP Verification</h3>
+                <p>
+                    An OTP has been sent to your registered phone number. Please
+                    enter it below.
+                </p>
+                <input
+                    type="text"
+                    id="otp_input"
+                    placeholder="Enter OTP"
+                    class="form-input"/>
+                <button id="verify_otp_button" class="btn primary-btn">
+                    Verify
+                </button>
+                <button id="cancel_otp_button" class="btn secondary-btn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <div id="edit_profile_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Edit Profile</h3>
+                <div class="form-group">
+                    <label for="edit_first_name">First Name</label>
+                    <input type="text" id="edit_first_name" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="edit_last_name">Last Name</label>
+                    <input type="text" id="edit_last_name" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="edit_username">Desired Username</label>
+                    <input type="text" id="edit_username" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="edit_password">Password</label>
+                    <input type="text" id="edit_password" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="edit_confirm_password">Confirm Password</label>
+                    <input type="text" id="edit_confirm_password" class="form-input">
+                </div>
+                 <div class="form-group">
+                    <label for="edit_phone_number">Phone Number</label>
+                    <input type="text" id="edit_phone_number" class="form-input">
+                </div>
+                <button id="save_profile_button" class="btn primary-btn">Save</button>
+                <button id="exit_profile_button" class="btn secondary-btn">Exit</button>
+            </div>
+        </div>
+
+        <script src="./js/account.js"></script>
+    </body>
+</html>

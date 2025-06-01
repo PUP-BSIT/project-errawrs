@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>StackOvercash - Admin Login</title>
+
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"/>
+
+        <!-- Font Awesome -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="./css/login.css" />
+    </head>
+    <body>
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Login Container -->
+                <div class="login-container">
+                    <div class="logo">
+                        <span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span>
+                    </div>
+                    <div class="form-header">
+                        <h2>Admin Login</h2>
+                    </div>
+
+                    <form class="login-form" id="admin_login_form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username"
+                                placeholder="Enter your username" 
+                                required/>
+                        </div>
+
+                        <div class="form-group password-group">
+                            <label for="password">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                placeholder="Enter your password" 
+                                required/>
+                            <button type="button" class="password-toggle" data-target="password">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>This is a secure system and your activities may be monitored</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <script src="./js/login.js"></script>
+    </body>
+</html> 
