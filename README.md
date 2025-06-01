@@ -77,6 +77,9 @@ Visit the application here:
 - │   ├── 📂/config <!-- Configuration files -->
 - │   │   ├── 📄database.php
 - │   │   └── 📄config.php
+- │   ├── 📂/auth <!-- Authentication functionality -->
+- │   │   ├── 📄auth.php
+- │   │   └── 📄session.php
 - │   └── 📂/logs <!-- System logs -->
 - └── 📄README.md
 
