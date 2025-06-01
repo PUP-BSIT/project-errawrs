@@ -35,15 +35,19 @@ class AdminLogin {
 		this.showLoadingState();
 
 		try {
-			console.log('Attempting login with:', { username }); // Don't log password
+			console.log('Attempting admin login with:', { username }); // Don't log password
 			
-			const response = await fetch('/project-errawrs/src/auth/login.php', {
+			const response = await fetch('/project-errawrs/src/api/auth/login.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'Accept': 'application/json'
 				},
-				body: JSON.stringify({ username, password }),
+				body: JSON.stringify({ 
+					username, 
+					password,
+					login_type: 'admin'
+				}),
 				credentials: 'include'
 			});
 
@@ -63,11 +67,13 @@ class AdminLogin {
 
 			if (response.ok && data.success) {
 				this.showNotification('Login successful! Redirecting...', 'success');
+				// Store admin data in localStorage if needed
+				localStorage.setItem('admin', JSON.stringify(data.user));
 				setTimeout(() => {
 					window.location.href = './dashboard.html';
 				}, 1500);
 			} else {
-				const errorMessage = data.message || 'Login failed. Please check your credentials.';
+				const errorMessage = data.error || 'Login failed. Please check your credentials.';
 				console.error('Login failed:', errorMessage);
 				this.showNotification(errorMessage, 'error');
 			}

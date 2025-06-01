@@ -1,24 +1,16 @@
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', initializeLogin);
-
-function initializeLogin() {
-    bindEvents();
-}
-
-function bindEvents() {
+document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login_form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
 
-    // Password toggle button
-    const passwordToggleBtn = document.querySelector('.password-toggle');
-    if (passwordToggleBtn) {
-        passwordToggleBtn.addEventListener('click', (e) => {
-            togglePassword(e.target.closest('.password-toggle'));
-        });
+    // Password toggle functionality
+    const passwordToggle = document.querySelector('.password-toggle');
+    if (passwordToggle) {
+        passwordToggle.addEventListener('click', () => togglePasswordVisibility(passwordToggle));
     }
-}
+});
 
 async function handleLogin(e) {
     e.preventDefault();
@@ -61,7 +53,7 @@ async function handleLogin(e) {
 
         if (data.success) {
             showNotification('Login successful! Redirecting...', 'success');
-            // Store user data if needed
+            // Store user data and account info
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('account', JSON.stringify(data.account));
             
@@ -80,101 +72,75 @@ async function handleLogin(e) {
     }
 }
 
-function togglePassword(button) {
-    if (!button) return;
-    
-    const targetId = button.dataset.target;
-    const input = document.getElementById(targetId);
-    const icon = button.querySelector('i');
-    
-    if (!input || !icon) return;
-    
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    icon.className = isPassword ? 'fas fa-eye' : 'fas fa-eye-slash';
-}
-
 function showLoadingState() {
     const submitBtn = document.querySelector('button[type="submit"]');
-    const inputs = document.querySelectorAll('input');
-    
     if (submitBtn) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
         submitBtn.disabled = true;
     }
-    
-    inputs.forEach(input => {
+
+    // Disable form inputs
+    document.querySelectorAll('input').forEach(input => {
         input.disabled = true;
     });
 }
 
 function hideLoadingState() {
     const submitBtn = document.querySelector('button[type="submit"]');
-    const inputs = document.querySelectorAll('input');
-    
     if (submitBtn) {
         submitBtn.innerHTML = 'Login';
         submitBtn.disabled = false;
     }
-    
-    inputs.forEach(input => {
+
+    // Re-enable form inputs
+    document.querySelectorAll('input').forEach(input => {
         input.disabled = false;
     });
 }
 
+function togglePasswordVisibility(toggleBtn) {
+    const targetId = toggleBtn.getAttribute('data-target');
+    const passwordInput = document.getElementById(targetId);
+    const icon = toggleBtn.querySelector('i');
+
+    if (passwordInput && icon) {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.className = 'fas fa-eye';
+        } else {
+            passwordInput.type = 'password';
+            icon.className = 'fas fa-eye-slash';
+        }
+    }
+}
+
 function showNotification(message, type = 'info') {
-    const notificationDiv = document.createElement('div');
-    notificationDiv.className = `notification notification-${type}`;
-    notificationDiv.innerHTML = `
+    // Create notification container if it doesn't exist
+    let container = document.querySelector('.notification');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'notification';
+        document.body.appendChild(container);
+    }
+
+    // Create notification content
+    container.className = `notification notification-${type}`;
+    container.innerHTML = `
         <div class="notification-content">
-            <i class="fas ${getNotificationIcon(type)}"></i>
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
             <span>${message}</span>
-            <button class="notification-close">
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
                 <i class="fas fa-times"></i>
             </button>
-        </div>`;
-    
-    document.body.appendChild(notificationDiv);
-    
-    // Show with animation
-    setTimeout(() => {
-        notificationDiv.classList.add('show');
-    }, 100);
-    
+        </div>
+    `;
+
+    // Show notification
+    container.classList.add('show');
+
     // Auto-hide after 5 seconds
     setTimeout(() => {
-        hideNotification(notificationDiv);
+        container.classList.remove('show');
+        setTimeout(() => container.remove(), 300);
     }, 5000);
-    
-    // Close button handler
-    const closeBtn = notificationDiv.querySelector('.notification-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            hideNotification(notificationDiv);
-        });
-    }
-}
-
-function getNotificationIcon(type) {
-    switch (type) {
-        case 'success':
-            return 'fa-check-circle';
-        case 'error':
-            return 'fa-exclamation-circle';
-        case 'warning':
-            return 'fa-exclamation-triangle';
-        default:
-            return 'fa-info-circle';
-    }
-}
-
-function hideNotification(notification) {
-    if (!notification) return;
-    
-    notification.classList.remove('show');
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 300);
 } 
