@@ -37,7 +37,7 @@ async function handleLogin(e) {
     showLoadingState();
 
     try {
-        const response = await fetch('../../src/api/auth/login.php', {
+        const response = await fetch('../src/api/auth/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
