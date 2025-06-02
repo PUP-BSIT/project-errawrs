@@ -49,7 +49,8 @@ function processDeposit() {
         accountNumber: accountData.number,
         newBalance: newBalance,
         type: 'deposit',
-        amount: amount
+        amount: amount,
+        preserveState: true
     }));
 }
 
@@ -79,7 +80,8 @@ function processWithdraw() {
         accountNumber: accountData.number,
         newBalance: newBalance,
         type: 'withdraw',
-        amount: amount
+        amount: amount,
+        preserveState: true
     }));
 }
 
@@ -129,6 +131,12 @@ function showTransactionReceipt(type, amount, accountData, newBalance) {
 // Return to search page
 function returnToSearch() {
     const accountData = getAccountDataFromURL();
+    // Store the current account data to preserve state
+    sessionStorage.setItem('lastTransactionData', JSON.stringify({
+        accountNumber: accountData.number,
+        newBalance: accountData.balance,
+        preserveState: true
+    }));
     window.location.href = accountData.returnUrl;
 }
 

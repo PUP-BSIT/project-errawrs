@@ -46,19 +46,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (lastTransactionData) {
         const data = JSON.parse(lastTransactionData);
         if (accountDatabase[data.accountNumber]) {
-            // Update the account balance
-            accountDatabase[data.accountNumber].balance = data.newBalance;
-            
-            // Clear the transaction data
-            sessionStorage.removeItem('lastTransactionData');
+            // Update the account balance if it was a transaction
+            if (data.newBalance !== undefined && !data.preserveState) {
+                accountDatabase[data.accountNumber].balance = data.newBalance;
+            }
             
             // Show the account details
             const searchInput = document.getElementById("search_input");
             searchInput.value = data.accountNumber;
             searchAccount();
             
-            // Show notification
-            showNotification(`${data.type === 'deposit' ? 'Deposit' : 'Withdrawal'} of ₱${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} was successful`, 'success');
+            // Show notification for completed transaction
+            if (data.type && !data.preserveState) {
+                showNotification(`${data.type === 'deposit' ? 'Deposit' : 'Withdrawal'} of ₱${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} was successful`, 'success');
+            }
+            
+            // Clear the transaction data
+            sessionStorage.removeItem('lastTransactionData');
         }
     }
 });
