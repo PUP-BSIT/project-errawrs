@@ -38,20 +38,8 @@ function processDeposit() {
         return;
     }
 
-    // Here you would typically make an API call to process the deposit
-    // For now, we'll simulate a successful deposit
-    const newBalance = accountData.balance + amount;
-
-    showTransactionReceipt('deposit', amount, accountData, newBalance);
-    
-    // Store the updated balance in sessionStorage
-    sessionStorage.setItem('lastTransactionData', JSON.stringify({
-        accountNumber: accountData.number,
-        newBalance: newBalance,
-        type: 'deposit',
-        amount: amount,
-        preserveState: true
-    }));
+    // Show confirmation screen first
+    showTransactionConfirmation('deposit', amount, accountData);
 }
 
 // Process withdrawal
@@ -69,17 +57,69 @@ function processWithdraw() {
         return;
     }
 
-    // Here you would typically make an API call to process the withdrawal
-    // For now, we'll simulate a successful withdrawal
-    const newBalance = accountData.balance - amount;
+    // Show confirmation screen first
+    showTransactionConfirmation('withdraw', amount, accountData);
+}
 
-    showTransactionReceipt('withdraw', amount, accountData, newBalance);
+// Show transaction confirmation
+function showTransactionConfirmation(type, amount, accountData) {
+    const newBalance = type === 'deposit' ? 
+        accountData.balance + amount : 
+        accountData.balance - amount;
+
+    const transactionContainer = document.querySelector('.transaction-container');
+    
+    transactionContainer.innerHTML = `
+        <div class="transaction-header">
+            <h2>Confirm ${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</h2>
+            <div class="account-info">
+                <div class="info-item">
+                    <span class="label">Transaction Type:</span>
+                    <span class="value">${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Account Number:</span>
+                    <span class="value">${accountData.number}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Account Name:</span>
+                    <span class="value">${accountData.name}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Amount:</span>
+                    <span class="value">₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Current Balance:</span>
+                    <span class="value">₱${accountData.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">New Balance:</span>
+                    <span class="value">₱${newBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="form-btn back-btn" onclick="window.location.reload()">Back</button>
+            <button class="form-btn submit-btn" onclick="completeTransaction('${type}', ${amount})">Submit</button>
+        </div>
+    `;
+}
+
+// Complete transaction
+function completeTransaction(type, amount) {
+    const accountData = getAccountDataFromURL();
+    const newBalance = type === 'deposit' ? 
+        accountData.balance + amount : 
+        accountData.balance - amount;
+
+    showTransactionReceipt(type, amount, accountData, newBalance);
     
     // Store the updated balance in sessionStorage
     sessionStorage.setItem('lastTransactionData', JSON.stringify({
         accountNumber: accountData.number,
         newBalance: newBalance,
-        type: 'withdraw',
+        type: type,
         amount: amount,
         preserveState: true
     }));

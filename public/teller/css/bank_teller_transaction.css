@@ -143,9 +143,21 @@ body {
     color: var(--color-white);
 }
 
+.back-btn {
+    background: var(--color-gray);
+    color: var(--color-white);
+}
+
 .confirm-btn {
     background: var(--color-mint);
     color: var(--color-primary-black);
+}
+
+.submit-btn {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+    font-weight: 700;
+    padding: 15px 35px;
 }
 
 .cancel-btn:hover {
@@ -153,9 +165,20 @@ body {
     transform: translateY(-2px);
 }
 
+.back-btn:hover {
+    background: #8a8a8a;
+    transform: translateY(-2px);
+}
+
 .confirm-btn:hover {
     background: #6bc740;
     transform: translateY(-2px);
+}
+
+.submit-btn:hover {
+    background: #6bc740;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.3);
 }
 
 /* Notification Styles */
