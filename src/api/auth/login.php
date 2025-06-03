@@ -135,7 +135,12 @@ try {
         'id' => $user['id'],
         'identifier' => $loginType === 'teller' ? $user['teller_number'] : $user['username'],
         'type' => $loginType,
-        'logged_in_at' => time()
+        'logged_in_at' => time(),
+        'last_activity' => time(),
+        'first_name' => $user['first_name'] ?? '',
+        'last_name' => $user['last_name'] ?? '',
+        'phone_number' => $user['phone_number'] ?? null,
+        'email' => $user['email'] ?? null
     ];
     
     // Add account data to session for users

@@ -127,6 +127,8 @@
 .pagination-buttons {
     display: flex; /* Use flex to align Previous, Page Numbers, and Next */
     align-items: center;
+    /* Removing gap here as we'll use margins on individual buttons */
+    /* gap: 5px; */
 }
 
 .pagination-buttons button {
@@ -136,7 +138,7 @@
     padding: 8px 15px;
     border-radius: 4px; /* Slightly less rounded than image, match page numbers */
     cursor: pointer;
-    margin: 0; /* Remove margin to place them next to page numbers */
+    margin: 0; /* Reset margin */
     font-family: var(--font-main);
     font-size: 14px;
 }
@@ -144,11 +146,13 @@
 .pagination-buttons button:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
+    margin-right: 5px; /* Add space after Previous button */
 }
 
 .pagination-buttons button:last-child {
      border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+    margin-left: 5px; /* Add space before Next button */
 }
 
 .pagination-buttons button:hover:not(:disabled) {
@@ -163,14 +167,14 @@
 .page-numbers {
      display: flex; /* Use flex for page number buttons */
      align-items: center;
+     gap: 3px; /* Maintain gap between page number buttons */
 }
 
 .page-numbers button {
     background-color: transparent;
     color: var(--color-primary-black);
     border: 1px solid var(--color-border);
-    /* Adjust margin to create space between page numbers and surrounding buttons */
-    margin: 0 3px;
+    margin: 0 2px; /* Add small margin to each page number button */
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
@@ -179,11 +183,11 @@
 }
 
 .page-numbers button:first-child {
-    margin-left: 5px; /* Add slight margin to separate from Previous */
+    margin-left: 0; /* Remove extra margin */
 }
 
 .page-numbers button:last-child {
-     margin-right: 5px; /* Add slight margin to separate from Next */
+     margin-right: 0; /* Remove extra margin */
 }
 
 .page-numbers button.active {
