@@ -115,7 +115,7 @@ try {
     // Get additional data for user type if needed
     $additionalData = [];
     if ($loginType === 'user') {
-        $accountStmt = $db->prepare('SELECT account_id, account_number, balance, status FROM account WHERE user_id = ? AND status = "active" LIMIT 3');
+        $accountStmt = $db->prepare('SELECT account_id, account_number, balance, status FROM account WHERE user_id = ? AND status = "active"');
         $accountStmt->bind_param('i', $user['id']);
         $accountStmt->execute();
         $accountResult = $accountStmt->get_result();
@@ -124,15 +124,7 @@ try {
             throw new Exception('No active account found');
         }
         
-        // Fetch all accounts
-        $accounts = [];
-        while ($account = $accountResult->fetch_assoc()) {
-            $accounts[] = $account;
-        }
-        $additionalData['accounts'] = $accounts;
-        
-        // Use the first account as the primary account for session data
-        $primaryAccount = $accounts[0];
+        $additionalData['account'] = $accountResult->fetch_assoc();
     }
     
     // Remove sensitive data
@@ -149,11 +141,10 @@ try {
     // Add account data to session for users
     if ($loginType === 'user') {
         $_SESSION['auth']['account'] = [
-            'account_id' => $primaryAccount['account_id'],
-            'account_number' => $primaryAccount['account_number'],
-            'balance' => $primaryAccount['balance']
+            'account_id' => $additionalData['account']['account_id'],
+            'account_number' => $additionalData['account']['account_number'],
+            'balance' => $additionalData['account']['balance']
         ];
-        $_SESSION['auth']['all_accounts'] = $accounts;
     }
     
     // Prepare response

@@ -1,0 +1,232 @@
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-red: #ff4757;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background: linear-gradient(135deg, 
+                var(--color-bg-gradient-start) 0%, 
+                var(--color-bg-gradient-end) 100%);
+    min-height: 100vh;
+    color: var(--color-primary-black);
+}
+
+.transaction-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Transaction Section Styles */
+.transaction-section {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.transaction-container {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.transaction-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.transaction-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 30px;
+}
+
+.account-info {
+    background: var(--color-bg-gradient-start);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item .label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.info-item .value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.transaction-form {
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--color-primary-black);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    border: 2px solid var(--color-bg-gradient-start);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--color-mint);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.form-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background: var(--color-gray);
+    color: var(--color-white);
+}
+
+.back-btn {
+    background: var(--color-gray);
+    color: var(--color-white);
+}
+
+.confirm-btn {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.submit-btn {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+    font-weight: 700;
+    padding: 15px 35px;
+}
+
+.cancel-btn:hover {
+    background: #8a8a8a;
+    transform: translateY(-2px);
+}
+
+.back-btn:hover {
+    background: #8a8a8a;
+    transform: translateY(-2px);
+}
+
+.confirm-btn:hover {
+    background: #6bc740;
+    transform: translateY(-2px);
+}
+
+.submit-btn:hover {
+    background: #6bc740;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.3);
+}
+
+/* Notification Styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    padding: 15px 25px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: var(--color-white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+    border-left: 4px solid var(--color-mint);
+}
+
+.notification.error {
+    border-left: 4px solid var(--color-red);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+} 

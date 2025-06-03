@@ -57,66 +57,77 @@
 }
 
 .account-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--color-input-bg); /* Light gray background */
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .account-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
 .info-group {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .info-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    margin-right: 10px;
+    font-size: 0.8rem;
+    color: #666;
 }
 
 .info-value {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--color-primary-black);
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
 }
 
 .account-actions {
-    position: relative; /* Needed for absolute positioning of the menu */
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .three-dots-button {
     background: none;
     border: none;
-    font-size: 18px;
-    color: var(--color-gray);
+    padding: 8px;
     cursor: pointer;
-    padding: 5px; /* Increase clickable area */
+    color: #666;
+    transition: color 0.2s ease;
 }
 
 .three-dots-button:hover {
-    color: var(--color-primary-black);
+    color: #333;
+}
+
+.three-dots-button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
 }
 
 .action-menu {
     position: absolute;
-    top: 100%; /* Position below the button */
+    top: 100%;
     right: 0;
-    background-color: var(--color-white);
+    background: white;
     border-radius: 8px;
-    box-shadow: var(--box-shadow-light);
-    overflow: hidden; /* Clip rounded corners */
-    z-index: 10; /* Ensure it's above other content */
-    min-width: 120px; /* Minimum width for the menu */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    min-width: 150px;
+    z-index: 100;
 }
 
 .action-menu.hidden {
@@ -124,33 +135,19 @@
 }
 
 .menu-item {
-    display: block; /* Make each item a block */
+    display: block;
     width: 100%;
-    padding: 10px 15px;
+    padding: 8px 16px;
+    text-align: left;
     background: none;
     border: none;
-    text-align: left;
-    font-family: var(--font-main);
-    font-size: 14px;
-    font-weight: 600; /* Make text bold */
-    color: var(--color-primary-black);
+    color: #333;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
-.menu-item.transfer-button:hover {
-    background-color: var(--color-mint); /* Green background on hover */
-    color: var(--color-white); /* White text on hover */
-}
-
-.menu-item.unlink-button:hover {
-    background-color: var(--color-info); /* Blue background on hover */
-    color: var(--color-white); /* White text on hover */
-}
-
-.menu-item.close-button:hover {
-    background-color: var(--color-error); /* Red background on hover */
-    color: var(--color-white); /* White text on hover */
+.menu-item:hover {
+    background-color: #f5f5f5;
 }
 
 /* Notification Container */
@@ -201,15 +198,21 @@
 
 /* Styling for Account Status */
 .account-status {
-    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
 }
 
 .account-status.active {
-    color: var(--color-success); /* Green color for Active status */
+    background-color: #e8f5e9;
+    color: #2e7d32;
 }
 
 .account-status.closed {
-    color: var(--color-error); /* Red color for Closed status */
+    background-color: #ffebee;
+    color: #c62828;
 }
 
 /* New styles for Add Account button and Modals */
@@ -380,18 +383,100 @@
 /* New style for the add account placeholder */
 .add-account-placeholder {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 15px;
-    border: 2px dashed var(--color-gray); /* Dashed border */
-    border-radius: 8px;
+    justify-content: center;
+    gap: 12px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 24px;
     cursor: pointer;
-    transition: border-color var(--transition-default);
-    font-size: 24px; /* Size of the plus icon */
-    color: var(--color-gray);
+    transition: all 0.2s ease;
 }
 
 .add-account-placeholder:hover {
-    border-color: var(--color-mint); /* Change border color on hover */
-    color: var(--color-mint); /* Change icon color on hover */
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.add-account-placeholder i {
+    font-size: 1.5rem;
+    color: #6c757d;
+}
+
+.add-account-placeholder span {
+    font-size: 1.1rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Account Type Selection Styles */
+.account-type-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.account-type-option {
+    position: relative;
+}
+
+.account-type-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.account-type-option label {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-default);
+}
+
+.account-type-option input[type="radio"]:checked + label {
+    border-color: var(--color-mint);
+    background-color: var(--color-bg-gradient-start);
+}
+
+.account-type-option label i {
+    font-size: 24px;
+    margin-right: 15px;
+    color: var(--color-mint);
+}
+
+.account-type-option label span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.account-type-option label small {
+    display: block;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.account-type-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.account-type-badge.savings {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.account-type-badge.credit {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
 } 

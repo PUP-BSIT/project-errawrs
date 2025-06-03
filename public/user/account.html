@@ -35,7 +35,7 @@
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name">Jhon Doe</h3>
+                    <h3 class="username" id="user_name"></h3>
                 </div>
 
                 <nav class="sidebar-nav">
@@ -84,11 +84,9 @@
                     <button class="logout-btn" id="logout_btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Log out
-                    </button>
                 </div>
             </div>
 
-            <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
                 <header class="main-header">
@@ -111,197 +109,51 @@
                 <div class="account-content">
                     <h2>View Account</h2>
                     <div class="account-list-container">
-                        <!-- Sample Account Item -->
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">527491759361</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 3,691.00</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Status</span>
-                                    <span class="info-value account-status">
-                                        Active</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Repeat account-item for more accounts -->
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">123456789012</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 10,500.50</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">987654321098</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 500.25</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Adding more sample accounts -->
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">456789123456</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 15,000.00</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">789012345678</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 7,200.75</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="account-item">
-                            <div class="account-info">
-                                <div class="info-group">
-                                    <span class="info-label">Account No.</span>
-                                    <span class="info-value">321098765432</span>
-                                </div>
-                                <div class="info-group">
-                                    <span class="info-label">Balance</span>
-                                    <span class="info-value">₱ 2,900.00</span>
-                                </div>
-                            </div>
-                            <div class="account-actions">
-                                <button class="three-dots-button">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </button>
-                                <div class="action-menu hidden">
-                                    <button class="menu-item transfer-button">
-                                        Transfer
-                                    </button>
-                                    <button class="menu-item unlink-button">
-                                        Unlink
-                                    </button>
-                                    <button class="menu-item close-button">
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Account items will be dynamically populated -->
                     </div>
                 </div>
             </div>
         </div>
         <div class="notification-container"></div>
+        
+        <!-- Account Type Selection Modal -->
+        <div id="account_type_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Select Account Type</h3>
+                <p>Please select the type of account you want to create:</p>
+                <div class="account-type-options">
+                    <div class="account-type-option">
+                        <input type="radio" id="savings_account" name="account_type" value="savings">
+                        <label for="savings_account">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>Savings Account</span>
+                            <small>Earn interest on your deposits</small>
+                        </label>
+                    </div>
+                    <div class="account-type-option">
+                        <input type="radio" id="credit_account" name="account_type" value="credit">
+                        <label for="credit_account">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Credit Account</span>
+                            <small>Access to credit line and rewards</small>
+                        </label>
+                    </div>
+                </div>
+                <button id="proceed_account_type_button" class="btn primary-btn" disabled>
+                    Continue
+                </button>
+                <button id="cancel_account_type_button" class="btn secondary-btn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
         <div id="confirmation_modal" class="modal hidden">
             <div class="modal-content">
                 <h3>Confirmation</h3>
                 <p>
-                    You're about to open another account. Would you like to
+                    You're about to open a new <span id="selected_account_type"></span> account. Would you like to
                     continue?
                 </p>
                 <label class="checkbox-container">

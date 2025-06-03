@@ -343,14 +343,6 @@ function createTableRow(transaction) {
     amountCell.className = "table-cell currency";
     amountCell.textContent = transaction.amount;
 
-    const accountNoCell = document.createElement("div");
-    accountNoCell.className = "table-cell";
-    accountNoCell.textContent = transaction.accountNo;
-
-    const accountNameCell = document.createElement("div");
-    accountNameCell.className = "table-cell";
-    accountNameCell.textContent = transaction.accountName;
-
     const statusCell = document.createElement("div");
     statusCell.className = statusClass;
     statusCell.innerHTML = `
@@ -361,8 +353,6 @@ function createTableRow(transaction) {
     row.appendChild(dateCell);
     row.appendChild(typeCell);
     row.appendChild(amountCell);
-    row.appendChild(accountNoCell);
-    row.appendChild(accountNameCell);
     row.appendChild(statusCell);
 
     return row;
@@ -430,7 +420,7 @@ function clearAllSelections() {
 function showTransactionDetails(transaction) {
     if (transaction) {
         alert(
-            `Transaction Details:\n\nDate: ${transaction.date}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nAccount No.: ${transaction.accountNo}\nAccount Name: ${transaction.accountName}\nStatus: ${transaction.status}`
+            `Transaction Details:\n\nDate: ${transaction.date}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nStatus: ${transaction.status}`
         );
     }
 }

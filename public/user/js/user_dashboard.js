@@ -5,291 +5,22 @@ const notification_btn = document.getElementById('notification_btn');
 const add_btn = document.getElementById('add_btn');
 const help_btn = document.getElementById('help_btn');
 const transfer_now_btn = document.getElementById('transfer_now_btn');
-const account_balance = document.getElementById('account_balance');
-const transaction_list = document.getElementById('transaction_list');
-const user_name = document.getElementById('user_name');
+const account_balance_element = document.getElementById('account_balance');
+const transaction_list_element = document.getElementById('transaction_list');
+const user_name_element = document.getElementById('user_name');
 const account_display_container = document.getElementById('account-display-container');
 const user_avatar_container = document.getElementById('user_avatar_container');
+const profile_edit_modal = document.getElementById('edit_profile_modal'); // Assuming the profile edit modal is in dashboard.html as well
 
-// Add click handler for transfer now button
-if (transfer_now_btn) {
-    transfer_now_btn.addEventListener('click', () => {
-        window.location.href = '../user/transfer.html';
-    });
-}
+// State
+let user_data = {}; // Will be populated from API
+let user_accounts = []; // Will be populated from API
 
-// Sample Account Data (matching the account panel data)
-const user_accounts = [
-    { number: '527491759361', balance: 3691.00, status: 'active' },
-    { number: '123456789012', balance: 10500.50, status: 'active' },
-    { number: '987654321098', balance: 500.25, status: 'closed' },
-    { number: '456789123456', balance: 15000.00, status: 'active' },
-    { number: '789012345678', balance: 7200.75, status: 'closed' },
-    { number: '321098765432', balance: 2900.00, status: 'active' },
-];
 
-// User Data
-let user_data = {
-    name: 'Jhon Doe',
-    currency: '₱',
-    transactions: [
-        {
-            date: '2025-05-02',
-            amount: 30000.0,
-            type: 'credit',
-            description: 'Salary Deposit',
-            account_number: '527491759361'
-        },
-        {
-            date: '2025-05-01',
-            amount: -5000.0,
-            type: 'debit',
-            description: 'ATM Withdrawal',
-            account_number: '123456789012'
-        },
-        {
-            date: '2025-04-31',
-            amount: -10000.0,
-            type: 'debit',
-            description: 'Online Purchase',
-            account_number: '527491759361'
-        },
-        {
-            date: '2025-05-03',
-            amount: 2500.0,
-            type: 'credit',
-            description: 'Refund',
-            account_number: '123456789012'
-        },
-        {
-            date: '2025-05-04',
-            amount: -500.0,
-            type: 'debit',
-            description: 'Coffee',
-            account_number: '527491759361'
-        }
-    ],
-};
-
-// Initialize Dashboard
-function init_dashboard() {
-    load_recent_transactions();
-    setup_smooth_animations();
-    setup_account_display();
-    display_user_initial();
-
-    console.log('StackOvercash Dashboard Initialized');
-}
-
-// Function to setup account number display and dropdown
-function setup_account_display() {
-    console.log('setup_account_display function started');
-    const account_display_container = document.getElementById('account-display-container');
-    if (!account_display_container) {
-        console.error('#account-display-container not found!');
-        return;
-    }
-    account_display_container.innerHTML = '';
-
-    // Filter out closed accounts
-    const active_accounts = user_accounts.filter(account => account.status === 'active');
-
-    // Check if there are any active accounts
-    if (!active_accounts || active_accounts.length === 0) {
-        console.log('No active accounts available to display.');
-        const no_account_message = document.createElement('span');
-        no_account_message.textContent = 'No active accounts linked';
-        no_account_message.style.color = 'rgba(255, 255, 255, 0.8)';
-        account_display_container.appendChild(no_account_message);
-        update_balance_display(0);
-        return;
-    }
-
-    // Use active_accounts for display logic
-    if (active_accounts.length === 1) {
-        console.log('One active account found, displaying single account number.');
-        const account_number_span = document.createElement('span');
-        account_number_span.classList.add('account-number-display');
-        account_number_span.textContent = `Account No. ${active_accounts[0].number}`;
-        account_display_container.appendChild(account_number_span);
-        update_balance_display(active_accounts[0].balance);
-    } else {
-        console.log(`Multiple active accounts (${active_accounts.length}) found, displaying dropdown.`);
-        const select_container = document.createElement('div');
-        select_container.classList.add('account-select-container');
-
-        const account_select = document.createElement('select');
-        account_select.id = 'account-select';
-
-        active_accounts.forEach(account => {
-            const option = document.createElement('option');
-            option.value = account.number;
-            option.textContent = `Account No. ${account.number}`;
-            account_select.appendChild(option);
-        });
-
-        const select_arrow = document.createElement('i');
-        select_arrow.classList.add('fas', 'fa-angle-down', 'select-arrow');
-
-        select_container.appendChild(account_select);
-        select_container.appendChild(select_arrow);
-        account_display_container.appendChild(select_container);
-
-        // Set initial balance to the first account in the list
-        update_balance_display(active_accounts[0].balance);
-
-        // Add event listener to update balance on select change
-        account_select.addEventListener('change', (event) => {
-            const selected_account_number = event.target.value;
-            const selected_account = active_accounts.find(account => account.number === selected_account_number);
-            if (selected_account) {
-                update_balance_display(selected_account.balance);
-                load_recent_transactions();
-            }
-        });
-    }
-}
-
-// Update Balance Display
-function update_balance_display(balance) {
-    console.log(`Attempting to update balance display with ${balance}`);
-    const account_balance_element = document.getElementById('account_balance');
-    if (account_balance_element) {
-        user_data.balance = balance;
-        const formatted_balance = format_currency_exact(user_data.balance);
-        account_balance_element.textContent = formatted_balance;
-    } else {
-        console.error('#account_balance element not found!');
-    }
-}
-
-// Format Currency - Exact Match
-function format_currency_exact(amount) {
-    return `${user_data.currency} ${amount.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })}`;
-}
-
-// Load Recent Transactions
-function load_recent_transactions() {
-    if (!transaction_list) {
-        console.error('#transaction_list element not found!');
-        return;
-    }
-
-    transaction_list.innerHTML = '';
-
-    const account_select = document.getElementById('account-select');
-    let selected_account_number = null;
-    if (account_select) {
-        selected_account_number = account_select.value;
-    } else {
-        const account_number_span = document.querySelector('.account-number-display');
-        if (account_number_span) {
-            selected_account_number = account_number_span.textContent.replace('Account No. ', '');
-        }
-    }
-
-    const filtered_transactions = user_data.transactions.filter(transaction => 
-        transaction.account_number === selected_account_number
-    );
-
-    filtered_transactions.forEach((transaction) => {
-        const transaction_element = create_transaction_element_exact(transaction);
-        transaction_list.appendChild(transaction_element);
-    });
-}
-
-// Create Transaction Element
-function create_transaction_element_exact(transaction) {
-    const item = document.createElement('div');
-    item.className = 'transaction-item';
-
-    const date_span = document.createElement('span');
-    date_span.className = 'transaction-date';
-    date_span.textContent = transaction.date;
-
-    const amount_span = document.createElement('span');
-    const amount_class = transaction.amount > 0 ? 'positive' : 'negative';
-    amount_span.className = `transaction-amount ${amount_class}`;
-
-    const formatted_amount = transaction.amount > 0
-        ? `+${user_data.currency}${Math.abs(transaction.amount).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })}`
-        : `-${user_data.currency}${Math.abs(transaction.amount).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })}`;
-
-    amount_span.textContent = formatted_amount;
-
-    item.appendChild(date_span);
-    item.appendChild(amount_span);
-
-    add_transaction_hover_effect(item);
-
-    return item;
-}
-
-// Add Transaction Hover Effect
-function add_transaction_hover_effect(item) {
-    item.addEventListener('mouseenter', () => {
-        item.style.backgroundColor = 'rgba(126, 217, 87, 0.1)';
-        item.style.borderRadius = '8px';
-        item.style.transition = 'all 0.2s ease';
-    });
-
-    item.addEventListener('mouseleave', () => {
-        item.style.backgroundColor = 'transparent';
-    });
-}
-
-// Setup Smooth Animations
-function setup_smooth_animations() {
-    const cards = document.querySelectorAll(
-        '.balance-card, .financial-tip, .transactions-card'
-    );
-
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100 * (index + 1));
-    });
-
-    if (account_balance) {
-        setInterval(() => {
-            account_balance.style.transform = 'scale(1.02)';
-            setTimeout(() => {
-                account_balance.style.transform = 'scale(1)';
-            }, 200);
-        }, 5000);
-    }
-}
-
-// Function to display user initial in the avatar circle
-function display_user_initial() {
-    const initial = user_data.name.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
-}
-
-// Add Function to show a notification
 function show_notification(message, type) {
-    const notification_container = document.querySelector('.notification-container');
-    if (!notification_container) {
-        const container = document.createElement('div');
-        container.classList.add('notification-container');
-        document.body.appendChild(container);
-    }
+    const notification_container = document.querySelector('.notification-container'); 
+    if (!notification_container) return;
+
     const notification = document.createElement('div');
     notification.classList.add('notification', type);
 
@@ -303,18 +34,452 @@ function show_notification(message, type) {
     }
 
     notification.innerHTML = `<i class="${icon_class}"></i> <span>${message}</span>`;
-    document.querySelector('.notification-container').appendChild(notification);
+    notification_container.appendChild(notification);
 
+    // Automatically remove the notification after a few seconds
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, 3000); // Hide after 3 seconds
 }
 
-// Initialize everything when DOM is loaded
+
+// Fetch user data from API
+async function fetchUserData() {
+    try {
+        // Assuming an API endpoint for user profile data
+        const response = await fetch('/project-errawrs/src/api/user/profile.php');
+        const data = await response.json();
+
+        if (data.success) {
+            user_data = data.user; // Store user data in state
+            if (user_name_element) {
+                user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+            }
+             // Assuming there is a welcome_user_name_element on the dashboard
+             const welcome_user_name_element = document.getElementById('welcome_user_name');
+             if (welcome_user_name_element) welcome_user_name_element.textContent = user_data.first_name;
+
+             display_user_initial(); // Update the initial
+        } else {
+            show_notification(data.error || 'Failed to fetch user data', 'error');
+        }
+    } catch (error) {
+        show_notification('Error fetching user data', 'error');
+        console.error('Error:', error);
+    }
+}
+
+
+// Fetch user accounts from API and display primary account balance
+async function fetchUserAccounts() {
+    try {
+        const response = await fetch('/project-errawrs/src/api/user/accounts.php');
+        const data = await response.json();
+
+        if (data.success) {
+            user_accounts = data.accounts || []; // Store accounts in state, handle empty array
+             updateAccountDisplay(); // Call function to update account display and balance
+        } else {
+            show_notification(data.error || 'Failed to fetch accounts', 'error');
+            user_accounts = []; // Ensure state is empty on error
+             updateAccountDisplay(); // Still call update to show empty state
+        }
+    } catch (error) {
+        show_notification('Error fetching accounts', 'error');
+        console.error('Error:', error);
+        user_accounts = []; // Ensure state is empty on error
+         updateAccountDisplay(); // Still call update to show error state
+    }
+}
+
+// Update Account Display (similar to account.js but for dashboard)
+function updateAccountDisplay() {
+     if (!account_display_container || !account_balance_element || !transfer_now_btn) return;
+
+     account_display_container.innerHTML = ''; // Clear existing content
+
+     const active_accounts = user_accounts.filter(account => account.status === 'active');
+
+     if (active_accounts.length > 0) {
+        // Find the first active account to display initially
+        const primaryAccount = active_accounts[0];
+
+        if (active_accounts.length === 1) {
+            // Display single account number if only one active account
+             const account_number_span = document.createElement('span');
+             account_number_span.classList.add('account-number-display'); // Use a class for styling
+             account_number_span.textContent = `Account No. ${primaryAccount.account_number}`;
+             account_display_container.appendChild(account_number_span);
+
+        } else {
+            // Display dropdown if multiple active accounts
+             const select_container = document.createElement('div');
+             select_container.classList.add('custom-select', 'account-select'); // Use custom-select class for styling
+
+             const account_select = document.createElement('select');
+             account_select.id = 'dashboard_account_select'; // Give it a unique ID
+
+             active_accounts.forEach(account => {
+                 const option = document.createElement('option');
+                 option.value = account.account_number;
+                 option.textContent = `${account.type} Account No. ${account.account_number}`;
+                  option.dataset.balance = account.balance; // Store balance
+                 account_select.appendChild(option);
+             });
+
+             const select_arrow = document.createElement('i');
+             select_arrow.classList.add('fas', 'fa-angle-down', 'select-arrow');
+
+             select_container.appendChild(account_select);
+             select_container.appendChild(select_arrow);
+             account_display_container.appendChild(select_container);
+
+             // Add event listener to update balance on select change
+             account_select.addEventListener('change', (event) => {
+                 const selectedAccountNumber = event.target.value;
+                 const selectedAccount = active_accounts.find(acc => acc.account_number === selectedAccountNumber);
+                 if(selectedAccount) {
+                     update_balance_display(parseFloat(selectedAccount.balance));
+                     // Optionally reload transactions for the selected account
+                     // fetchRecentTransactions(selectedAccount.account_number); // Needs modification in fetchRecentTransactions
+                 }
+             });
+        }
+
+         // Always update balance display for the initially selected account (the primary one)
+         update_balance_display(parseFloat(primaryAccount.balance));
+
+         // Enable/Disable transfer button based on primary account balance
+         if (parseFloat(primaryAccount.balance) > 0) {
+            transfer_now_btn.classList.remove('disabled'); // Assuming a 'disabled' class
+            transfer_now_btn.style.pointerEvents = 'auto';
+         } else {
+             transfer_now_btn.classList.add('disabled');
+             transfer_now_btn.style.pointerEvents = 'none';
+         }
+
+     } else {
+         // No active accounts
+         account_display_container.innerHTML = `<p class="no-account-message">No active accounts linked</p>`;
+         update_balance_display(0);
+          transfer_now_btn.classList.add('disabled');
+          transfer_now_btn.style.pointerEvents = 'none';
+     }
+}
+
+
+// Update Balance Display
+function update_balance_display(balance) {
+    if (account_balance_element) {
+        const formatted_balance = `₱ ${parseFloat(balance).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })}`;
+        account_balance_element.textContent = formatted_balance;
+    }
+}
+
+// Fetch recent transactions from API
+async function fetchRecentTransactions() {
+     try {
+        // Assuming an API endpoint for recent transactions
+        // This endpoint might need to accept an account number parameter if we want transactions per account
+        const response = await fetch('/project-errawrs/src/api/user/transactions.php?limit=3');
+        const data = await response.json();
+
+        if (data.success && data.transactions.length > 0) {
+            if (transaction_list_element) {
+                transaction_list_element.innerHTML = ''; // Clear existing static content
+                data.transactions.forEach(transaction => {
+                     const transactionItem = document.createElement('div');
+                     transactionItem.classList.add('transaction-item');
+                     const amountClass = parseFloat(transaction.amount) >= 0 ? 'positive' : 'negative';
+                      const formattedAmount = parseFloat(transaction.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                     transactionItem.innerHTML = `
+                         <span class="transaction-date">${transaction.date}</span>
+                         <span class="transaction-amount ${amountClass}">${parseFloat(transaction.amount) >= 0 ? '+' : '-' }₱${formattedAmount}</span>
+                     `;
+                     transaction_list_element.appendChild(transactionItem);
+                });
+            }
+        } else {
+             // Handle case with no transactions
+            if (transaction_list_element) {
+                transaction_list_element.innerHTML = '<p class="no-transactions-message">No recent transactions.</p>';
+            }
+             show_notification(data.error || 'No recent transactions found', 'info');
+        }
+    } catch (error) {
+        show_notification('Error fetching transactions', 'error');
+        console.error('Error:', error);
+         if (transaction_list_element) {
+             transaction_list_element.innerHTML = '<p class="no-transactions-message">Failed to load transactions.</p>';
+         }
+    }
+}
+
+
+// Function to display user initial in the avatar circle
+function display_user_initial() {
+     // Use user_data fetched from API
+    const userName = user_data.first_name && user_data.last_name ? `${user_data.first_name} ${user_data.last_name}`.trim() : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    const initial = userName.charAt(0).toUpperCase();
+    if (user_avatar_container) {
+        user_avatar_container.textContent = initial;
+    }
+}
+
+// Keep the setup_smooth_animations and setup_profile_edit functions if they are needed on this page
+// Function to setup smooth animations (assuming existing)
+function setup_smooth_animations() {
+    // Existing animation setup code
+    console.log('Setting up smooth animations (placeholder)');
+}
+
+// Function to setup profile edit interactions (assuming modals and elements exist in user_dashboard.html)
+function setup_profile_edit() {
+     // Assuming modals and elements for profile edit exist in user_dashboard.html
+     // This function needs to be adapted to work with fetched user_data
+     const edit_profile_icon = document.getElementById('edit_profile_icon'); // Assuming this exists
+     const save_profile_button = profile_edit_modal ? profile_edit_modal.querySelector('#save_profile_button') : null; // Assuming button inside modal
+     const exit_profile_button = profile_edit_modal ? profile_edit_modal.querySelector('#exit_profile_button') : null; // Assuming button inside modal
+
+      if (!user_avatar_container || !edit_profile_icon || !profile_edit_modal || !save_profile_button || !exit_profile_button) {
+         console.log('Profile edit elements not found on dashboard.');
+         return;
+     }
+
+     // Show pen icon on hover
+     user_avatar_container.addEventListener('mouseenter', () => {
+         edit_profile_icon.classList.remove('hidden');
+     });
+
+     // Hide pen icon when not hovering over avatar or icon
+     user_avatar_container.addEventListener('mouseleave', () => {
+         setTimeout(() => {
+             if (!edit_profile_icon.matches(':hover')) {
+                 edit_profile_icon.classList.add('hidden');
+             }
+         }, 50);
+     });
+
+     edit_profile_icon.addEventListener('mouseenter', () => {
+         edit_profile_icon.classList.remove('hidden');
+     });
+
+      edit_profile_icon.addEventListener('mouseleave', () => {
+         edit_profile_icon.classList.add('hidden');
+     });
+
+    // Show modal on pen icon click
+    edit_profile_icon.addEventListener('click', () => {
+        populate_profile_form(); // Populate the form with current user_data
+        profile_edit_modal.classList.remove('hidden');
+    });
+
+    // Close modal on Exit button click
+    exit_profile_button.addEventListener('click', () => {
+        profile_edit_modal.classList.add('hidden');
+    });
+
+    // Handle Save button click
+    if (save_profile_button) {
+        save_profile_button.addEventListener('click', async () => {
+             const edit_first_name_input = profile_edit_modal.querySelector('#edit_first_name');
+             const edit_last_name_input = profile_edit_modal.querySelector('#edit_last_name');
+             const edit_username_input = profile_edit_modal.querySelector('#edit_username');
+             const edit_password_input = profile_edit_modal.querySelector('#edit_password');
+             const edit_confirm_password_input = profile_edit_modal.querySelector('#edit_confirm_password');
+             const edit_phone_number_input = profile_edit_modal.querySelector('#edit_phone_number');
+
+             const updatedProfileData = {
+                 first_name: edit_first_name_input ? edit_first_name_input.value.trim() : user_data.first_name,
+                 last_name: edit_last_name_input ? edit_last_name_input.value.trim() : user_data.last_name,
+                 username: edit_username_input ? edit_username_input.value.trim() : user_data.username,
+                 // Only send password fields if they are not empty
+                 password: edit_password_input && edit_password_input.value.trim() !== '' ? edit_password_input.value : null,
+                 confirm_password: edit_confirm_password_input && edit_confirm_password_input.value.trim() !== '' ? edit_confirm_password_input.value : null,
+                 phone_number: edit_phone_number_input ? edit_phone_number_input.value.trim() : user_data.phone_number,
+             };
+
+             // Basic client-side validation for password if changed
+             if (updatedProfileData.password !== null && updatedProfileData.password !== updatedProfileData.confirm_password) {
+                  show_notification('Password and Confirm Password do not match', 'error');
+                  if (edit_password_input) edit_password_input.value = '';
+                  if (edit_confirm_password_input) edit_confirm_password_input.value = '';
+                  return;
+             }
+             if (updatedProfileData.password !== null && updatedProfileData.password.length < 8) {
+                  show_notification('Password must be at least 8 characters long', 'error');
+                   if (edit_password_input) edit_password_input.value = '';
+                   if (edit_confirm_password_input) edit_confirm_password_input.value = '';
+                   return;
+             }
+
+
+            try {
+                 // Assuming an API endpoint for updating user profile data
+                 const response = await fetch('/project-errawrs/src/api/user/profile/update.php', {
+                     method: 'POST', // Or PUT
+                     headers: {
+                         'Content-Type': 'application/json'
+                     },
+                     body: JSON.stringify(updatedProfileData)
+                 });
+
+                 const data = await response.json();
+
+                 if (data.success) {
+                     show_notification('Profile updated successfully!', 'success');
+                     // Update local user_data state with new info (excluding password)
+                     user_data.first_name = data.user.first_name; // Assuming API returns updated user data
+                     user_data.last_name = data.user.last_name;
+                     user_data.username = data.user.username;
+                     user_data.phone_number = data.user.phone_number;
+
+                      // Update displayed name and initial
+                     if (user_name_element) user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+                     display_user_initial();
+
+                     profile_edit_modal.classList.add('hidden');
+                      // Clear password fields after successful update
+                     if (edit_password_input) edit_password_input.value = '';
+                     if (edit_confirm_password_input) edit_confirm_password_input.value = '';
+                 } else {
+                     show_notification(data.error || 'Failed to update profile', 'error');
+                 }
+             } catch (error) {
+                 show_notification('Error updating profile', 'error');
+                 console.error('Error:', error);
+             }
+        });
+    }
+
+    // Close modal when clicking outside
+    if (profile_edit_modal) {
+         profile_edit_modal.addEventListener('click', (event) => {
+             // Check if the click is directly on the modal backdrop
+             if (event.target === profile_edit_modal) {
+                 profile_edit_modal.classList.add('hidden');
+             }
+         });
+    }
+}
+
+// Function to populate the profile edit form (requires user_data to be fetched)
+function populate_profile_form() {
+     const edit_first_name_input = profile_edit_modal.querySelector('#edit_first_name');
+     const edit_last_name_input = profile_edit_modal.querySelector('#edit_last_name');
+     const edit_username_input = profile_edit_modal.querySelector('#edit_username');
+     const edit_phone_number_input = profile_edit_modal.querySelector('#edit_phone_number');
+     const edit_password_input = profile_edit_modal.querySelector('#edit_password'); // Get password fields to clear them
+     const edit_confirm_password_input = profile_edit_modal.querySelector('#edit_confirm_password'); // Get confirm password fields to clear them
+
+     if (!edit_first_name_input || !edit_last_name_input || !edit_username_input || !edit_phone_number_input || !user_data) return;
+
+     edit_first_name_input.value = user_data.first_name || '';
+     edit_last_name_input.value = user_data.last_name || '';
+     edit_username_input.value = user_data.username || '';
+     edit_phone_number_input.value = user_data.phone_number || '';
+      // Clear password fields when opening the modal
+     if (edit_password_input) edit_password_input.value = '';
+     if (edit_confirm_password_input) edit_confirm_password_input.value = '';
+
+ }
+
+// Fetch and display financial tip
+async function fetchFinancialTip() {
+    try {
+        const response = await fetch('/project-errawrs/src/api/user/financial-tips.php');
+        const data = await response.json();
+
+        if (data.success && data.tip) {
+            const tipContainer = document.getElementById('financial_tip_container');
+            if (tipContainer) {
+                tipContainer.innerHTML = `
+                    <h3 class="tip-title">${data.tip.title}</h3>
+                    <p class="tip-subtitle">${data.tip.subtitle}</p>
+                `;
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching financial tip:', error);
+    }
+}
+
+// Initialize Dashboard
+function init_dashboard() {
+    fetchUserData(); // Fetch user data first
+    fetchUserAccounts(); // Fetch accounts
+    fetchRecentTransactions(); // Fetch transactions
+    fetchFinancialTip(); // Fetch financial tip
+    setup_smooth_animations(); // Keep existing setup
+    setup_profile_edit(); // Setup profile edit interactions
+
+    console.log('StackOvercash Dashboard Initialized Dynamically');
+}
+
+
+// Add click handler for transfer now button (assuming it navigates)
+if (transfer_now_btn) {
+    transfer_now_btn.addEventListener('click', (event) => {
+        // Prevent default navigation if disabled
+        if (transfer_now_btn.classList.contains('disabled')) {
+            event.preventDefault();
+             show_notification('Please add an account with a balance to transfer funds.', 'info');
+            return;
+        }
+        // Proceed with navigation if not disabled
+        window.location.href = '../user/transfer.html';
+    });
+}
+
+
+// Initial load
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded, initializing dashboard.');
-    init_dashboard();
-    setup_keyboard_shortcuts();
-    setInterval(update_current_time, 60000);
-    console.log('StackOvercash Banking Dashboard fully loaded and ready!');
+    init_dashboard(); // Start the dynamic initialization
 });
+
+
+// Keep the format_currency_exact function if it's used elsewhere and needed globally
+// It seems update_balance_display formats directly now, so maybe not needed.
+// function format_currency_exact(amount) { ... }
+
+// Keep the create_transaction_element_exact and add_transaction_hover_effect if needed for transactions display
+// These seem to be integrated into fetchRecentTransactions and render logic now, maybe not needed globally.
+// function create_transaction_element_exact(transaction) { ... }
+// function add_transaction_hover_effect(item) { ... }
+
+// Function to handle logout
+async function handleLogout() {
+    try {
+        // Clear relevant items from localStorage
+        localStorage.removeItem('user');
+        localStorage.removeItem('account'); // Assuming account data is also stored
+        localStorage.removeItem('token'); // If you are using tokens
+
+        // Optional: Call backend logout API
+        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
+        // Note: This fetch is fire-and-forget as we are navigating away immediately
+        fetch('/project-errawrs/src/api/auth/logout.php', { method: 'POST' })
+            .catch(error => console.error('Error during logout API call:', error));
+
+        // Let the default link navigation to index.html happen
+    } catch (error) {
+        console.error('Error during logout:', error);
+        // Optionally show a notification that logout might not have been clean
+        show_notification('Logout might not have been fully successful.', 'warning');
+    }
+}
+
+// Event listener for logout button
+if (logout_btn) {
+    logout_btn.addEventListener('click', (event) => {
+        // Prevent default navigation immediately if you want to wait for API call
+        // event.preventDefault(); 
+        handleLogout();
+        // If not preventing default, the browser will navigate after this function runs
+    });
+}
+
+// --- END OF FILE ---
