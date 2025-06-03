@@ -208,6 +208,7 @@ body {
     border-radius: 25px;
     transition: var(--transition-default);
     letter-spacing: -0.2px;
+    text-decoration: none; /* Remove underline */
 }
 
 .logout-btn:hover {
@@ -436,6 +437,9 @@ body {
     letter-spacing: -0.2px;
     margin-top: 20px; /* Adjust top margin to move it up */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    text-decoration: none; /* Remove underline from link */
+    text-align: center; /* Center the text */
+    display: block; /* Make it a block element to properly center text */
 }
 
 .transfer-btn:hover {
