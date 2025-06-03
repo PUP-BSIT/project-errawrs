@@ -15,7 +15,12 @@ function togglePassword() {
 }
 
 // Handle login submission
-function handleLogin() {
+function handleLogin(event) {
+    // Always prevent the default form submission first
+    if (event) {
+        event.preventDefault();
+    }
+
     const tellerNumber = document.getElementById("tellerNumber").value;
     const password = document.getElementById("passwordInput").value;
 
@@ -26,52 +31,84 @@ function handleLogin() {
 
     // Prepare login data
     const loginData = {
-        tellerNumber: tellerNumber,
+        teller_number: tellerNumber,
         password: password,
+        login_type: 'teller'  // Add login type for the unified auth endpoint
     };
 
     // Send login request to backend
-    fetch("/api/auth/login", {
+    fetch("/project-errawrs/src/api/auth/login.php", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(loginData),
+        body: JSON.stringify(loginData)
     })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Login failed");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("Login successful:", data);
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.success) {
+            // Store teller info in session storage
+            sessionStorage.setItem('tellerInfo', JSON.stringify({
+                teller_id: data.user.id,
+                teller_number: data.user.teller_number,
+                name: `${data.user.first_name} ${data.user.last_name}`,
+                type: data.type
+            }));
 
-        })
-        .catch((error) => {
-            console.error("Login error:", error);
+            // Redirect to dashboard immediately
+            window.location.href = '../teller/bank_teller_dashboard.html';
+        } else {
+            throw new Error(data.error || "Login failed");
+        }
+    })
+    .catch((error) => {
+        console.error("Login error:", error);
 
-            // Reset button
-            loginButton.disabled = false;
-            loginButton.textContent = "log in";
+        // Reset button
+        loginButton.disabled = false;
+        loginButton.textContent = "log in";
 
-            // Show error message to user
-            alert("Login failed. Please check your credentials and try again.");
-        });
+        // Show error message
+        const errorMessage = document.createElement('div');
+        errorMessage.textContent = error.message || "Login failed. Please check your credentials and try again.";
+        errorMessage.style.color = 'red';
+        errorMessage.style.textAlign = 'center';
+        errorMessage.style.marginTop = '10px';
+        loginButton.parentNode.insertBefore(errorMessage, loginButton.nextSibling);
 
-    return false; // Prevent default form submission
+        // Remove error message after 3 seconds
+        setTimeout(() => {
+            errorMessage.remove();
+        }, 3000);
+    });
+
+    // Prevent form submission
+    return false;
 }
 
+// Handle forgot username
 function handleForgotUsername() {
-    alert(
-        "This feature is still under development and will be available in the next update."
-    );
-    return false;
+    alert("Please contact your administrator to recover your username.");
 }
 
+// Handle forgot password
 function handleForgotPassword() {
-    alert(
-        "This feature is still under development and will be available in the next update."
-    );
-    return false;
+    alert("Please contact your administrator to reset your password.");
 }
+
+// Check if user is already logged in
+document.addEventListener('DOMContentLoaded', function() {
+    // Clear any existing session
+    sessionStorage.removeItem('tellerInfo');
+    
+    // Add form submit handler
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    const tellerInfo = sessionStorage.getItem('tellerInfo');
+    if (tellerInfo && window.location.pathname.includes('bank_teller_login.html')) {
+        window.location.href = '../teller/bank_teller_dashboard.html';
+    }
+});

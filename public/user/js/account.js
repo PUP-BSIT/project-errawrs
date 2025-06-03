@@ -1,11 +1,34 @@
 // DOM Elements
-const three_dots_buttons = document.querySelectorAll('.three-dots-button');
-const notification_container = document.querySelector('.notification-container');
+const account_list_container = document.querySelector(
+    '.account-list-container'
+);
+const notification_container = document.querySelector(
+    '.notification-container'
+);
+const account_type_modal = document.getElementById('account_type_modal');
 const confirmation_modal = document.getElementById('confirmation_modal');
 const otp_modal = document.getElementById('otp_modal');
-const confirm_add_account_checkbox = document.getElementById('confirm_add_account_checkbox');
-const proceed_add_account_button = document.getElementById('proceed_add_account_button');
-const cancel_add_account_button = document.getElementById('cancel_add_account_button');
+const account_type_radios = document.querySelectorAll(
+    'input[name="account_type"]'
+);
+const proceed_account_type_button = document.getElementById(
+    'proceed_account_type_button'
+);
+const cancel_account_type_button = document.getElementById(
+    'cancel_account_type_button'
+);
+const confirm_add_account_checkbox = document.getElementById(
+    'confirm_add_account_checkbox'
+);
+const proceed_add_account_button = document.getElementById(
+    'proceed_add_account_button'
+);
+const cancel_add_account_button = document.getElementById(
+    'cancel_add_account_button'
+);
+const selected_account_type_span = document.getElementById(
+    'selected_account_type'
+);
 const otp_input = document.getElementById('otp_input');
 const verify_otp_button = document.getElementById('verify_otp_button');
 const cancel_otp_button = document.getElementById('cancel_otp_button');
@@ -20,256 +43,405 @@ const edit_first_name_input = document.getElementById('edit_first_name');
 const edit_last_name_input = document.getElementById('edit_last_name');
 const edit_username_input = document.getElementById('edit_username');
 const edit_password_input = document.getElementById('edit_password');
-const edit_confirm_password_input = document.getElementById('edit_confirm_password');
+const edit_confirm_password_input = document.getElementById(
+    'edit_confirm_password'
+);
 const edit_phone_number_input = document.getElementById('edit_phone_number');
 const user_name_element = document.getElementById('user_name');
+const welcome_user_name_element = document.getElementById('welcome_user_name');
 
-// Sample Account Data (Add status)
-let user_accounts = [
-    { number: '527491759361', balance: 3691.00, status: 'active' },
-    { number: '123456789012', balance: 10500.50, status: 'active' },
-];
-
-// User Data (Add registration fields)
-let user_data = {
-    name: 'Jhon Doe',
-    first_name: 'Jhon', // Added for edit form
-    last_name: 'Doe', // Added for edit form
-    username: 'jhondoe', // Added for edit form
-    password: 'password123', // Added for edit form (in a real app, handle securely)
-    phone_number: '123-456-7890', // Added for edit form
-    // Add other user data as needed
-};
-
+// Constants
 const MAX_ACCOUNTS = 3;
 
-// Function to show a notification
-function show_notification(message, type) {
-    const notification = document.createElement('div');
-    notification.classList.add('notification', type);
+// State
+let selectedAccountType = null;
+let userAccounts = [];
+let user_data = {};
 
-    let icon_class = '';
-    if (type === 'success') {
-        icon_class = 'fas fa-check-circle';
-    } else if (type === 'info') {
-        icon_class = 'fas fa-info-circle';
-    } else if (type === 'error') {
-        icon_class = 'fas fa-times-circle';
+// Fetch user data from API
+async function fetchUserData() {
+    try {
+        // Use session_check.php instead of profile.php
+        const response = await fetch('../../src/api/auth/session_check.php');
+        const data = await response.json();
+
+        if (data.success && data.authenticated) {
+            user_data = data.user;
+            if (user_name_element) {
+                user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+            }
+            if (welcome_user_name_element) {
+                welcome_user_name_element.textContent = user_data.first_name;
+            }
+            display_user_initial(); // Update the initial
+        } else {
+            showNotification(data.error || 'Session expired or invalid', 'error');
+            // Redirect to login page if not authenticated
+            setTimeout(() => {
+                window.location.href = './login_account_holder.html';
+            }, 2000);
+        }
+    } catch (error) {
+        showNotification('Error fetching user data', 'error');
+        console.error('Error:', error);
     }
-
-    notification.innerHTML = `<i class="${icon_class}"></i> <span>${message}</span>`;
-    notification_container.appendChild(notification);
-
-    // Automatically remove the notification after a few seconds
-    setTimeout(() => {
-        notification.remove();
-    }, 3000); // Hide after 3 seconds
 }
 
-// Function to update the account list display and button visibility
-function update_account_display() {
-    const account_list_container = document.querySelector('.account-list-container');
+// Fetch user accounts from API
+async function fetchUserAccounts() {
+    try {
+        const response = await fetch('../../src/api/user/accounts.php');
+        const data = await response.json();
+
+        // Debug log to see what accounts data we have
+        console.log('User accounts data:', data.accounts);
+
+        if (data.success) {
+            userAccounts = data.accounts;
+            updateAccountDisplay();
+        } else {
+            showNotification(data.error || 'Failed to fetch accounts', 'error');
+        }
+    } catch (error) {
+        showNotification('Error fetching accounts', 'error');
+        console.error('Error:', error);
+    }
+}
+
+// Update account display
+function updateAccountDisplay() {
     if (!account_list_container) return;
 
-    account_list_container.innerHTML = ''; // Clear existing content
+    account_list_container.innerHTML = '';
 
-    // Enforce the 3-account limit for display purposes
-    const accounts_to_display = user_accounts.slice(0, MAX_ACCOUNTS);
-
-    accounts_to_display.forEach(account => {
-        const account_item = document.createElement('div');
-        account_item.classList.add('account-item');
-
-        account_item.innerHTML = `
-            <div class="account-info">
-                <div class="info-group">
-                    <span class="info-label">Account No.</span>
-                    <span class="info-value">${account.number}</span>
-                </div>
-                <div class="info-group">
-                    <span class="info-label">Balance</span>
-                    <span class="info-value">₱ ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                </div>
-                <div class="info-group">
-                    <span class="info-label">Status</span>
-                    <span class="info-value account-status ${account.status}">${account.status.charAt(0).toUpperCase() + account.status.slice(1)}</span>
-                </div>
-            </div>
-            <div class="account-actions">
-                <button class="three-dots-button" ${account.status === 'closed' ? 'disabled' : ''}> <!-- Disable for closed accounts -->
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
-                <div class="action-menu hidden">
-                    <!-- Menu items will be added by JS on click -->
-                </div>
-            </div>
-        `;
-
-        account_list_container.appendChild(account_item);
+    // Display existing accounts
+    userAccounts.forEach((account) => {
+        const accountItem = createAccountItem(account);
+        account_list_container.appendChild(accountItem);
     });
 
-    // Add the plus sign placeholder if the account limit is not reached
-    if (user_accounts.length < MAX_ACCOUNTS) {
-        const add_account_placeholder = document.createElement('div');
-        add_account_placeholder.classList.add('add-account-placeholder');
-        add_account_placeholder.innerHTML = '<i class="fas fa-plus"></i>';
-        account_list_container.appendChild(add_account_placeholder);
-
-        // Add event listener to the placeholder
-        add_account_placeholder.addEventListener('click', () => {
-            confirmation_modal.classList.remove('hidden');
+    // Add "Add Account" placeholder if under limit
+    if (userAccounts.length < MAX_ACCOUNTS) {
+        const addAccountPlaceholder = document.createElement('div');
+        addAccountPlaceholder.classList.add('add-account-placeholder');
+        addAccountPlaceholder.innerHTML = `
+            <i class="fas fa-plus"></i>
+            <span>Add New Account</span>
+        `;
+        addAccountPlaceholder.addEventListener('click', () => {
+            account_type_modal.classList.remove('hidden');
         });
+        account_list_container.appendChild(addAccountPlaceholder);
     }
 
-    // Re-attach event listeners to the newly created three-dots buttons
-    attach_three_dots_listeners();
+    // Re-attach event listeners
+    attachAccountItemListeners();
 }
 
-// Function to attach listeners to three-dots buttons
-function attach_three_dots_listeners() {
-    document.querySelectorAll('.three-dots-button:not(:disabled)').forEach(button => { // Only attach to enabled buttons
-        // Remove existing listeners to prevent duplicates
-        const old_button = button.cloneNode(true);
-        button.parentNode.replaceChild(old_button, button);
-        const new_button = old_button;
+// Create account item element
+function createAccountItem(account) {
+    const accountItem = document.createElement('div');
+    accountItem.classList.add('account-item');
+    accountItem.dataset.accountId = account.id;
 
-        new_button.addEventListener('click', () => {
-            const account_item = new_button.closest('.account-item');
-            const account_status_element = account_item.querySelector('.account-status');
-            const current_status = account_status_element.textContent.toLowerCase();
-            const action_menu = new_button.nextElementSibling; // The action menu is the next sibling
+    // Format account_type for display
+    const accountTypeDisplay = account.account_type 
+        ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
+        : 'Standard';
+    
+    accountItem.innerHTML = `
+        <div class="account-info">
+            <div class="info-group">
+                <span class="info-label">Account No.</span>
+                <span class="info-value">${account.account_number}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Type</span>
+                <span class="account-type-badge ${account.account_type ? account.account_type.toLowerCase() : 'standard'}">${accountTypeDisplay}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Balance</span>
+                <span class="info-value">₱ ${parseFloat(
+                    account.balance
+                ).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Status</span>
+                <span class="info-value account-status ${account.status.toLowerCase()}">${
+        account.status
+    }</span>
+            </div>
+        </div>
+        <div class="account-actions">
+            <button class="three-dots-button" ${
+                account.status === 'closed' ? 'disabled' : ''
+            }>
+                <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div class="action-menu hidden">
+                <button class="menu-item transfer-button">Transfer</button>
+                <button class="menu-item unlink-button">Unlink</button>
+                <button class="menu-item close-button">Close</button>
+            </div>
+        </div>
+    `;
 
-            // Close all other open menus
-            document.querySelectorAll('.action-menu').forEach(menu => {
-                if (menu !== action_menu) {
-                    menu.classList.add('hidden');
-                }
+    return accountItem;
+}
+
+// Attach event listeners to account items
+function attachAccountItemListeners() {
+    document.querySelectorAll('.three-dots-button').forEach((button) => {
+        button.addEventListener('click', (e) => {
+            const menu = e.target
+                .closest('.account-actions')
+                .querySelector('.action-menu');
+            const allMenus = document.querySelectorAll('.action-menu');
+
+            // Close all other menus
+            allMenus.forEach((m) => {
+                if (m !== menu) m.classList.add('hidden');
             });
 
-            // Clear previous menu items
-            action_menu.innerHTML = '';
-
-            // Add menu items based on status
-            if (current_status === 'active') {
-                action_menu.innerHTML = `
-                    <button class="menu-item transfer-button">Transfer</button>
-                    <button class="menu-item close-button">Close</button> <!-- Only Transfer and Close -->
-                `;
-            }
-            // No menu items for closed accounts as button is disabled
-
-            // Toggle the visibility of the clicked menu
-            action_menu.classList.toggle('hidden');
+            menu.classList.toggle('hidden');
         });
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.account-actions')) {
+            document.querySelectorAll('.action-menu').forEach((menu) => {
+                menu.classList.add('hidden');
+            });
+        }
     });
 }
 
-// Add event listeners to menu items (Updated to handle Transfer and Close)
-document.addEventListener('click', (event) => {
-    const target = event.target;
+// Account Type Selection Handlers
+account_type_radios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+        selectedAccountType = radio.value;
+        proceed_account_type_button.disabled = false;
+    });
+});
 
-    if (target.classList.contains('menu-item')) {
-        // Close the menu after clicking an item
-        target.closest('.action-menu').classList.add('hidden');
-
-        const account_item = target.closest('.account-item');
-        const account_status_element = account_item.querySelector('.account-status');
-        const account_number = account_item.querySelector('.info-value').textContent; // Get account number
-
-        if (target.classList.contains('transfer-button')) {
-            // Redirect to transfer page (can pass account number if needed)
-            window.location.href = `transfer.html?account=${account_number}`; // Example: Pass account number as query param
-        } else if (target.classList.contains('close-button')) {
-            // Show account closed notification and update status (simulated)
-            show_notification(`Account ${account_number} closed successfully!`, 'success');
-            // In a real application, you would update the backend and then the UI
-            // For this example, we will just update the status in the data and re-render
-            const account_index = user_accounts.findIndex(account => account.number === account_number);
-            if (account_index !== -1) {
-                user_accounts[account_index].status = 'closed';
-                update_account_display(); // Re-render the list
-            }
-        }
+proceed_account_type_button.addEventListener('click', () => {
+    if (selectedAccountType) {
+        account_type_modal.classList.add('hidden');
+        selected_account_type_span.textContent = selectedAccountType;
+        confirmation_modal.classList.remove('hidden');
     }
 });
 
-// Close menu when clicking outside
-document.addEventListener('click', (event) => {
-    const is_three_dots_button = event.target.closest('.three-dots-button');
-    const is_action_menu = event.target.closest('.action-menu');
-    const is_modal = event.target.closest('.modal-content'); // Don't close menus when clicking inside modals
-
-    if (!is_three_dots_button && !is_action_menu && !is_modal) {
-        document.querySelectorAll('.action-menu').forEach(menu => {
-            menu.classList.add('hidden');
-        });
-    }
+cancel_account_type_button.addEventListener('click', () => {
+    account_type_modal.classList.add('hidden');
+    selectedAccountType = null;
+    account_type_radios.forEach((radio) => (radio.checked = false));
+    proceed_account_type_button.disabled = true;
 });
 
-// Function to generate a random 12-digit account number (simulation)
-function generate_account_number() {
-    return Math.floor(100000000000 + Math.random() * 900000000000).toString();
-}
-
-// Event listeners for Confirmation Modal
+// Confirmation Modal Handlers
 confirm_add_account_checkbox.addEventListener('change', () => {
     proceed_add_account_button.disabled = !confirm_add_account_checkbox.checked;
 });
 
-proceed_add_account_button.addEventListener('click', () => {
-    confirmation_modal.classList.add('hidden');
-    otp_modal.classList.remove('hidden');
-    // Simulate sending OTP (in a real app, this would be backend)
-    console.log('Simulating OTP sent.');
+proceed_add_account_button.addEventListener('click', async () => {
+    try {
+        // Get the user's phone number from session data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification('Phone number not found in user profile', 'error');
+            return;
+        }
+        
+        // Store selected account type in localStorage for later use
+        localStorage.setItem('pending_account_type', selectedAccountType);
+        
+        // Send OTP to user's phone number
+        const response = await fetch(
+            '../../src/api/auth/send_otp.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone_number: phoneNumber,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+            confirmation_modal.classList.add('hidden');
+            otp_modal.classList.remove('hidden');
+            showNotification('OTP sent successfully. Please verify to complete account creation.', 'success');
+            
+            // Remove auto-filling of OTP
+            if (otp_input) {
+                otp_input.value = '';
+            }
+        } else {
+            showNotification(data.error || 'Failed to send OTP', 'error');
+        }
+    } catch (error) {
+        showNotification('Error sending OTP', 'error');
+        console.error('Error:', error);
+    }
 });
 
 cancel_add_account_button.addEventListener('click', () => {
     confirmation_modal.classList.add('hidden');
-    confirm_add_account_checkbox.checked = false; // Reset checkbox
-    proceed_add_account_button.disabled = true; // Disable proceed button
+    confirm_add_account_checkbox.checked = false;
+    proceed_add_account_button.disabled = true;
 });
 
-// Event listeners for OTP Modal
-verify_otp_button.addEventListener('click', () => {
-    const entered_otp = otp_input.value;
-    // Simulate OTP verification (in a real app, this would be backend)
-    // Check if the entered OTP is a 6-digit number
-    if (/^\d{6}$/.test(entered_otp)) {
-        // In a real application, you would send the entered OTP to the backend for verification
-        // For this simulation, we will assume any 6-digit number is valid
-        otp_modal.classList.add('hidden');
-        show_notification('Account added successfully!', 'success');
+// OTP Verification Handlers
+verify_otp_button.addEventListener('click', async () => {
+    const otp = otp_input.value.trim();
 
-        // Simulate adding a new account
-        const new_account_number = generate_account_number();
-        const new_account = { number: new_account_number, balance: 0.00, status: 'active' };
-        user_accounts.push(new_account);
-        update_account_display(); // Update the display with the new account
+    if (!otp) {
+        showNotification('Please enter OTP', 'error');
+        return;
+    }
 
-        otp_input.value = ''; // Clear OTP input
+    try {
+        // Get the phone number from user data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification('Phone number not found in user profile', 'error');
+            return;
+        }
+        
+        // First verify the OTP
+        const verifyResponse = await fetch(
+            '../../src/api/auth/verify_otp.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    otp: otp,
+                    phone_number: phoneNumber
+                }),
+            }
+        );
 
-    } else {
-        show_notification('Invalid OTP. Please enter a 6-digit number.', 'error');
-        otp_input.value = ''; // Clear OTP input
+        const verifyData = await verifyResponse.json();
+
+        if (verifyData.success) {
+            // Get the account type from localStorage
+            const accountType = localStorage.getItem('pending_account_type');
+            
+            if (!accountType) {
+                showNotification('Account type not found. Please try again.', 'error');
+                return;
+            }
+            
+            // If OTP verification is successful, create the account
+            const createResponse = await fetch(
+                '../../src/api/user/create_additional_account.php',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        account_type: accountType,
+                        verified: true
+                    }),
+                }
+            );
+
+            const createData = await createResponse.json();
+
+            if (createData.success) {
+                otp_modal.classList.add('hidden');
+                showNotification('Account created successfully', 'success');
+                
+                // Clear the stored account type
+                localStorage.removeItem('pending_account_type');
+                
+                await fetchUserAccounts(); // Refresh account list
+            } else {
+                showNotification(createData.error || 'Failed to create account', 'error');
+            }
+        } else {
+            showNotification(verifyData.error || 'Invalid OTP', 'error');
+        }
+    } catch (error) {
+        showNotification('Error verifying OTP', 'error');
+        console.error('Error:', error);
     }
 });
 
 cancel_otp_button.addEventListener('click', () => {
     otp_modal.classList.add('hidden');
-    otp_input.value = ''; // Clear OTP input
+    otp_input.value = '';
 });
+
+// Show notification
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.classList.add('notification', type);
+
+    let icon = '';
+    switch (type) {
+        case 'success':
+            icon = 'fas fa-check-circle';
+            break;
+        case 'error':
+            icon = 'fas fa-times-circle';
+            break;
+        case 'info':
+            icon = 'fas fa-info-circle';
+            break;
+        default:
+            icon = 'fas fa-bell';
+    }
+
+    notification.innerHTML = `
+        <i class="${icon}"></i>
+        <span>${message}</span>
+    `;
+
+    notification_container.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
 // Function to display user initial in the avatar circle
 function display_user_initial() {
-    const initial = user_data.name.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
+    if (!user_avatar_container) return;
+    
+    // Use first_name and last_name directly from user_data
+    const userName = user_data.first_name && user_data.last_name 
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
+        : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    
+    const initial = userName.charAt(0).toUpperCase();
+    user_avatar_container.textContent = initial;
 }
 
 // Function to setup profile edit interactions
 function setup_profile_edit() {
-    if (!user_avatar_container || !edit_profile_icon || !edit_profile_modal || !save_profile_button || !exit_profile_button) return;
+    if (
+        !user_avatar_container ||
+        !edit_profile_icon ||
+        !edit_profile_modal ||
+        !save_profile_button ||
+        !exit_profile_button
+    )
+        return;
 
     // Show pen icon on hover
     user_avatar_container.addEventListener('mouseenter', () => {
@@ -289,7 +461,7 @@ function setup_profile_edit() {
         edit_profile_icon.classList.remove('hidden');
     });
 
-     edit_profile_icon.addEventListener('mouseleave', () => {
+    edit_profile_icon.addEventListener('mouseleave', () => {
         edit_profile_icon.classList.add('hidden');
     });
 
@@ -304,25 +476,66 @@ function setup_profile_edit() {
         edit_profile_modal.classList.add('hidden');
     });
 
-    // Simulate Save button click
-    save_profile_button.addEventListener('click', () => {
+    // Handle Save button click
+    save_profile_button.addEventListener('click', async () => {
         const updated_profile_data = {
-            first_name: edit_first_name_input.value,
-            last_name: edit_last_name_input.value,
-            username: edit_username_input.value,
-            password: edit_password_input.value, // Handle password securely!
-            phone_number: edit_phone_number_input.value,
+            first_name: edit_first_name_input.value.trim(),
+            last_name: edit_last_name_input.value.trim(),
+            username: edit_username_input.value.trim(),
+            password: edit_password_input.value, // Only include if not empty
+            confirm_password: edit_confirm_password_input.value,
+            phone_number: edit_phone_number_input.value.trim(),
         };
-        console.log('Saving profile data (simulated):', updated_profile_data);
+        
+        // Basic validation
+        if (!updated_profile_data.first_name || !updated_profile_data.last_name) {
+            showNotification('First name and last name are required', 'error');
+            return;
+        }
+        
+        // Only include password if it's not empty
+        if (!updated_profile_data.password) {
+            delete updated_profile_data.password;
+            delete updated_profile_data.confirm_password;
+        } else if (updated_profile_data.password !== updated_profile_data.confirm_password) {
+            showNotification('Passwords do not match', 'error');
+            return;
+        }
 
-        // Update the displayed name if first or last name changed (simulated)
-        user_data.name = `${updated_profile_data.first_name} ${updated_profile_data.last_name}`.trim();
-        if (user_name_element) user_name_element.textContent = user_data.name;
-        display_user_initial(); // Update the initial
+        try {
+            // Send update to API
+            const response = await fetch('../../src/api/user/profile/update.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updated_profile_data)
+            });
 
-        show_notification('Profile updated successfully!', 'success');
+            const data = await response.json();
 
-        edit_profile_modal.classList.add('hidden');
+            if (data.success) {
+                // Update local user data
+                user_data.first_name = updated_profile_data.first_name;
+                user_data.last_name = updated_profile_data.last_name;
+                user_data.username = updated_profile_data.username;
+                user_data.phone_number = updated_profile_data.phone_number;
+                
+                // Update UI
+                if (user_name_element) {
+                    user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+                }
+                display_user_initial();
+                
+                showNotification('Profile updated successfully!', 'success');
+                edit_profile_modal.classList.add('hidden');
+            } else {
+                showNotification(data.error || 'Failed to update profile', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            showNotification('Error updating profile', 'error');
+        }
     });
 
     // Close modal when clicking outside
@@ -335,19 +548,66 @@ function setup_profile_edit() {
 
 // Function to populate the profile edit form
 function populate_profile_form() {
-     if (!edit_first_name_input || !edit_last_name_input || !edit_username_input || !edit_password_input || !edit_confirm_password_input || !edit_phone_number_input) return;
+    if (
+        !edit_first_name_input ||
+        !edit_last_name_input ||
+        !edit_username_input ||
+        !edit_password_input ||
+        !edit_confirm_password_input ||
+        !edit_phone_number_input
+    )
+        return;
 
     edit_first_name_input.value = user_data.first_name || '';
     edit_last_name_input.value = user_data.last_name || '';
     edit_username_input.value = user_data.username || '';
-    edit_password_input.value = user_data.password || ''; // Be cautious
-    edit_confirm_password_input.value = user_data.password || ''; // Be cautious
+    // Clear password fields for security
+    edit_password_input.value = '';
+    edit_confirm_password_input.value = '';
     edit_phone_number_input.value = user_data.phone_number || '';
 }
 
-// Initial display of account data on page load
+// Initial fetch on page load
 document.addEventListener('DOMContentLoaded', () => {
-    update_account_display(); // Initial render
-    display_user_initial(); // Display user initial on load
-    setup_profile_edit(); // Setup profile edit interactions on load
-}); 
+    fetchUserData();
+    fetchUserAccounts();
+    setup_profile_edit();
+    console.log('StackOvercash Account Page Initialized Dynamically!');
+});
+
+// Function to handle logout
+async function handleLogout() {
+    try {
+        // Clear relevant items from localStorage
+        localStorage.removeItem('user');
+        localStorage.removeItem('account'); // Assuming account data is also stored
+        localStorage.removeItem('token'); // If you are using tokens
+
+        // Optional: Call backend logout API
+        fetch('../../src/api/auth/logout.php', {
+            method: 'POST',
+        }).catch((error) =>
+            console.error('Error during logout API call:', error)
+        );
+
+        // Let the default link navigation to index.html happen
+    } catch (error) {
+        console.error('Error during logout:', error);
+        // Optionally show a notification that logout might not have been clean
+        showNotification(
+            'Logout might not have been fully successful.',
+            'warning'
+        );
+    }
+}
+
+// Event listener for logout button
+const logout_btn = document.getElementById('logout_btn');
+if (logout_btn) {
+    logout_btn.addEventListener('click', (event) => {
+        // Prevent default navigation immediately if you want to wait for API call
+        // event.preventDefault();
+        handleLogout();
+        // If not preventing default, the browser will navigate after this function runs
+    });
+}
