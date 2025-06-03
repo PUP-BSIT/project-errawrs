@@ -8,12 +8,10 @@ const page_numbers_container = document.getElementById('page-numbers');
 const items_per_page_select = document.getElementById('items-per-page');
 const showing_info_span = document.getElementById('showing-info');
 const go_button = document.getElementById('go-button');
-const notification_container = document.querySelector(
-    '.notification-container'
-); // Assuming this exists in transaction.html
 
-// DOM Elements for Sidebar Profile Info (assuming they exist in transaction.html)
+// DOM Elements for Profile Edit
 const user_avatar_container = document.getElementById('user_avatar_container');
+// DOM Elements for Sidebar Profile Info (assuming they exist in transaction.html)
 const user_name_element = document.getElementById('user_name');
 const welcome_user_name_element = document.getElementById('welcome_user_name'); // Assuming this element might be on transaction page for consistency
 
@@ -67,11 +65,11 @@ function showNotification(message, type) {
 async function fetchUserData() {
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/user/profile.php'
+            '../../src/api/auth/session_check.php'
         );
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.authenticated) {
             user_data = data.user; // Store user data in state
             // Update displayed name and initial if elements exist
             if (user_name_element)
@@ -82,9 +80,13 @@ async function fetchUserData() {
             display_user_initial(); // Update the initial
         } else {
             showNotification(
-                data.error || 'Failed to fetch user data',
+                data.error || 'Session expired or invalid',
                 'error'
             );
+            // Redirect to login page if not authenticated
+            setTimeout(() => {
+                window.location.href = './login_account_holder.html';
+            }, 2000);
         }
     } catch (error) {
         showNotification('Error fetching user data', 'error');
@@ -97,7 +99,7 @@ async function fetchTransactions() {
     try {
         // Assuming API endpoint /api/user/transactions that supports pagination
         const response = await fetch(
-            `/project-errawrs/src/api/user/transactions.php?page=${currentPage}&limit=${itemsPerPage}`
+            `../../src/api/user/transactions.php?page=${currentPage}&limit=${itemsPerPage}`
         );
         const data = await response.json();
 
@@ -292,17 +294,15 @@ if (go_button) {
 
 // Function to display user initial in the avatar circle
 function display_user_initial() {
-    // Use user_data fetched from API
-    const userName =
-        user_data.first_name && user_data.last_name
-            ? `${user_data.first_name} ${user_data.last_name}`.trim()
-            : user_name_element
-            ? user_name_element.textContent.trim()
-            : 'User';
+    if (!user_avatar_container) return;
+    
+    // Use first_name and last_name directly from user_data
+    const userName = user_data.first_name && user_data.last_name 
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
+        : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    
     const initial = userName.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
+    user_avatar_container.textContent = initial;
 }
 
 // Removed setup_profile_edit and populate_profile_form functions as modal was removed from HTML
@@ -323,9 +323,7 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If you are using tokens
 
         // Optional: Call backend logout API
-        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
-        // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('/project-errawrs/src/api/auth/logout.php', {
+        fetch('../../src/api/auth/logout.php', {
             method: 'POST',
         }).catch((error) =>
             console.error('Error during logout API call:', error)

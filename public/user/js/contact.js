@@ -39,7 +39,6 @@ class ContactFormHandler {
 
     async handleSubmit(e) {
         e.preventDefault();
-
         if (!this.validateForm()) {
             return;
         }
@@ -159,7 +158,6 @@ class ContactFormHandler {
     showNotification(message, type = ALERT_TYPES.INFO) {
         const notification = document.createElement('div');
         notification.className = `notification-alert alert-${type}`;
-
         notification.innerHTML = `
             <i class="fas ${this.getAlertIconClass(type)}"></i>
             <span>${message}</span>

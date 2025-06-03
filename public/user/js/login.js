@@ -61,7 +61,6 @@ async function handleLogin(e) {
             // Store user data and account info
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('account', JSON.stringify(data.account));
-
             // Redirect after a short delay
             setTimeout(() => {
                 window.location.href = './user_dashboard.html';

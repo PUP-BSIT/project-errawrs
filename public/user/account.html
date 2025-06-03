@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./css/account.css" />
         <!-- New account specific styles -->
     </head>
-    <body>
+    <body class="authenticated-page">
         <div class="dashboard-container">
             <!-- Sidebar -->
             <div class="sidebar">
@@ -81,14 +81,12 @@
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="./index.html" class="logout-btn" id="logout_btn">
+                    <button class="logout-btn" id="logout_btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Log out
-                    </a>
                 </div>
             </div>
 
-            <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
                 <header class="main-header">
@@ -231,6 +229,7 @@
             </div>
         </div>
 
+        <script src="./js/session-manager.js"></script>
         <script src="./js/account.js"></script>
     </body>
 </html>

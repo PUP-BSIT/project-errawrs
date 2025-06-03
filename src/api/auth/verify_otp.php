@@ -41,27 +41,32 @@ if (!isset($_SESSION['otp'])) {
     exit();
 }
 
-// Check if registration data exists in session
-if (!isset($_SESSION['registration'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'No registration data found. Please start registration process again']);
-    exit();
-}
-
 $storedOTP = $_SESSION['otp'];
-$registration = $_SESSION['registration'];
+
+// Determine the purpose of this OTP verification
+$isRegistration = isset($_SESSION['registration']);
+
+// If this is for registration, check registration data
+if ($isRegistration) {
+    if (!isset($_SESSION['registration'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'No registration data found. Please start registration process again']);
+        exit();
+    }
+    $registration = $_SESSION['registration'];
+    
+    // Validate phone number matches registration data
+    if ($registration['phone_number'] !== $phone) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Phone number does not match registration data']);
+        exit();
+    }
+}
 
 // Validate phone number matches OTP request
 if ($storedOTP['phone_number'] !== $phone) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Phone number does not match OTP request']);
-    exit();
-}
-
-// Validate phone number matches registration data
-if ($registration['phone_number'] !== $phone) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Phone number does not match registration data']);
     exit();
 }
 
@@ -95,6 +100,16 @@ if ($data['otp'] !== $storedOTP['code']) {
     exit();
 }
 
+// If this is not a registration flow, just return success
+if (!$isRegistration) {
+    echo json_encode([
+        'success' => true,
+        'message' => 'OTP verified successfully'
+    ]);
+    exit();
+}
+
+// Below is the registration flow
 try {
     $db = db_connect();
     

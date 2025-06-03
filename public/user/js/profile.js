@@ -3,7 +3,7 @@ const CONFIG = {
     API: {
         BASE_URL: '/project-errawrs/src/api',
         ENDPOINTS: {
-            PROFILE: '/user/profile.php',
+            PROFILE: '/auth/session_check.php',
             UPDATE: '/user/profile/update.php',
             LOGOUT: '/auth/logout.php'
         }
@@ -239,7 +239,7 @@ const ProfileManager = {
             const data = await ApiService.getProfile();
             console.log('API Response:', data);
             
-            if (data.success && data.user) {
+            if (data.success && data.authenticated && data.user) {
                 console.log('Profile fetched successfully. User data:', data.user);
                 StateManager.setState({ 
                     userData: data.user,
@@ -248,20 +248,15 @@ const ProfileManager = {
                 this.populateForm();
                 this.updateDisplay();
             } else {
-                if (data.error === 'Unauthorized') {
-                    console.warn('Unauthorized access to profile. Redirecting to login.');
-                    NotificationManager.show('Please log in to view your profile.', CONFIG.NOTIFICATION.TYPES.INFO);
-                    setTimeout(() => {
-                        window.location.href = '/project-errawrs/public/user/index.html';
-                    }, 1500);
-                } else {
-                    console.error('Failed to fetch user profile:', data.error);
-                    NotificationManager.show(
-                        data.error || 'Failed to fetch user profile',
-                        CONFIG.NOTIFICATION.TYPES.ERROR
-                    );
-                    this.disableForm();
-                }
+                // Handle authentication failure or missing user data
+                NotificationManager.show(
+                    data.error || 'Session expired or invalid. Please log in again.',
+                    CONFIG.NOTIFICATION.TYPES.ERROR
+                );
+                // Redirect to login after a short delay
+                setTimeout(() => {
+                    window.location.href = './login_account_holder.html';
+                }, 2000);
             }
         } catch (error) {
             console.error('Error during profile fetch:', error);
