@@ -12,8 +12,8 @@
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="./css/user_dashboard.css"/> 
-        <link rel="stylesheet" href="./css/transaction.css"/> 
+        <link rel="stylesheet" href="./css/user_dashboard.css?v=1.1"/>
+        <link rel="stylesheet" href="./css/transaction.css?v=1.1"/>
     </head>
     <body>
         <div class="dashboard-container">
@@ -33,7 +33,7 @@
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name">Jhon Doe</h3>
+                    <h3 class="username" id="user_name"></h3>
                 </div>
 
                 <nav class="sidebar-nav">
@@ -44,7 +44,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./user/transfer.html" class="nav-link" data-page="transfer">
+                            <a href="./transfer.html" class="nav-link" data-page="transfer">
                                 Transfer
                             </a>
                         </li>
@@ -66,10 +66,10 @@
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button class="logout-btn" id="logout_btn">
+                    <a href="./index.html" class="logout-btn" id="logout_btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Log out
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -136,37 +136,8 @@
                 </div>
             </div>
         </div>
-        <div id="edit_profile_modal" class="modal hidden">
-            <div class="modal-content">
-                <h3>Edit Profile</h3>
-                <div class="form-group">
-                    <label for="edit_first_name">First Name</label>
-                    <input type="text" id="edit_first_name" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label for="edit_last_name">Last Name</label>
-                    <input type="text" id="edit_last_name" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label for="edit_username">Desired Username</label>
-                    <input type="text" id="edit_username" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label for="edit_password">Password</label>
-                    <input type="text" id="edit_password" class="form-input">
-                </div>
-                <div class="form-group">
-                    <label for="edit_confirm_password">Confirm Password</label>
-                    <input type="text" id="edit_confirm_password" class="form-input">
-                </div>
-                 <div class="form-group">
-                    <label for="edit_phone_number">Phone Number</label>
-                    <input type="text" id="edit_phone_number" class="form-input">
-                </div>
-                <button id="save_profile_button" class="btn primary-btn">Save</button>
-                <button id="exit_profile_button" class="btn secondary-btn">Exit</button>
-            </div>
-        </div>
+        <div class="notification-container"></div>
+
         <script src="./js/transaction.js"></script> 
     </body>
 </html> 
