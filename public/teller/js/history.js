@@ -333,7 +333,11 @@ function createTableRow(transaction) {
 
     const dateCell = document.createElement("div");
     dateCell.className = "table-cell date";
-    dateCell.textContent = transaction.date;
+    dateCell.textContent = formatDate(transaction.date);
+
+    const timeCell = document.createElement("div");
+    timeCell.className = "table-cell time";
+    timeCell.textContent = formatTime(transaction.date);
 
     const typeCell = document.createElement("div");
     typeCell.className = "table-cell";
@@ -343,14 +347,6 @@ function createTableRow(transaction) {
     amountCell.className = "table-cell currency";
     amountCell.textContent = transaction.amount;
 
-    const accountNoCell = document.createElement("div");
-    accountNoCell.className = "table-cell";
-    accountNoCell.textContent = transaction.accountNo;
-
-    const accountNameCell = document.createElement("div");
-    accountNameCell.className = "table-cell";
-    accountNameCell.textContent = transaction.accountName;
-
     const statusCell = document.createElement("div");
     statusCell.className = statusClass;
     statusCell.innerHTML = `
@@ -359,10 +355,9 @@ function createTableRow(transaction) {
     `;
 
     row.appendChild(dateCell);
+    row.appendChild(timeCell);
     row.appendChild(typeCell);
     row.appendChild(amountCell);
-    row.appendChild(accountNoCell);
-    row.appendChild(accountNameCell);
     row.appendChild(statusCell);
 
     return row;
@@ -503,6 +498,15 @@ function formatDate(dateString) {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
+    });
+}
+
+function formatTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-PH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
     });
 }
 
