@@ -102,6 +102,9 @@ function updateAccountDisplay() {
 
      account_display_container.innerHTML = ''; // Clear existing content
 
+     // Debug log to see what accounts data we have
+     console.log('User accounts data:', user_accounts);
+
      const active_accounts = user_accounts.filter(account => account.status === 'active');
 
      if (active_accounts.length > 0) {
@@ -126,9 +129,13 @@ function updateAccountDisplay() {
              active_accounts.forEach(account => {
                  const option = document.createElement('option');
                  option.value = account.account_number;
-                 // Use account_type instead of type field
-                 const accountTypeDisplay = account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Standard';
-                 option.textContent = `${accountTypeDisplay} Account No. ${account.account_number}`;
+                 
+                 // Format account_type for display
+                 const accountType = account.account_type 
+                     ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
+                     : 'Standard';
+                 
+                 option.textContent = `${accountType} Account No. ${account.account_number}`;
                  option.dataset.balance = account.balance; // Store balance
                  account_select.appendChild(option);
              });

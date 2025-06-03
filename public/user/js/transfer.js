@@ -111,6 +111,9 @@ async function populateAccountsDropdown() {
         );
         const data = await response.json();
 
+        // Debug log to see what accounts data we have
+        console.log('User accounts data:', data.accounts);
+
         if (data.success && data.accounts.length > 0) {
             user_accounts = data.accounts.filter(
                 (account) => account.status === 'active'
@@ -120,7 +123,13 @@ async function populateAccountsDropdown() {
             user_accounts.forEach((account) => {
                 const option = document.createElement('option');
                 option.value = account.account_number;
-                option.textContent = `${account.type} Account No. ${
+                
+                // Format account_type for display
+                const accountType = account.account_type 
+                    ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
+                    : 'Standard';
+                
+                option.textContent = `${accountType} Account No. ${
                     account.account_number
                 } (₱ ${parseFloat(account.balance).toLocaleString('en-US', {
                     minimumFractionDigits: 2,
