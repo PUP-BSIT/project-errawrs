@@ -676,7 +676,7 @@ body {
     width: 1150px;
     margin: 0 auto;
     border-radius: 15px;
-    padding: 10px 25px 0px 25px;
+    padding: 10px 25px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
@@ -687,6 +687,10 @@ body {
     font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background: var(--color-white);
+    z-index: 1;
 }
 
 .history-table {
@@ -699,6 +703,11 @@ body {
     grid-template-columns: 300px 370px 380px;
     gap: 20px;
     margin-bottom: 15px;
+    position: sticky;
+    top: 60px;
+    background: var(--color-white);
+    z-index: 1;
+    padding: 10px 0;
 }
 
 .history-header-value {
@@ -711,6 +720,30 @@ body {
     color: var(--color-primary-black);
 }
 
+.history-body {
+    display: flex;
+    flex-direction: column;
+    max-height: 350px; /* Height for 5 items */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-mint) var(--color-bg-gradient-start);
+}
+
+/* Webkit scrollbar styles */
+.history-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-body::-webkit-scrollbar-track {
+    background: var(--color-bg-gradient-start);
+    border-radius: 4px;
+}
+
+.history-body::-webkit-scrollbar-thumb {
+    background-color: var(--color-mint);
+    border-radius: 4px;
+}
+
 .history-row {
     display: grid;
     grid-template-columns: 300px 380px 380px;
@@ -719,6 +752,8 @@ body {
     border-bottom: 1px solid var(--color-bg-gradient-end);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    min-height: 70px; /* Fixed height for each row */
+    align-items: center;
 }
 
 .history-row:hover {
@@ -989,7 +1024,6 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 20px;
     padding: 0;
 }
 

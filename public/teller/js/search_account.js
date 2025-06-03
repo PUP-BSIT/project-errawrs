@@ -38,8 +38,34 @@ const accountDatabase = {
 };
 
 let currentAccount = null;
-let currentTransactionType = null;
 let isDropdownOpen = false;
+
+// Check for transaction data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const lastTransactionData = sessionStorage.getItem('lastTransactionData');
+    if (lastTransactionData) {
+        const data = JSON.parse(lastTransactionData);
+        if (accountDatabase[data.accountNumber]) {
+            // Update the account balance if it was a transaction
+            if (data.newBalance !== undefined && !data.preserveState) {
+                accountDatabase[data.accountNumber].balance = data.newBalance;
+            }
+            
+            // Show the account details
+            const searchInput = document.getElementById("search_input");
+            searchInput.value = data.accountNumber;
+            searchAccount();
+            
+            // Show notification for completed transaction
+            if (data.type && !data.preserveState) {
+                showNotification(`${data.type === 'deposit' ? 'Deposit' : 'Withdrawal'} of ₱${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} was successful`, 'success');
+            }
+            
+            // Clear the transaction data
+            sessionStorage.removeItem('lastTransactionData');
+        }
+    }
+});
 
 // Search account function
 function searchAccount() {
@@ -49,7 +75,6 @@ function searchAccount() {
     if (accountNumber.length >= 10) {
         const account = accountDatabase[accountNumber];
         if (account) {
-            // Only hide actions if selecting a different account
             if (!currentAccount || currentAccount.number !== account.number) {
                 hideAccountActions();
             }
@@ -93,7 +118,6 @@ function displayAccountDetails(account) {
 
     const accountDetails = document.getElementById("account_details");
     
-    // Add chevron icon if it doesn't exist
     if (!accountDetails.querySelector('.account-chevron')) {
         const chevron = document.createElement('i');
         chevron.className = 'fas fa-chevron-right account-chevron';
@@ -103,7 +127,6 @@ function displayAccountDetails(account) {
     accountDetails.classList.remove('display-none');
     accountDetails.classList.add('display-flex', 'visible');
 
-    // Add click event listener to the account details card
     accountDetails.onclick = function() {
         const chevron = this.querySelector('.account-chevron');
         chevron.classList.toggle('rotated');
@@ -131,7 +154,6 @@ function toggleAccountActions() {
         return;
     }
 
-    // Show new actions
     showAccountActions();
 }
 
@@ -140,20 +162,18 @@ function showAccountActions() {
     const accountDetails = document.querySelector(".account-details");
     const mainContent = document.querySelector(".main-content");
     
-    // Check if action buttons container already exists
     let actionContainer = mainContent.querySelector(".actions-container");
     if (actionContainer) {
-        actionContainer.remove(); // Remove existing container
+        actionContainer.remove();
     }
 
-    // Create action buttons HTML with conditional display based on account status
     const actionButtonsHTML = `
         <div class="actions-container status-${currentAccount.status.toLowerCase()}">
-            <button class="action-deposit" onclick="showDepositForm()">
+            <button class="action-deposit" onclick="redirectToDeposit()">
                 <i class="fas fa-plus"></i>
                 Deposit
             </button>
-            <button class="action-withdraw" onclick="showWithdrawForm()">
+            <button class="action-withdraw" onclick="redirectToWithdraw()">
                 <i class="fas fa-minus"></i>
                 Withdraw
             </button>
@@ -169,7 +189,6 @@ function showAccountActions() {
     `;
 
     accountDetails.insertAdjacentHTML('afterend', actionButtonsHTML);
-
     isDropdownOpen = true;
 }
 
@@ -182,91 +201,22 @@ function hideAccountActions() {
     isDropdownOpen = false;
 }
 
-// Show transaction form
-function showTransactionForm() {
-    const transactionForm = document.getElementById('transaction_form');
-    transactionForm.classList.add('visible', 'show');
-    document.getElementById('transaction_amount').focus();
-}
-
-// Hide transaction form
-function hideTransactionForm() {
-    const transactionForm = document.getElementById('transaction_form');
-    transactionForm.classList.remove('show');
-    setTimeout(() => {
-        transactionForm.classList.remove('visible');
-        // Reset the form to its initial state
-        const container = transactionForm.querySelector('.transaction-container');
-        container.innerHTML = `
-            <div class="transaction-header">
-                <h2>Deposit</h2>
-                <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-            </div>
-            <div class="transaction-form-content">
-                <div class="form-group">
-                    <label for="transaction_amount">Enter Amount</label>
-                    <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
-                </div>
-                <div class="form-actions">
-                    <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-                    <button class="form-btn confirm-btn" onclick="showTransactionReceipt('deposit')">Confirm</button>
-                </div>
-            </div>
-        `;
-        document.getElementById('transaction_amount').value = ''; // Clear input
-    }, 300);
-}
-
-// Show deposit form
-function showDepositForm() {
-    const transactionForm = document.getElementById('transaction_form');
-    const container = transactionForm.querySelector('.transaction-container');
+// Redirect to deposit page
+function redirectToDeposit() {
+    if (!currentAccount) return;
     
-    // Reset the form to deposit state
-    container.innerHTML = `
-        <div class="transaction-header">
-            <h2>Deposit</h2>
-            <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-        </div>
-        <div class="transaction-form-content">
-            <div class="form-group">
-                <label for="transaction_amount">Enter Amount</label>
-                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
-            </div>
-            <div class="form-actions">
-                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-                <button class="form-btn confirm-btn" onclick="showTransactionReceipt('deposit')">Confirm</button>
-            </div>
-        </div>
-    `;
-
-    showTransactionForm();
+    const returnUrl = window.location.href;
+    const url = `bank_teller_deposit.html?account_number=${currentAccount.number}&account_name=${encodeURIComponent(currentAccount.name)}&balance=${currentAccount.balance}&return_url=${encodeURIComponent(returnUrl)}`;
+    window.location.href = url;
 }
 
-// Show withdraw form
-function showWithdrawForm() {
-    const transactionForm = document.getElementById('transaction_form');
-    const container = transactionForm.querySelector('.transaction-container');
+// Redirect to withdraw page
+function redirectToWithdraw() {
+    if (!currentAccount) return;
     
-    // Reset the form to withdraw state
-    container.innerHTML = `
-        <div class="transaction-header">
-            <h2>Withdraw</h2>
-            <p>Current Balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
-        </div>
-        <div class="transaction-form-content">
-            <div class="form-group">
-                <label for="transaction_amount">Enter Amount</label>
-                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
-            </div>
-            <div class="form-actions">
-                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
-                <button class="form-btn confirm-btn" onclick="showTransactionReceipt('withdraw')">Confirm</button>
-            </div>
-        </div>
-    `;
-
-    showTransactionForm();
+    const returnUrl = window.location.href;
+    const url = `bank_teller_withdraw.html?account_number=${currentAccount.number}&account_name=${encodeURIComponent(currentAccount.name)}&balance=${currentAccount.balance}&return_url=${encodeURIComponent(returnUrl)}`;
+    window.location.href = url;
 }
 
 // Notification System
@@ -295,12 +245,8 @@ function showNotification(message, type = 'info') {
         <span>${message}</span>
     `;
 
-    // Add click handler to dismiss notification
     notification.onclick = () => dismissNotification(notification);
-
     container.appendChild(notification);
-
-    // Auto dismiss after 5 seconds
     setTimeout(() => dismissNotification(notification), 5000);
 }
 
@@ -313,88 +259,17 @@ function dismissNotification(notification) {
     }, 300);
 }
 
-// Update showTransactionReceipt to use notifications
-function showTransactionReceipt(type) {
-    const amountInput = document.getElementById('transaction_amount');
-    const amount = parseFloat(amountInput.value);
-
-    if (!amount || amount <= 0) {
-        showNotification('Please enter a valid amount.', 'error');
-        return;
-    }
-
-    if (type === 'withdraw' && amount > currentAccount.balance) {
-        showNotification('Insufficient funds.', 'error');
-        return;
-    }
-
-    const newBalance = type === 'deposit' ? 
-        currentAccount.balance + amount : 
-        currentAccount.balance - amount;
-
-    const transactionForm = document.getElementById('transaction_form');
-    const container = transactionForm.querySelector('.transaction-container');
-
-    container.innerHTML = `
-        <div class="transaction-header">
-            <h2>Transaction Receipt</h2>
-            <div class="receipt-content">
-                <div class="receipt-item">
-                    <span>Transaction Type:</span>
-                    <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</span>
-                </div>
-                <div class="receipt-item">
-                    <span>Account Number:</span>
-                    <span>${currentAccount.number}</span>
-                </div>
-                <div class="receipt-item">
-                    <span>Account Name:</span>
-                    <span>${currentAccount.name}</span>
-                </div>
-                <div class="receipt-item">
-                    <span>Current Balance:</span>
-                    <span>₱${currentAccount.balance.toLocaleString('en-US', 
-                          { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div class="receipt-item">
-                    <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'} 
-                          Amount:</span>
-                    <span>₱${amount.toLocaleString('en-US', 
-                          { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div class="receipt-item total">
-                    <span>New Balance:</span>
-                    <span>₱${newBalance.toLocaleString('en-US', 
-                          { minimumFractionDigits: 2 })}</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-actions">
-            <button class="form-btn cancel-btn" 
-              onclick="hideTransactionForm()">Cancel</button>
-            <button class="form-btn confirm-btn" 
-              onclick="processTransaction('${type}', 
-              ${amount})">Submit</button>
-        </div>
-    `;
-}
-
-// Update closeAccount to use notifications
+// Close account
 function closeAccount() {
     if (currentAccount.balance > 0) {
-        showNotification(`Cannot close account ${currentAccount.number}. 
-            Account balance must be zero. Current balance: 
-            ₱${currentAccount.balance.toLocaleString('en-US', 
-            { minimumFractionDigits: 2 })}`, 'error');
+        showNotification(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 'error');
         return;
     }
 
-    if (confirm(`Are you sure you want to close account 
-          ${currentAccount.number}?`)) {
+    if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
         currentAccount.status = "Inactive";
         accountDatabase[currentAccount.number].status = "Inactive";
 
-        // Update status display
         const statusElement = document.getElementById("account_status");
         statusElement.innerHTML = `
             <div class="status-icon">✗</div>
@@ -402,7 +277,6 @@ function closeAccount() {
         `;
         statusElement.className = "status-inactive";
 
-        // Hide current actions and show updated actions
         hideAccountActions();
         showAccountActions();
         
@@ -410,14 +284,12 @@ function closeAccount() {
     }
 }
 
-// Update reopenAccount to use notifications
+// Reopen account
 function reopenAccount() {
-    if (confirm(`Are you sure you want to reopen account 
-          ${currentAccount.number}?`)) {
+    if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
         currentAccount.status = "Active";
         accountDatabase[currentAccount.number].status = "Active";
 
-        // Update status display
         const statusElement = document.getElementById("account_status");
         statusElement.innerHTML = `
             <div class="status-icon">✓</div>
@@ -425,7 +297,6 @@ function reopenAccount() {
         `;
         statusElement.className = "status-active";
 
-        // Hide current actions and show updated actions
         hideAccountActions();
         showAccountActions();
         
@@ -433,99 +304,11 @@ function reopenAccount() {
     }
 }
 
-// Update processTransaction to use notifications
-function processTransaction(type, amount) {
-    const oldBalance = currentAccount.balance;
-    const newBalance = type === 'deposit' ? 
-      oldBalance + amount : oldBalance - amount;
-
-    // Update account balance
-    currentAccount.balance = newBalance;
-    accountDatabase[currentAccount.number].balance = newBalance;
-
-    // Add transaction to history
-    const reference = `${type.charAt(0).toUpperCase() + type.slice(1)}
-       - Acc: #${currentAccount.number}`;
-    addTransactionToHistory(type, amount, reference);
-
-    // Update display
-    document.getElementById('account_balance').textContent
-       = `₱${newBalance.toLocaleString('en-US', {
-        minimumFractionDigits: 2
-    })}`;
-
-    // Show completion message
-    const transactionForm = document.getElementById('transaction_form');
-    const container = transactionForm.querySelector('.transaction-container');
-
-    container.innerHTML = `
-        <div class="transaction-header">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>Transaction Complete</h2>
-            <p>Your ${type === 'deposit' ? 'deposit' : 'withdrawal'} 
-              has been processed successfully.</p>
-        </div>
-        <div class="transaction-summary">
-            <div class="summary-item">
-                <span>Transaction Type:</span>
-                <span>${type === 'deposit' ? 'Deposit' : 'Withdrawal'}</span>
-            </div>
-            <div class="summary-item">
-                <span>Amount:</span>
-                <span>₱${amount.toLocaleString('en-US', 
-                      { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div class="summary-item total">
-                <span>New Balance:</span>
-                <span>₱${newBalance.toLocaleString('en-US', 
-                      { minimumFractionDigits: 2 })}</span>
-            </div>
-        </div>
-        <div class="form-actions">
-            <button class="form-btn confirm-btn" 
-              onclick="hideTransactionForm()">Done</button>
-        </div>
-    `;
-
-    showNotification(`${type === 'deposit' ? 'Deposit' : 'Withdrawal'} 
-          completed successfully.`, 'success');
-}
-
-// Function to add transaction to history
-function addTransactionToHistory(type, amount, reference, status = "Success") {
-    // Get today's date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Create new transaction object
-    const newTransaction = {
-        id: Date.now(), // Use timestamp as unique ID
-        date: today,
-        type: type.charAt(0).toUpperCase() + type.slice(1),
-        amount: `₱${amount.toLocaleString('en-US', 
-              { minimumFractionDigits: 2 })}`,
-        reference: reference || 'Over-the-counter',
-        status: status
-    };
-
-    // Get existing history data
-    let historyData = JSON.parse(localStorage.getItem
-          ('transactionHistory') || '[]');
-    
-    // Add new transaction at the beginning of the array
-    historyData.unshift(newTransaction);
-    
-    // Store updated history
-    localStorage.setItem('transactionHistory', JSON.stringify(historyData));
-}
-
 // Add to search history
 function addToSearchHistory(name, accountNumber) {
     const historyBody = document.getElementById("history_body");
     const existingRows = historyBody.querySelectorAll(".history-row");
 
-    // Remove if this account already exists in history
     existingRows.forEach((row) => {
         const accountCell = row.children[2];
         if (accountCell && accountCell.textContent === accountNumber) {
@@ -533,7 +316,6 @@ function addToSearchHistory(name, accountNumber) {
         }
     });
 
-    // Create new row for the searched account
     const newRow = document.createElement("div");
     newRow.className = "history-row";
     newRow.onclick = () => selectFromHistory(name, accountNumber);
@@ -543,20 +325,17 @@ function addToSearchHistory(name, accountNumber) {
         <div class="history-value">${accountNumber}</div>
     `;
 
-    // Insert at the beginning of history
     if (historyBody.firstChild) {
         historyBody.insertBefore(newRow, historyBody.firstChild);
     } else {
         historyBody.appendChild(newRow);
     }
 
-    // Limit history to 10 items
     const updatedRows = historyBody.querySelectorAll(".history-row");
     if (updatedRows.length > 10) {
         historyBody.removeChild(updatedRows[updatedRows.length - 1]);
     }
 
-    // Update row numbers
     updateHistoryNumbers();
 }
 
@@ -572,10 +351,9 @@ function updateHistoryNumbers() {
 
 // Select from history
 function selectFromHistory(name, accountNumber) {
-    // Only proceed if selecting a different account
     if (!currentAccount || currentAccount.number !== accountNumber) {
-    const searchInput = document.getElementById("search_input");
-    searchInput.value = accountNumber;
-    searchAccount();
+        const searchInput = document.getElementById("search_input");
+        searchInput.value = accountNumber;
+        searchAccount();
     }
 }
