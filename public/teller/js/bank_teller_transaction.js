@@ -209,4 +209,171 @@ function showNotification(message, type = 'info') {
 }
 
 // Initialize page when DOM is loaded
-document.addEventListener('DOMContentLoaded', initializePage); 
+document.addEventListener('DOMContentLoaded', initializePage);
+
+// Transaction handling for deposits and withdrawals
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in
+    const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo') || '{}');
+    if (!tellerInfo.teller_number) {
+        window.location.href = 'bank_teller_login.html';
+        return;
+    }
+
+    // Get form elements
+    const depositForm = document.getElementById('depositForm');
+    const withdrawForm = document.getElementById('withdrawForm');
+    
+    // Handle deposit form submission
+    if (depositForm) {
+        depositForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                // Show loading state
+                document.getElementById('depositButton').disabled = true;
+                document.getElementById('depositStatus').textContent = 'Processing deposit...';
+                
+                // Get form data
+                const accountNumber = document.getElementById('accountNumber').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const description = document.getElementById('description').value || 'Cash deposit';
+                
+                // Validate amount
+                if (isNaN(amount) || amount <= 0) {
+                    throw new Error('Please enter a valid amount');
+                }
+                
+                // Make API call
+                const response = await fetch('../src/api/teller/deposit.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account_number: accountNumber,
+                        amount: amount,
+                        teller_number: tellerInfo.teller_number,
+                        description: description
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success message
+                    document.getElementById('depositStatus').textContent = 'Deposit successful!';
+                    document.getElementById('depositStatus').style.color = 'green';
+                    
+                    // Update transaction details
+                    document.getElementById('transactionDetails').innerHTML = `
+                        <h3>Transaction Details</h3>
+                        <p>Transaction ID: ${data.data.transaction_id}</p>
+                        <p>Amount: $${data.data.deposit_amount}</p>
+                        <p>New Balance: $${data.data.new_balance}</p>
+                        <p>Date: ${data.data.transaction_date}</p>
+                        <p>Status: ${data.data.status}</p>
+                    `;
+                    
+                    // Reset form
+                    depositForm.reset();
+                } else {
+                    throw new Error(data.error || 'Deposit failed');
+                }
+                
+            } catch (error) {
+                // Show error message
+                document.getElementById('depositStatus').textContent = error.message;
+                document.getElementById('depositStatus').style.color = 'red';
+            } finally {
+                document.getElementById('depositButton').disabled = false;
+            }
+        });
+    }
+    
+    // Handle withdraw form submission
+    if (withdrawForm) {
+        withdrawForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                // Show loading state
+                document.getElementById('withdrawButton').disabled = true;
+                document.getElementById('withdrawStatus').textContent = 'Processing withdrawal...';
+                
+                // Get form data
+                const accountNumber = document.getElementById('accountNumber').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const description = document.getElementById('description').value || 'Cash withdrawal';
+                
+                // Validate amount
+                if (isNaN(amount) || amount <= 0) {
+                    throw new Error('Please enter a valid amount');
+                }
+                
+                // Make API call
+                const response = await fetch('../src/api/teller/withdraw.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account_number: accountNumber,
+                        amount: amount,
+                        teller_number: tellerInfo.teller_number,
+                        description: description
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success message
+                    document.getElementById('withdrawStatus').textContent = 'Withdrawal successful!';
+                    document.getElementById('withdrawStatus').style.color = 'green';
+                    
+                    // Update transaction details
+                    document.getElementById('transactionDetails').innerHTML = `
+                        <h3>Transaction Details</h3>
+                        <p>Transaction ID: ${data.data.transaction_id}</p>
+                        <p>Amount: $${data.data.withdrawal_amount}</p>
+                        <p>New Balance: $${data.data.new_balance}</p>
+                        <p>Date: ${data.data.transaction_date}</p>
+                        <p>Status: ${data.data.status}</p>
+                    `;
+                    
+                    // Reset form
+                    withdrawForm.reset();
+                } else {
+                    throw new Error(data.error || 'Withdrawal failed');
+                }
+                
+            } catch (error) {
+                // Show error message
+                document.getElementById('withdrawStatus').textContent = error.message;
+                document.getElementById('withdrawStatus').style.color = 'red';
+            } finally {
+                document.getElementById('withdrawButton').disabled = false;
+            }
+        });
+    }
+    
+    // Add account number validation
+    const accountNumberInputs = document.querySelectorAll('input[name="accountNumber"]');
+    accountNumberInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    });
+    
+    // Add amount validation
+    const amountInputs = document.querySelectorAll('input[name="amount"]');
+    amountInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9.]/g, '');
+            if (this.value.split('.').length > 2) {
+                this.value = this.value.replace(/\.+$/, '');
+            }
+        });
+    });
+}); 
