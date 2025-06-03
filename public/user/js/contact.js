@@ -3,20 +3,20 @@ const ALERT_TYPES = {
     SUCCESS: 'success',
     ERROR: 'error',
     WARNING: 'warning',
-    INFO: 'info'
+    INFO: 'info',
 };
 
 const ALERT_ICONS = {
     success: 'fa-check-circle',
     error: 'fa-exclamation-circle',
     warning: 'fa-exclamation-triangle',
-    info: 'fa-info-circle'
+    info: 'fa-info-circle',
 };
 
 const OBSERVER_CONFIG = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.1
+    threshold: 0.1,
 };
 
 // Form Handler
@@ -39,7 +39,6 @@ class ContactFormHandler {
 
     async handleSubmit(e) {
         e.preventDefault();
-        
         if (!this.validateForm()) {
             return;
         }
@@ -49,9 +48,12 @@ class ContactFormHandler {
         try {
             const formData = this.getFormData();
             const response = await this.submitForm(formData);
-            
+
             if (response.success) {
-                this.showNotification('Message sent successfully!', ALERT_TYPES.SUCCESS);
+                this.showNotification(
+                    'Message sent successfully!',
+                    ALERT_TYPES.SUCCESS
+                );
                 this.resetForm();
             } else {
                 throw new Error(response.message || 'Failed to send message');
@@ -73,22 +75,34 @@ class ContactFormHandler {
         const message = this.form.querySelector('#message').value.trim();
 
         if (!name) {
-            this.showNotification('Please enter your name', ALERT_TYPES.WARNING);
+            this.showNotification(
+                'Please enter your name',
+                ALERT_TYPES.WARNING
+            );
             return false;
         }
 
         if (!email) {
-            this.showNotification('Please enter your email', ALERT_TYPES.WARNING);
+            this.showNotification(
+                'Please enter your email',
+                ALERT_TYPES.WARNING
+            );
             return false;
         }
 
         if (!this.isValidEmail(email)) {
-            this.showNotification('Please enter a valid email address', ALERT_TYPES.WARNING);
+            this.showNotification(
+                'Please enter a valid email address',
+                ALERT_TYPES.WARNING
+            );
             return false;
         }
 
         if (!message) {
-            this.showNotification('Please enter your message', ALERT_TYPES.WARNING);
+            this.showNotification(
+                'Please enter your message',
+                ALERT_TYPES.WARNING
+            );
             return false;
         }
 
@@ -110,9 +124,9 @@ class ContactFormHandler {
             const response = await fetch('/api/contact', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
@@ -144,7 +158,6 @@ class ContactFormHandler {
     showNotification(message, type = ALERT_TYPES.INFO) {
         const notification = document.createElement('div');
         notification.className = `notification-alert alert-${type}`;
-        
         notification.innerHTML = `
             <i class="fas ${this.getAlertIconClass(type)}"></i>
             <span>${message}</span>
@@ -184,21 +197,21 @@ class SmoothScrollNavigation {
     }
 
     setupEventListeners() {
-        this.links.forEach(link => {
+        this.links.forEach((link) => {
             link.addEventListener('click', (e) => this.handleClick(e));
         });
     }
 
     handleClick(e) {
         e.preventDefault();
-        
+
         const targetId = e.currentTarget.getAttribute('href');
         const targetElement = document.querySelector(targetId);
-        
+
         if (targetElement) {
             targetElement.scrollIntoView({
                 behavior: 'smooth',
-                block: 'start'
+                block: 'start',
             });
         }
     }
@@ -228,7 +241,7 @@ class ScrollAnimationController {
     }
 
     handleIntersectionChanges(entries) {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting === true) {
                 entry.target.classList.add('animate-in');
             }
@@ -236,7 +249,7 @@ class ScrollAnimationController {
     }
 
     observeElements(observer) {
-        this.animatedElements.forEach(element => {
+        this.animatedElements.forEach((element) => {
             observer.observe(element);
         });
     }
@@ -267,4 +280,4 @@ class ApplicationInitializer {
 }
 
 // Initialize Application
-new ApplicationInitializer(); 
+new ApplicationInitializer();

@@ -37,7 +37,7 @@ if (!preg_match('/^09\d{9}$/', $phone)) {
     exit();
 }
 
-// For now, using static OTP
+// Use static OTP for development (no SMS API yet)
 $otp = '123456';
 
 // Store OTP and phone number in session
@@ -45,7 +45,8 @@ $_SESSION['otp'] = [
     'code' => $otp,
     'phone_number' => $phone,
     'created_at' => time(),
-    'attempts' => 0
+    'attempts' => 0,
+    'purpose' => $data['purpose'] ?? 'general'
 ];
 
 // In a real application, you would send the OTP via SMS here

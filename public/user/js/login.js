@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Password toggle functionality
     const passwordToggle = document.querySelector('.password-toggle');
     if (passwordToggle) {
-        passwordToggle.addEventListener('click', () => togglePasswordVisibility(passwordToggle));
+        passwordToggle.addEventListener('click', () =>
+            togglePasswordVisibility(passwordToggle)
+        );
     }
 });
 
@@ -37,17 +39,20 @@ async function handleLogin(e) {
     showLoadingState();
 
     try {
-        const response = await fetch('/project-errawrs/src/api/auth/login.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
-                login_type: 'user'
-            })
-        });
+        const response = await fetch(
+            '/project-errawrs/src/api/auth/login.php',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    login_type: 'user',
+                }),
+            }
+        );
 
         const data = await response.json();
 
@@ -56,7 +61,6 @@ async function handleLogin(e) {
             // Store user data and account info
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('account', JSON.stringify(data.account));
-            
             // Redirect after a short delay
             setTimeout(() => {
                 window.location.href = './user_dashboard.html';
@@ -75,12 +79,13 @@ async function handleLogin(e) {
 function showLoadingState() {
     const submitBtn = document.querySelector('button[type="submit"]');
     if (submitBtn) {
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+        submitBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Logging in...';
         submitBtn.disabled = true;
     }
 
     // Disable form inputs
-    document.querySelectorAll('input').forEach(input => {
+    document.querySelectorAll('input').forEach((input) => {
         input.disabled = true;
     });
 }
@@ -93,7 +98,7 @@ function hideLoadingState() {
     }
 
     // Re-enable form inputs
-    document.querySelectorAll('input').forEach(input => {
+    document.querySelectorAll('input').forEach((input) => {
         input.disabled = false;
     });
 }
@@ -127,7 +132,13 @@ function showNotification(message, type = 'info') {
     container.className = `notification notification-${type}`;
     container.innerHTML = `
         <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+            <i class="fas ${
+                type === 'success'
+                    ? 'fa-check-circle'
+                    : type === 'error'
+                    ? 'fa-exclamation-circle'
+                    : 'fa-info-circle'
+            }"></i>
             <span>${message}</span>
             <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
                 <i class="fas fa-times"></i>
@@ -143,4 +154,4 @@ function showNotification(message, type = 'info') {
         container.classList.remove('show');
         setTimeout(() => container.remove(), 300);
     }, 5000);
-} 
+}
