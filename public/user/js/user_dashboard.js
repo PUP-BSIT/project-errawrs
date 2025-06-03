@@ -46,11 +46,11 @@ function show_notification(message, type) {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        // Assuming an API endpoint for user profile data
-        const response = await fetch('/project-errawrs/src/api/user/profile.php');
+        // Use the new session check endpoint instead of profile.php
+        const response = await fetch('../../src/api/auth/session_check.php');
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.authenticated) {
             user_data = data.user; // Store user data in state
             if (user_name_element) {
                 user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
@@ -61,7 +61,11 @@ async function fetchUserData() {
 
              display_user_initial(); // Update the initial
         } else {
-            show_notification(data.error || 'Failed to fetch user data', 'error');
+            show_notification(data.error || 'Session expired or invalid', 'error');
+            // Redirect to login page if not authenticated
+            setTimeout(() => {
+                window.location.href = './login_account_holder.html';
+            }, 2000);
         }
     } catch (error) {
         show_notification('Error fetching user data', 'error');
@@ -73,7 +77,7 @@ async function fetchUserData() {
 // Fetch user accounts from API and display primary account balance
 async function fetchUserAccounts() {
     try {
-        const response = await fetch('/project-errawrs/src/api/user/accounts.php');
+        const response = await fetch('../../src/api/user/accounts.php');
         const data = await response.json();
 
         if (data.success) {
@@ -122,8 +126,10 @@ function updateAccountDisplay() {
              active_accounts.forEach(account => {
                  const option = document.createElement('option');
                  option.value = account.account_number;
-                 option.textContent = `${account.type} Account No. ${account.account_number}`;
-                  option.dataset.balance = account.balance; // Store balance
+                 // Use account_type instead of type field
+                 const accountTypeDisplay = account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Standard';
+                 option.textContent = `${accountTypeDisplay} Account No. ${account.account_number}`;
+                 option.dataset.balance = account.balance; // Store balance
                  account_select.appendChild(option);
              });
 
@@ -184,7 +190,7 @@ async function fetchRecentTransactions() {
      try {
         // Assuming an API endpoint for recent transactions
         // This endpoint might need to accept an account number parameter if we want transactions per account
-        const response = await fetch('/project-errawrs/src/api/user/transactions.php?limit=3');
+        const response = await fetch('../../src/api/user/transactions.php?limit=3');
         const data = await response.json();
 
         if (data.success && data.transactions.length > 0) {
@@ -221,12 +227,15 @@ async function fetchRecentTransactions() {
 
 // Function to display user initial in the avatar circle
 function display_user_initial() {
-     // Use user_data fetched from API
-    const userName = user_data.first_name && user_data.last_name ? `${user_data.first_name} ${user_data.last_name}`.trim() : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    if (!user_avatar_container) return;
+    
+    // Use user_data fetched from API
+    const userName = user_data.first_name && user_data.last_name 
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
+        : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    
     const initial = userName.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
+    user_avatar_container.textContent = initial;
 }
 
 // Keep the setup_smooth_animations and setup_profile_edit functions if they are needed on this page
@@ -461,7 +470,7 @@ async function handleLogout() {
         // Optional: Call backend logout API
         // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
         // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('/project-errawrs/src/api/auth/logout.php', { method: 'POST' })
+        fetch('../../src/api/auth/logout.php', { method: 'POST' })
             .catch(error => console.error('Error during logout API call:', error));
 
         // Let the default link navigation to index.html happen

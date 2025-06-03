@@ -16,8 +16,8 @@ $user_id = $_SESSION['auth']['id'];
 try {
     $conn = db_connect();
     
-    // Fetch accounts for the logged-in user
-    $stmt = $conn->prepare('SELECT account_id, account_number, balance, type, status FROM account WHERE user_id = ?');
+    // Fetch accounts for the logged-in user, including account_type
+    $stmt = $conn->prepare('SELECT account_id, account_number, balance, type, status, account_type FROM account WHERE user_id = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $result = $stmt->get_result();

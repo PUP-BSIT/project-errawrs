@@ -61,24 +61,25 @@ let user_data = {};
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(
-            '/project-errawrs/src/api/user/profile.php'
-        );
+        // Use session_check.php instead of profile.php
+        const response = await fetch('../../src/api/auth/session_check.php');
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.authenticated) {
             user_data = data.user;
-            if (user_name_element)
-                user_name_element.textContent =
-                    `${user_data.first_name} ${user_data.last_name}`.trim();
-            if (welcome_user_name_element)
+            if (user_name_element) {
+                user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+            }
+            if (welcome_user_name_element) {
                 welcome_user_name_element.textContent = user_data.first_name;
-            display_user_initial();
+            }
+            display_user_initial(); // Update the initial
         } else {
-            showNotification(
-                data.error || 'Failed to fetch user data',
-                'error'
-            );
+            showNotification(data.error || 'Session expired or invalid', 'error');
+            // Redirect to login page if not authenticated
+            setTimeout(() => {
+                window.location.href = './login_account_holder.html';
+            }, 2000);
         }
     } catch (error) {
         showNotification('Error fetching user data', 'error');
@@ -89,9 +90,7 @@ async function fetchUserData() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
-        const response = await fetch(
-            '/project-errawrs/src/api/user/accounts.php'
-        );
+        const response = await fetch('../../src/api/user/accounts.php');
         const data = await response.json();
 
         if (data.success) {
@@ -142,6 +141,9 @@ function createAccountItem(account) {
     accountItem.classList.add('account-item');
     accountItem.dataset.accountId = account.id;
 
+    // Use account_type instead of type for display
+    const accountTypeDisplay = account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Standard';
+    
     accountItem.innerHTML = `
         <div class="account-info">
             <div class="info-group">
@@ -150,9 +152,7 @@ function createAccountItem(account) {
             </div>
             <div class="info-group">
                 <span class="info-label">Type</span>
-                <span class="account-type-badge ${account.type.toLowerCase()}">${
-        account.type
-    }</span>
+                <span class="account-type-badge ${account.account_type ? account.account_type.toLowerCase() : 'standard'}">${accountTypeDisplay}</span>
             </div>
             <div class="info-group">
                 <span class="info-label">Balance</span>
@@ -246,14 +246,14 @@ confirm_add_account_checkbox.addEventListener('change', () => {
 proceed_add_account_button.addEventListener('click', async () => {
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/user/accounts.php',
+            '../../src/api/user/create_additional_account.php',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    type: selectedAccountType,
+                    account_type: selectedAccountType,
                 }),
             }
         );
@@ -291,7 +291,7 @@ verify_otp_button.addEventListener('click', async () => {
 
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/auth/verify_otp.php',
+            '../../src/api/auth/verify_otp.php',
             {
                 method: 'POST',
                 headers: {
@@ -355,16 +355,15 @@ function showNotification(message, type) {
 
 // Function to display user initial in the avatar circle
 function display_user_initial() {
-    const userName =
-        user_data.first_name && user_data.last_name
-            ? `${user_data.first_name} ${user_data.last_name}`.trim()
-            : user_name_element
-            ? user_name_element.textContent.trim()
-            : 'User';
+    if (!user_avatar_container) return;
+    
+    // Use first_name and last_name directly from user_data
+    const userName = user_data.first_name && user_data.last_name 
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
+        : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    
     const initial = userName.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
+    user_avatar_container.textContent = initial;
 }
 
 // Function to setup profile edit interactions
@@ -411,26 +410,66 @@ function setup_profile_edit() {
         edit_profile_modal.classList.add('hidden');
     });
 
-    // Simulate Save button click
-    save_profile_button.addEventListener('click', () => {
+    // Handle Save button click
+    save_profile_button.addEventListener('click', async () => {
         const updated_profile_data = {
-            first_name: edit_first_name_input.value,
-            last_name: edit_last_name_input.value,
-            username: edit_username_input.value,
-            password: edit_password_input.value, // Handle password securely!
-            phone_number: edit_phone_number_input.value,
+            first_name: edit_first_name_input.value.trim(),
+            last_name: edit_last_name_input.value.trim(),
+            username: edit_username_input.value.trim(),
+            password: edit_password_input.value, // Only include if not empty
+            confirm_password: edit_confirm_password_input.value,
+            phone_number: edit_phone_number_input.value.trim(),
         };
-        console.log('Saving profile data (simulated):', updated_profile_data);
+        
+        // Basic validation
+        if (!updated_profile_data.first_name || !updated_profile_data.last_name) {
+            showNotification('First name and last name are required', 'error');
+            return;
+        }
+        
+        // Only include password if it's not empty
+        if (!updated_profile_data.password) {
+            delete updated_profile_data.password;
+            delete updated_profile_data.confirm_password;
+        } else if (updated_profile_data.password !== updated_profile_data.confirm_password) {
+            showNotification('Passwords do not match', 'error');
+            return;
+        }
 
-        // Update the displayed name if first or last name changed (simulated)
-        user_data.name =
-            `${updated_profile_data.first_name} ${updated_profile_data.last_name}`.trim();
-        if (user_name_element) user_name_element.textContent = user_data.name;
-        display_user_initial(); // Update the initial
+        try {
+            // Send update to API
+            const response = await fetch('../../src/api/user/profile/update.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updated_profile_data)
+            });
 
-        show_notification('Profile updated successfully!', 'success');
+            const data = await response.json();
 
-        edit_profile_modal.classList.add('hidden');
+            if (data.success) {
+                // Update local user data
+                user_data.first_name = updated_profile_data.first_name;
+                user_data.last_name = updated_profile_data.last_name;
+                user_data.username = updated_profile_data.username;
+                user_data.phone_number = updated_profile_data.phone_number;
+                
+                // Update UI
+                if (user_name_element) {
+                    user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+                }
+                display_user_initial();
+                
+                showNotification('Profile updated successfully!', 'success');
+                edit_profile_modal.classList.add('hidden');
+            } else {
+                showNotification(data.error || 'Failed to update profile', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            showNotification('Error updating profile', 'error');
+        }
     });
 
     // Close modal when clicking outside
@@ -456,8 +495,9 @@ function populate_profile_form() {
     edit_first_name_input.value = user_data.first_name || '';
     edit_last_name_input.value = user_data.last_name || '';
     edit_username_input.value = user_data.username || '';
-    edit_password_input.value = user_data.password || ''; // Be cautious
-    edit_confirm_password_input.value = user_data.password || ''; // Be cautious
+    // Clear password fields for security
+    edit_password_input.value = '';
+    edit_confirm_password_input.value = '';
     edit_phone_number_input.value = user_data.phone_number || '';
 }
 
@@ -478,9 +518,7 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If you are using tokens
 
         // Optional: Call backend logout API
-        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
-        // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('/project-errawrs/src/api/auth/logout.php', {
+        fetch('../../src/api/auth/logout.php', {
             method: 'POST',
         }).catch((error) =>
             console.error('Error during logout API call:', error)

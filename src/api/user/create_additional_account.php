@@ -10,6 +10,17 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     exit();
 }
 
+// Get POST data
+$input = json_decode(file_get_contents('php://input'), true);
+$account_type = isset($input['account_type']) ? $input['account_type'] : 'savings'; // Default to savings if not specified
+
+// Validate account_type
+if (!in_array($account_type, ['savings', 'credit', 'checking'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Invalid account type']);
+    exit();
+}
+
 try {
     $db = db_connect();
     
@@ -39,9 +50,9 @@ try {
     $year = date('y');
     $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
     
-    // Create new account
-    $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status) VALUES (?, ?, 0.00, "active")');
-    $accountStmt->bind_param('is', $user_id, $accountNumber);
+    // Create new account with account_type
+    $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status, account_type) VALUES (?, ?, 0.00, "active", ?)');
+    $accountStmt->bind_param('iss', $user_id, $accountNumber, $account_type);
     
     if (!$accountStmt->execute()) {
         throw new Exception('Failed to create new account');
@@ -50,7 +61,7 @@ try {
     $account_id = $accountStmt->insert_id;
     
     // Get all user's accounts
-    $allAccountsStmt = $db->prepare('SELECT account_id, account_number, balance, status FROM account WHERE user_id = ? AND status = "active"');
+    $allAccountsStmt = $db->prepare('SELECT account_id, account_number, balance, status, account_type FROM account WHERE user_id = ? AND status = "active"');
     $allAccountsStmt->bind_param('i', $user_id);
     $allAccountsStmt->execute();
     $allAccountsResult = $allAccountsStmt->get_result();
@@ -74,7 +85,8 @@ try {
             'account_id' => $account_id,
             'account_number' => $accountNumber,
             'balance' => '0.00',
-            'status' => 'active'
+            'status' => 'active',
+            'account_type' => $account_type
         ],
         'all_accounts' => $accounts
     ]);

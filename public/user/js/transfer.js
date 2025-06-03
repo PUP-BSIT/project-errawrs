@@ -75,11 +75,11 @@ function showNotification(message, type) {
 async function fetchUserData() {
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/user/profile.php'
+            '../../src/api/auth/session_check.php'
         );
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success && data.authenticated) {
             user_data = data.user;
             if (user_name_element)
                 user_name_element.textContent =
@@ -89,9 +89,13 @@ async function fetchUserData() {
             display_user_initial();
         } else {
             showNotification(
-                data.error || 'Failed to fetch user data',
+                data.error || 'Session expired or invalid',
                 'error'
             );
+            // Redirect to login page if not authenticated
+            setTimeout(() => {
+                window.location.href = './login_account_holder.html';
+            }, 2000);
         }
     } catch (error) {
         showNotification('Error fetching user data', 'error');
@@ -103,7 +107,7 @@ async function fetchUserData() {
 async function populateAccountsDropdown() {
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/user/accounts.php'
+            '../../src/api/user/accounts.php'
         );
         const data = await response.json();
 
@@ -176,16 +180,15 @@ function update_default_label() {
 
 // Function to display user initial in the avatar circle
 function display_user_initial() {
-    const user_name =
-        user_data.first_name && user_data.last_name
-            ? `${user_data.first_name} ${user_data.last_name}`.trim()
-            : user_name_element
-            ? user_name_element.textContent.trim()
-            : 'User';
-    const initial = user_name.charAt(0).toUpperCase();
-    if (user_avatar_container) {
-        user_avatar_container.textContent = initial;
-    }
+    if (!user_avatar_container) return;
+    
+    // Use first_name and last_name directly from user_data
+    const userName = user_data.first_name && user_data.last_name 
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
+        : (user_name_element ? user_name_element.textContent.trim() : 'User');
+    
+    const initial = userName.charAt(0).toUpperCase();
+    user_avatar_container.textContent = initial;
 }
 
 // Function to setup profile edit interactions
