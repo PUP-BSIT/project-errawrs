@@ -101,12 +101,13 @@ try {
         // Record status change in transaction table
         $transaction_sql = "INSERT INTO transaction (
             sender_account_id,
+            amount,
             transaction_type,
             status,
             created_at,
             completed_at,
             description
-        ) VALUES (?, 'account_closure', 'completed', NOW(), NOW(), ?)";
+        ) VALUES (?, 0.00, 'withdrawal', 'completed', NOW(), NOW(), ?)";
         
         $transaction_stmt = mysqli_prepare($conn, $transaction_sql);
         mysqli_stmt_bind_param($transaction_stmt, "is", 
