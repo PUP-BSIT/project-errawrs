@@ -15,7 +15,10 @@ function togglePassword() {
 }
 
 // Handle login submission
-function handleLogin() {
+function handleLogin(event) {
+    // Prevent the default form submission
+    event.preventDefault();
+
     const tellerNumber = document.getElementById("tellerNumber").value;
     const password = document.getElementById("passwordInput").value;
 
@@ -50,18 +53,8 @@ function handleLogin() {
                 type: data.type
             }));
 
-            // Show success message
-            const statusMessage = document.createElement('div');
-            statusMessage.textContent = 'Login successful! Redirecting...';
-            statusMessage.style.color = 'green';
-            statusMessage.style.textAlign = 'center';
-            statusMessage.style.marginTop = '10px';
-            loginButton.parentNode.insertBefore(statusMessage, loginButton.nextSibling);
-
-            // Redirect to dashboard
-            setTimeout(() => {
-                window.location.href = '../teller/bank_teller_dashboard.html';
-            }, 1500);
+            // Redirect to dashboard immediately
+            window.location.href = '../teller/bank_teller_dashboard.html';
         } else {
             throw new Error(data.error || "Login failed");
         }
