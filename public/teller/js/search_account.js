@@ -285,22 +285,50 @@ function closeAccount() {
 }
 
 // Reopen account
-function reopenAccount() {
+async function reopenAccount() {
+    if (!currentAccount || !currentTeller) {
+        showNotification('Account or teller information missing', 'error');
+        return;
+    }
+
     if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
-        currentAccount.status = "Active";
-        accountDatabase[currentAccount.number].status = "Active";
+        try {
+            const response = await fetch('../api/teller/reopen_account.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    account_number: currentAccount.number,
+                    teller_number: currentTeller.number,
+                    reason: 'Account reopened by teller request'
+                })
+            });
 
-        const statusElement = document.getElementById("account_status");
-        statusElement.innerHTML = `
-            <div class="status-icon">✓</div>
-            ${currentAccount.status}
-        `;
-        statusElement.className = "status-active";
+            const data = await response.json();
 
-        hideAccountActions();
-        showAccountActions();
-        
-        showNotification('Account has been reopened successfully.', 'success');
+            if (data.success) {
+                currentAccount.status = "Active";
+                
+                // Update status display
+                const statusElement = document.getElementById("account_status");
+                statusElement.innerHTML = `
+                    <div class="status-icon">✓</div>
+                    ${currentAccount.status}
+                `;
+                statusElement.className = "status-active";
+
+                // Hide current actions and show updated actions
+                hideAccountActions();
+                showAccountActions();
+                
+                showNotification('Account has been reopened successfully.', 'success');
+            } else {
+                throw new Error(data.error || 'Failed to reopen account');
+            }
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
     }
 }
 

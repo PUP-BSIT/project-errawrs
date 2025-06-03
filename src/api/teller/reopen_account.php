@@ -100,8 +100,9 @@ try {
             status,
             created_at,
             completed_at,
-            description
-        ) VALUES (?, 'account_reopen', 'completed', NOW(), NOW(), ?)";
+            description,
+            amount
+        ) VALUES (?, 'deposit', 'completed', NOW(), NOW(), ?, 0.00)";
         
         $transaction_stmt = mysqli_prepare($conn, $transaction_sql);
         mysqli_stmt_bind_param($transaction_stmt, "is", 
