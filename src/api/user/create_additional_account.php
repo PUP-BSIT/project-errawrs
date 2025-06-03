@@ -12,12 +12,34 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
 
 // Get POST data
 $input = json_decode(file_get_contents('php://input'), true);
-$account_type = isset($input['account_type']) ? $input['account_type'] : 'savings'; // Default to savings if not specified
+$account_type = isset($input['account_type']) ? $input['account_type'] : null;
+$verified = isset($input['verified']) ? $input['verified'] : false;
 
 // Validate account_type
-if (!in_array($account_type, ['savings', 'credit', 'checking'])) {
+if (!$account_type) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Account type is required']);
+    exit();
+}
+
+// Validate account_type values
+if (!in_array($account_type, ['savings', 'checking', 'time_deposit'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid account type']);
+    exit();
+}
+
+// Verify that OTP has been verified if creating account
+if ($verified !== true) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'OTP verification required']);
+    exit();
+}
+
+// Check if OTP exists and has been verified
+if (!isset($_SESSION['otp'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'No verified OTP found. Please complete verification first']);
     exit();
 }
 
@@ -77,10 +99,13 @@ try {
     // Commit transaction
     $db->commit();
     
+    // Clear OTP session data
+    unset($_SESSION['otp']);
+    
     // Return success response with new account details
     echo json_encode([
         'success' => true,
-        'message' => 'New account created successfully',
+        'message' => 'Account created successfully',
         'new_account' => [
             'account_id' => $account_id,
             'account_number' => $accountNumber,

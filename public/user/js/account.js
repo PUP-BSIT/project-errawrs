@@ -93,6 +93,9 @@ async function fetchUserAccounts() {
         const response = await fetch('../../src/api/user/accounts.php');
         const data = await response.json();
 
+        // Debug log to see what accounts data we have
+        console.log('User accounts data:', data.accounts);
+
         if (data.success) {
             userAccounts = data.accounts;
             updateAccountDisplay();
@@ -141,8 +144,10 @@ function createAccountItem(account) {
     accountItem.classList.add('account-item');
     accountItem.dataset.accountId = account.id;
 
-    // Use account_type instead of type for display
-    const accountTypeDisplay = account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Standard';
+    // Format account_type for display
+    const accountTypeDisplay = account.account_type 
+        ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
+        : 'Standard';
     
     accountItem.innerHTML = `
         <div class="account-info">
@@ -245,15 +250,27 @@ confirm_add_account_checkbox.addEventListener('change', () => {
 
 proceed_add_account_button.addEventListener('click', async () => {
     try {
+        // Get the user's phone number from session data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification('Phone number not found in user profile', 'error');
+            return;
+        }
+        
+        // Store selected account type in localStorage for later use
+        localStorage.setItem('pending_account_type', selectedAccountType);
+        
+        // Send OTP to user's phone number
         const response = await fetch(
-            '../../src/api/user/create_additional_account.php',
+            '../../src/api/auth/send_otp.php',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    account_type: selectedAccountType,
+                    phone_number: phoneNumber,
                 }),
             }
         );
@@ -263,13 +280,17 @@ proceed_add_account_button.addEventListener('click', async () => {
         if (data.success) {
             confirmation_modal.classList.add('hidden');
             otp_modal.classList.remove('hidden');
-            showNotification('Account created successfully', 'success');
-            await fetchUserAccounts(); // Refresh account list
+            showNotification('OTP sent successfully. Please verify to complete account creation.', 'success');
+            
+            // Remove auto-filling of OTP
+            if (otp_input) {
+                otp_input.value = '';
+            }
         } else {
-            showNotification(data.error || 'Failed to create account', 'error');
+            showNotification(data.error || 'Failed to send OTP', 'error');
         }
     } catch (error) {
-        showNotification('Error creating account', 'error');
+        showNotification('Error sending OTP', 'error');
         console.error('Error:', error);
     }
 });
@@ -290,25 +311,70 @@ verify_otp_button.addEventListener('click', async () => {
     }
 
     try {
-        const response = await fetch(
+        // Get the phone number from user data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification('Phone number not found in user profile', 'error');
+            return;
+        }
+        
+        // First verify the OTP
+        const verifyResponse = await fetch(
             '../../src/api/auth/verify_otp.php',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ otp }),
+                body: JSON.stringify({ 
+                    otp: otp,
+                    phone_number: phoneNumber
+                }),
             }
         );
 
-        const data = await response.json();
+        const verifyData = await verifyResponse.json();
 
-        if (data.success) {
-            otp_modal.classList.add('hidden');
-            showNotification('Account verified successfully', 'success');
-            await fetchUserAccounts(); // Refresh account list
+        if (verifyData.success) {
+            // Get the account type from localStorage
+            const accountType = localStorage.getItem('pending_account_type');
+            
+            if (!accountType) {
+                showNotification('Account type not found. Please try again.', 'error');
+                return;
+            }
+            
+            // If OTP verification is successful, create the account
+            const createResponse = await fetch(
+                '../../src/api/user/create_additional_account.php',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        account_type: accountType,
+                        verified: true
+                    }),
+                }
+            );
+
+            const createData = await createResponse.json();
+
+            if (createData.success) {
+                otp_modal.classList.add('hidden');
+                showNotification('Account created successfully', 'success');
+                
+                // Clear the stored account type
+                localStorage.removeItem('pending_account_type');
+                
+                await fetchUserAccounts(); // Refresh account list
+            } else {
+                showNotification(createData.error || 'Failed to create account', 'error');
+            }
         } else {
-            showNotification(data.error || 'Invalid OTP', 'error');
+            showNotification(verifyData.error || 'Invalid OTP', 'error');
         }
     } catch (error) {
         showNotification('Error verifying OTP', 'error');

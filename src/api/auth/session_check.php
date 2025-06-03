@@ -44,6 +44,7 @@ echo json_encode([
         'type' => $_SESSION['auth']['type'],
         'first_name' => $_SESSION['auth']['first_name'] ?? '',
         'last_name' => $_SESSION['auth']['last_name'] ?? '',
+        'phone_number' => $_SESSION['auth']['phone_number'] ?? '',
         'last_activity' => $_SESSION['auth']['last_activity'],
         'session_expires_in' => SESSION_TIMEOUT
     ]
