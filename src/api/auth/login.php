@@ -81,7 +81,7 @@ try {
         ],
         'teller' => [
             'table' => 'teller',
-            'query' => 'SELECT teller_id as id, teller_number, password_hash, first_name, last_name, email FROM teller WHERE teller_number = ?'
+            'query' => 'SELECT teller_id as id, teller_number, password_hash, first_name, last_name, email FROM teller WHERE teller_number = ? AND status = "active"'
         ],
         'user' => [
             'table' => 'user',
