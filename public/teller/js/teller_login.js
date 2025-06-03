@@ -95,6 +95,9 @@ function handleForgotPassword() {
 
 // Check if user is already logged in
 document.addEventListener('DOMContentLoaded', function() {
+    // Clear any existing session
+    sessionStorage.removeItem('tellerInfo');
+    
     const tellerInfo = sessionStorage.getItem('tellerInfo');
     if (tellerInfo && window.location.pathname.includes('bank_teller_login.html')) {
         window.location.href = '../teller/bank_teller_dashboard.html';
