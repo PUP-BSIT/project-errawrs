@@ -16,8 +16,10 @@ function togglePassword() {
 
 // Handle login submission
 function handleLogin(event) {
-    // Prevent the default form submission
-    event.preventDefault();
+    // Always prevent the default form submission first
+    if (event) {
+        event.preventDefault();
+    }
 
     const tellerNumber = document.getElementById("tellerNumber").value;
     const password = document.getElementById("passwordInput").value;
@@ -80,7 +82,8 @@ function handleLogin(event) {
         }, 3000);
     });
 
-    return false; // Prevent default form submission
+    // Prevent form submission
+    return false;
 }
 
 // Handle forgot username
@@ -97,6 +100,12 @@ function handleForgotPassword() {
 document.addEventListener('DOMContentLoaded', function() {
     // Clear any existing session
     sessionStorage.removeItem('tellerInfo');
+    
+    // Add form submit handler
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
     
     const tellerInfo = sessionStorage.getItem('tellerInfo');
     if (tellerInfo && window.location.pathname.includes('bank_teller_login.html')) {
