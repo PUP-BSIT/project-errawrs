@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     // Get database connection
-    $conn = getDBConnection();
+    $conn = db_connect();
 
     // Get input
     $data = json_decode(file_get_contents('php://input'), true);
