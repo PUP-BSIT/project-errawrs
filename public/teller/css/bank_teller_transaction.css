@@ -100,7 +100,7 @@ body {
 .transaction-card {
     background: var(--color-white);
     border-radius: 20px;
-    padding: 40px;
+    padding: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
 }
@@ -110,10 +110,10 @@ body {
 }
 
 .transaction-card h1 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--color-primary-black);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -193,8 +193,9 @@ input[type="number"]:focus {
 /* Buttons */
 .button-group {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: flex-end;
+    margin-top: 15px;
 }
 
 .btn {
@@ -224,7 +225,7 @@ input[type="number"]:focus {
 .btn.done {
     background-color: var(--color-mint);
     color: var(--color-white);
-    width: 200px;
+    width: 150px;
     margin: 0 auto;
 }
 
@@ -272,27 +273,27 @@ input[type="number"]:focus {
 /* Receipt */
 .receipt-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .success-icon {
-    font-size: 64px;
+    font-size: 48px;
     color: var(--color-mint);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .receipt-details {
     background: #f8f9fa;
     border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .receipt-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -305,21 +306,21 @@ input[type="number"]:focus {
 .receipt-label {
     color: var(--color-primary-black);
     font-weight: 600;
-    font-size: 20px;
-    min-width: 200px;
+    font-size: 16px;
+    min-width: 160px;
 }
 
 .receipt-value {
     color: var(--color-primary-black);
     font-weight: 500;
-    font-size: 20px;
+    font-size: 16px;
     text-align: right;
 }
 
 .receipt-row.highlight {
     background-color: var(--color-bg-gradient-start);
-    margin: 0 -30px;
-    padding: 20px 30px;
+    margin: 0 -20px;
+    padding: 15px 20px;
 }
 
 /* Add highlight for important values */
@@ -329,7 +330,7 @@ input[type="number"]:focus {
 .detail-row.balance .detail-value {
     color: var(--color-mint);
     font-weight: 700;
-    font-size: 22px;
+    font-size: 18px;
 }
 
 /* Notifications */
