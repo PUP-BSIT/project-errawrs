@@ -152,36 +152,45 @@ body {
 
 /* Search Container */
 .search-container {
-    margin-bottom: 30px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 30px;
 }
 
 .search-box {
     background: var(--color-white);
-    border-radius: 30px;
-    padding: 15px 25px;
+    border-radius: 15px;
+    padding: 20px 30px;
     display: flex;
     align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.search-box:focus-within {
+    border-color: var(--color-mint);
+    box-shadow: 0 2px 8px rgba(126, 217, 87, 0.15);
 }
 
 .search-icon {
-    color: var(--color-gray);
+    color: #9e9e9e;
     margin-right: 15px;
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .search-input {
+    flex: 1;
     border: none;
     outline: none;
-    width: 100%;
-    font-size: 16px;
+    font-size: 20px;
     color: var(--color-primary-black);
+    font-family: var(--font-main);
+    font-weight: 500;
 }
 
 .search-input::placeholder {
-    color: var(--color-gray);
+    color: #9e9e9e;
 }
 
 /* Search History */
@@ -189,51 +198,71 @@ body {
     background: var(--color-white);
     border-radius: 15px;
     padding: 25px;
-    margin-bottom: 30px;
+    margin: 30px auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 1000px;
 }
 
 .search-history h2 {
+    font-size: 24px;
+    font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
-    font-size: 20px;
-}
-
-.history-table {
-    width: 100%;
 }
 
 .history-header {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 2fr;
-    padding: 15px;
-    background-color: var(--color-bg-gradient-start);
-    border-radius: 8px;
+    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    gap: 20px;
     margin-bottom: 15px;
 }
 
 .header-cell {
+    background: var(--color-mint);
+    color: var(--color-white);
     font-weight: 600;
-    color: var(--color-primary-black);
+    font-size: 16px;
+    padding: 15px 20px;
+    border-radius: 25px;
+    text-align: center;
 }
 
 .history-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .history-row {
     display: grid;
-    grid-template-columns: 0.5fr 2fr 2fr;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    gap: 20px;
+    padding: 15px 20px;
     cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
     transition: all 0.3s ease;
 }
 
 .history-row:hover {
-    background-color: var(--color-bg-gradient-start);
+    background: var(--color-bg-gradient-start);
+}
+
+.history-row:last-child {
+    border-bottom: none;
+}
+
+.history-value {
+    font-size: 16px;
+    color: var(--color-primary-black);
+    text-align: center;
+}
+
+.history-value.status {
+    color: var(--color-mint);
+    font-weight: 500;
+}
+
+.history-value.status.inactive {
+    color: var(--color-red);
 }
 
 /* Account Details */
@@ -275,15 +304,24 @@ body {
 }
 
 .action-btn {
-    padding: 12px 25px;
+    padding: 18px 25px;
     border: none;
-    border-radius: 8px;
+    border-radius: 30px;
+    font-family: var(--font-main);
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
     transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn i {
+    font-size: 20px;
 }
 
 .deposit-btn {
@@ -429,4 +467,157 @@ body {
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+.card-icon {
+    display: none;
+}
+
+/* Account Container */
+.account-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease;
+}
+
+/* Account Card */
+.account-card {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 30px;
+    flex: 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.account-card.expanded {
+    max-width: calc(100% - 280px);
+}
+
+.account-info {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.account-label {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.account-value {
+    color: var(--color-primary-black);
+    font-size: 18px;
+}
+
+.account-value.active {
+    color: var(--color-mint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-value.active::before {
+    content: "✓";
+    color: var(--color-mint);
+}
+
+/* Account Actions */
+.account-actions {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 20px;
+    width: 260px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    margin-top: 0;
+}
+
+.account-actions.visible {
+    display: flex;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.action-btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 30px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.action-btn.deposit {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.action-btn.withdraw {
+    background: #FF4757;
+    color: var(--color-white);
+}
+
+.action-btn.close {
+    background: #FF4757;
+    color: var(--color-white);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.action-btn i {
+    font-size: 18px;
+}
+
+/* Toggle Icon */
+.toggle-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
+.toggle-icon:hover {
+    border-color: var(--color-mint);
+}
+
+.toggle-icon i {
+    color: var(--color-primary-black);
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon.active i {
+    transform: rotate(180deg);
 }

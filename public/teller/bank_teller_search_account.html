@@ -43,91 +43,79 @@
         </div>
 
         <div class="main-content">
+            <div class="top-bar">
+                <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
+                <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
+            </div>
+
             <div class="search-container">
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" 
                            class="search-input" 
                            id="search_input"
-                           placeholder="Search Account Number" 
-                           onkeyup="searchAccount()">
+                           placeholder="Search Account Number">
                 </div>
             </div>
 
-            <div class="search-history">
-                <h2>Search History</h2>
-                <div class="history-table">
-                    <div class="history-header">
-                        <div class="header-cell">Number</div>
-                        <div class="header-cell">Account Name</div>
-                        <div class="header-cell">Account Number</div>
+            <!-- Account Container -->
+            <div class="account-container">
+                <!-- Account Card -->
+                <div class="account-card" id="account_card" onclick="toggleAccountActions()">
+                    <div class="account-info">
+                        <div class="account-label">Account Number</div>
+                        <div class="account-value" id="account_number"></div>
+                        
+                        <div class="account-label">Account Holder Name</div>
+                        <div class="account-value" id="account_name"></div>
+                        
+                        <div class="account-label">Account Type</div>
+                        <div class="account-value" id="account_type"></div>
+                        
+                        <div class="account-label">Current Balance</div>
+                        <div class="account-value" id="account_balance"></div>
+                        
+                        <div class="account-label">Account Status</div>
+                        <div class="account-value" id="account_status"></div>
                     </div>
-                    <div class="history-body" id="history_body"></div>
+                    <div class="toggle-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="card-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Account Details (Initially Hidden) -->
-            <div class="account-details" id="account_details">
-                <div class="details-content">
-                    <div class="detail-row">
-                        <div class="detail-label">Account Number:</div>
-                        <div class="detail-value" id="account_number"></div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Account Name:</div>
-                        <div class="detail-value" id="account_name"></div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Account Type:</div>
-                        <div class="detail-value" id="account_type"></div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Balance:</div>
-                        <div class="detail-value" id="account_balance"></div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-label">Status:</div>
-                        <div class="detail-value" id="account_status"></div>
-                    </div>
-                </div>
-                <div class="account-actions">
-                    <button class="action-btn deposit-btn" onclick="showDepositForm()">
+                <!-- Account Actions -->
+                <div class="account-actions" id="account_actions">
+                    <button class="action-btn deposit" onclick="showDepositForm()">
                         <i class="fas fa-plus"></i> Deposit
                     </button>
-                    <button class="action-btn withdraw-btn" onclick="showWithdrawForm()">
+                    <button class="action-btn withdraw" onclick="showWithdrawForm()">
                         <i class="fas fa-minus"></i> Withdraw
                     </button>
-                    <button class="action-btn close-btn" onclick="closeAccount()">
+                    <button class="action-btn close" onclick="closeAccount()">
                         <i class="fas fa-times"></i> Close Account
-                    </button>
-                    <button class="action-btn reopen-btn" onclick="reopenAccount()">
-                        <i class="fas fa-redo"></i> Re-open Account
                     </button>
                 </div>
             </div>
 
-            <!-- Transaction Form Modal -->
-            <div class="transaction-modal" id="transaction_form">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Transaction</h3>
-                        <div class="current-balance">Current Balance: <span id="modal_balance"></span></div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group">
-                            <label for="transaction_amount">Amount</label>
-                            <input type="number" 
-                                   id="transaction_amount" 
-                                   placeholder="Enter amount" 
-                                   step="0.01" 
-                                   min="0">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="modal-btn cancel" onclick="hideTransactionForm()">Cancel</button>
-                        <button class="modal-btn confirm" onclick="processTransaction()">Confirm</button>
-                    </div>
+            <!-- Search History -->
+            <div class="search-history" id="search_history">
+                <h2>Search History</h2>
+                <div class="history-header">
+                    <div class="header-cell">Number</div>
+                    <div class="header-cell">Account Name</div>
+                    <div class="header-cell">Account Number</div>
+                    <div class="header-cell">Balance</div>
+                    <div class="header-cell">Status</div>
                 </div>
+                <div class="history-body" id="history_body"></div>
+            </div>
+
+            <!-- Transaction Modal -->
+            <div class="transaction-modal" id="transaction_form">
+                <div class="transaction-container"></div>
             </div>
         </div>
     </div>
