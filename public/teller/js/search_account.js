@@ -121,16 +121,12 @@ function updateSearchHistory() {
         row.onclick = () => selectFromHistory(item.accountNumber);
         
         const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ''));
-        const formattedBalance = new Intl.NumberFormat('en-PH', {
-            style: 'currency',
-            currency: 'PHP'
-        }).format(balance);
-
+        
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
             <div class="history-value">${item.name}</div>
             <div class="history-value">${item.accountNumber}</div>
-            <div class="history-value">${formattedBalance}</div>
+            <div class="history-value">${formatCurrency(balance)}</div>
             <div class="history-value status ${item.status === 'active' ? '' : 'inactive'}">${
                 item.status.charAt(0).toUpperCase() + item.status.slice(1)
             }</div>
@@ -351,6 +347,68 @@ async function reopenAccount() {
     }
 }
 
+// Function to update account balance and refresh account card
+async function updateAccountBalance(newBalance) {
+    try {
+        // Get the current account number
+        const currentAccount = JSON.parse(sessionStorage.getItem('currentAccount'));
+        if (!currentAccount || !currentAccount.account_number) return;
+
+        // Fetch fresh account data
+        const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(currentAccount.account_number)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to refresh account data');
+        }
+
+        if (data.success && data.accounts && data.accounts.length > 0) {
+            const account = data.accounts[0];
+            
+            // Update the account card with fresh data
+            updateAccountDetails(account);
+
+            // Update search history with the new account data
+            const updatedHistoryItem = {
+                name: account.user.name,
+                accountNumber: account.account_number,
+                balance: account.balance,
+                status: account.status
+            };
+
+            // Update existing history entry if it exists
+            const existingIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+            if (existingIndex !== -1) {
+                searchHistory[existingIndex] = updatedHistoryItem;
+            } else {
+                // Add to beginning of history if not exists
+                searchHistory.unshift(updatedHistoryItem);
+                // Keep only last 5 entries
+                searchHistory = searchHistory.slice(0, 5);
+            }
+
+            // Update the history display
+            updateSearchHistory();
+
+            // Show the account card
+            accountCard.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error updating account data:', error);
+        showNotification('Error refreshing account data', true);
+    }
+}
+
+// Event listener for storage changes
+window.addEventListener('storage', (e) => {
+    if (e.key === 'currentAccount') {
+        const account = JSON.parse(e.newValue);
+        if (account) {
+            updateAccountBalance(account.balance);
+        }
+    }
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Hide account card initially
@@ -372,6 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userNameElement) {
             userNameElement.textContent = tellerInfo.name;
         }
+    }
+
+    // Check if there's a current account and refresh its data
+    const currentAccount = JSON.parse(sessionStorage.getItem('currentAccount'));
+    if (currentAccount && currentAccount.account_number) {
+        updateAccountBalance(currentAccount.balance);
     }
 
     // Close account actions when clicking outside

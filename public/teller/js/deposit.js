@@ -104,12 +104,15 @@ async function submitDeposit() {
             throw new Error(data.error || 'Failed to process deposit');
         }
 
+        // Parse the new balance from the response
+        const newBalance = parseFloat(data.data.new_balance.replace(/[^0-9.-]+/g, ''));
+
         // Update receipt
         document.getElementById('transaction_id').textContent = data.data.transaction_id;
         document.getElementById('receipt_account_number').textContent = data.data.account_number;
         document.getElementById('receipt_account_name').textContent = account.user.name;
         document.getElementById('receipt_amount').textContent = formatCurrency(amount);
-        document.getElementById('receipt_new_balance').textContent = data.data.new_balance;
+        document.getElementById('receipt_new_balance').textContent = formatCurrency(newBalance);
         document.getElementById('transaction_date').textContent = data.data.transaction_date;
         document.getElementById('teller_number').textContent = data.data.teller_number;
 
@@ -120,16 +123,25 @@ async function submitDeposit() {
         // Update steps
         updateSteps(3);
 
+        // Update the current balance display
+        document.getElementById('current_balance').textContent = formatCurrency(newBalance);
+
         // Update session storage with new balance
-        const newBalance = parseFloat(data.data.new_balance.replace(/[^0-9.-]+/g, ''));
         account.balance = newBalance;
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
 
-        // Update balance in parent window if it exists
+        // Update parent window if it exists
         if (window.opener && !window.opener.closed) {
-            const balanceElement = window.opener.document.getElementById('account_balance');
-            if (balanceElement) {
-                balanceElement.textContent = formatCurrency(newBalance);
+            try {
+                // Update the parent window's session storage first
+                window.opener.sessionStorage.setItem('currentAccount', JSON.stringify(account));
+                
+                // Call the updateAccountBalance function in the parent window
+                if (window.opener.updateAccountBalance) {
+                    window.opener.updateAccountBalance(newBalance);
+                }
+            } catch (error) {
+                console.error('Error updating parent window:', error);
             }
         }
 
@@ -144,7 +156,25 @@ async function submitDeposit() {
 
 // Finish transaction and return to search
 function finishTransaction() {
-    // Instead of redirecting, just go back to the previous page
+    // Update the parent window's session storage to trigger a refresh
+    if (window.opener && !window.opener.closed) {
+        try {
+            // Get the latest account data
+            const currentAccount = JSON.parse(sessionStorage.getItem('currentAccount'));
+            
+            // Update parent window's storage
+            window.opener.sessionStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+            
+            // Trigger update in parent window
+            if (window.opener.updateAccountBalance) {
+                window.opener.updateAccountBalance(currentAccount.balance);
+            }
+        } catch (error) {
+            console.error('Error updating parent window:', error);
+        }
+    }
+    
+    // Go back to the previous page
     window.history.back();
 }
 
