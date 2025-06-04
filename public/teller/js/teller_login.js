@@ -65,8 +65,8 @@ async function handleLogin(event) {
             login_type: 'teller'
         };
 
-        // Send login request to backend with correct path
-        const response = await fetch("/project-errawrs/src/api/auth/login.php", {
+        // Send login request to backend
+        const response = await fetch("http://localhost/project-errawrs/src/api/auth/login.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -75,11 +75,12 @@ async function handleLogin(event) {
             credentials: 'include'
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Login failed');
         }
+
+        const data = await response.json();
 
         if (data.success) {
             // Store teller info in session storage
@@ -90,7 +91,7 @@ async function handleLogin(event) {
                 type: data.type
             }));
 
-            // Redirect to dashboard immediately
+            // Redirect to dashboard
             window.location.href = './bank_teller_dashboard.html';
         } else {
             throw new Error(data.error || "Login failed");
@@ -126,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.removeItem('tellerInfo');
 
     // Test API connection
-    fetch("/project-errawrs/src/api/auth/login.php", {
+    fetch("http://localhost/project-errawrs/src/api/auth/login.php", {
         method: 'OPTIONS',
         credentials: 'include'
     }).catch(() => {

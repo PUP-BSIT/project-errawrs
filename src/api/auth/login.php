@@ -2,11 +2,12 @@
 session_start();
 require_once __DIR__ . '/../../config/database.php';
 
-// Add CORS headers
+// Add proper CORS headers for localhost
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Credentials: true');
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -21,13 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Parse and validate input
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
-
 // Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+// Parse and validate input
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
 // Guard against missing required fields
 if (!isset($data['password']) || !isset($data['login_type'])) {
@@ -96,7 +97,7 @@ try {
         ],
         'teller' => [
             'table' => 'teller',
-            'query' => 'SELECT teller_id as id, teller_number, password_hash, first_name, last_name, email FROM teller WHERE teller_number = ? AND status = "active"'
+            'query' => 'SELECT teller_id as id, teller_number, password_hash, first_name, last_name, email, status FROM teller WHERE teller_number = ?'
         ],
         'user' => [
             'table' => 'user',
@@ -121,6 +122,11 @@ try {
     }
     
     $user = $result->fetch_assoc();
+    
+    // For tellers, check if account is active
+    if ($loginType === 'teller' && $user['status'] !== 'active') {
+        throw new Exception('Teller account is inactive. Please contact administrator.');
+    }
     
     // Verify password
     if (!password_verify($password, $user['password_hash'])) {
