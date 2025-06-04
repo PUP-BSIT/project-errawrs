@@ -1,7 +1,18 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config/database.php';
+
+// Add CORS headers
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Guard against non-POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -13,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Parse and validate input
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Guard against missing required fields
 if (!isset($data['password']) || !isset($data['login_type'])) {
@@ -168,6 +183,17 @@ try {
     echo json_encode($response);
 
 } catch (Exception $e) {
+    error_log("Login error: " . $e->getMessage());
     http_response_code(401);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+} finally {
+    if (isset($stmt)) {
+        $stmt->close();
+    }
+    if (isset($db)) {
+        $db->close();
+    }
 } 

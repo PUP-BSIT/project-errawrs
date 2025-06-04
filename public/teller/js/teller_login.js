@@ -14,8 +14,30 @@ function togglePassword() {
     }
 }
 
+// Show error message
+function showError(message) {
+    // Remove any existing error message
+    const existingError = document.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.cssText = 'color: #dc3545; margin-top: 10px; text-align: center; padding: 10px;';
+    errorDiv.textContent = message;
+
+    const loginForm = document.getElementById('loginForm');
+    loginForm.appendChild(errorDiv);
+
+    // Remove the error message after 5 seconds
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
 // Handle login submission
-function handleLogin(event) {
+async function handleLogin(event) {
     // Always prevent the default form submission first
     if (event) {
         event.preventDefault();
@@ -26,7 +48,7 @@ function handleLogin(event) {
 
     // Basic validation
     if (!tellerNumber || !password) {
-        alert('Please fill in all fields');
+        showError('Please fill in all fields');
         return;
     }
 
@@ -35,38 +57,30 @@ function handleLogin(event) {
     loginButton.disabled = true;
     loginButton.textContent = "Logging in...";
 
-    // Get the base URL dynamically
-    const baseUrl = window.location.pathname.includes('/public/') 
-        ? window.location.pathname.split('/public/')[0] 
-        : '';
+    try {
+        // Prepare login data
+        const loginData = {
+            teller_number: tellerNumber,
+            password: password,
+            login_type: 'teller'
+        };
 
-    // Prepare login data
-    const loginData = {
-        teller_number: tellerNumber,
-        password: password,
-        login_type: 'teller'
-    };
+        // Send login request to backend
+        const response = await fetch("../src/api/auth/login.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(loginData),
+            credentials: 'include'
+        });
 
-    // Send login request to backend using relative path
-    fetch(`${baseUrl}/src/api/auth/login.php`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(loginData)
-    })
-    .then((response) => {
+        const data = await response.json();
+
         if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Server configuration error. Please make sure the project is set up correctly in your web server.');
-            }
-            return response.json().then(data => {
-                throw new Error(data.error || 'Login failed');
-            });
+            throw new Error(data.error || 'Login failed');
         }
-        return response.json();
-    })
-    .then((data) => {
+
         if (data.success) {
             // Store teller info in session storage
             sessionStorage.setItem('tellerInfo', JSON.stringify({
@@ -81,23 +95,14 @@ function handleLogin(event) {
         } else {
             throw new Error(data.error || "Login failed");
         }
-    })
-    .catch((error) => {
+    } catch (error) {
         console.error('Login error:', error);
         // Reset button state
         loginButton.disabled = false;
         loginButton.textContent = "log in";
         // Show error to user
-        if (error.message.includes('configuration error')) {
-            alert('Server Configuration Error:\n\n' +
-                  '1. Make sure XAMPP/Apache is running\n' +
-                  '2. Verify the project is in the correct directory (htdocs)\n' +
-                  '3. Check if the project folder name is "project-errawrs"\n' +
-                  '4. Ensure database connection settings are correct');
-        } else {
-            alert(error.message || 'Login failed. Please check your credentials and try again.');
-        }
-    });
+        showError(error.message || 'Login failed. Please check your credentials and try again.');
+    }
 }
 
 // Handle forgot username
@@ -120,20 +125,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear any existing session
     sessionStorage.removeItem('tellerInfo');
 
-    // Check server configuration
-    fetch(`${window.location.pathname.split('/public/')[0]}/src/api/auth/login.php`, {
-        method: 'OPTIONS'
+    // Test API connection
+    fetch("../src/api/auth/login.php", {
+        method: 'OPTIONS',
+        credentials: 'include'
     }).catch(() => {
-        const configAlert = document.createElement('div');
-        configAlert.style.cssText = 'background-color: #fff3cd; color: #856404; padding: 10px; margin: 10px 0; border-radius: 4px; text-align: center;';
-        configAlert.innerHTML = `
-            <strong>Server Configuration Check Failed</strong><br>
-            Please ensure:<br>
-            1. XAMPP/Apache is running<br>
-            2. Project is in htdocs folder<br>
-            3. Folder name is "project-errawrs"<br>
-            4. Database configuration is correct
-        `;
-        loginForm.insertBefore(configAlert, loginForm.firstChild);
+        showError('Unable to connect to the server. Please check your connection and try again.');
     });
 });
