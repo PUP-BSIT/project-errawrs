@@ -230,17 +230,11 @@ function updateTableDisplay() {
         // Show empty state message
         const emptyRow = document.createElement("div");
         emptyRow.className = "table-row empty-state";
-        emptyRow.style.textAlign = "center";
-        emptyRow.style.padding = "40px 0";
-        emptyRow.style.color = "var(--color-gray)";
-        emptyRow.style.gridColumn = "1 / -1";
         emptyRow.innerHTML = `
-            <div style="font-size: 1.2rem; margin-bottom: 10px;">
-                <i class="fa-regular fa-folder-open" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
-                No transactions found
-            </div>
-            <div style="font-size: 1rem;">
-                Transaction history will appear here
+            <div class="empty-state-container">
+                <i class="fa-regular fa-folder-open empty-state-icon"></i>
+                <div class="empty-state-title">No transactions found</div>
+                <div class="empty-state-subtitle">Transaction history will appear here</div>
             </div>
         `;
         tableBody.appendChild(emptyRow);

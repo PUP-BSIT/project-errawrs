@@ -534,3 +534,41 @@ body {
     font-weight: 500;
     padding: 0 4px;
 }
+
+/* Empty State Styles */
+.empty-state {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--color-gray);
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--color-gray);
+    margin-bottom: 10px;
+}
+
+.empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-gray);
+}
+
+.empty-state-subtitle {
+    font-size: 1rem;
+    color: var(--color-gray);
+    opacity: 0.8;
+}
