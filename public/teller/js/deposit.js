@@ -46,7 +46,8 @@ function updateSteps(currentStep) {
 
 // Go back to search page
 function goBack() {
-    window.location.href = './bank_teller_search_account.html';
+    // Instead of redirecting, just go back to the previous page
+    window.history.back();
 }
 
 // Confirm amount and show confirmation screen
@@ -120,8 +121,17 @@ async function submitDeposit() {
         updateSteps(3);
 
         // Update session storage with new balance
-        account.balance = parseFloat(data.data.new_balance.replace(/[^0-9.-]+/g, ''));
+        const newBalance = parseFloat(data.data.new_balance.replace(/[^0-9.-]+/g, ''));
+        account.balance = newBalance;
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
+
+        // Update balance in parent window if it exists
+        if (window.opener && !window.opener.closed) {
+            const balanceElement = window.opener.document.getElementById('account_balance');
+            if (balanceElement) {
+                balanceElement.textContent = formatCurrency(newBalance);
+            }
+        }
 
         // Show success notification
         showNotification('Deposit successful');
@@ -134,7 +144,8 @@ async function submitDeposit() {
 
 // Finish transaction and return to search
 function finishTransaction() {
-    window.location.href = './bank_teller_search_account.html';
+    // Instead of redirecting, just go back to the previous page
+    window.history.back();
 }
 
 // Add input validation

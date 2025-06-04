@@ -208,8 +208,12 @@ input[type="number"]:focus {
 }
 
 .btn.cancel {
-    background-color: #f8f9fa;
-    color: var(--color-gray);
+    background-color: #e0e0e0;
+    color: #666666;
+}
+
+.btn.cancel:hover {
+    background-color: #d0d0d0;
 }
 
 .btn.confirm {
