@@ -1,387 +1,381 @@
-// Sample account data
-const accountDatabase = {
-    2023123456: {
-        number: "2023123456",
-        name: "Juan Dela Cruz",
-        type: "Savings",
-        balance: 25750.0,
-        status: "Active",
-    },
-    2023987654: {
-        number: "2023987654",
-        name: "Maria Santos",
-        type: "Checking",
-        balance: 45000.0,
-        status: "Active",
-    },
-    2023567890: {
-        number: "2023567890",
-        name: "Carlo Mendoza",
-        type: "Savings",
-        balance: 12500.5,
-        status: "Active",
-    },
-    2023344556: {
-        number: "2023344556",
-        name: "Robert Lim",
-        type: "Checking",
-        balance: 78900.25,
-        status: "Active",
-    },
-    3315746283: {
-        number: "3315746283",
-        name: "Sample Account",
-        type: "Savings",
-        balance: 50000.0,
-        status: "Active",
-    },
-};
-
-let currentAccount = null;
-let isDropdownOpen = false;
-
-// Check for transaction data on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const lastTransactionData = sessionStorage.getItem('lastTransactionData');
-    if (lastTransactionData) {
-        const data = JSON.parse(lastTransactionData);
-        if (accountDatabase[data.accountNumber]) {
-            // Update the account balance if it was a transaction
-            if (data.newBalance !== undefined && !data.preserveState) {
-                accountDatabase[data.accountNumber].balance = data.newBalance;
-            }
-            
-            // Show the account details
-            const searchInput = document.getElementById("search_input");
-            searchInput.value = data.accountNumber;
-            searchAccount();
-            
-            // Show notification for completed transaction
-            if (data.type && !data.preserveState) {
-                showNotification(`${data.type === 'deposit' ? 'Deposit' : 'Withdrawal'} of ₱${data.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} was successful`, 'success');
-            }
-            
-            // Clear the transaction data
-            sessionStorage.removeItem('lastTransactionData');
-        }
-    }
-});
-
-// Search account function
-function searchAccount() {
-    const searchInput = document.getElementById("search_input");
-    const accountNumber = searchInput.value.trim();
-
-    if (accountNumber.length >= 10) {
-        const account = accountDatabase[accountNumber];
-        if (account) {
-            if (!currentAccount || currentAccount.number !== account.number) {
-                hideAccountActions();
-            }
-            displayAccountDetails(account);
-            addToSearchHistory(account.name, account.number);
-        } else {
-            hideAccountDetails();
-            hideAccountActions();
-        }
-    } else {
-        hideAccountDetails();
-        hideAccountActions();
-    }
+// Get teller info from session storage
+const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error('No teller info found in session storage');
+    window.location.href = './bank_teller_login.html';
 }
 
-// Display account details
-function displayAccountDetails(account) {
-    currentAccount = account;
+// Initialize search history
+let searchHistory = [];
 
-    document.getElementById("account_number").textContent = account.number;
-    document.getElementById("account_name").textContent = account.name;
-    document.getElementById("account_type").textContent = account.type;
-    document.getElementById("account_balance").textContent = `₱${account.balance.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-    })}`;
+// Elements
+const searchInput = document.getElementById('search_input');
+const accountDetails = document.getElementById('account_details');
+const accountActionsDropdown = document.getElementById('accountActionsDropdown');
+const dropdownIcon = document.getElementById('dropdownIcon');
+const historyBody = document.getElementById('history_body');
 
-    const statusElement = document.getElementById("account_status");
-    if (account.status === "Active") {
-        statusElement.innerHTML = `
-            <div class="status-icon">✓</div>
-            ${account.status}
-        `;
-        statusElement.className = "status-active";
-    } else {
-        statusElement.innerHTML = `
-            <div class="status-icon">✗</div>
-            ${account.status}
-        `;
-        statusElement.className = "status-inactive";
-    }
+// Format currency
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP'
+    }).format(amount);
+}
 
-    const accountDetails = document.getElementById("account_details");
+// Show notification
+function showNotification(message, isError = false) {
+    const container = document.getElementById('notification_container');
+    const notification = document.createElement('div');
+    notification.className = `notification ${isError ? 'error' : 'success'}`;
+    notification.textContent = message;
+    container.appendChild(notification);
+
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// Update account details in the UI
+function updateAccountDetails(account) {
+    document.getElementById('account_number').textContent = account.account_number;
+    document.getElementById('account_name').textContent = account.user.name;
+    document.getElementById('account_type').textContent = 'Savings';
     
-    if (!accountDetails.querySelector('.account-chevron')) {
-        const chevron = document.createElement('i');
-        chevron.className = 'fas fa-chevron-right account-chevron';
-        accountDetails.appendChild(chevron);
+    // Format the balance properly
+    const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ''));
+    document.getElementById('account_balance').textContent = formatCurrency(balance);
+    
+    const statusElement = document.getElementById('account_status');
+    statusElement.className = account.status === 'active' ? 'status-active' : 'status-inactive';
+    statusElement.innerHTML = `<div class="status-icon">${account.status === 'active' ? '✓' : '✕'}</div>${account.status}`;
+
+    // Store current account in session storage
+    sessionStorage.setItem('currentAccount', JSON.stringify({
+        ...account,
+        balance: balance // Store the parsed balance
+    }));
+
+    // Show the account details section
+    accountDetails.style.display = 'flex';
+}
+
+// Add to search history
+function addToSearchHistory(account) {
+    // Check if the account already exists in search history
+    const existingIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+    
+    if (existingIndex !== -1) {
+        // Remove the existing entry
+        searchHistory.splice(existingIndex, 1);
     }
+    
+    // Add to the beginning of the array
+    searchHistory.unshift({
+        name: account.user.name,
+        accountNumber: account.account_number
+    });
 
-    accountDetails.classList.remove('display-none');
-    accountDetails.classList.add('display-flex', 'visible');
+    // Keep only the last 5 searches
+    searchHistory = searchHistory.slice(0, 5);
 
-    accountDetails.onclick = function() {
-        const chevron = this.querySelector('.account-chevron');
-        chevron.classList.toggle('rotated');
-        toggleAccountActions();
+    // Update history UI
+    updateSearchHistory();
+}
+
+// Update search history UI
+function updateSearchHistory() {
+    historyBody.innerHTML = '';
+    searchHistory.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = 'history-row';
+        row.onclick = () => selectFromHistory(item.name, item.accountNumber);
+        row.innerHTML = `
+            <div class="history-value">${index + 1}</div>
+            <div class="history-value">${item.name}</div>
+            <div class="history-value">${item.accountNumber}</div>
+        `;
+        historyBody.appendChild(row);
+    });
+}
+
+// Add event listener for search input
+searchInput.addEventListener('input', debounce(searchAccount, 500));
+
+// Debounce function to prevent too many API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
     };
 }
 
-// Hide account details
-function hideAccountDetails() {
-    const accountDetails = document.getElementById("account_details");
-    accountDetails.classList.remove('display-flex', 'visible');
-    accountDetails.classList.add('display-none');
-    hideAccountActions();
-    currentAccount = null;
+// Search account
+async function searchAccount() {
+    const searchTerm = searchInput.value.trim();
+    console.log('Searching for:', searchTerm); // Debug log
+
+    if (!searchTerm) {
+        accountDetails.style.display = 'none';
+        return;
+    }
+
+    if (!tellerInfo || !tellerInfo.teller_number) {
+        console.error('No teller number found');
+        showNotification('Please log in again', true);
+        window.location.href = './bank_teller_login.html';
+        return;
+    }
+
+    try {
+        console.log('Making API request...'); // Debug log
+        const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        console.log('Response status:', response.status); // Debug log
+        
+        const data = await response.json();
+        console.log('API response:', data); // Debug log
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to search account');
+        }
+
+        if (data.success && data.accounts && data.accounts.length > 0) {
+            const account = data.accounts[0]; // Get the first account
+            updateAccountDetails(account);
+            addToSearchHistory(account);
+        } else {
+            accountDetails.style.display = 'none';
+            showNotification('No accounts found', true);
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        showNotification(error.message || 'Error searching for account', true);
+        accountDetails.style.display = 'none';
+    }
+}
+
+// Select from history
+function selectFromHistory(name, accountNumber) {
+    searchInput.value = accountNumber;
+    searchAccount();
 }
 
 // Toggle account actions dropdown
 function toggleAccountActions() {
-    if (!currentAccount) return;
-
-    const existingActions = document.querySelector(".actions-container");
-    
-    if (existingActions) {
-        existingActions.remove();
-        return;
-    }
-
-    showAccountActions();
+    accountActionsDropdown.style.display = accountActionsDropdown.style.display === 'none' ? 'flex' : 'none';
+    dropdownIcon.classList.toggle('fa-chevron-up');
+    dropdownIcon.classList.toggle('fa-chevron-down');
 }
 
-// Show account actions dropdown
-function showAccountActions() {
-    const accountDetails = document.querySelector(".account-details");
-    const mainContent = document.querySelector(".main-content");
-    
-    let actionContainer = mainContent.querySelector(".actions-container");
-    if (actionContainer) {
-        actionContainer.remove();
-    }
-
-    const actionButtonsHTML = `
-        <div class="actions-container status-${currentAccount.status.toLowerCase()}">
-            <button class="action-deposit" onclick="redirectToDeposit()">
-                <i class="fas fa-plus"></i>
-                Deposit
-            </button>
-            <button class="action-withdraw" onclick="redirectToWithdraw()">
-                <i class="fas fa-minus"></i>
-                Withdraw
-            </button>
-            <button class="action-close" onclick="closeAccount()">
-                <i class="fas fa-times-circle"></i>
-                Close Account
-            </button>
-            <button class="action-reopen" onclick="reopenAccount()">
-                <i class="fas fa-check-circle"></i>
-                Re-open Account
-            </button>
-        </div>
-    `;
-
-    accountDetails.insertAdjacentHTML('afterend', actionButtonsHTML);
-    isDropdownOpen = true;
+// Show transaction form
+function showTransactionForm() {
+    const transactionForm = document.getElementById('transaction_form');
+    transactionForm.classList.add('visible', 'show');
+    document.getElementById('transaction_amount').focus();
 }
 
-// Hide account actions
-function hideAccountActions() {
-    const actionContainer = document.querySelector(".actions-container");
-    if (actionContainer) {
-        actionContainer.remove();
-    }
-    isDropdownOpen = false;
-}
-
-// Redirect to deposit page
-function redirectToDeposit() {
-    if (!currentAccount) return;
-    
-    const returnUrl = window.location.href;
-    const url = `bank_teller_deposit.html?account_number=${currentAccount.number}&account_name=${encodeURIComponent(currentAccount.name)}&balance=${currentAccount.balance}&return_url=${encodeURIComponent(returnUrl)}`;
-    window.location.href = url;
-}
-
-// Redirect to withdraw page
-function redirectToWithdraw() {
-    if (!currentAccount) return;
-    
-    const returnUrl = window.location.href;
-    const url = `bank_teller_withdraw.html?account_number=${currentAccount.number}&account_name=${encodeURIComponent(currentAccount.name)}&balance=${currentAccount.balance}&return_url=${encodeURIComponent(returnUrl)}`;
-    window.location.href = url;
-}
-
-// Notification System
-function showNotification(message, type = 'info') {
-    const container = document.getElementById('notification_container');
-    const notification = document.createElement('div');
-    notification.className = `notification ${type} fade-in`;
-    
-    let icon = '';
-    switch(type) {
-        case 'error':
-            icon = 'fa-circle-exclamation';
-            break;
-        case 'success':
-            icon = 'fa-circle-check';
-            break;
-        case 'warning':
-            icon = 'fa-triangle-exclamation';
-            break;
-        default:
-            icon = 'fa-circle-info';
-    }
-    
-    notification.innerHTML = `
-        <i class="fas ${icon}"></i>
-        <span>${message}</span>
-    `;
-
-    notification.onclick = () => dismissNotification(notification);
-    container.appendChild(notification);
-    setTimeout(() => dismissNotification(notification), 5000);
-}
-
-function dismissNotification(notification) {
-    notification.classList.add('fade-out');
+// Hide transaction form
+function hideTransactionForm() {
+    const transactionForm = document.getElementById('transaction_form');
+    transactionForm.classList.remove('show');
     setTimeout(() => {
-        if (notification.parentElement) {
-            notification.parentElement.removeChild(notification);
-        }
+        transactionForm.classList.remove('visible');
+        document.getElementById('transaction_amount').value = ''; // Clear input
     }, 300);
 }
 
-// Close account
-function closeAccount() {
-    if (currentAccount.balance > 0) {
-        showNotification(`Cannot close account ${currentAccount.number}. Account balance must be zero. Current balance: ₱${currentAccount.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 'error');
+// Show deposit form
+function showDepositForm() {
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
+    const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    
+    container.innerHTML = `
+        <div class="transaction-header">
+            <h2>Deposit</h2>
+            <p>Current Balance: ${formatCurrency(account.balance)}</p>
+        </div>
+        <div class="transaction-form-content">
+            <div class="form-group">
+                <label for="transaction_amount">Enter Amount</label>
+                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0">
+            </div>
+            <div class="form-actions">
+                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
+                <button class="form-btn confirm-btn" onclick="processTransaction('deposit')">Confirm</button>
+            </div>
+        </div>
+    `;
+
+    showTransactionForm();
+}
+
+// Show withdraw form
+function showWithdrawForm() {
+    const transactionForm = document.getElementById('transaction_form');
+    const container = transactionForm.querySelector('.transaction-container');
+    const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    
+    container.innerHTML = `
+        <div class="transaction-header">
+            <h2>Withdraw</h2>
+            <p>Current Balance: ${formatCurrency(account.balance)}</p>
+        </div>
+        <div class="transaction-form-content">
+            <div class="form-group">
+                <label for="transaction_amount">Enter Amount</label>
+                <input type="number" id="transaction_amount" placeholder="₱0.00" step="0.01" min="0" max="${account.balance}">
+            </div>
+            <div class="form-actions">
+                <button class="form-btn cancel-btn" onclick="hideTransactionForm()">Cancel</button>
+                <button class="form-btn confirm-btn" onclick="processTransaction('withdraw')">Confirm</button>
+            </div>
+        </div>
+    `;
+
+    showTransactionForm();
+}
+
+// Process transaction (deposit/withdraw)
+async function processTransaction(type) {
+    const amount = parseFloat(document.getElementById('transaction_amount').value);
+    const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+
+    if (isNaN(amount) || amount <= 0) {
+        showNotification('Please enter a valid amount', true);
         return;
     }
 
-    if (confirm(`Are you sure you want to close account ${currentAccount.number}?`)) {
-        currentAccount.status = "Inactive";
-        accountDatabase[currentAccount.number].status = "Inactive";
+    if (type === 'withdraw' && amount > account.balance) {
+        showNotification('Insufficient balance', true);
+        return;
+    }
 
-        const statusElement = document.getElementById("account_status");
-        statusElement.innerHTML = `
-            <div class="status-icon">✗</div>
-            ${currentAccount.status}
-        `;
-        statusElement.className = "status-inactive";
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/${type}.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                amount: amount,
+                teller_number: tellerInfo.teller_number
+            })
+        });
 
-        hideAccountActions();
-        showAccountActions();
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || `Failed to ${type}`);
+        }
+
+        // Update the UI with new balance
+        account.balance = data.new_balance;
+        sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        updateAccountDetails(account);
         
-        showNotification('Account has been closed successfully.', 'success');
+        hideTransactionForm();
+        showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} successful`, false);
+
+    } catch (error) {
+        console.error(`${type} error:`, error);
+        showNotification(error.message, true);
+    }
+}
+
+// Close account
+async function closeAccount() {
+    const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/update_account_status.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                status: 'inactive',
+                teller_number: tellerInfo.teller_number
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to close account');
+        }
+
+        account.status = 'inactive';
+        sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        updateAccountDetails(account);
+        showNotification('Account closed successfully', false);
+
+    } catch (error) {
+        console.error('Close account error:', error);
+        showNotification(error.message, true);
     }
 }
 
 // Reopen account
 async function reopenAccount() {
-    if (!currentAccount || !currentTeller) {
-        showNotification('Account or teller information missing', 'error');
-        return;
-    }
+    const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/update_account_status.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                status: 'active',
+                teller_number: tellerInfo.teller_number
+            })
+        });
 
-    if (confirm(`Are you sure you want to reopen account ${currentAccount.number}?`)) {
-        try {
-            const response = await fetch('../api/teller/reopen_account.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    account_number: currentAccount.number,
-                    teller_number: currentTeller.number,
-                    reason: 'Account reopened by teller request'
-                })
-            });
+        const data = await response.json();
 
-            const data = await response.json();
-
-            if (data.success) {
-                currentAccount.status = "Active";
-                
-                // Update status display
-                const statusElement = document.getElementById("account_status");
-                statusElement.innerHTML = `
-                    <div class="status-icon">✓</div>
-                    ${currentAccount.status}
-                `;
-                statusElement.className = "status-active";
-
-                // Hide current actions and show updated actions
-                hideAccountActions();
-                showAccountActions();
-                
-                showNotification('Account has been reopened successfully.', 'success');
-            } else {
-                throw new Error(data.error || 'Failed to reopen account');
-            }
-        } catch (error) {
-            showNotification(error.message, 'error');
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to reopen account');
         }
+
+        account.status = 'active';
+        sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        updateAccountDetails(account);
+        showNotification('Account reopened successfully', false);
+
+    } catch (error) {
+        console.error('Reopen account error:', error);
+        showNotification(error.message, true);
     }
 }
 
-// Add to search history
-function addToSearchHistory(name, accountNumber) {
-    const historyBody = document.getElementById("history_body");
-    const existingRows = historyBody.querySelectorAll(".history-row");
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Hide account details initially
+    accountDetails.style.display = 'none';
+    accountActionsDropdown.style.display = 'none';
 
-    existingRows.forEach((row) => {
-        const accountCell = row.children[2];
-        if (accountCell && accountCell.textContent === accountNumber) {
-            row.remove();
+    // Add search input event listener
+    searchInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+            searchAccount();
         }
     });
 
-    const newRow = document.createElement("div");
-    newRow.className = "history-row";
-    newRow.onclick = () => selectFromHistory(name, accountNumber);
-    newRow.innerHTML = `
-        <div class="history-value">1</div>
-        <div class="history-value">${name}</div>
-        <div class="history-value">${accountNumber}</div>
-    `;
-
-    if (historyBody.firstChild) {
-        historyBody.insertBefore(newRow, historyBody.firstChild);
-    } else {
-        historyBody.appendChild(newRow);
+    // Update user profile if available
+    if (tellerInfo) {
+        const userNameElement = document.querySelector('.user-name');
+        if (userNameElement) {
+            userNameElement.textContent = tellerInfo.name;
+        }
     }
-
-    const updatedRows = historyBody.querySelectorAll(".history-row");
-    if (updatedRows.length > 10) {
-        historyBody.removeChild(updatedRows[updatedRows.length - 1]);
-    }
-
-    updateHistoryNumbers();
-}
-
-// Update history row numbers
-function updateHistoryNumbers() {
-    const historyBody = document.getElementById("history_body");
-    const rows = historyBody.querySelectorAll(".history-row");
-
-    rows.forEach((row, index) => {
-        row.children[0].textContent = index + 1;
-    });
-}
-
-// Select from history
-function selectFromHistory(name, accountNumber) {
-    if (!currentAccount || currentAccount.number !== accountNumber) {
-        const searchInput = document.getElementById("search_input");
-        searchInput.value = accountNumber;
-        searchAccount();
-    }
-}
+});
