@@ -65,8 +65,8 @@ async function handleLogin(event) {
             login_type: 'teller'
         };
 
-        // Send login request to backend
-        const response = await fetch("../src/api/auth/login.php", {
+        // Send login request to backend with correct path
+        const response = await fetch("/project-errawrs/src/api/auth/login.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.removeItem('tellerInfo');
 
     // Test API connection
-    fetch("../src/api/auth/login.php", {
+    fetch("/project-errawrs/src/api/auth/login.php", {
         method: 'OPTIONS',
         credentials: 'include'
     }).catch(() => {
