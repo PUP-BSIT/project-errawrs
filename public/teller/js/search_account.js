@@ -12,8 +12,8 @@ const accountActionsDropdown = document.getElementById('account_actions_dropdown
 const searchHistoryContainer = document.getElementById('search_history');
 const historyBody = document.getElementById('history_body');
 
-// Initialize search history
-let searchHistory = [];
+// Initialize search history from localStorage
+let searchHistory = JSON.parse(localStorage.getItem(`searchHistory_${tellerInfo.teller_number}`)) || [];
 
 // Format currency
 function formatCurrency(amount) {
@@ -45,7 +45,7 @@ function updateAccountDetails(account) {
     
     // Format the balance properly with peso sign
     const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ''));
-    document.getElementById('account_balance').textContent = `₱${balance.toFixed(2)}`;
+    document.getElementById('account_balance').textContent = formatCurrency(balance);
     
     // Update status with proper styling
     const statusElement = document.getElementById('account_status');
@@ -108,6 +108,9 @@ function addToSearchHistory(account) {
     // Keep only the last 5 searches
     searchHistory = searchHistory.slice(0, 5);
 
+    // Save to localStorage with teller-specific key
+    localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+
     // Update history UI
     updateSearchHistory();
 }
@@ -133,6 +136,9 @@ function updateSearchHistory() {
         `;
         historyBody.appendChild(row);
     });
+
+    // Show/hide search history container based on history existence
+    searchHistoryContainer.style.display = searchHistory.length > 0 ? 'block' : 'none';
 }
 
 // Add event listener for search input
@@ -155,9 +161,9 @@ function debounce(func, wait) {
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
 
+    // Hide account card when search is empty
     if (!searchTerm) {
         accountCard.style.display = 'none';
-        accountActionsDropdown.style.display = 'none';
         return;
     }
 
@@ -175,14 +181,12 @@ async function searchAccount() {
             addToSearchHistory(account);
         } else {
             accountCard.style.display = 'none';
-            accountActionsDropdown.style.display = 'none';
             showNotification('No accounts found', true);
         }
     } catch (error) {
         console.error('Search error:', error);
         showNotification(error.message || 'Error searching for account', true);
         accountCard.style.display = 'none';
-        accountActionsDropdown.style.display = 'none';
     }
 }
 
@@ -364,34 +368,15 @@ async function updateAccountBalance(newBalance) {
 
         if (data.success && data.accounts && data.accounts.length > 0) {
             const account = data.accounts[0];
-            
-            // Update the account card with fresh data
             updateAccountDetails(account);
-
-            // Update search history with the new account data
-            const updatedHistoryItem = {
-                name: account.user.name,
-                accountNumber: account.account_number,
-                balance: account.balance,
-                status: account.status
-            };
-
-            // Update existing history entry if it exists
-            const existingIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
-            if (existingIndex !== -1) {
-                searchHistory[existingIndex] = updatedHistoryItem;
-            } else {
-                // Add to beginning of history if not exists
-                searchHistory.unshift(updatedHistoryItem);
-                // Keep only last 5 entries
-                searchHistory = searchHistory.slice(0, 5);
+            
+            // Update search history with new balance
+            const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+            if (historyIndex !== -1) {
+                searchHistory[historyIndex].balance = account.balance;
+                localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+                updateSearchHistory();
             }
-
-            // Update the history display
-            updateSearchHistory();
-
-            // Show the account card
-            accountCard.style.display = 'block';
         }
     } catch (error) {
         console.error('Error updating account data:', error);
@@ -414,13 +399,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide account card initially
     accountCard.style.display = 'none';
     
-    // Show empty search history by default
-    searchHistoryContainer.style.display = 'block';
+    // Update search history display
+    updateSearchHistory();
 
-    // Add search input event listener for Enter key
+    // Add search input event listeners
     searchInput.addEventListener('keyup', (e) => {
+        // Hide account card if search input is empty
+        if (!searchInput.value.trim()) {
+            accountCard.style.display = 'none';
+            return;
+        }
+        
+        // Perform search on Enter key
         if (e.key === 'Enter') {
             searchAccount();
+        }
+    });
+
+    // Add input event listener to handle clearing via backspace/delete
+    searchInput.addEventListener('input', (e) => {
+        if (!e.target.value.trim()) {
+            accountCard.style.display = 'none';
         }
     });
 
@@ -430,12 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userNameElement) {
             userNameElement.textContent = tellerInfo.name;
         }
-    }
-
-    // Check if there's a current account and refresh its data
-    const currentAccount = JSON.parse(sessionStorage.getItem('currentAccount'));
-    if (currentAccount && currentAccount.account_number) {
-        updateAccountBalance(currentAccount.balance);
     }
 
     // Close account actions when clicking outside
