@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .response {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Test Tool</h1>
+    
+    <div class="form-group">
+        <label for="endpoint">API Endpoint:</label>
+        <input type="text" id="endpoint" value="../../src/api/user/fund_transfer.php">
+    </div>
+    
+    <div class="form-group">
+        <label for="payload">Request Payload (JSON):</label>
+        <textarea id="payload" rows="10">{
+    "transaction_amount": 100,
+    "source_account_no": "544250000001",
+    "recipient_account_no": "544250000002",
+    "redirect_url": "http://localhost/project-errawrs/public/user/transfer_success.html"
+}</textarea>
+    </div>
+    
+    <button id="send-request">Send Request</button>
+    
+    <div class="response" id="response">Response will appear here...</div>
+    
+    <script>
+        document.getElementById('send-request').addEventListener('click', async () => {
+            const endpoint = document.getElementById('endpoint').value;
+            const payload = document.getElementById('payload').value;
+            const responseElement = document.getElementById('response');
+            
+            try {
+                // Validate JSON
+                let parsedPayload;
+                try {
+                    parsedPayload = JSON.parse(payload);
+                } catch (e) {
+                    responseElement.innerHTML = `<span class="error">Invalid JSON: ${e.message}</span>`;
+                    return;
+                }
+                
+                responseElement.textContent = 'Sending request...';
+                
+                // Send the request
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: payload
+                });
+                
+                // Get response as text first
+                const responseText = await response.text();
+                
+                try {
+                    // Try to parse as JSON
+                    const jsonResponse = JSON.parse(responseText);
+                    responseElement.textContent = JSON.stringify(jsonResponse, null, 2);
+                } catch (e) {
+                    // If not valid JSON, show as text
+                    responseElement.innerHTML = `<span class="error">Server returned non-JSON response:</span>\n${responseText}`;
+                }
+            } catch (error) {
+                responseElement.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+            }
+        });
+    </script>
+</body>
+</html> 

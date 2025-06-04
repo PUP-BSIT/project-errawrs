@@ -11,6 +11,18 @@ const your_account_select = document.getElementById('your-account');
 const receiver_account_input = document.getElementById('receiver-account');
 const amount_input = document.getElementById('amount');
 
+// Debug logging of DOM elements
+console.log('DOM Elements loaded:');
+console.log('- select_bank_panel:', select_bank_panel ? 'found' : 'NOT FOUND');
+console.log('- account_details_panel:', account_details_panel ? 'found' : 'NOT FOUND');
+console.log('- bank_radio_buttons:', bank_radio_buttons.length, 'elements found');
+console.log('- next_button:', next_button ? 'found' : 'NOT FOUND');
+console.log('- send_money_button:', send_money_button ? 'found' : 'NOT FOUND');
+console.log('- info_correct_checkbox:', info_correct_checkbox ? 'found' : 'NOT FOUND');
+console.log('- your_account_select:', your_account_select ? 'found' : 'NOT FOUND');
+console.log('- receiver_account_input:', receiver_account_input ? 'found' : 'NOT FOUND');
+console.log('- amount_input:', amount_input ? 'found' : 'NOT FOUND');
+
 // DOM Elements for Profile Edit
 const user_avatar_container = document.getElementById('user_avatar_container');
 const edit_profile_icon = document.getElementById('edit_profile_icon');
@@ -262,7 +274,7 @@ function setup_profile_edit() {
         if (user_name_element) user_name_element.textContent = user_data.name;
         display_user_initial();
 
-        show_notification('Profile updated successfully!', 'success');
+        showNotification('Profile updated successfully!', 'success');
 
         edit_profile_modal.classList.add('hidden');
     });
@@ -295,147 +307,409 @@ function populate_profile_form() {
     edit_phone_number_input.value = user_data.phone_number || '';
 }
 
-// Event listener for bank radio buttons
-bank_radio_buttons.forEach((radio) => {
-    radio.addEventListener('change', () => {
-        next_button.disabled = !is_bank_selected();
-        update_default_label();
-    });
-});
-
-// Event listener for the Next button
-if (next_button) {
-    next_button.addEventListener('click', () => {
-        if (is_bank_selected()) {
-            if (select_bank_panel) select_bank_panel.style.display = 'none';
-            if (account_details_panel)
-                account_details_panel.style.display = 'block';
-            if (send_money_button)
-                send_money_button.disabled = !is_info_correct();
-        }
-    });
-}
-
-// Event listener for the Info Correct checkbox
-if (info_correct_checkbox) {
-    info_correct_checkbox.addEventListener('change', () => {
-        if (send_money_button) send_money_button.disabled = !is_info_correct();
-    });
-}
-
-// Event listener for the Send Money button
-if (send_money_button) {
-    send_money_button.addEventListener('click', async () => {
-        const senderAccountNumber = your_account_select
-            ? your_account_select.value
-            : '';
-        const receiverAccountNumber = receiver_account_input
-            ? receiver_account_input.value.trim()
-            : '';
-        const amount = amount_input
-            ? parseFloat(amount_input.value.trim())
-            : NaN;
-        const infoCorrect = info_correct_checkbox
-            ? info_correct_checkbox.checked
-            : false;
-
-        if (!senderAccountNumber) {
-            showNotification('Please select your account', 'error');
-            return;
-        }
-        if (!receiverAccountNumber) {
-            showNotification('Please enter receiver account number', 'error');
-            return;
-        }
-        if (isNaN(amount) || amount <= 0) {
-            showNotification(
-                'Please enter a valid amount to transfer',
-                'error'
-            );
-            return;
-        }
-        if (senderAccountNumber === receiverAccountNumber) {
-            showNotification(
-                'Cannot transfer money to the same account',
-                'error'
-            );
-            return;
-        }
-        if (!infoCorrect) {
-            showNotification(
-                'Please confirm the information is correct',
-                'error'
-            );
-            return;
-        }
-
-        const selectedAccount = user_accounts.find(
-            (account) => account.account_number === senderAccountNumber
-        );
-
-        if (!selectedAccount) {
-            showNotification('Selected account not found.', 'error');
-            console.error(
-                'Selected account not found in fetched data.',
-                senderAccountNumber,
-                user_accounts
-            );
-            return;
-        }
-
-        const senderAccountBalance = parseFloat(selectedAccount.balance);
-
-        if (amount > senderAccountBalance) {
-            showNotification('Insufficient balance', 'error');
-            return;
-        }
-
-        try {
-            const response = await fetch(
-                '/project-errawrs/src/api/user/transfer.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        sender_account_number: senderAccountNumber,
-                        receiver_account_number: receiverAccountNumber,
-                        amount: amount,
-                    }),
-                }
-            );
-
-            const data = await response.json();
-
-            if (data.success) {
-                showNotification('Transfer successful!', 'success');
-                if (your_account_select) your_account_select.value = '';
-                if (receiver_account_input) receiver_account_input.value = '';
-                if (amount_input) amount_input.value = '';
-                if (info_correct_checkbox)
-                    info_correct_checkbox.checked = false;
-
-                populateAccountsDropdown();
-            } else {
-                showNotification(data.error || 'Transfer failed', 'error');
-            }
-        } catch (error) {
-            showNotification('Error during transfer', 'error');
-            console.error('Error:', error);
-        }
-    });
-}
-
-// Initial load
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     fetchUserData();
     populateAccountsDropdown();
-    update_default_label();
     setup_profile_edit();
 
-    console.log('StackOvercash Transfer Page Initialized Dynamically!');
+    // Add event listeners for bank selection
+    bank_radio_buttons.forEach((radio) => {
+        radio.addEventListener('change', () => {
+            next_button.disabled = !is_bank_selected();
+            update_default_label();
+        });
+    });
+
+    // Next button click
+    if (next_button) {
+        next_button.addEventListener('click', () => {
+            if (is_bank_selected()) {
+                select_bank_panel.style.display = 'none';
+                account_details_panel.style.display = 'block';
+            }
+        });
+    }
+
+    // Info correct checkbox
+    if (info_correct_checkbox) {
+        info_correct_checkbox.addEventListener('change', () => {
+            if (send_money_button) {
+                send_money_button.disabled = !is_info_correct();
+            }
+        });
+    }
+
+    // Send money button
+    if (send_money_button) {
+        console.log('Send Money button found:', send_money_button);
+        
+        // Ensure the button has the correct styling
+        send_money_button.className = 'send-btn';
+        send_money_button.disabled = !is_info_correct();
+        
+        send_money_button.addEventListener('click', async (e) => {
+            console.log('Send Money button clicked');
+            e.preventDefault();
+            
+            // Validate form fields
+            if (!validateTransferForm()) {
+                console.log('Form validation failed');
+                return;
+            }
+
+            // Get selected account balance
+            const selectedOption = your_account_select.options[your_account_select.selectedIndex];
+            const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
+            const transferAmount = parseFloat(amount_input.value);
+            
+            console.log('Transfer details:', {
+                sourceAccount: your_account_select.value,
+                recipientAccount: receiver_account_input.value,
+                amount: transferAmount,
+                balance: accountBalance
+            });
+            
+            // Check if sufficient balance
+            if (transferAmount > accountBalance) {
+                console.log('Insufficient balance');
+                showNotification('Insufficient balance for this transfer', 'error');
+                return;
+            }
+
+            // Disable button to prevent double submission
+            send_money_button.disabled = true;
+            
+            try {
+                console.log('Sending transfer request...');
+                // Send transfer request with updated parameter names
+                const response = await fetch('../../src/api/user/fund_transfer.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        transaction_amount: transferAmount,
+                        source_account_no: your_account_select.value,
+                        recipient_account_no: receiver_account_input.value,
+                        redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
+                    })
+                });
+                
+                console.log('Transfer response received');
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    // Handle non-JSON response
+                    const text = await response.text();
+                    console.error('Server returned non-JSON response:', text);
+                    throw new Error('Server returned an invalid response. Please try again later.');
+                }
+                
+                const data = await response.json();
+                console.log('Transfer response data:', data);
+                
+                if (data.success) {
+                    if (data.requires_verification) {
+                        console.log('Transfer requires OTP verification');
+                        showOTPVerificationModal(data);
+                    } else {
+                        console.log('Transfer successful');
+                        showNotification('Transfer successful!', 'success');
+                        
+                        // Show transfer details
+                        showTransferReceipt(data);
+                        
+                        // Reset form
+                        resetTransferForm();
+                    }
+                } else {
+                    console.log('Transfer failed:', data.error);
+                    showNotification(data.error || 'Transfer failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Error during transfer:', error);
+                showNotification('An error occurred during the transfer. Please try again.', 'error');
+            } finally {
+                // Re-enable button
+                send_money_button.disabled = false;
+            }
+        });
+    } else {
+        console.log('Send Money button not found');
+    }
 });
+
+// Validate transfer form
+function validateTransferForm() {
+    // Check if source account is selected
+    if (!your_account_select.value) {
+        showNotification('Please select your account', 'error');
+        return false;
+    }
+    
+    // Check if recipient account is entered
+    if (!receiver_account_input.value) {
+        showNotification('Please enter recipient account number', 'error');
+        return false;
+    }
+    
+    // Check if amount is entered and valid
+    if (!amount_input.value || isNaN(parseFloat(amount_input.value)) || parseFloat(amount_input.value) <= 0) {
+        showNotification('Please enter a valid amount', 'error');
+        return false;
+    }
+    
+    return true;
+}
+
+// Reset transfer form
+function resetTransferForm() {
+    your_account_select.selectedIndex = 0;
+    receiver_account_input.value = '';
+    amount_input.value = '';
+    info_correct_checkbox.checked = false;
+    send_money_button.disabled = true;
+    
+    // Go back to first panel
+    account_details_panel.style.display = 'none';
+    select_bank_panel.style.display = 'block';
+}
+
+// Show transfer receipt
+function showTransferReceipt(data) {
+    // Create modal for receipt
+    const receiptModal = document.createElement('div');
+    receiptModal.classList.add('modal');
+    receiptModal.id = 'receipt-modal';
+    
+    // Format amount with 2 decimal places
+    const formattedAmount = parseFloat(data.amount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    
+    // Format new balance with 2 decimal places
+    const formattedBalance = parseFloat(data.new_balance).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    
+    receiptModal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Transfer Receipt</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="receipt">
+                    <div class="receipt-item">
+                        <span class="label">Transaction ID:</span>
+                        <span class="value">${data.transaction_id}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Date:</span>
+                        <span class="value">${data.transaction_date}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">From Account:</span>
+                        <span class="value">${data.source_account}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">To Account:</span>
+                        <span class="value">${data.recipient_account}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Amount:</span>
+                        <span class="value">₱ ${formattedAmount}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">New Balance:</span>
+                        <span class="value">₱ ${formattedBalance}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close-receipt">Close</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(receiptModal);
+    
+    // Show modal
+    receiptModal.style.display = 'block';
+    
+    // Close modal on X click
+    const closeBtn = receiptModal.querySelector('.close');
+    closeBtn.addEventListener('click', () => {
+        receiptModal.remove();
+    });
+    
+    // Close modal on button click
+    const closeButton = receiptModal.querySelector('#close-receipt');
+    closeButton.addEventListener('click', () => {
+        receiptModal.remove();
+    });
+    
+    // Close modal on outside click
+    window.addEventListener('click', (event) => {
+        if (event.target === receiptModal) {
+            receiptModal.remove();
+        }
+    });
+}
+
+// Show OTP verification modal
+function showOTPVerificationModal(data) {
+    // Create modal for OTP verification
+    const otpModal = document.createElement('div');
+    otpModal.classList.add('modal');
+    otpModal.id = 'otp-verification-modal';
+    
+    // Format amount with 2 decimal places
+    const formattedAmount = parseFloat(data.transfer_details.amount).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    
+    otpModal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>OTP Verification</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>An OTP has been sent to your registered phone number. Please enter it below.</p>
+                
+                <div class="transfer-details">
+                    <div class="detail-item">
+                        <span class="label">Amount:</span>
+                        <span class="value">₱ ${formattedAmount}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">From Account:</span>
+                        <span class="value">${data.transfer_details.source_account}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">To Account:</span>
+                        <span class="value">${data.transfer_details.recipient_account}</span>
+                    </div>
+                </div>
+                
+                <div class="otp-input-container">
+                    <label for="otp-input">Enter 6-digit OTP:</label>
+                    <input type="text" id="otp-input" maxlength="6" placeholder="123456">
+                </div>
+                
+                <div class="error-message" id="otp-error" style="display: none; color: red;"></div>
+                
+                <!-- For development only - remove in production -->
+                <div class="dev-otp">
+                    <small>Development OTP: ${data.dev_otp}</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="verify-otp-button">Verify OTP</button>
+                <button id="cancel-otp-button">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(otpModal);
+    
+    // Explicitly set the modal to display as a block (floating window)
+    otpModal.style.display = 'block';
+    
+    // Get elements
+    const closeBtn = otpModal.querySelector('.close');
+    const verifyButton = otpModal.querySelector('#verify-otp-button');
+    const cancelButton = otpModal.querySelector('#cancel-otp-button');
+    const otpInput = otpModal.querySelector('#otp-input');
+    const otpError = otpModal.querySelector('#otp-error');
+    
+    // Close modal on X click
+    closeBtn.addEventListener('click', () => {
+        otpModal.remove();
+    });
+    
+    // Close modal on Cancel button click
+    cancelButton.addEventListener('click', () => {
+        otpModal.remove();
+    });
+    
+    // Verify OTP button click
+    verifyButton.addEventListener('click', async () => {
+        const otp = otpInput.value.trim();
+        
+        if (!otp || otp.length !== 6) {
+            otpError.textContent = 'Please enter a valid 6-digit OTP';
+            otpError.style.display = 'block';
+            return;
+        }
+        
+        try {
+            verifyButton.disabled = true;
+            verifyButton.textContent = 'Verifying...';
+            
+            const response = await fetch('../../src/api/user/verify_transfer_otp.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ otp })
+            });
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                // Handle non-JSON response
+                const text = await response.text();
+                console.error('Server returned non-JSON response:', text);
+                throw new Error('Server returned an invalid response. Please try again later.');
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                otpModal.remove();
+                showNotification('Transfer successful!', 'success');
+                
+                // If redirect is needed, go to the URL
+                if (result.redirect && result.redirect_url) {
+                    console.log('Redirecting to:', result.redirect_url);
+                    window.location.href = result.redirect_url;
+                    return;
+                }
+                
+                // Otherwise show the receipt
+                showTransferReceipt(result);
+                resetTransferForm();
+            } else {
+                otpError.textContent = result.error || 'Invalid OTP. Please try again.';
+                otpError.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error verifying OTP:', error);
+            otpError.textContent = 'An error occurred. Please try again.';
+            otpError.style.display = 'block';
+        } finally {
+            verifyButton.disabled = false;
+            verifyButton.textContent = 'Verify OTP';
+        }
+    });
+    
+    // Close modal on outside click
+    window.addEventListener('click', (event) => {
+        if (event.target === otpModal) {
+            otpModal.remove();
+        }
+    });
+    
+    // Focus on OTP input
+    otpInput.focus();
+}
 
 // Function to handle logout
 async function handleLogout() {
