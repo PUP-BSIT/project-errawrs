@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     accountActionsDropdown.style.display = 'none';
 
     // Add search input event listener
+    searchInput.addEventListener('input', debounce(searchAccount, 500));
     searchInput.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
             searchAccount();
@@ -377,5 +378,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userNameElement) {
             userNameElement.textContent = tellerInfo.name;
         }
+    }
+
+    // Check for account number in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const accountParam = urlParams.get('account');
+    if (accountParam) {
+        searchInput.value = accountParam;
+        searchAccount();
     }
 });
