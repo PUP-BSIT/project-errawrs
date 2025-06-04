@@ -53,7 +53,7 @@ function updateAccountDetails(account) {
         statusElement.textContent = 'Active';
         statusElement.className = 'account-value active';
     } else {
-        statusElement.textContent = 'Inactive';
+        statusElement.textContent = 'Closed';
         statusElement.className = 'account-value';
     }
 
@@ -65,6 +65,24 @@ function updateAccountDetails(account) {
 
     // Show the account card
     accountCard.style.display = 'block';
+
+    // Update account actions based on status
+    const accountActions = document.getElementById('account_actions');
+    accountActions.innerHTML = account.status === 'active' ? `
+        <button class="action-btn deposit" onclick="showDepositForm()">
+            <i class="fas fa-plus"></i> Deposit
+        </button>
+        <button class="action-btn withdraw" onclick="showWithdrawForm()">
+            <i class="fas fa-minus"></i> Withdraw
+        </button>
+        <button class="action-btn close" onclick="closeAccount()">
+            <i class="fas fa-times"></i> Close Account
+        </button>
+    ` : `
+        <button class="action-btn deposit" onclick="reopenAccount()">
+            <i class="fas fa-redo"></i> Reopen Account
+        </button>
+    `;
 }
 
 // Toggle account actions
@@ -286,14 +304,13 @@ async function closeAccount() {
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
     
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/update_account_status.php`, {
+        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 account_number: account.account_number,
-                status: 'inactive',
                 teller_number: tellerInfo.teller_number
             })
         });
@@ -304,10 +321,40 @@ async function closeAccount() {
             throw new Error(data.error || 'Failed to close account');
         }
 
-        account.status = 'inactive';
+        // Update account status in memory
+        account.status = 'closed';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
-        updateAccountDetails(account);
-        toggleAccountActions();
+
+        // Update UI immediately
+        const statusElement = document.getElementById('account_status');
+        statusElement.textContent = 'Closed';
+        statusElement.className = 'account-value';
+
+        // Update account actions immediately
+        accountActions.innerHTML = `
+            <button class="action-btn deposit" onclick="reopenAccount()">
+                <i class="fas fa-redo"></i> Reopen Account
+            </button>
+        `;
+
+        // Update search history with new status
+        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+        if (historyIndex !== -1) {
+            searchHistory[historyIndex].status = 'closed';
+            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+            
+            // Update search history UI immediately
+            const historyRows = document.querySelectorAll('.history-row');
+            historyRows.forEach(row => {
+                const accountNumberCell = row.children[2];
+                if (accountNumberCell.textContent === account.account_number) {
+                    const statusCell = row.children[4];
+                    statusCell.textContent = 'Closed';
+                    statusCell.className = 'history-value status inactive';
+                }
+            });
+        }
+
         showNotification('Account closed successfully');
 
     } catch (error) {
@@ -321,14 +368,13 @@ async function reopenAccount() {
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
     
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/update_account_status.php`, {
+        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 account_number: account.account_number,
-                status: 'active',
                 teller_number: tellerInfo.teller_number
             })
         });
@@ -339,10 +385,47 @@ async function reopenAccount() {
             throw new Error(data.error || 'Failed to reopen account');
         }
 
+        // Update account status in memory
         account.status = 'active';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
-        updateAccountDetails(account);
-        toggleAccountActions();
+
+        // Update UI immediately
+        const statusElement = document.getElementById('account_status');
+        statusElement.textContent = 'Active';
+        statusElement.className = 'account-value active';
+
+        // Update account actions immediately
+        const accountActions = document.getElementById('account_actions');
+        accountActions.innerHTML = `
+            <button class="action-btn deposit" onclick="showDepositForm()">
+                <i class="fas fa-plus"></i> Deposit
+            </button>
+            <button class="action-btn withdraw" onclick="showWithdrawForm()">
+                <i class="fas fa-minus"></i> Withdraw
+            </button>
+            <button class="action-btn close" onclick="closeAccount()">
+                <i class="fas fa-times"></i> Close Account
+            </button>
+        `;
+
+        // Update search history with new status
+        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+        if (historyIndex !== -1) {
+            searchHistory[historyIndex].status = 'active';
+            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+            
+            // Update search history UI immediately
+            const historyRows = document.querySelectorAll('.history-row');
+            historyRows.forEach(row => {
+                const accountNumberCell = row.children[2];
+                if (accountNumberCell.textContent === account.account_number) {
+                    const statusCell = row.children[4];
+                    statusCell.textContent = 'Active';
+                    statusCell.className = 'history-value status';
+                }
+            });
+        }
+
         showNotification('Account reopened successfully');
 
     } catch (error) {
