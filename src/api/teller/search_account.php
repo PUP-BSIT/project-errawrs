@@ -1,4 +1,8 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Enable CORS for localhost development
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -13,17 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Include database configuration
 require_once '../../config/database.php';
-
-// Add error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Accept both GET and POST methods
-if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-    exit();
-}
 
 try {
     // Get database connection
@@ -54,11 +47,11 @@ try {
 
     // Validate input
     if (empty($search_term)) {
-        throw new Exception('Search term is required. Please provide a search parameter.');
+        throw new Exception('Search term is required');
     }
 
     if (empty($teller_number)) {
-        throw new Exception('Teller number is required. Please provide a teller_number parameter.');
+        throw new Exception('Teller number is required');
     }
 
     // Verify teller exists and is active
@@ -131,8 +124,7 @@ try {
         'search_term' => $search_term,
         'debug' => [
             'method' => $_SERVER['REQUEST_METHOD'],
-            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $data : $_GET,
-            'search_pattern' => $search_pattern
+            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $data : $_GET
         ]
     ]);
 
@@ -145,7 +137,7 @@ try {
         'debug' => [
             'method' => $_SERVER['REQUEST_METHOD'],
             'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? 
-                (json_decode(file_get_contents('php://input'), true) ?? []) : $_GET
+                (isset($data) ? $data : []) : $_GET
         ]
     ]);
 } finally {

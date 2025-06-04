@@ -1,6 +1,7 @@
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
-if (!tellerInfo) {
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error('No teller info found in session storage');
     window.location.href = './bank_teller_login.html';
 }
 
@@ -62,6 +63,14 @@ function updateAccountDetails(account) {
 
 // Add to search history
 function addToSearchHistory(account) {
+    // Check if the account already exists in search history
+    const existingIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+    
+    if (existingIndex !== -1) {
+        // Remove the existing entry
+        searchHistory.splice(existingIndex, 1);
+    }
+    
     // Add to the beginning of the array
     searchHistory.unshift({
         name: account.user.name,
@@ -91,23 +100,52 @@ function updateSearchHistory() {
     });
 }
 
+// Add event listener for search input
+searchInput.addEventListener('input', debounce(searchAccount, 500));
+
+// Debounce function to prevent too many API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Search account
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
+    console.log('Searching for:', searchTerm); // Debug log
+
     if (!searchTerm) {
         accountDetails.style.display = 'none';
         return;
     }
 
+    if (!tellerInfo || !tellerInfo.teller_number) {
+        console.error('No teller number found');
+        showNotification('Please log in again', true);
+        window.location.href = './bank_teller_login.html';
+        return;
+    }
+
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?search=${searchTerm}&teller_number=${tellerInfo.teller_number}`);
+        console.log('Making API request...'); // Debug log
+        const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        console.log('Response status:', response.status); // Debug log
+        
         const data = await response.json();
+        console.log('API response:', data); // Debug log
 
         if (!response.ok) {
             throw new Error(data.error || 'Failed to search account');
         }
 
-        if (data.success && data.accounts.length > 0) {
+        if (data.success && data.accounts && data.accounts.length > 0) {
             const account = data.accounts[0]; // Get the first account
             updateAccountDetails(account);
             addToSearchHistory(account);
@@ -117,7 +155,8 @@ async function searchAccount() {
         }
     } catch (error) {
         console.error('Search error:', error);
-        showNotification(error.message, true);
+        showNotification(error.message || 'Error searching for account', true);
+        accountDetails.style.display = 'none';
     }
 }
 
