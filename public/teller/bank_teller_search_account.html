@@ -61,7 +61,7 @@
             <!-- Account Container -->
             <div class="account-container">
                 <!-- Account Card -->
-                <div class="account-card" id="account_card" onclick="toggleAccountActions()">
+                <div class="account-card hidden" id="account_card">
                     <div class="account-info">
                         <div class="account-label">Account Number</div>
                         <div class="account-value" id="account_number"></div>
@@ -81,27 +81,14 @@
                     <div class="toggle-icon">
                         <i class="fas fa-chevron-right"></i>
                     </div>
-                    <div class="card-icon">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
                 </div>
 
                 <!-- Account Actions -->
-                <div class="account-actions" id="account_actions">
-                    <button class="action-btn deposit" onclick="showDepositForm()">
-                        <i class="fas fa-plus"></i> Deposit
-                    </button>
-                    <button class="action-btn withdraw" onclick="showWithdrawForm()">
-                        <i class="fas fa-minus"></i> Withdraw
-                    </button>
-                    <button class="action-btn close" onclick="closeAccount()">
-                        <i class="fas fa-times"></i> Close Account
-                    </button>
-                </div>
+                <div class="account-actions hidden" id="account_actions"></div>
             </div>
 
             <!-- Search History -->
-            <div class="search-history" id="search_history">
+            <div class="search-history hidden" id="search_history">
                 <h2>Search History</h2>
                 <div class="history-header">
                     <div class="header-cell">Number</div>

@@ -54,7 +54,7 @@ function updateAccountDetails(account) {
         statusElement.className = 'account-value active';
     } else {
         statusElement.textContent = 'Closed';
-        statusElement.className = 'account-value';
+        statusElement.className = 'account-value closed';
     }
 
     // Store current account in session storage
@@ -64,25 +64,40 @@ function updateAccountDetails(account) {
     }));
 
     // Show the account card
-    accountCard.style.display = 'block';
+    accountCard.classList.remove('hidden');
+    accountCard.classList.add('visible');
 
     // Update account actions based on status
     const accountActions = document.getElementById('account_actions');
     accountActions.innerHTML = account.status === 'active' ? `
-        <button class="action-btn deposit" onclick="showDepositForm()">
+        <button class="action-btn deposit">
             <i class="fas fa-plus"></i> Deposit
         </button>
-        <button class="action-btn withdraw" onclick="showWithdrawForm()">
+        <button class="action-btn withdraw">
             <i class="fas fa-minus"></i> Withdraw
         </button>
-        <button class="action-btn close" onclick="closeAccount()">
+        <button class="action-btn close">
             <i class="fas fa-times"></i> Close Account
         </button>
     ` : `
-        <button class="action-btn deposit" onclick="reopenAccount()">
+        <button class="action-btn reopen">
             <i class="fas fa-redo"></i> Reopen Account
         </button>
     `;
+
+    // Add event listeners to buttons
+    const buttons = accountActions.getElementsByTagName('button');
+    Array.from(buttons).forEach(button => {
+        if (button.classList.contains('deposit')) {
+            button.onclick = showDepositForm;
+        } else if (button.classList.contains('withdraw')) {
+            button.onclick = showWithdrawForm;
+        } else if (button.classList.contains('close')) {
+            button.onclick = closeAccount;
+        } else if (button.classList.contains('reopen')) {
+            button.onclick = reopenAccount;
+        }
+    });
 }
 
 // Toggle account actions
@@ -120,11 +135,9 @@ function addToSearchHistory(account) {
         name: account.user.name,
         accountNumber: account.account_number,
         balance: account.balance,
-        status: account.status
+        status: account.status,
+        timestamp: new Date().toISOString() // Add timestamp for sorting
     });
-
-    // Keep only the last 5 searches
-    searchHistory = searchHistory.slice(0, 5);
 
     // Save to localStorage with teller-specific key
     localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
@@ -148,15 +161,16 @@ function updateSearchHistory() {
             <div class="history-value">${item.name}</div>
             <div class="history-value">${item.accountNumber}</div>
             <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value status ${item.status === 'active' ? '' : 'inactive'}">${
+            <div class="history-value status ${item.status === 'active' ? 'active' : 'closed'}">${
                 item.status.charAt(0).toUpperCase() + item.status.slice(1)
             }</div>
         `;
         historyBody.appendChild(row);
     });
 
-    // Show/hide search history container based on history existence
-    searchHistoryContainer.style.display = searchHistory.length > 0 ? 'block' : 'none';
+    // Show/hide search history container
+    searchHistoryContainer.classList.toggle('visible', searchHistory.length > 0);
+    searchHistoryContainer.classList.toggle('hidden', searchHistory.length === 0);
 }
 
 // Add event listener for search input
@@ -181,7 +195,7 @@ async function searchAccount() {
 
     // Hide account card when search is empty
     if (!searchTerm) {
-        accountCard.style.display = 'none';
+        accountCard.classList.add('hidden');
         return;
     }
 
@@ -198,13 +212,13 @@ async function searchAccount() {
             updateAccountDetails(account);
             addToSearchHistory(account);
         } else {
-            accountCard.style.display = 'none';
+            accountCard.classList.add('hidden');
             showNotification('No accounts found', true);
         }
     } catch (error) {
         console.error('Search error:', error);
         showNotification(error.message || 'Error searching for account', true);
-        accountCard.style.display = 'none';
+        accountCard.classList.add('hidden');
     }
 }
 
@@ -328,12 +342,18 @@ async function closeAccount() {
         // Update UI immediately
         const statusElement = document.getElementById('account_status');
         statusElement.textContent = 'Closed';
-        statusElement.className = 'account-value';
+        statusElement.className = 'account-value closed';
 
         // Update account actions immediately
         accountActions.innerHTML = `
-            <button class="action-btn deposit" onclick="reopenAccount()">
-                <i class="fas fa-redo"></i> Reopen Account
+            <button class="action-btn deposit">
+                <i class="fas fa-plus"></i> Deposit
+            </button>
+            <button class="action-btn withdraw">
+                <i class="fas fa-minus"></i> Withdraw
+            </button>
+            <button class="action-btn close">
+                <i class="fas fa-times"></i> Close Account
             </button>
         `;
 
@@ -350,7 +370,7 @@ async function closeAccount() {
                 if (accountNumberCell.textContent === account.account_number) {
                     const statusCell = row.children[4];
                     statusCell.textContent = 'Closed';
-                    statusCell.className = 'history-value status inactive';
+                    statusCell.className = 'history-value status closed';
                 }
             });
         }
@@ -397,13 +417,13 @@ async function reopenAccount() {
         // Update account actions immediately
         const accountActions = document.getElementById('account_actions');
         accountActions.innerHTML = `
-            <button class="action-btn deposit" onclick="showDepositForm()">
+            <button class="action-btn deposit">
                 <i class="fas fa-plus"></i> Deposit
             </button>
-            <button class="action-btn withdraw" onclick="showWithdrawForm()">
+            <button class="action-btn withdraw">
                 <i class="fas fa-minus"></i> Withdraw
             </button>
-            <button class="action-btn close" onclick="closeAccount()">
+            <button class="action-btn close">
                 <i class="fas fa-times"></i> Close Account
             </button>
         `;
@@ -421,7 +441,7 @@ async function reopenAccount() {
                 if (accountNumberCell.textContent === account.account_number) {
                     const statusCell = row.children[4];
                     statusCell.textContent = 'Active';
-                    statusCell.className = 'history-value status';
+                    statusCell.className = 'history-value status active';
                 }
             });
         }
@@ -480,16 +500,19 @@ window.addEventListener('storage', (e) => {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Hide account card initially
-    accountCard.style.display = 'none';
+    accountCard.classList.add('hidden');
     
     // Update search history display
     updateSearchHistory();
+
+    // Add click event listener to account card
+    document.getElementById('account_card').addEventListener('click', toggleAccountActions);
 
     // Add search input event listeners
     searchInput.addEventListener('keyup', (e) => {
         // Hide account card if search input is empty
         if (!searchInput.value.trim()) {
-            accountCard.style.display = 'none';
+            accountCard.classList.add('hidden');
             return;
         }
         
@@ -502,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add input event listener to handle clearing via backspace/delete
     searchInput.addEventListener('input', (e) => {
         if (!e.target.value.trim()) {
-            accountCard.style.display = 'none';
+            accountCard.classList.add('hidden');
         }
     });
 
