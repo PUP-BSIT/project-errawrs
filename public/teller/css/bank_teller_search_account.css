@@ -234,7 +234,7 @@ body {
 }
 
 .search-history h2 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
@@ -249,9 +249,9 @@ body {
 
 .header-cell {
     background: var(--color-mint);
-    color: var(--color-white);
+    color: var(--color-primary-black);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 18px;
     padding: 15px 20px;
     border-radius: 25px;
     text-align: center;
@@ -266,10 +266,11 @@ body {
     display: grid;
     grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
     gap: 20px;
-    padding: 15px 20px;
+    padding: 18px 20px;
     cursor: pointer;
     border-bottom: 1px solid #e0e0e0;
     transition: all 0.3s ease;
+    align-items: center;
 }
 
 .history-row:hover {
@@ -281,7 +282,7 @@ body {
 }
 
 .history-value {
-    font-size: 16px;
+    font-size: 18px;
     color: var(--color-primary-black);
     text-align: center;
     font-weight: 500;
@@ -329,13 +330,28 @@ body {
 
 /* Account Actions */
 .account-actions {
+    background: var(--color-white);
+    border-radius: 15px;
+    padding: 25px;
+    width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    margin-top: 0;
+}
+
+.account-actions.visible {
     display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .action-btn {
-    padding: 18px 25px;
+    padding: 20px 30px;
     border: none;
     border-radius: 30px;
     font-family: var(--font-main);
@@ -345,7 +361,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 15px;
     transition: all 0.3s ease;
     width: 100%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -355,24 +371,25 @@ body {
     font-size: 20px;
 }
 
-.deposit-btn {
-    background-color: var(--color-mint);
-    color: var(--color-white);
-}
-
-.withdraw-btn {
-    background-color: var(--color-red);
-    color: var(--color-white);
-}
-
-.close-btn, .reopen-btn {
-    background-color: #f8f9fa;
+.action-btn.deposit {
+    background: var(--color-mint);
     color: var(--color-primary-black);
 }
 
+.action-btn.withdraw {
+    background: var(--color-red);
+    color: var(--color-white);
+}
+
+.action-btn.close {
+    background: var(--color-red);
+    color: var(--color-white);
+}
+
 .action-btn:hover {
-    opacity: 0.9;
     transform: translateY(-2px);
+    opacity: 0.9;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Transaction Modal */
@@ -519,6 +536,7 @@ body {
     border-radius: 15px;
     padding: 30px;
     flex: 1;
+    width: 700px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
@@ -527,25 +545,26 @@ body {
 }
 
 .account-card.expanded {
-    max-width: calc(100% - 280px);
+    width: 700px;
 }
 
 .account-info {
     display: grid;
     grid-template-columns: 250px 1fr;
-    gap: 20px;
+    gap: 25px;
     align-items: center;
 }
 
 .account-label {
     color: var(--color-primary-black);
-    font-weight: 500;
-    font-size: 18px;
+    font-weight: 700;
+    font-size: 20px;
 }
 
 .account-value {
     color: var(--color-primary-black);
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .account-value.active {
@@ -558,68 +577,6 @@ body {
 .account-value.active::before {
     content: "✓";
     color: var(--color-mint);
-}
-
-/* Account Actions */
-.account-actions {
-    background: var(--color-white);
-    border-radius: 15px;
-    padding: 20px;
-    width: 260px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    opacity: 0;
-    transform: translateX(20px);
-    transition: all 0.3s ease;
-    margin-top: 0;
-}
-
-.account-actions.visible {
-    display: flex;
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.action-btn {
-    padding: 15px 20px;
-    border: none;
-    border-radius: 30px;
-    font-family: var(--font-main);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.action-btn.deposit {
-    background: var(--color-mint);
-    color: var(--color-primary-black);
-}
-
-.action-btn.withdraw {
-    background: #FF4757;
-    color: var(--color-white);
-}
-
-.action-btn.close {
-    background: #FF4757;
-    color: var(--color-white);
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.action-btn i {
-    font-size: 18px;
 }
 
 /* Toggle Icon */
