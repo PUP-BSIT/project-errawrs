@@ -4,55 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller Deposit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link 
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
+          rel="stylesheet">
+    <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/bank_teller_transaction.css">
 </head>
 <body>
-    <div class="transaction-page">
-        <div id="notification_container" class="notification-container"></div>
-        
-        <div class="transaction-section">
-            <div class="transaction-container">
-                <div class="transaction-header">
-                    <h2>Deposit Transaction</h2>
-                    <div class="account-info">
-                        <div class="info-item">
-                            <span class="label">Account Number:</span>
-                            <span class="value" id="account_number"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">Account Name:</span>
-                            <span class="value" id="account_name"></span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">Current Balance:</span>
-                            <span class="value" id="account_balance"></span>
-                        </div>
-                    </div>
+    <div class="container">
+        <!-- Transaction Steps -->
+        <div class="transaction-steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">Enter Amount</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">Confirm Details</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">Receipt</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Amount Entry -->
+        <div class="transaction-card" id="amount_entry">
+            <h1>Deposit Transaction</h1>
+            <div class="account-info">
+                <div class="info-row">
+                    <div class="info-label">Account Number:</div>
+                    <div class="info-value" id="account_number"></div>
                 </div>
-                
-                <div class="transaction-form">
-                    <div class="form-group">
-                        <label for="deposit_amount">
-                            Enter Deposit Amount
-                        </label>
-                        <input type="number" id="deposit_amount" 
-                              placeholder="₱0.00" step="0.01" min="0">
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="form-btn cancel-btn" 
-                              onclick="returnToSearch()">Cancel</button>
-                        <button class="form-btn confirm-btn" 
-                              onclick="processDeposit()">
-                              Confirm Deposit
-                            </button>
-                    </div>
+                <div class="info-row">
+                    <div class="info-label">Account Name:</div>
+                    <div class="info-value" id="account_name"></div>
                 </div>
+                <div class="info-row">
+                    <div class="info-label">Current Balance:</div>
+                    <div class="info-value" id="current_balance"></div>
+                </div>
+            </div>
+            <div class="amount-section">
+                <label for="deposit_amount">Enter Deposit Amount</label>
+                <div class="amount-input">
+                    <span class="currency">₱</span>
+                    <input type="number" 
+                           id="deposit_amount" 
+                           placeholder="0.00" 
+                           step="0.01" 
+                           min="0">
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn cancel" onclick="goBack()">Back</button>
+                <button class="btn confirm" onclick="confirmAmount()">Confirm Deposit</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Confirmation -->
+        <div class="transaction-card hidden" id="confirmation">
+            <h1>Confirm Deposit</h1>
+            <div class="confirmation-details">
+                <div class="detail-row">
+                    <div class="detail-label">Account Number:</div>
+                    <div class="detail-value" id="confirm_account_number"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Account Name:</div>
+                    <div class="detail-value" id="confirm_account_name"></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Current Balance:</div>
+                    <div class="detail-value" id="confirm_current_balance"></div>
+                </div>
+                <div class="detail-row highlight">
+                    <div class="detail-label">Deposit Amount:</div>
+                    <div class="detail-value" id="confirm_amount"></div>
+                </div>
+                <div class="detail-row highlight">
+                    <div class="detail-label">New Balance:</div>
+                    <div class="detail-value" id="new_balance"></div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn cancel" onclick="backToAmount()">Back</button>
+                <button class="btn confirm" onclick="submitDeposit()">Submit</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Receipt -->
+        <div class="transaction-card hidden" id="receipt">
+            <div class="receipt-header">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h1>Deposit Successful</h1>
+            </div>
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <div class="receipt-label">Transaction ID:</div>
+                    <div class="receipt-value" id="transaction_id"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Account Number:</div>
+                    <div class="receipt-value" id="receipt_account_number"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Account Name:</div>
+                    <div class="receipt-value" id="receipt_account_name"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Deposit Amount:</div>
+                    <div class="receipt-value" id="receipt_amount"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">New Balance:</div>
+                    <div class="receipt-value" id="receipt_new_balance"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Date & Time:</div>
+                    <div class="receipt-value" id="transaction_date"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Teller:</div>
+                    <div class="receipt-value" id="teller_number"></div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn done" onclick="finishTransaction()">Done</button>
             </div>
         </div>
     </div>
-    <script src="./js/bank_teller_transaction.js"></script>
+
+    <div id="notification_container" class="notification-container"></div>
+    <script src="./js/deposit.js"></script>
 </body>
 </html> 

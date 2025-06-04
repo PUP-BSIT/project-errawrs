@@ -80,11 +80,11 @@ function toggleAccountActions() {
 
 // Handle action button clicks
 function showDepositForm() {
-    showTransactionForm('deposit');
+    window.location.href = './bank_teller_deposit.html';
 }
 
 function showWithdrawForm() {
-    showTransactionForm('withdraw');
+    window.location.href = './bank_teller_withdraw.html';
 }
 
 // Add to search history
