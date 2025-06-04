@@ -256,15 +256,17 @@ input[type="number"]:focus {
 }
 
 .detail-label {
-    color: var(--color-gray);
-    font-weight: 500;
-    font-size: 18px;
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 20px;
+    min-width: 200px;
 }
 
 .detail-value {
     color: var(--color-primary-black);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 20px;
+    text-align: right;
 }
 
 /* Receipt */
@@ -282,30 +284,52 @@ input[type="number"]:focus {
 .receipt-details {
     background: #f8f9fa;
     border-radius: 15px;
-    padding: 25px;
+    padding: 30px;
     margin-bottom: 30px;
 }
 
 .receipt-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .receipt-row:last-child {
     margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .receipt-label {
-    color: var(--color-gray);
-    font-weight: 500;
-    font-size: 16px;
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 20px;
+    min-width: 200px;
 }
 
 .receipt-value {
     color: var(--color-primary-black);
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 20px;
+    text-align: right;
+}
+
+.receipt-row.highlight {
+    background-color: var(--color-bg-gradient-start);
+    margin: 0 -30px;
+    padding: 20px 30px;
+}
+
+/* Add highlight for important values */
+.receipt-row.amount .receipt-value,
+.receipt-row.balance .receipt-value,
+.detail-row.amount .detail-value,
+.detail-row.balance .detail-value {
+    color: var(--color-mint);
+    font-weight: 700;
+    font-size: 22px;
 }
 
 /* Notifications */
