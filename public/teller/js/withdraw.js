@@ -18,10 +18,6 @@ document.getElementById('current_balance').textContent = formatCurrency(account.
 const amountInput = document.getElementById('withdraw_amount');
 const validationMessage = document.createElement('div');
 validationMessage.className = 'validation-message';
-validationMessage.style.color = 'var(--color-red)';
-validationMessage.style.fontSize = '14px';
-validationMessage.style.marginTop = '8px';
-validationMessage.style.display = 'none';
 amountInput.parentElement.appendChild(validationMessage);
 
 // Format currency
@@ -30,6 +26,16 @@ function formatCurrency(amount) {
         style: 'currency',
         currency: 'PHP'
     }).format(amount);
+}
+
+// Show/hide loading overlay
+function toggleLoading(show) {
+    const overlay = document.getElementById('loading_overlay');
+    if (show) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
 }
 
 // Show notification
@@ -73,23 +79,17 @@ function validateAmount(amount) {
         validationMessage.textContent = `Maximum withdrawal amount is ${formatCurrency(MAX_WITHDRAW_AMOUNT)}`;
         validationMessage.style.display = 'block';
         confirmButton.disabled = true;
-        confirmButton.style.opacity = '0.5';
-        confirmButton.style.cursor = 'not-allowed';
         return false;
     } else if (amount > account.balance) {
         amountInput.style.borderColor = 'var(--color-red)';
         validationMessage.textContent = 'Insufficient balance';
         validationMessage.style.display = 'block';
         confirmButton.disabled = true;
-        confirmButton.style.opacity = '0.5';
-        confirmButton.style.cursor = 'not-allowed';
         return false;
     } else {
         amountInput.style.borderColor = '';
         validationMessage.style.display = 'none';
         confirmButton.disabled = false;
-        confirmButton.style.opacity = '';
-        confirmButton.style.cursor = '';
         return true;
     }
 }
@@ -123,16 +123,14 @@ function confirmAmount() {
     updateSteps(2);
 }
 
-// Back to amount entry
-function backToAmount() {
-    document.getElementById('confirmation').classList.add('hidden');
-    document.getElementById('amount_entry').classList.remove('hidden');
-    updateSteps(1);
-}
-
 // Submit withdrawal
 async function submitWithdrawal() {
     const amount = parseFloat(document.getElementById('withdraw_amount').value);
+    const submitButton = document.querySelector('#confirmation .btn.confirm');
+    
+    // Disable submit button and show loading
+    submitButton.disabled = true;
+    toggleLoading(true);
     
     try {
         const response = await fetch('/project-errawrs/src/api/teller/withdraw.php', {
@@ -164,6 +162,9 @@ async function submitWithdrawal() {
         document.getElementById('receipt_new_balance').textContent = formatCurrency(newBalance);
         document.getElementById('transaction_date').textContent = data.data.transaction_date;
         document.getElementById('teller_number').textContent = data.data.teller_number;
+
+        // Hide loading before showing receipt
+        toggleLoading(false);
 
         // Hide confirmation, show receipt
         document.getElementById('confirmation').classList.add('hidden');
@@ -200,7 +201,16 @@ async function submitWithdrawal() {
     } catch (error) {
         console.error('Withdrawal error:', error);
         showNotification(error.message || 'Error processing withdrawal', true);
+        submitButton.disabled = false;
+        toggleLoading(false);
     }
+}
+
+// Back to amount entry
+function backToAmount() {
+    document.getElementById('confirmation').classList.add('hidden');
+    document.getElementById('amount_entry').classList.remove('hidden');
+    updateSteps(1);
 }
 
 // Finish transaction and return to search
