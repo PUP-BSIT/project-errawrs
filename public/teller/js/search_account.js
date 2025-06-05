@@ -63,7 +63,7 @@ function updateAccountDetails(account) {
         balance: balance
     }));
 
-    // Show the account card
+    // Show the account card immediately
     accountCard.classList.remove('hidden');
     accountCard.classList.add('visible');
 
@@ -173,23 +173,11 @@ function updateSearchHistory() {
     searchHistoryContainer.classList.toggle('hidden', searchHistory.length === 0);
 }
 
-// Add event listener for search input
-searchInput.addEventListener('input', debounce(searchAccount, 500));
+// REMOVED DEBOUNCE - Now search happens instantly
+// Add event listener for search input with instant search
+searchInput.addEventListener('input', searchAccount);
 
-// Debounce function to prevent too many API calls
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Search account
+// Search account - now runs instantly without delay
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
 
@@ -197,12 +185,19 @@ async function searchAccount() {
     if (!searchTerm) {
         accountCard.classList.add('hidden');
         accountCard.classList.remove('visible');
+        hideLoadingIndicator();
         return;
     }
+
+    // Show loading indicator immediately
+    showLoadingIndicator();
 
     try {
         const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
         const data = await response.json();
+
+        // Hide loading indicator
+        hideLoadingIndicator();
 
         if (!response.ok) {
             throw new Error(data.error || 'Failed to search account');
@@ -210,17 +205,9 @@ async function searchAccount() {
 
         if (data.success && data.accounts && data.accounts.length > 0) {
             const account = data.accounts[0];
-            // Only show the account card if the search term exactly matches the account number
-            if (account.account_number === searchTerm) {
-                updateAccountDetails(account);
-                addToSearchHistory(account);
-                accountCard.classList.remove('hidden');
-                accountCard.classList.add('visible');
-            } else {
-                accountCard.classList.add('hidden');
-                accountCard.classList.remove('visible');
-                showNotification('No exact account number match found', true);
-            }
+            // Show account details immediately when found
+            updateAccountDetails(account);
+            addToSearchHistory(account);
         } else {
             accountCard.classList.add('hidden');
             accountCard.classList.remove('visible');
@@ -228,9 +215,70 @@ async function searchAccount() {
         }
     } catch (error) {
         console.error('Search error:', error);
+        hideLoadingIndicator();
         showNotification(error.message || 'Error searching for account', true);
         accountCard.classList.add('hidden');
         accountCard.classList.remove('visible');
+    }
+}
+
+// Show loading indicator
+function showLoadingIndicator() {
+    // Create loading indicator if it doesn't exist
+    let loadingIndicator = document.getElementById('loading_indicator');
+    if (!loadingIndicator) {
+        loadingIndicator = document.createElement('div');
+        loadingIndicator.id = 'loading_indicator';
+        loadingIndicator.innerHTML = '<div class="spinner"></div><span>Searching...</span>';
+        loadingIndicator.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        `;
+        
+        // Add spinner styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .spinner {
+                width: 16px;
+                height: 16px;
+                border: 2px solid #f3f3f3;
+                border-top: 2px solid #007bff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Add to search input container
+        const searchContainer = searchInput.parentElement;
+        searchContainer.style.position = 'relative';
+        searchContainer.appendChild(loadingIndicator);
+    }
+    
+    loadingIndicator.style.display = 'flex';
+}
+
+// Hide loading indicator
+function hideLoadingIndicator() {
+    const loadingIndicator = document.getElementById('loading_indicator');
+    if (loadingIndicator) {
+        loadingIndicator.style.display = 'none';
     }
 }
 
@@ -358,16 +406,18 @@ async function closeAccount() {
 
         // Update account actions immediately
         accountActions.innerHTML = `
-            <button class="action-btn deposit">
-                <i class="fas fa-plus"></i> Deposit
-            </button>
-            <button class="action-btn withdraw">
-                <i class="fas fa-minus"></i> Withdraw
-            </button>
-            <button class="action-btn close">
-                <i class="fas fa-times"></i> Close Account
+            <button class="action-btn reopen">
+                <i class="fas fa-redo"></i> Reopen Account
             </button>
         `;
+
+        // Add event listeners to new buttons
+        const buttons = accountActions.getElementsByTagName('button');
+        Array.from(buttons).forEach(button => {
+            if (button.classList.contains('reopen')) {
+                button.onclick = reopenAccount;
+            }
+        });
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
@@ -439,6 +489,18 @@ async function reopenAccount() {
                 <i class="fas fa-times"></i> Close Account
             </button>
         `;
+
+        // Add event listeners to new buttons
+        const buttons = accountActions.getElementsByTagName('button');
+        Array.from(buttons).forEach(button => {
+            if (button.classList.contains('deposit')) {
+                button.onclick = showDepositForm;
+            } else if (button.classList.contains('withdraw')) {
+                button.onclick = showWithdrawForm;
+            } else if (button.classList.contains('close')) {
+                button.onclick = closeAccount;
+            }
+        });
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
@@ -520,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click event listener to account card
     document.getElementById('account_card').addEventListener('click', toggleAccountActions);
 
-    // Add search input event listeners
+    // Add search input event listeners for Enter key
     searchInput.addEventListener('keyup', (e) => {
         // Hide account card if search input is empty
         if (!searchInput.value.trim()) {
@@ -529,17 +591,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Perform search on Enter key
+        // Perform search on Enter key (but search already happens on input)
         if (e.key === 'Enter') {
             searchAccount();
-        }
-    });
-
-    // Add input event listener to handle clearing via backspace/delete
-    searchInput.addEventListener('input', (e) => {
-        if (!e.target.value.trim()) {
-            accountCard.classList.add('hidden');
-            accountCard.classList.remove('visible');
         }
     });
 
