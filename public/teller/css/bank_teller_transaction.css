@@ -237,6 +237,9 @@ input[type="number"]:focus {
 /* Confirmation Details */
 .confirmation-details {
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .detail-row {
@@ -251,9 +254,10 @@ input[type="number"]:focus {
 }
 
 .detail-row.highlight {
-    background-color: var(--color-bg-gradient-start);
-    margin: 0 -40px;
-    padding: 20px 40px;
+    border-radius: 15px;
+    background-color: var(--color-bg-gradient-end);
+    margin: 0 -20px;
+    padding: 20px 20px;
 }
 
 .detail-label {
