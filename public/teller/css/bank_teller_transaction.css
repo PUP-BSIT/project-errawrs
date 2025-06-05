@@ -14,174 +14,326 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: var(--font-main);
 }
 
 body {
-    margin: 0;
-    font-family: var(--font-main);
-    background: linear-gradient(135deg, 
-                var(--color-bg-gradient-start) 0%, 
-                var(--color-bg-gradient-end) 100%);
+    background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
     min-height: 100vh;
-    color: var(--color-primary-black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.transaction-page {
-    min-height: 100vh;
+.container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Transaction Steps */
+.transaction-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 40px;
+}
+
+.step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
+    gap: 10px;
+    position: relative;
+    flex: 1;
 }
 
-/* Transaction Section Styles */
-.transaction-section {
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
     width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
+    height: 2px;
+    background-color: var(--color-gray);
+    z-index: 1;
 }
 
-.transaction-container {
+.step.active:not(:last-child)::after {
+    background-color: var(--color-mint);
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-gray);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    z-index: 2;
+}
+
+.step.active .step-number {
+    background-color: var(--color-mint);
+}
+
+.step-label {
+    color: var(--color-gray);
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.step.active .step-label {
+    color: var(--color-primary-black);
+    font-weight: 600;
+}
+
+/* Transaction Card */
+.transaction-card {
     background: var(--color-white);
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
 }
 
-.transaction-header {
-    margin-bottom: 40px;
+.transaction-card.hidden {
+    display: none;
+}
+
+.transaction-card h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 20px;
     text-align: center;
 }
 
-.transaction-header h2 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--color-primary-black);
+/* Account Info */
+.account-info {
+    background: var(--color-bg-gradient-start);
+    border-radius: 15px;
+    padding: 25px;
     margin-bottom: 30px;
 }
 
-.account-info {
-    background: var(--color-bg-gradient-start);
-    padding: 20px;
-    border-radius: 12px;
-    margin-top: 20px;
-}
-
-.info-item {
+.info-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
 
-.info-item:last-child {
-    border-bottom: none;
+.info-row:last-child {
+    margin-bottom: 0;
 }
 
-.info-item .label {
-    font-size: 1.1rem;
+.info-label {
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.info-value {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* Amount Section */
+.amount-section {
+    margin-bottom: 30px;
+}
+
+.amount-section label {
+    display: block;
+    font-size: 20px;
     font-weight: 600;
     color: var(--color-primary-black);
+    margin-bottom: 15px;
 }
 
-.info-item .value {
-    font-size: 1.1rem;
+.amount-input {
+    position: relative;
+    width: 100%;
+}
+
+.currency {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: var(--color-primary-black);
     font-weight: 500;
 }
 
-.transaction-form {
-    margin-top: 30px;
-}
-
-.form-group {
-    margin-bottom: 30px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: var(--color-primary-black);
-}
-
-.form-group input {
+input[type="number"] {
     width: 100%;
-    padding: 15px;
-    font-size: 1.2rem;
-    border: 2px solid var(--color-bg-gradient-start);
+    padding: 20px 20px 20px 45px;
+    font-size: 24px;
+    border: 2px solid #e0e0e0;
     border-radius: 10px;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
-.form-group input:focus {
+input[type="number"]:focus {
     border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
 }
 
-.form-actions {
+/* Buttons */
+.button-group {
     display: flex;
-    justify-content: flex-end;
     gap: 15px;
-    margin-top: 40px;
+    justify-content: flex-end;
+    margin-top: 15px;
 }
 
-.form-btn {
+.btn {
     padding: 15px 30px;
-    font-size: 1.1rem;
-    font-weight: 600;
     border: none;
     border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.cancel-btn {
-    background: var(--color-gray);
+.btn.cancel {
+    background-color: #e0e0e0;
+    color: #666666;
+}
+
+.btn.cancel:hover {
+    background-color: #d0d0d0;
+}
+
+.btn.confirm {
+    background-color: var(--color-mint);
     color: var(--color-white);
 }
 
-.back-btn {
-    background: var(--color-gray);
+.btn.done {
+    background-color: var(--color-mint);
     color: var(--color-white);
+    width: 150px;
+    margin: 0 auto;
 }
 
-.confirm-btn {
-    background: var(--color-mint);
-    color: var(--color-primary-black);
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.submit-btn {
-    background: var(--color-mint);
+/* Confirmation Details */
+.confirmation-details {
+    margin-bottom: 30px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row.highlight {
+    background-color: var(--color-bg-gradient-start);
+    margin: 0 -40px;
+    padding: 20px 40px;
+}
+
+.detail-label {
     color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 20px;
+    min-width: 200px;
+}
+
+.detail-value {
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 20px;
+    text-align: right;
+}
+
+/* Receipt */
+.receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.success-icon {
+    font-size: 48px;
+    color: var(--color-mint);
+    margin-bottom: 10px;
+}
+
+.receipt-details {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.receipt-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.receipt-label {
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 160px;
+}
+
+.receipt-value {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    font-size: 16px;
+    text-align: right;
+}
+
+.receipt-row.highlight {
+    background-color: var(--color-bg-gradient-start);
+    margin: 0 -20px;
+    padding: 15px 20px;
+}
+
+/* Add highlight for important values */
+.receipt-row.amount .receipt-value,
+.receipt-row.balance .receipt-value,
+.detail-row.amount .detail-value,
+.detail-row.balance .detail-value {
+    color: var(--color-mint);
     font-weight: 700;
-    padding: 15px 35px;
+    font-size: 18px;
 }
 
-.cancel-btn:hover {
-    background: #8a8a8a;
-    transform: translateY(-2px);
-}
-
-.back-btn:hover {
-    background: #8a8a8a;
-    transform: translateY(-2px);
-}
-
-.confirm-btn:hover {
-    background: #6bc740;
-    transform: translateY(-2px);
-}
-
-.submit-btn:hover {
-    background: #6bc740;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.3);
-}
-
-/* Notification Styles */
+/* Notifications */
 .notification-container {
     position: fixed;
     top: 20px;
@@ -190,23 +342,20 @@ body {
 }
 
 .notification {
+    background-color: var(--color-mint);
+    color: var(--color-white);
     padding: 15px 25px;
-    margin-bottom: 10px;
     border-radius: 8px;
-    background: var(--color-white);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    gap: 12px;
-    animation: slideIn 0.3s ease;
-}
-
-.notification.success {
-    border-left: 4px solid var(--color-mint);
+    gap: 10px;
+    animation: slideIn 0.3s ease-out;
 }
 
 .notification.error {
-    border-left: 4px solid var(--color-red);
+    background-color: var(--color-red);
 }
 
 @keyframes slideIn {
@@ -217,16 +366,5 @@ body {
     to {
         transform: translateX(0);
         opacity: 1;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
     }
 } 
