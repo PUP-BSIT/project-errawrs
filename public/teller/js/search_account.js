@@ -196,6 +196,7 @@ async function searchAccount() {
     // Hide account card when search is empty
     if (!searchTerm) {
         accountCard.classList.add('hidden');
+        accountCard.classList.remove('visible');
         return;
     }
 
@@ -209,16 +210,27 @@ async function searchAccount() {
 
         if (data.success && data.accounts && data.accounts.length > 0) {
             const account = data.accounts[0];
-            updateAccountDetails(account);
-            addToSearchHistory(account);
+            // Only show the account card if the search term exactly matches the account number
+            if (account.account_number === searchTerm) {
+                updateAccountDetails(account);
+                addToSearchHistory(account);
+                accountCard.classList.remove('hidden');
+                accountCard.classList.add('visible');
+            } else {
+                accountCard.classList.add('hidden');
+                accountCard.classList.remove('visible');
+                showNotification('No exact account number match found', true);
+            }
         } else {
             accountCard.classList.add('hidden');
+            accountCard.classList.remove('visible');
             showNotification('No accounts found', true);
         }
     } catch (error) {
         console.error('Search error:', error);
         showNotification(error.message || 'Error searching for account', true);
         accountCard.classList.add('hidden');
+        accountCard.classList.remove('visible');
     }
 }
 
@@ -513,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide account card if search input is empty
         if (!searchInput.value.trim()) {
             accountCard.classList.add('hidden');
+            accountCard.classList.remove('visible');
             return;
         }
         
@@ -526,6 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', (e) => {
         if (!e.target.value.trim()) {
             accountCard.classList.add('hidden');
+            accountCard.classList.remove('visible');
         }
     });
 
