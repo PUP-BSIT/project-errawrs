@@ -43,6 +43,9 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector('.account-container');
     accountContainer.innerHTML = '';
 
+    // Always hide search history when displaying account details
+    searchHistoryContainer.classList.add('hidden');
+
     accounts.forEach(account => {
         // Create a new card wrapper
         const cardWrapper = document.createElement('div');
@@ -234,6 +237,7 @@ async function searchAccount() {
     // Always hide search history when there's a search term
     if (searchTerm) {
         searchHistoryContainer.classList.add('hidden');
+        searchHistoryContainer.style.display = 'none';
     }
 
     // Clear account container and show search history when search is empty
@@ -241,6 +245,7 @@ async function searchAccount() {
         const accountContainer = document.querySelector('.account-container');
         accountContainer.innerHTML = '';
         searchHistoryContainer.classList.remove('hidden');
+        searchHistoryContainer.style.display = 'block';
         hideLoadingIndicator();
         return;
     }
@@ -266,6 +271,9 @@ async function searchAccount() {
             );
             
             if (matchingAccounts.length > 0) {
+                // Ensure search history is hidden before showing results
+                searchHistoryContainer.classList.add('hidden');
+                searchHistoryContainer.style.display = 'none';
                 updateAccountDetails(matchingAccounts);
             } else {
                 const accountContainer = document.querySelector('.account-container');
@@ -639,6 +647,7 @@ window.addEventListener('storage', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     // Show search history initially
     searchHistoryContainer.classList.remove('hidden');
+    searchHistoryContainer.style.display = 'block';
     
     // Update search history display
     updateSearchHistory();
@@ -652,10 +661,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const accountContainer = document.querySelector('.account-container');
             accountContainer.innerHTML = '';
             searchHistoryContainer.classList.remove('hidden');
+            searchHistoryContainer.style.display = 'block';
             hideLoadingIndicator();
         } else {
             // Hide search history and perform search
             searchHistoryContainer.classList.add('hidden');
+            searchHistoryContainer.style.display = 'none';
             searchAccount();
         }
     });

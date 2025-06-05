@@ -702,7 +702,7 @@ body {
 
 /* Search History Container States */
 .search-history.hidden {
-    display: none;
+    display: none !important;
 }
 
 .search-history.visible {
