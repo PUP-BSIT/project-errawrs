@@ -2,6 +2,9 @@
 const account = JSON.parse(sessionStorage.getItem('currentAccount'));
 const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
 
+// Define maximum deposit amount
+const MAX_DEPOSIT_AMOUNT = 50000;
+
 if (!account || !tellerInfo) {
     window.location.href = './bank_teller_search_account.html';
 }
@@ -10,6 +13,16 @@ if (!account || !tellerInfo) {
 document.getElementById('account_number').textContent = account.account_number;
 document.getElementById('account_name').textContent = account.user.name;
 document.getElementById('current_balance').textContent = formatCurrency(account.balance);
+
+// Create validation message element
+const amountInput = document.getElementById('deposit_amount');
+const validationMessage = document.createElement('div');
+validationMessage.className = 'validation-message';
+validationMessage.style.color = 'var(--color-red)';
+validationMessage.style.fontSize = '14px';
+validationMessage.style.marginTop = '8px';
+validationMessage.style.display = 'none';
+amountInput.parentElement.appendChild(validationMessage);
 
 // Format currency
 function formatCurrency(amount) {
@@ -50,12 +63,40 @@ function goBack() {
     window.history.back();
 }
 
+// Validate amount and update UI
+function validateAmount(amount) {
+    const confirmButton = document.querySelector('.btn.confirm');
+    const amountInput = document.getElementById('deposit_amount');
+    
+    if (amount > MAX_DEPOSIT_AMOUNT) {
+        amountInput.style.borderColor = 'var(--color-red)';
+        validationMessage.textContent = `Maximum deposit amount is ${formatCurrency(MAX_DEPOSIT_AMOUNT)}`;
+        validationMessage.style.display = 'block';
+        confirmButton.disabled = true;
+        confirmButton.style.opacity = '0.5';
+        confirmButton.style.cursor = 'not-allowed';
+        return false;
+    } else {
+        amountInput.style.borderColor = '';
+        validationMessage.style.display = 'none';
+        confirmButton.disabled = false;
+        confirmButton.style.opacity = '';
+        confirmButton.style.cursor = '';
+        return true;
+    }
+}
+
 // Confirm amount and show confirmation screen
 function confirmAmount() {
     const amount = parseFloat(document.getElementById('deposit_amount').value);
     
     if (isNaN(amount) || amount <= 0) {
-        showNotification('Please enter a valid amount', true);
+        validationMessage.textContent = 'Please enter a valid amount';
+        validationMessage.style.display = 'block';
+        return;
+    }
+
+    if (!validateAmount(amount)) {
         return;
     }
 
@@ -198,4 +239,11 @@ document.getElementById('deposit_amount').addEventListener('input', function(e) 
     }
     
     e.target.value = value;
+    
+    // Validate amount after input
+    if (value === '') {
+        validationMessage.style.display = 'none';
+    } else {
+        validateAmount(parseFloat(value) || 0);
+    }
 }); 
