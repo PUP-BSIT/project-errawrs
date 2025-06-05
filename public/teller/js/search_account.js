@@ -38,66 +38,120 @@ function showNotification(message, isError = false) {
 }
 
 // Update account details in the UI
-function updateAccountDetails(account) {
-    document.getElementById('account_number').textContent = account.account_number;
-    document.getElementById('account_name').textContent = account.user.name;
-    document.getElementById('account_type').textContent = 'Checking';
-    
-    // Format the balance properly with peso sign
-    const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ''));
-    document.getElementById('account_balance').textContent = formatCurrency(balance);
-    
-    // Update status with proper styling
-    const statusElement = document.getElementById('account_status');
-    if (account.status === 'active') {
-        statusElement.textContent = 'Active';
-        statusElement.className = 'account-value active';
-    } else {
-        statusElement.textContent = 'Closed';
-        statusElement.className = 'account-value closed';
-    }
+function updateAccountDetails(accounts) {
+    // Clear any existing account cards
+    const accountContainer = document.querySelector('.account-container');
+    accountContainer.innerHTML = '';
 
-    // Store current account in session storage
-    sessionStorage.setItem('currentAccount', JSON.stringify({
-        ...account,
-        balance: balance
-    }));
+    accounts.forEach(account => {
+        // Create a new card wrapper
+        const cardWrapper = document.createElement('div');
+        cardWrapper.className = 'card-wrapper';
+        
+        const newCard = document.createElement('div');
+        newCard.className = 'account-card visible';
+        
+        // Format the balance properly with peso sign
+        const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ''));
+        
+        newCard.innerHTML = `
+            <div class="account-info">
+                <div class="account-label">Account Number</div>
+                <div class="account-value">${account.account_number}</div>
+                
+                <div class="account-label">Account Holder Name</div>
+                <div class="account-value">${account.user.name}</div>
+                
+                <div class="account-label">Account Type</div>
+                <div class="account-value">Checking</div>
+                
+                <div class="account-label">Current Balance</div>
+                <div class="account-value">${formatCurrency(balance)}</div>
+                
+                <div class="account-label">Account Status</div>
+                <div class="account-value ${account.status === 'active' ? 'active' : 'closed'}">
+                    ${account.status === 'active' ? 'Active' : 'Closed'}
+                </div>
+            </div>
+            <div class="toggle-icon">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        `;
 
-    // Show the account card immediately
-    accountCard.classList.remove('hidden');
-    accountCard.classList.add('visible');
+        // Create actions container for this card
+        const actionsContainer = document.createElement('div');
+        actionsContainer.className = 'account-actions';
+        actionsContainer.innerHTML = account.status === 'active' ? `
+            <button class="action-btn deposit">
+                <i class="fas fa-plus"></i> Deposit
+            </button>
+            <button class="action-btn withdraw">
+                <i class="fas fa-minus"></i> Withdraw
+            </button>
+            <button class="action-btn close">
+                <i class="fas fa-times"></i> Close Account
+            </button>
+        ` : `
+            <button class="action-btn reopen">
+                <i class="fas fa-redo"></i> Reopen Account
+            </button>
+        `;
 
-    // Update account actions based on status
-    const accountActions = document.getElementById('account_actions');
-    accountActions.innerHTML = account.status === 'active' ? `
-        <button class="action-btn deposit">
-            <i class="fas fa-plus"></i> Deposit
-        </button>
-        <button class="action-btn withdraw">
-            <i class="fas fa-minus"></i> Withdraw
-        </button>
-        <button class="action-btn close">
-            <i class="fas fa-times"></i> Close Account
-        </button>
-    ` : `
-        <button class="action-btn reopen">
-            <i class="fas fa-redo"></i> Reopen Account
-        </button>
-    `;
+        // Add event listeners to buttons
+        const buttons = actionsContainer.getElementsByTagName('button');
+        Array.from(buttons).forEach(button => {
+            if (button.classList.contains('deposit')) {
+                button.onclick = (e) => {
+                    e.stopPropagation();
+                    sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                    showDepositForm();
+                };
+            } else if (button.classList.contains('withdraw')) {
+                button.onclick = (e) => {
+                    e.stopPropagation();
+                    sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                    showWithdrawForm();
+                };
+            } else if (button.classList.contains('close')) {
+                button.onclick = (e) => {
+                    e.stopPropagation();
+                    sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                    closeAccount();
+                };
+            } else if (button.classList.contains('reopen')) {
+                button.onclick = (e) => {
+                    e.stopPropagation();
+                    sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                    reopenAccount();
+                };
+            }
+        });
 
-    // Add event listeners to buttons
-    const buttons = accountActions.getElementsByTagName('button');
-    Array.from(buttons).forEach(button => {
-        if (button.classList.contains('deposit')) {
-            button.onclick = showDepositForm;
-        } else if (button.classList.contains('withdraw')) {
-            button.onclick = showWithdrawForm;
-        } else if (button.classList.contains('close')) {
-            button.onclick = closeAccount;
-        } else if (button.classList.contains('reopen')) {
-            button.onclick = reopenAccount;
-        }
+        // Add click event to toggle actions
+        newCard.addEventListener('click', (e) => {
+            e.stopPropagation();
+            actionsContainer.classList.toggle('visible');
+            const icon = newCard.querySelector('.toggle-icon i');
+            icon.classList.toggle('fa-chevron-right');
+            icon.classList.toggle('fa-chevron-left');
+
+            // Match action container height to card height
+            if (actionsContainer.classList.contains('visible')) {
+                const cardHeight = newCard.offsetHeight;
+                actionsContainer.style.height = `${cardHeight}px`;
+            }
+        });
+
+        // Add card and actions to wrapper, then add wrapper to container
+        cardWrapper.appendChild(newCard);
+        cardWrapper.appendChild(actionsContainer);
+        accountContainer.appendChild(cardWrapper);
     });
+
+    // Add to search history if there's exactly one account
+    if (accounts.length === 1) {
+        addToSearchHistory(accounts[0]);
+    }
 }
 
 // Toggle account actions
@@ -173,18 +227,20 @@ function updateSearchHistory() {
     searchHistoryContainer.classList.toggle('hidden', searchHistory.length === 0);
 }
 
-// REMOVED DEBOUNCE - Now search happens instantly
-// Add event listener for search input with instant search
-searchInput.addEventListener('input', searchAccount);
-
 // Search account - now runs instantly without delay
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
 
-    // Hide account card when search is empty
+    // Always hide search history when there's a search term
+    if (searchTerm) {
+        searchHistoryContainer.classList.add('hidden');
+    }
+
+    // Clear account container and show search history when search is empty
     if (!searchTerm) {
-        accountCard.classList.add('hidden');
-        accountCard.classList.remove('visible');
+        const accountContainer = document.querySelector('.account-container');
+        accountContainer.innerHTML = '';
+        searchHistoryContainer.classList.remove('hidden');
         hideLoadingIndicator();
         return;
     }
@@ -204,21 +260,29 @@ async function searchAccount() {
         }
 
         if (data.success && data.accounts && data.accounts.length > 0) {
-            const account = data.accounts[0];
-            // Show account details immediately when found
-            updateAccountDetails(account);
-            addToSearchHistory(account);
+            // Filter accounts that start with the search term
+            const matchingAccounts = data.accounts.filter(account => 
+                account.account_number.toLowerCase().startsWith(searchTerm.toLowerCase())
+            );
+            
+            if (matchingAccounts.length > 0) {
+                updateAccountDetails(matchingAccounts);
+            } else {
+                const accountContainer = document.querySelector('.account-container');
+                accountContainer.innerHTML = '';
+                showNotification('No matching accounts found', true);
+            }
         } else {
-            accountCard.classList.add('hidden');
-            accountCard.classList.remove('visible');
+            const accountContainer = document.querySelector('.account-container');
+            accountContainer.innerHTML = '';
             showNotification('No accounts found', true);
         }
     } catch (error) {
         console.error('Search error:', error);
         hideLoadingIndicator();
         showNotification(error.message || 'Error searching for account', true);
-        accountCard.classList.add('hidden');
-        accountCard.classList.remove('visible');
+        const accountContainer = document.querySelector('.account-container');
+        accountContainer.innerHTML = '';
     }
 }
 
@@ -360,7 +424,7 @@ async function processTransaction(type) {
 
         account.balance = data.new_balance;
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
-        updateAccountDetails(account);
+        updateAccountDetails([account]);
         
         hideTransactionForm();
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} successful`);
@@ -545,7 +609,7 @@ async function updateAccountBalance(newBalance) {
 
         if (data.success && data.accounts && data.accounts.length > 0) {
             const account = data.accounts[0];
-            updateAccountDetails(account);
+            updateAccountDetails([account]);
             
             // Update search history with new balance
             const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
@@ -573,26 +637,25 @@ window.addEventListener('storage', (e) => {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    // Hide account card initially
-    accountCard.classList.add('hidden');
+    // Show search history initially
+    searchHistoryContainer.classList.remove('hidden');
     
     // Update search history display
     updateSearchHistory();
 
-    // Add click event listener to account card
-    document.getElementById('account_card').addEventListener('click', toggleAccountActions);
-
-    // Add search input event listeners for Enter key
-    searchInput.addEventListener('keyup', (e) => {
-        // Hide account card if search input is empty
-        if (!searchInput.value.trim()) {
-            accountCard.classList.add('hidden');
-            accountCard.classList.remove('visible');
-            return;
-        }
+    // Add search input event listeners
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.trim();
         
-        // Perform search on Enter key (but search already happens on input)
-        if (e.key === 'Enter') {
+        if (!searchTerm) {
+            // Clear account container and show search history immediately
+            const accountContainer = document.querySelector('.account-container');
+            accountContainer.innerHTML = '';
+            searchHistoryContainer.classList.remove('hidden');
+            hideLoadingIndicator();
+        } else {
+            // Hide search history and perform search
+            searchHistoryContainer.classList.add('hidden');
             searchAccount();
         }
     });
@@ -607,14 +670,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close account actions when clicking outside
     document.addEventListener('click', (e) => {
-        const accountCard = document.getElementById('account_card');
-        const accountActions = document.getElementById('account_actions');
-        const toggleIcon = document.querySelector('.toggle-icon');
+        const accountCards = document.querySelectorAll('.account-card');
+        const accountActions = document.querySelectorAll('.account-actions');
         
-        if (!accountCard.contains(e.target) && !accountActions.contains(e.target)) {
-            accountCard.classList.remove('expanded');
-            accountActions.classList.remove('visible');
-            toggleIcon.classList.remove('active');
-        }
+        accountCards.forEach((card, index) => {
+            if (!card.contains(e.target) && !accountActions[index].contains(e.target)) {
+                accountActions[index].classList.remove('visible');
+                card.classList.remove('expanded');
+                const icon = card.querySelector('.toggle-icon i');
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            }
+        });
     });
 });
