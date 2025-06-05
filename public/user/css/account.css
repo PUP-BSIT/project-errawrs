@@ -34,121 +34,494 @@
 
 /* Specific styles for Account page */
 .account-content {
-    padding: 20px;
-    background-color: var(--color-white);
-    border-radius: 16px;
-    box-shadow: var(--box-shadow-light);
-    max-width: 700px; /* Adjust as needed */
-    margin: 24px auto; /* Center the container */
+    padding: 32px;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+    backdrop-filter: blur(20px);
+    border-radius: 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    max-width: 1400px;
+    margin: 16px auto;
+    min-height: auto; /* Remove fixed height */
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .account-content h2 {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 32px;
+    font-weight: 800;
     color: var(--color-primary-black);
-    margin-bottom: 24px;
-    text-align: center;
+    margin-bottom: 32px;
+    text-align: left;
+    letter-spacing: -1px;
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.account-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-mint), var(--color-lime-green));
+    border-radius: 2px;
 }
 
 .account-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    padding: 4px;
+    margin-bottom: 16px; /* Add bottom margin */
 }
 
+/* Enhanced Account Item */
 .account-item {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 200px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.03),
+        0 1px 2px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.account-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(182, 255, 74, 0.08) 0%,
+        rgba(126, 217, 87, 0.08) 100%);
+    border-radius: 28px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .account-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.account-item:hover::before {
+    opacity: 1;
 }
 
 .account-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .info-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    background: transparent;
+    padding: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .info-label {
-    font-size: 0.8rem;
-    color: #666;
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
 }
 
 .info-value {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    letter-spacing: -0.5px;
 }
 
-.account-actions {
-    position: relative;
+/* Account Number Value */
+.info-group:first-child .info-value {
+    font-size: 24px;
+    letter-spacing: 0.5px;
+}
+
+/* Balance Value */
+.info-group:nth-child(3) .info-value {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Account Status Badges */
+.account-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    height: 28px;
+    white-space: nowrap;
+    width: fit-content;
+    position: relative;
+    z-index: 1;
+}
+
+.account-status.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.account-status.active::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+    margin-right: 6px;
+}
+
+.account-status.closed {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.account-status.closed::before {
+    background-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+/* Account Type Badge */
+.account-type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 32px;
+    white-space: nowrap;
+    width: fit-content;
+    position: relative;
+    z-index: 1;
+}
+
+.account-type-badge::before {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 8px;
+}
+
+.account-type-badge.savings {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+}
+
+.account-type-badge.savings::before {
+    content: '\f555'; /* Piggy bank icon */
+}
+
+.account-type-badge.credit {
+    background: rgba(168, 85, 247, 0.1);
+    color: #7c3aed;
+}
+
+.account-type-badge.credit::before {
+    content: '\f09d'; /* Credit card icon */
+}
+
+.account-type-badge.standard {
+    background: rgba(71, 85, 105, 0.1);
+    color: #475569;
+}
+
+.account-type-badge.standard::before {
+    content: '\f19c'; /* Bank icon */
+}
+
+/* Account Actions */
+.account-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
 }
 
 .three-dots-button {
-    background: none;
+    background: transparent;
     border: none;
-    padding: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    color: #666;
-    transition: color 0.2s ease;
+    color: #64748b;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    position: relative;
+    z-index: 11;
 }
 
 .three-dots-button:hover {
-    color: #333;
+    opacity: 1;
 }
 
-.three-dots-button:disabled {
-    color: #ccc;
-    cursor: not-allowed;
-}
-
+/* Action Menu */
 .action-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 8px 0;
-    min-width: 150px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    min-width: 160px; /* Slightly reduced width since we have fewer items */
     z-index: 100;
-}
-
-.action-menu.hidden {
-    display: none;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transform-origin: top right;
+    animation: menuFadeIn 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    margin-top: 8px;
 }
 
 .menu-item {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
-    padding: 8px 16px;
+    padding: 12px 16px;
     text-align: left;
     background: none;
     border: none;
-    color: #333;
+    color: #334155;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    gap: 12px;
+    position: relative;
+}
+
+.menu-item::before {
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.menu-item.transfer-button::before {
+    content: '\f362';
+    color: #2563eb;
+}
+
+.menu-item.close-button::before {
+    content: '\f057';
+    color: #dc2626;
 }
 
 .menu-item:hover {
-    background-color: #f5f5f5;
+    background-color: rgba(248, 250, 252, 0.8);
+    color: var(--color-primary-black);
+    transform: translateX(4px);
 }
+
+.action-menu.hidden {
+    display: none !important;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+@keyframes menuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Add Account Placeholder */
+.add-account-placeholder {
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.8) 0%, 
+        rgba(241, 245, 249, 0.8) 100%);
+    backdrop-filter: blur(12px);
+    border: 2px dashed #cbd5e1;
+    border-radius: 24px;
+    padding: 48px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-account-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+        rgba(182, 255, 74, 0.1) 0%,
+        rgba(126, 217, 87, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.add-account-placeholder:hover {
+    border-color: var(--color-mint);
+    transform: translateY(-6px);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.add-account-placeholder:hover::before {
+    opacity: 1;
+}
+
+.add-account-placeholder i {
+    font-size: 32px;
+    color: #64748b;
+    background: rgba(255, 255, 255, 0.9);
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.06),
+        0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.add-account-placeholder:hover i {
+    color: var(--color-mint);
+    transform: scale(1.1) rotate(180deg);
+    background: white;
+}
+
+.add-account-placeholder span {
+    font-size: 20px;
+    color: #475569;
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.add-account-placeholder:hover span {
+    color: var(--color-primary-black);
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .account-content {
+        margin: 16px;
+        padding: 24px;
+    }
+    
+    .account-list-container {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-content {
+        margin: 12px;
+        padding: 20px;
+        border-radius: 24px;
+    }
+    
+    .account-content h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .account-list-container {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .account-item {
+        min-height: 180px;
+        padding: 20px;
+    }
+    
+    .account-info {
+        gap: 16px;
+    }
+    
+    .info-value {
+        font-size: 24px;
+    }
+    
+    .info-group:first-child .info-value {
+        font-size: 20px;
+    }
+    
+    .account-type-badge,
+    .account-status {
+        height: 28px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .add-account-placeholder {
+        padding: 32px;
+        min-height: 240px;
+    }
+}
+
+/* Animation for new items */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.account-item {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Stagger animation for multiple items */
+.account-item:nth-child(1) { animation-delay: 0.1s; }
+.account-item:nth-child(2) { animation-delay: 0.2s; }
+.account-item:nth-child(3) { animation-delay: 0.3s; }
 
 /* Notification Container */
 .notification-container {
@@ -195,25 +568,6 @@
 
 /* Ensure 80 column width */
 /* This is handled by the editor's formatting, not CSS */
-
-/* Styling for Account Status */
-.account-status {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-transform: capitalize;
-}
-
-.account-status.active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.account-status.closed {
-    background-color: #ffebee;
-    color: #c62828;
-}
 
 /* New styles for Add Account button and Modals */
 .add-account-btn {
@@ -380,36 +734,6 @@
     font-size: 16px;
 }
 
-/* New style for the add account placeholder */
-.add-account-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: #f8f9fa;
-    border: 2px dashed #dee2e6;
-    border-radius: 12px;
-    padding: 24px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.add-account-placeholder:hover {
-    background: #e9ecef;
-    border-color: #adb5bd;
-}
-
-.add-account-placeholder i {
-    font-size: 1.5rem;
-    color: #6c757d;
-}
-
-.add-account-placeholder span {
-    font-size: 1.1rem;
-    color: #495057;
-    font-weight: 500;
-}
-
 /* Account Type Selection Styles */
 .account-type-options {
     display: flex;
@@ -461,22 +785,4 @@
     font-size: 12px;
     color: var(--color-text-muted);
     margin-top: 4px;
-}
-
-.account-type-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-transform: capitalize;
-}
-
-.account-type-badge.savings {
-    background-color: #e3f2fd;
-    color: #1976d2;
-}
-
-.account-type-badge.credit {
-    background-color: #f3e5f5;
-    color: #7b1fa2;
 } 

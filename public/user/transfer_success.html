@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>StackOvercash - Transfer Success</title>
+        <title>Transfer Successful - StackOvercash</title>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -13,7 +13,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <link rel="stylesheet" href="./css/user_dashboard.css"/> <!-- Keep some base styles -->
-        <link rel="stylesheet" href="./css/transfer.css"/> <!-- Transfer specific styles -->
+        <link rel="stylesheet" href="./css/transfer_success.css"/> <!-- Transfer specific styles -->
     </head>
     <body class="authenticated-page">
         <div class="dashboard-container">
@@ -92,24 +92,41 @@
                     </div>
                 </header>
 
-                <!-- Transfer Content -->
-                <div class="transfer-content">
-                    <h2>Transfer Successful</h2>
-                    
-                    <div class="transfer-panel">
-                        <div class="panel-body">
-                            <div class="success-notification">
-                                <i class="fas fa-check-circle"></i>
-                                <span>Your funds have been successfully transferred to the recipient account.</span>
-                            </div>
-                            
-                            <div class="receipt" id="transaction-details">
-                                <!-- Transaction details will be populated by JavaScript -->
-                            </div>
-                            
-                            <a href="./transfer.html" class="next-btn">Back to Transfer</a>
+                <!-- Success Content -->
+                <div class="success-container">
+                    <div class="success-header">
+                        <div class="success-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h1>Transfer Successful</h1>
+                    </div>
+
+                    <div class="receipt-container">
+                        <div class="receipt-row">
+                            <span class="receipt-label">Transaction ID</span>
+                            <span class="receipt-value" id="transaction_id">97</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Date</span>
+                            <span class="receipt-value" id="transaction_date">6/6/2025, 2:57:01 AM</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Amount</span>
+                            <span class="receipt-value amount-value" id="transaction_amount">₱ 1,000.00</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">From Account</span>
+                            <span class="receipt-value" id="from_account">544250000007</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">To Account</span>
+                            <span class="receipt-value" id="to_account">544250000009</span>
                         </div>
                     </div>
+
+                    <a href="./transfer.html" class="back-button">
+                        Back to Transfer
+                    </a>
                 </div>
             </div>
         </div>
@@ -120,51 +137,22 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // Parse URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
-                const success = urlParams.get('fund_transfer_success');
-                const transactionId = urlParams.get('transaction_id');
-                const amount = urlParams.get('amount');
-                const sourceAccount = urlParams.get('source_account');
-                const recipientAccount = urlParams.get('recipient_account');
                 
-                // Check if this is a successful transfer
-                if (success === 'true' && transactionId) {
-                    const transactionDetails = document.getElementById('transaction-details');
-                    
-                    // Format amount if it exists
-                    const formattedAmount = amount ? '₱ ' + parseFloat(amount).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }) : 'N/A';
-                    
-                    // Create transaction details HTML
-                    transactionDetails.innerHTML = `
-                        <div class="receipt-item">
-                            <span class="label">Transaction ID:</span>
-                            <span class="value">${transactionId}</span>
-                        </div>
-                        <div class="receipt-item">
-                            <span class="label">Date:</span>
-                            <span class="value">${new Date().toLocaleString()}</span>
-                        </div>
-                        <div class="receipt-item">
-                            <span class="label">Amount:</span>
-                            <span class="value">${formattedAmount}</span>
-                        </div>
-                        <div class="receipt-item">
-                            <span class="label">From Account:</span>
-                            <span class="value">${sourceAccount || 'N/A'}</span>
-                        </div>
-                        <div class="receipt-item">
-                            <span class="label">To Account:</span>
-                            <span class="value">${recipientAccount || 'N/A'}</span>
-                        </div>
-                    `;
-                } else {
-                    // If parameters are missing, show generic message
-                    document.querySelector('h2').textContent = 'Transaction Complete';
-                    document.querySelector('.success-notification span').textContent = 'Your transaction has been processed.';
-                    document.getElementById('transaction-details').style.display = 'none';
-                }
+                // Update receipt values if provided in URL
+                document.getElementById('transaction_id').textContent = urlParams.get('transaction_id') || '97';
+                document.getElementById('transaction_date').textContent = urlParams.get('date') || '6/6/2025, 2:57:01 AM';
+                document.getElementById('transaction_amount').textContent = '₱ ' + (urlParams.get('amount') || '1,000.00');
+                document.getElementById('from_account').textContent = urlParams.get('from_account') || '544250000007';
+                document.getElementById('to_account').textContent = urlParams.get('to_account') || '544250000009';
+                
+                // Handle print functionality
+                document.addEventListener('keydown', function(e) {
+                    // Ctrl/Cmd + P
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                        e.preventDefault();
+                        window.print();
+                    }
+                });
                 
                 // Also update the user avatar
                 const userAvatarContainer = document.getElementById('user_avatar_container');

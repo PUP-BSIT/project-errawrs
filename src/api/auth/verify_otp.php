@@ -19,15 +19,18 @@ if (!isset($data['otp']) || !isset($data['phone_number'])) {
     exit();
 }
 
+$otp = $data['otp'];
+$phone_number = $data['phone_number'];
+
 // Validate OTP format (6 digits)
-if (!preg_match('/^\d{6}$/', $data['otp'])) {
+if (!preg_match('/^\d{6}$/', $otp)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'OTP must be 6 digits']);
+    echo json_encode(['success' => false, 'error' => 'Invalid OTP format']);
     exit();
 }
 
 // Phone number validation and conversion
-$phone = $data['phone_number'];
+$phone = $phone_number;
 $phone = preg_replace('/[^0-9+]/', '', $phone);
 
 if (preg_match('/^\+?639\d{9}$/', $phone)) {
@@ -87,7 +90,7 @@ if ($storedOTP['attempts'] >= 3) {
 }
 
 // Verify OTP
-if ($data['otp'] !== $storedOTP['code']) {
+if ($otp !== $storedOTP['code']) {
     // Increment attempts
     $_SESSION['otp']['attempts']++;
     $remainingAttempts = 3 - $_SESSION['otp']['attempts'];

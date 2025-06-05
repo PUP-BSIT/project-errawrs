@@ -184,6 +184,26 @@ class RegistrationManager {
 				this.validateUsername(e.target);
 			});
 		}
+
+		// First name validation
+		const firstNameInput = document.getElementById("first_name");
+		if (firstNameInput) {
+			// Remove any non-letter characters immediately
+			firstNameInput.addEventListener("input", (e) => {
+				e.target.value = e.target.value.replace(/[^A-Za-z\s-]/g, '');
+				this.validateName(e.target, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
+			});
+		}
+
+		// Last name validation
+		const lastNameInput = document.getElementById("last_name");
+		if (lastNameInput) {
+			// Remove any non-letter characters immediately
+			lastNameInput.addEventListener("input", (e) => {
+				e.target.value = e.target.value.replace(/[^A-Za-z\s-]/g, '');
+				this.validateName(e.target, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
+			});
+		}
 	}
 
 	validateAccountNumber(input) {
@@ -271,9 +291,18 @@ class RegistrationManager {
 	validateName(input, minLength) {
 		console.log("validateName called.");
 		const value = input.value.trim();
-		const isValid = value.length >= minLength;
+		const lettersOnlyRegex = /^[A-Za-z\s-]+$/;
+		const isValidLength = value.length >= minLength;
+		const isValidCharacters = lettersOnlyRegex.test(value);
+		const isValid = isValidLength && isValidCharacters;
 
-		const errorMsg = `Name must be at least ${minLength} characters`;
+		let errorMsg = '';
+		if (!isValidLength) {
+			errorMsg = `Name must be at least ${minLength} characters`;
+		} else if (!isValidCharacters) {
+			errorMsg = 'Name can only contain letters, spaces, and hyphens';
+		}
+
 		this.setInputValidation(input, isValid, errorMsg);
 		console.log("validateName result:", isValid);
 		return isValid;
@@ -450,7 +479,8 @@ class RegistrationManager {
 			this.showLoadingState("otp_form");
 			submitBtn.style.opacity = "0.5";
 			submitBtn.disabled = true;
-			// Verify OTP and complete registration
+			
+			// Include both OTP and phone number in the verification request
 			fetch("../../src/api/auth/verify_otp.php", {
 				method: "POST",
 				headers: {
@@ -458,6 +488,7 @@ class RegistrationManager {
 				},
 				body: JSON.stringify({
 					otp: otpCode,
+					phone_number: this.formData.phone_number // Include the phone number
 				}),
 			})
 				.then((response) => {
