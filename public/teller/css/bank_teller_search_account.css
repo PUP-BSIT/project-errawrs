@@ -24,8 +24,8 @@ body {
 
 .container {
     display: flex;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    position: relative;
 }
 
 /* Sidebar Styles */
@@ -158,7 +158,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 /* Top Bar */
@@ -196,15 +196,66 @@ body {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
+    padding: 20px 0;
 }
 
 /* Content Area */
 .content-area {
     flex: 1;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     margin-top: 20px;
+    align-items: center;
+    min-height: min-content;
+    width: 100%;
+}
+
+/* Scrollbar Styles for Main Content */
+.main-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: var(--color-mint);
+    border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #6bc746;
+}
+
+/* Firefox scrollbar for main content */
+.main-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-mint) #f1f1f1;
+}
+
+/* Content Area Scrollbar */
+.content-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-area::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.content-area::-webkit-scrollbar-thumb {
+    background: var(--color-mint);
+    border-radius: 4px;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover {
+    background: #6bc746;
 }
 
 .search-box {
@@ -233,7 +284,7 @@ body {
     flex: 1;
     border: none;
     outline: none;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--color-primary-black);
     font-family: var(--font-main);
     font-weight: 500;
@@ -248,59 +299,87 @@ body {
 .search-history {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px 30px;
+    padding: 20px 25px;
     margin: 0 auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
     max-width: 1000px;
-    flex: 1;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 200px);
 }
 
 .search-history h2 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 20px;
-    background: var(--color-white);
-    padding: 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 2;
+    text-align: center;
 }
 
 .history-header {
     display: grid;
     grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
-    gap: 25px;
+    gap: 20px;
     margin-bottom: 15px;
-    background: var(--color-white);
     padding: 10px 0;
+    background: var(--color-white);
     position: sticky;
-    top: 54px;
-    z-index: 2;
+    top: 0;
 }
 
 .header-cell {
     background: var(--color-mint);
     color: var(--color-primary-black);
     font-weight: 600;
-    font-size: 16px;
-    padding: 15px 25px;
+    font-size: 18px;
+    padding: 15px 20px;
     border-radius: 25px;
     text-align: center;
 }
 
 .history-body {
-    flex: 1;
+    max-height: calc(65px * 5); /* Height for 5 items */
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-mint) #f1f1f1;
 }
 
-/* Webkit scrollbar styles */
+.history-row {
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    gap: 20px;
+    padding: 15px;
+    min-height: 65px;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    align-items: center;
+}
+
+.history-row:last-child {
+    border-bottom: none;
+}
+
+.history-row:hover {
+    background: var(--color-bg-gradient-start);
+}
+
+.history-value {
+    font-size: 18px;
+    color: var(--color-primary-black);
+    text-align: center;
+    font-weight: 500;
+}
+
+.history-value.status.active {
+    color: var(--color-mint);
+    font-weight: 600;
+}
+
+.history-value.status.closed {
+    color: var(--color-red);
+    font-weight: 600;
+}
+
+/* Scrollbar Styles */
 .history-body::-webkit-scrollbar {
     width: 8px;
 }
@@ -319,40 +398,10 @@ body {
     background: #6bc746;
 }
 
-.history-row {
-    display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
-    gap: 25px;
-    padding: 15px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
-    align-items: center;
-}
-
-.history-row:last-child {
-    border-bottom: none;
-}
-
-.history-row:hover {
-    background: var(--color-bg-gradient-start);
-}
-
-.history-value {
-    font-size: 16px;
-    color: var(--color-primary-black);
-    text-align: center;
-    font-weight: 500;
-}
-
-.history-value.status.active {
-    color: var(--color-mint);
-    font-weight: 600;
-}
-
-.history-value.status.closed {
-    color: var(--color-red);
-    font-weight: 600;
+/* Firefox scrollbar */
+.history-body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-mint) #f1f1f1;
 }
 
 /* Account Details */
@@ -390,13 +439,13 @@ body {
 .account-actions {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 25px;
-    width: 300px;
+    padding: 20px;
+    width: 250px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     flex-direction: column;
     justify-content: center;
-    gap: 18px;
+    gap: 15px;
     opacity: 0;
     transition: all 0.3s ease;
 }
@@ -538,19 +587,18 @@ body {
 /* Account Container */
 .account-container {
     width: 100%;
-    max-width: 1000px;
-    margin: 20px auto;
+    max-width: 800px;
+    margin: 0 auto 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    transition: all 0.3s ease;
+    gap: 15px;
 }
 
 /* Card Wrapper */
 .card-wrapper {
     width: 100%;
     display: flex;
-    gap: 20px;
+    gap: 15px;
     align-items: stretch;
 }
 
@@ -558,14 +606,14 @@ body {
 .account-card {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 25px;
+    padding: 20px 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     flex: 1;
-    max-width: 975px;
+    max-width: 800px;
 }
 
 .account-card.visible {
@@ -576,19 +624,19 @@ body {
 .account-info {
     display: grid;
     grid-template-columns: 180px 1fr;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
 }
 
 .account-label {
     color: var(--color-gray);
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 500;
 }
 
 .account-value {
     color: var(--color-primary-black);
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 600;
 }
 
