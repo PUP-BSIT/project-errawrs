@@ -445,9 +445,18 @@ async function processTransaction(type) {
 
 // Close account
 async function closeAccount() {
-    const accountActions = document.getElementById('account_actions');
-    accountActions.classList.remove('visible');
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    if (!account) {
+        showNotification('No account selected', true);
+        return;
+    }
+
+    // Check if account has balance
+    const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ''));
+    if (balance > 0) {
+        showNotification('Account must have zero balance before closing', true);
+        return;
+    }
     
     try {
         const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
@@ -471,44 +480,8 @@ async function closeAccount() {
         account.status = 'closed';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
 
-        // Update UI immediately
-        const statusElement = document.getElementById('account_status');
-        statusElement.textContent = 'Closed';
-        statusElement.className = 'account-value closed';
-
-        // Update account actions immediately
-        accountActions.innerHTML = `
-            <button class="action-btn reopen">
-                <i class="fas fa-redo"></i> Reopen Account
-            </button>
-        `;
-
-        // Add event listeners to new buttons
-        const buttons = accountActions.getElementsByTagName('button');
-        Array.from(buttons).forEach(button => {
-            if (button.classList.contains('reopen')) {
-                button.onclick = reopenAccount;
-            }
-        });
-
-        // Update search history with new status
-        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
-        if (historyIndex !== -1) {
-            searchHistory[historyIndex].status = 'closed';
-            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
-            
-            // Update search history UI immediately
-            const historyRows = document.querySelectorAll('.history-row');
-            historyRows.forEach(row => {
-                const accountNumberCell = row.children[2];
-                if (accountNumberCell.textContent === account.account_number) {
-                    const statusCell = row.children[4];
-                    statusCell.textContent = 'Closed';
-                    statusCell.className = 'history-value status closed';
-                }
-            });
-        }
-
+        // Refresh the account display
+        await updateAccountBalance();
         showNotification('Account closed successfully');
 
     } catch (error) {
@@ -520,6 +493,10 @@ async function closeAccount() {
 // Reopen account
 async function reopenAccount() {
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
+    if (!account) {
+        showNotification('No account selected', true);
+        return;
+    }
     
     try {
         const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
@@ -543,55 +520,8 @@ async function reopenAccount() {
         account.status = 'active';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
 
-        // Update UI immediately
-        const statusElement = document.getElementById('account_status');
-        statusElement.textContent = 'Active';
-        statusElement.className = 'account-value active';
-
-        // Update account actions immediately
-        const accountActions = document.getElementById('account_actions');
-        accountActions.innerHTML = `
-            <button class="action-btn deposit">
-                <i class="fas fa-plus"></i> Deposit
-            </button>
-            <button class="action-btn withdraw">
-                <i class="fas fa-minus"></i> Withdraw
-            </button>
-            <button class="action-btn close">
-                <i class="fas fa-times"></i> Close Account
-            </button>
-        `;
-
-        // Add event listeners to new buttons
-        const buttons = accountActions.getElementsByTagName('button');
-        Array.from(buttons).forEach(button => {
-            if (button.classList.contains('deposit')) {
-                button.onclick = showDepositForm;
-            } else if (button.classList.contains('withdraw')) {
-                button.onclick = showWithdrawForm;
-            } else if (button.classList.contains('close')) {
-                button.onclick = closeAccount;
-            }
-        });
-
-        // Update search history with new status
-        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
-        if (historyIndex !== -1) {
-            searchHistory[historyIndex].status = 'active';
-            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
-            
-            // Update search history UI immediately
-            const historyRows = document.querySelectorAll('.history-row');
-            historyRows.forEach(row => {
-                const accountNumberCell = row.children[2];
-                if (accountNumberCell.textContent === account.account_number) {
-                    const statusCell = row.children[4];
-                    statusCell.textContent = 'Active';
-                    statusCell.className = 'history-value status active';
-                }
-            });
-        }
-
+        // Refresh the account display
+        await updateAccountBalance();
         showNotification('Account reopened successfully');
 
     } catch (error) {
