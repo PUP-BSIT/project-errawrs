@@ -443,8 +443,80 @@ async function processTransaction(type) {
     }
 }
 
+// Show loading overlay
+function showLoadingOverlay(message) {
+    let overlay = document.getElementById('loading_overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'loading_overlay';
+        overlay.innerHTML = `
+            <div class="overlay-content">
+                <div class="spinner"></div>
+                <div class="overlay-message"></div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Add styles
+        const style = document.createElement('style');
+        style.textContent = `
+            #loading_overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+            }
+            .overlay-content {
+                background: white;
+                padding: 30px 40px;
+                border-radius: 8px;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+            .overlay-message {
+                margin-top: 15px;
+                color: var(--color-primary-black);
+                font-weight: 500;
+                font-size: 16px;
+            }
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border: 5px solid #f3f3f3;
+                border-top: 5px solid var(--color-mint);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    overlay.querySelector('.overlay-message').textContent = message;
+    overlay.style.display = 'flex';
+}
+
+// Hide loading overlay
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading_overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
 // Close account
-async function closeAccount() {
+async function closeAccount(e) {
+    if (e) e.stopPropagation();
+    
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
     if (!account) {
         showNotification('No account selected', true);
@@ -456,6 +528,32 @@ async function closeAccount() {
     if (balance > 0) {
         showNotification('Account must have zero balance before closing', true);
         return;
+    }
+
+    // Get the current card wrapper
+    const cardWrapper = document.querySelector('.card-wrapper');
+    if (!cardWrapper) return;
+
+    // Show loading overlay
+    showLoadingOverlay('Closing account...');
+
+    // Immediately update UI
+    const statusElement = cardWrapper.querySelector('.account-value:last-child');
+    const actionsContainer = cardWrapper.querySelector('.account-actions');
+    
+    // Update status display immediately
+    if (statusElement) {
+        statusElement.textContent = 'Closed';
+        statusElement.className = 'account-value closed';
+    }
+
+    // Update actions immediately
+    if (actionsContainer) {
+        actionsContainer.innerHTML = `
+            <button class="action-btn reopen" disabled>
+                <i class="fas fa-redo"></i> Reopen Account
+            </button>
+        `;
     }
     
     try {
@@ -473,29 +571,117 @@ async function closeAccount() {
         const data = await response.json();
 
         if (!response.ok) {
+            // Revert UI changes if the API call fails
+            if (statusElement) {
+                statusElement.textContent = 'Active';
+                statusElement.className = 'account-value active';
+            }
+            if (actionsContainer) {
+                actionsContainer.innerHTML = `
+                    <button class="action-btn deposit">
+                        <i class="fas fa-plus"></i> Deposit
+                    </button>
+                    <button class="action-btn withdraw">
+                        <i class="fas fa-minus"></i> Withdraw
+                    </button>
+                    <button class="action-btn close">
+                        <i class="fas fa-times"></i> Close Account
+                    </button>
+                `;
+                // Reattach event listeners
+                const buttons = actionsContainer.getElementsByTagName('button');
+                Array.from(buttons).forEach(button => {
+                    if (button.classList.contains('deposit')) {
+                        button.onclick = (e) => {
+                            e.stopPropagation();
+                            sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                            showDepositForm();
+                        };
+                    } else if (button.classList.contains('withdraw')) {
+                        button.onclick = (e) => {
+                            e.stopPropagation();
+                            sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
+                            showWithdrawForm();
+                        };
+                    } else if (button.classList.contains('close')) {
+                        button.onclick = (e) => closeAccount(e);
+                    }
+                });
+            }
             throw new Error(data.error || 'Failed to close account');
         }
 
         // Update account status in memory
         account.status = 'closed';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        
+        // Update search history
+        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+        if (historyIndex !== -1) {
+            searchHistory[historyIndex].status = 'closed';
+            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+            updateSearchHistory();
+        }
 
-        // Refresh the account display
-        await updateAccountBalance();
+        // Re-enable the reopen button and add its event listener
+        if (actionsContainer) {
+            const reopenBtn = actionsContainer.querySelector('.reopen');
+            if (reopenBtn) {
+                reopenBtn.disabled = false;
+                reopenBtn.onclick = (e) => reopenAccount(e);
+            }
+        }
+
         showNotification('Account closed successfully');
 
     } catch (error) {
         console.error('Close account error:', error);
         showNotification(error.message, true);
+    } finally {
+        hideLoadingOverlay();
     }
 }
 
 // Reopen account
-async function reopenAccount() {
+async function reopenAccount(e) {
+    if (e) e.stopPropagation();
+    
     const account = JSON.parse(sessionStorage.getItem('currentAccount'));
     if (!account) {
         showNotification('No account selected', true);
         return;
+    }
+
+    // Get the current card wrapper
+    const cardWrapper = document.querySelector('.card-wrapper');
+    if (!cardWrapper) return;
+
+    // Show loading overlay
+    showLoadingOverlay('Reopening account...');
+
+    // Immediately update UI
+    const statusElement = cardWrapper.querySelector('.account-value:last-child');
+    const actionsContainer = cardWrapper.querySelector('.account-actions');
+    
+    // Update status display immediately
+    if (statusElement) {
+        statusElement.textContent = 'Active';
+        statusElement.className = 'account-value active';
+    }
+
+    // Update actions immediately
+    if (actionsContainer) {
+        actionsContainer.innerHTML = `
+            <button class="action-btn deposit" disabled>
+                <i class="fas fa-plus"></i> Deposit
+            </button>
+            <button class="action-btn withdraw" disabled>
+                <i class="fas fa-minus"></i> Withdraw
+            </button>
+            <button class="action-btn close" disabled>
+                <i class="fas fa-times"></i> Close Account
+            </button>
+        `;
     }
     
     try {
@@ -513,20 +699,68 @@ async function reopenAccount() {
         const data = await response.json();
 
         if (!response.ok) {
+            // Revert UI changes if the API call fails
+            if (statusElement) {
+                statusElement.textContent = 'Closed';
+                statusElement.className = 'account-value closed';
+            }
+            if (actionsContainer) {
+                actionsContainer.innerHTML = `
+                    <button class="action-btn reopen">
+                        <i class="fas fa-redo"></i> Reopen Account
+                    </button>
+                `;
+                // Reattach event listener to reopen button
+                const reopenBtn = actionsContainer.querySelector('.reopen');
+                if (reopenBtn) {
+                    reopenBtn.onclick = (e) => reopenAccount(e);
+                }
+            }
             throw new Error(data.error || 'Failed to reopen account');
         }
 
         // Update account status in memory
         account.status = 'active';
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        
+        // Update search history
+        const historyIndex = searchHistory.findIndex(item => item.accountNumber === account.account_number);
+        if (historyIndex !== -1) {
+            searchHistory[historyIndex].status = 'active';
+            localStorage.setItem(`searchHistory_${tellerInfo.teller_number}`, JSON.stringify(searchHistory));
+            updateSearchHistory();
+        }
 
-        // Refresh the account display
-        await updateAccountBalance();
+        // Re-enable all buttons and add their event listeners
+        if (actionsContainer) {
+            const buttons = actionsContainer.getElementsByTagName('button');
+            Array.from(buttons).forEach(button => {
+                button.disabled = false;
+                if (button.classList.contains('deposit')) {
+                    button.onclick = (e) => {
+                        e.stopPropagation();
+                        sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: account.balance}));
+                        showDepositForm();
+                    };
+                } else if (button.classList.contains('withdraw')) {
+                    button.onclick = (e) => {
+                        e.stopPropagation();
+                        sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: account.balance}));
+                        showWithdrawForm();
+                    };
+                } else if (button.classList.contains('close')) {
+                    button.onclick = (e) => closeAccount(e);
+                }
+            });
+        }
+
         showNotification('Account reopened successfully');
 
     } catch (error) {
         console.error('Reopen account error:', error);
         showNotification(error.message, true);
+    } finally {
+        hideLoadingOverlay();
     }
 }
 
