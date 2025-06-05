@@ -29,9 +29,10 @@ function formatCurrency(amount) {
 }
 
 // Show/hide loading overlay
-function toggleLoading(show) {
+function toggleLoading(show, amount = 0) {
     const overlay = document.getElementById('loading_overlay');
     if (show) {
+        document.getElementById('processing_amount').textContent = formatCurrency(amount);
         overlay.classList.add('active');
     } else {
         overlay.classList.remove('active');
@@ -130,7 +131,7 @@ async function submitWithdrawal() {
     
     // Disable submit button and show loading
     submitButton.disabled = true;
-    toggleLoading(true);
+    toggleLoading(true, amount);
     
     try {
         const response = await fetch('/project-errawrs/src/api/teller/withdraw.php', {
