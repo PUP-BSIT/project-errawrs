@@ -1,0 +1,79 @@
+[Your Institution's Letterhead]
+[Institution Address]
+[Date]
+
+Alex Alabiso
+Semaphore
+via email
+
+Subject: Request for Semaphore API Access - Academic Project
+
+Dear Mr. Alabiso,
+
+I am writing this letter to formally request access to Semaphore's SMS API platform for our capstone project at [Your Institution Name]. Our project, "StackOverCash: A Secure Online Banking System," aims to develop a comprehensive banking solution with enhanced security features through SMS notifications.
+
+1. Purpose:
+Our capstone project implements a secure banking system that requires SMS verification for critical transactions. The Semaphore platform will be used to:
+- Send One-Time Passwords (OTP) for transaction verification
+- Deliver account security notifications
+- Send transaction confirmations to users
+- Alert users about important account activities
+
+2. Scope:
+- Expected number of SMS recipients: 20-30 test users
+- Message types: Transactional (OTP, notifications, alerts)
+- Testing environment: Controlled academic setting
+- Geographic reach: Local (Philippines only)
+
+3. Project Duration:
+- Start Date: [Start Date]
+- Expected Completion: [End Date]
+- Total Duration: [X] months
+
+4. Sender Name Request:
+Requested Sender Name: "StackOverCash"
+Relation to Project: This is the official name of our banking system project
+
+Project Team Members:
+1. [Your Full Name]
+   Role: Team Leader
+   Signature: _____________
+
+2. [Team Member 2 Full Name]
+   Role: [Role]
+   Signature: _____________
+
+3. [Team Member 3 Full Name]
+   Role: [Role]
+   Signature: _____________
+
+[Add more team members as needed]
+
+Faculty Advisor:
+[Professor's Full Name]
+[Designation/Position]
+Department of [Department Name]
+Signature: _____________
+
+Institution Details:
+[Complete Institution Name]
+[Complete Institution Address]
+[Contact Information]
+
+We understand the responsibility that comes with using your platform and commit to adhering to all guidelines and best practices. We will ensure that all messages sent through the platform will be for legitimate testing purposes only.
+
+Thank you for considering our request. We look forward to your positive response.
+
+Sincerely,
+
+[Your Full Name]
+Team Leader
+[Contact Number]
+[Email Address]
+
+Endorsed by:
+
+________________________
+[Department Head/Dean Name]
+[Position]
+[Department/College Name] 
