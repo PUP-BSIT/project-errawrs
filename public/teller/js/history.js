@@ -10,6 +10,8 @@ let currentPage = 1;
 let itemsPerPage = 5;
 let totalItems = 0;
 let totalPages = 0;
+let lastFetchTime = null;
+const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 // Table data storage
 let tableData = [];
@@ -28,43 +30,75 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    await fetchSearchHistory();
+    await fetchTransactionHistory();
     updateTableDisplay();
     updatePaginationDisplay();
+    setupAutoRefresh();
 }
 
-// Fetch search history from the server
-async function fetchSearchHistory() {
+// Setup auto-refresh functionality
+function setupAutoRefresh() {
+    setInterval(async () => {
+        const now = new Date().getTime();
+        if (lastFetchTime && (now - lastFetchTime) >= REFRESH_INTERVAL) {
+            await fetchTransactionHistory();
+            updateTableDisplay();
+            updatePaginationDisplay();
+        }
+    }, 60000); // Check every minute
+}
+
+// Fetch transaction history from the server
+async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch search history");
+            throw new Error(data.error || "Failed to fetch transaction history");
         }
 
-        if (data.success && data.history) {
-            tableData = data.history.map(item => ({
-                id: item.account_number, // Using account number as ID
-                date: new Date(item.timestamp),
+        if (data.success && data.transactions) {
+            tableData = data.transactions.map(item => ({
+                id: item.account_number,
+                date: new Date(item.date),
+                time: item.time,
                 account_number: item.account_number,
                 account_name: item.account_name,
-                timestamp: item.timestamp,
-                amount: item.amount
+                amount: item.amount,
+                card_type: item.card_type,
+                action: item.action,
+                type: determineTransactionType(item.action, item.card_type)
             }));
             filteredData = [...tableData];
-            totalItems = filteredData.length;
-            totalPages = Math.ceil(totalItems / itemsPerPage);
+            totalItems = data.pagination.total_records;
+            totalPages = data.pagination.total_pages;
+            lastFetchTime = new Date().getTime();
         } else {
             tableData = [];
             filteredData = [];
             totalItems = 0;
             totalPages = 0;
-            showNotification("No search history found", "info");
+            showNotification("No transaction history found", "info");
         }
     } catch (error) {
-        console.error("Error fetching search history:", error);
-        showNotification(error.message || "Error fetching search history", "error");
+        console.error("Error fetching transaction history:", error);
+        showNotification(error.message || "Error fetching transaction history", "error");
+    }
+}
+
+// Helper function to determine transaction type for icon and styling
+function determineTransactionType(action, cardType) {
+    if (action.toLowerCase().includes('deposit')) {
+        return 'deposit';
+    } else if (action.toLowerCase().includes('withdraw')) {
+        return 'withdraw';
+    } else if (action.toLowerCase().includes('closed')) {
+        return 'close';
+    } else if (action.toLowerCase().includes('reopened')) {
+        return 'reopen';
+    } else {
+        return cardType?.toLowerCase() || 'unknown';
     }
 }
 
@@ -223,7 +257,7 @@ function createTableRow(item) {
 
     const timeCell = document.createElement("div");
     timeCell.className = "table-cell time";
-    timeCell.textContent = formatTime(item.date);
+    timeCell.textContent = item.time || formatTime(item.date);
 
     const accountNumberCell = document.createElement("div");
     accountNumberCell.className = "table-cell";
@@ -240,8 +274,8 @@ function createTableRow(item) {
     const detailsCell = document.createElement("div");
     detailsCell.className = "table-cell details-cell";
     
-    // Set the details content based on transaction type
-    const detailsContent = getTransactionDetails(item.type);
+    // Set the details content based on transaction type and card type
+    const detailsContent = getTransactionDetails(item.type, item.card_type, item.action);
     detailsCell.innerHTML = `
         <i class="${detailsContent.icon}"></i>
         <span class="${detailsContent.class}">${detailsContent.text}</span>
@@ -258,36 +292,38 @@ function createTableRow(item) {
 }
 
 // Helper function to get transaction details
-function getTransactionDetails(type) {
+function getTransactionDetails(type, cardType, action) {
+    // First check for specific transaction types
     switch (type?.toLowerCase()) {
         case 'deposit':
             return {
                 icon: 'fas fa-plus-circle',
-                text: 'Deposit',
+                text: action || 'Deposit',
                 class: 'details-deposit'
             };
         case 'withdraw':
             return {
                 icon: 'fas fa-minus-circle',
-                text: 'Withdraw',
+                text: action || 'Withdrawal',
                 class: 'details-withdraw'
             };
         case 'close':
             return {
                 icon: 'fas fa-times-circle',
-                text: 'Close Account',
+                text: action || 'Close Account',
                 class: 'details-close'
             };
         case 'reopen':
             return {
                 icon: 'fas fa-redo-alt',
-                text: 'Reopen Account',
+                text: action || 'Reopen Account',
                 class: 'details-reopen'
             };
         default:
+            // If no specific transaction type, show card type
             return {
-                icon: 'fas fa-info-circle',
-                text: 'View Details',
+                icon: 'fas fa-credit-card',
+                text: cardType ? `${cardType} Account` : action || 'View Details',
                 class: ''
             };
     }
