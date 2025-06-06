@@ -318,8 +318,11 @@ body {
     width: 100%;
     padding: 25px;
     margin: 10px auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     max-width: 1000px;
+    max-height: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .search-history h2 {
@@ -360,9 +363,9 @@ body {
 }
 
 .history-body {
-    max-height: calc(65px * 5); /* Height for 5 items */
-    max-height: 400px;
     overflow-y: auto;
+    max-height: 325px; /* Height for 5 items */
+    padding-right: 10px;
 }
 
 .history-row {
@@ -398,10 +401,8 @@ body {
 }
 
 .history-value.status.active {
-.history-value.status {
     color: var(--color-mint);
     font-weight: 600;
-}
 }
 
 .history-value.status.closed {
@@ -432,9 +433,10 @@ body {
 .history-body {
     scrollbar-width: thin;
     scrollbar-color: var(--color-mint) #f1f1f1;
+}
+
 .history-value.status.inactive {
     color: var(--color-red);
-}
 }
 
 /* Account Details */
@@ -472,16 +474,8 @@ body {
 .account-actions {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px;
-    width: 250px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 15px;
-    opacity: 0;
     padding: 25px;
-    width: 300px;
+    width: 250px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     flex-direction: column;
@@ -489,7 +483,6 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.3s ease;
-    margin-top: 0;
 }
 
 .account-actions.visible {
@@ -515,9 +508,6 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.account-actions.visible {
-    display: flex;
-    opacity: 1;
 .action-btn i {
     font-size: 20px;
 }
@@ -675,7 +665,7 @@ body {
 /* Account Container */
 .account-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto 20px;
     display: flex;
     flex-direction: column;
@@ -686,30 +676,23 @@ body {
 .card-wrapper {
     width: 100%;
     display: flex;
-    gap: 15px;
-    align-items: stretch;
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
     gap: 20px;
     transition: all 0.3s ease;
+    justify-content: center;
 }
 
 /* Account Card */
 .account-card {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px 25px;
     padding: 30px;
-    flex: 1;
-    width: 700px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     flex: 1;
-    max-width: 800px;
+    max-width: 650px;
 }
 
 .account-card.visible {
@@ -719,36 +702,23 @@ body {
 /* Account Info Layout */
 .account-info {
     display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 15px;
-}
-
-.account-card.expanded {
-    width: 700px;
-}
-
-.account-info {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 25px;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
     align-items: center;
 }
 
+/* Account Label */
 .account-label {
     color: var(--color-gray);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
-    color: var(--color-primary-black);
-    font-weight: 700;
-    font-size: 20px;
 }
 
+/* Account Value */
 .account-value {
     color: var(--color-primary-black);
-    font-size: 22px;
-    font-weight: 600;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .account-value.active {
@@ -756,7 +726,6 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    gap: 8px;
 }
 
 .account-value.closed {
@@ -809,21 +778,6 @@ body {
 .toggle-icon i {
     font-size: 14px;
     transition: transform 0.3s ease;
-}
-
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--color-white);
-    border: 2px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: absolute;
-    right: 30px;
-    top: 30px;
 }
 
 .toggle-icon:hover {
