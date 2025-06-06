@@ -785,6 +785,10 @@ body {
     transition: all 0.2s ease;
 }
 
+.more-options i {
+    transition: transform 0.3s ease;
+}
+
 .more-options:hover {
     background-color: #f5f5f5;
 }
@@ -793,7 +797,7 @@ body {
 .card-actions {
     display: none;
     position: absolute;
-    top: 50px;
+    top: 60px;
     right: 20px;
     background: white;
     border-radius: 12px;
@@ -801,10 +805,15 @@ body {
     overflow: hidden;
     z-index: 1;
     min-width: 200px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .card-actions.visible {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .card-action-btn {

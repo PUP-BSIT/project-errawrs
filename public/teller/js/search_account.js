@@ -17,7 +17,7 @@ const historyBody = document.getElementById("history_body");
 // Initialize search history
 let searchHistory = [];
 
-// Load search history from API
+// Load search history
 async function loadSearchHistory() {
     try {
         const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
@@ -25,7 +25,7 @@ async function loadSearchHistory() {
 
         if (data.success && data.history) {
             searchHistory = data.history;
-            updateSearchHistory();
+            // Don't automatically update UI here
         }
     } catch (error) {
         console.error("Error loading search history:", error);
@@ -128,7 +128,7 @@ function updateAccountDetails(accounts) {
                 </div>
             </div>
             <div class="more-options">
-                <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-chevron-right"></i>
             </div>
             <div class="card-actions">
                 ${account.status === "active" ? `
@@ -159,6 +159,9 @@ function updateAccountDetails(accounts) {
         
         moreOptions.addEventListener('click', (e) => {
             e.stopPropagation();
+            // Toggle the rotation of the chevron icon
+            const chevron = moreOptions.querySelector('.fa-chevron-right');
+            chevron.style.transform = chevron.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
             cardActions.classList.toggle('visible');
         });
 
@@ -166,6 +169,8 @@ function updateAccountDetails(accounts) {
         document.addEventListener('click', (e) => {
             if (!cardActions.contains(e.target) && !moreOptions.contains(e.target)) {
                 cardActions.classList.remove('visible');
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = 'rotate(0deg)';
             }
         });
 
@@ -175,6 +180,8 @@ function updateAccountDetails(accounts) {
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
                 cardActions.classList.remove('visible');
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = 'rotate(0deg)';
                 
                 if (button.classList.contains('deposit')) {
                     sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
@@ -227,16 +234,16 @@ function showWithdrawForm() {
 function addToSearchHistory(account) {
     // Check if the account already exists in search history
     const existingIndex = searchHistory.findIndex(
-        (item) => item.accountNumber === account.account_number
+        (item) => item.account_number === account.account_number
     );
 
     // Create new history entry
     const newEntry = {
-        name: account.user.name,
-        accountNumber: account.account_number,
+        account_name: account.user.name,
+        account_number: account.account_number,
         balance: account.balance,
-        status: account.status,
-        timestamp: new Date().toISOString()
+        account_type: account.account_type || 'savings',
+        status: account.status
     };
 
     if (existingIndex !== -1) {
@@ -252,14 +259,8 @@ function addToSearchHistory(account) {
         searchHistory.pop();
     }
 
-    // Save to localStorage with teller-specific key
-    localStorage.setItem(
-        `searchHistory_${tellerInfo.teller_number}`,
-        JSON.stringify(searchHistory)
-    );
-
-    // Don't update history UI while searching
-    // updateSearchHistory();
+    // Update the UI immediately
+    updateSearchHistory();
 }
 
 // Update search history UI
@@ -349,6 +350,11 @@ async function searchAccount() {
             );
 
             if (matchingAccounts.length > 0) {
+                // Add each matching account to search history
+                matchingAccounts.forEach(account => {
+                    addToSearchHistory(account);
+                });
+                
                 // Keep search history hidden and show results
                 searchHistoryContainer.classList.add("hidden");
                 searchHistoryContainer.style.display = "none";
@@ -585,7 +591,7 @@ async function closeAccount() {
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(
-            (item) => item.accountNumber === account.account_number
+            (item) => item.account_number === account.account_number
         );
         if (historyIndex !== -1) {
             searchHistory[historyIndex].status = "closed";
@@ -641,7 +647,7 @@ async function reopenAccount() {
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(
-            (item) => item.accountNumber === account.account_number
+            (item) => item.account_number === account.account_number
         );
         if (historyIndex !== -1) {
             searchHistory[historyIndex].status = "active";
@@ -689,7 +695,7 @@ async function updateAccountBalance() {
 
             // Update search history with new balance
             const historyIndex = searchHistory.findIndex(
-                (item) => item.accountNumber === account.account_number
+                (item) => item.account_number === account.account_number
             );
             if (historyIndex !== -1) {
                 searchHistory[historyIndex].balance = account.balance;
@@ -720,12 +726,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const contentArea = document.querySelector(".content-area");
     
     // Load search history initially
-    loadSearchHistory();
-
-    // Show search history initially if we have entries and no search term
-    if (searchHistory.length > 0 && !searchInput.value.trim()) {
-        updateSearchHistory();
-    }
+    loadSearchHistory().then(() => {
+        // Only show search history if we have entries and no search term
+        if (searchHistory.length > 0 && !searchInput.value.trim()) {
+            updateSearchHistory();
+        }
+    });
 
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
