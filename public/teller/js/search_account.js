@@ -83,10 +83,9 @@ function updateAccountDetails(accounts) {
         // Format the balance properly with peso sign
         const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
 
-        // Determine account type display and icon
+        // Determine account type display
         const accountType = account.account_type ? account.account_type.toLowerCase() : 'savings';
         const displayAccountType = accountType === 'credit' ? 'Credit' : 'Savings';
-        const accountTypeIcon = accountType === 'credit' ? 'fa-credit-card' : 'fa-piggy-bank';
 
         // Status indicator HTML
         const statusIndicator = account.status === "active"
@@ -103,20 +102,25 @@ function updateAccountDetails(accounts) {
             <div class="account-info">
                 ${statusIndicator}
                 
-                <div class="account-label">Account Number</div>
-                <div class="account-value">${account.account_number}</div>
-                
-                <div class="account-label">Account Holder Name</div>
-                <div class="account-value">${account.user.name}</div>
-                
-                <div class="account-label">Account Type</div>
-                <div class="account-value">
-                    <i class="fas ${accountTypeIcon} account-type-icon"></i>
-                    ${displayAccountType}
+                <div class="account-field">
+                    <div class="account-label">Account Number</div>
+                    <div class="account-value">${account.account_number}</div>
                 </div>
                 
-                <div class="account-label">Current Balance</div>
-                <div class="account-value">${formatCurrency(balance)}</div>
+                <div class="account-field">
+                    <div class="account-label">Account Holder Name</div>
+                    <div class="account-value">${account.user.name}</div>
+                </div>
+                
+                <div class="account-field">
+                    <div class="account-label">Account Type</div>
+                    <div class="account-value">${displayAccountType}</div>
+                </div>
+                
+                <div class="account-field">
+                    <div class="account-label">Current Balance</div>
+                    <div class="account-value balance">${formatCurrency(balance)}</div>
+                </div>
             </div>
             <div class="toggle-icon">
                 <i class="fas fa-chevron-right"></i>

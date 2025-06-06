@@ -652,7 +652,7 @@ body {
 .account-card {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 30px;
+    padding: 35px; /* Increased padding */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
@@ -669,40 +669,60 @@ body {
 /* Account Info Layout */
 .account-info {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 20px;
-    align-items: center;
+    grid-template-columns: repeat(2, 180px);
+    gap: 30px;
     position: relative;
-    padding-top: 40px; /* Add space for status indicator */
+    padding-top: 50px; /* Increased space for larger status indicator */
+}
+
+/* Account Field Container */
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* Account Label */
 .account-label {
     color: var(--color-primary-black);
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 400;
 }
 
-/* Account Status Indicator */
+/* Account Value */
+.account-value {
+    color: var(--color-primary-black);
+    font-size: 30px;
+    font-weight: 700;
+    padding-left: 4px;
+}
+
+/* Balance Value */
+.account-value.balance {
+    color: var(--color-mint);
+    font-size: 28px;
+}
+
+/* Status Indicator */
 .status-indicator {
     position: absolute;
     top: 0;
     left: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 16px;
+    gap: 12px;
+    font-size: 18px;
     font-weight: 600;
 }
 
 .status-indicator .status-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .status-indicator.active {
