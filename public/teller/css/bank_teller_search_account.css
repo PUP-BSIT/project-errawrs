@@ -199,7 +199,6 @@ body {
 .search-container {
     width: 100%;
     max-width: 1000px;
-    margin: 0 auto 20px;
     background: var(--color-white);
     padding: 15px 25px;
     border-radius: 20px;
@@ -221,7 +220,6 @@ body {
     align-items: center;
     border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
-    margin-bottom: 30px;
 }
 
 .search-box:focus-within {
@@ -316,15 +314,10 @@ body {
 .search-history {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px 25px;
-    margin: 0 auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 1000px;
-    display: flex;
-    flex-direction: column;
     padding: 25px;
-    margin: 30px auto;
+    margin: 10px auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     max-width: 1000px;
 }
@@ -335,8 +328,6 @@ body {
     color: var(--color-primary-black);
     margin-bottom: 20px;
     text-align: center;
-    position: sticky;
-    top: 0;
     background: var(--color-white);
     padding: 10px 0;
     z-index: 1;
