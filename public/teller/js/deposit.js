@@ -220,7 +220,6 @@ function backToAmount() {
 }
 
     }
-}
 
 // Finish transaction and return to search
 function finishTransaction() {

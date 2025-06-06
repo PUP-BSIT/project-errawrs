@@ -85,8 +85,6 @@ body {
     background-color: var(--color-mint);
 }
 
-}
-
 .step.active .step-number {
     background-color: var(--color-mint);
 }
@@ -274,8 +272,6 @@ input[type="number"]:focus {
     border-bottom: 1px solid #e0e0e0;
 }
 
-}
-
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -382,8 +378,6 @@ input[type="number"]:focus {
     color: var(--color-mint);
     font-weight: 700;
     font-size: 18px;
-}
-
 }
 
 .receipt-row:last-child {

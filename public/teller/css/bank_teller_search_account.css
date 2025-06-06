@@ -411,6 +411,7 @@ body {
     color: var(--color-mint);
     font-weight: 600;
 }
+}
 
 .history-value.status.closed {
     color: var(--color-red);
@@ -442,6 +443,7 @@ body {
     scrollbar-color: var(--color-mint) #f1f1f1;
 .history-value.status.inactive {
     color: var(--color-red);
+}
 }
 
 /* Account Details */
