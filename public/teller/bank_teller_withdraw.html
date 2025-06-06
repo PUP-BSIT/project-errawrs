@@ -88,59 +88,6 @@
                     <div class="detail-label">New Balance:</div>
                     <div class="detail-value" id="new_balance"></div>
                 </div>
-                <div class="detail-row highlight amount">
-                    <div class="detail-label">Withdrawal Amount:</div>
-                    <div class="detail-value" id="confirm_amount"></div>
-                </div>
-                <div class="detail-row highlight balance">
-                    <div class="detail-label">New Balance:</div>
-                    <div class="detail-value" id="new_balance"></div>
-                </div>
-            </div>
-            <div class="button-group">
-                <button class="btn cancel" onclick="backToAmount()">Back</button>
-                <button class="btn confirm" onclick="submitWithdrawal()">Submit</button>
-            </div>
-        </div>
-
-        <!-- Step 3: Receipt -->
-        <div class="transaction-card hidden" id="receipt">
-            <div class="receipt-header">
-                <i class="fas fa-check-circle success-icon"></i>
-                <h1>Withdrawal Successful</h1>
-            </div>
-            <div class="receipt-details">
-                <div class="receipt-row">
-                    <div class="receipt-label">Transaction ID:</div>
-                    <div class="receipt-value" id="transaction_id"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Account Number:</div>
-                    <div class="receipt-value" id="receipt_account_number"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Account Name:</div>
-                    <div class="receipt-value" id="receipt_account_name"></div>
-                </div>
-                <div class="receipt-row amount highlight">
-                    <div class="receipt-label">Withdrawal Amount:</div>
-                    <div class="receipt-value" id="receipt_amount"></div>
-                </div>
-                <div class="receipt-row balance highlight">
-                    <div class="receipt-label">New Balance:</div>
-                    <div class="receipt-value" id="receipt_new_balance"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Date & Time:</div>
-                    <div class="receipt-value" id="transaction_date"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Teller:</div>
-                    <div class="receipt-value" id="teller_number"></div>
-                </div>
-            </div>
-            <div class="button-group">
-                <button class="btn done" onclick="finishTransaction()">Done</button>
             </div>
             <div class="button-group">
                 <button class="btn cancel" onclick="backToAmount()">Back</button>
@@ -202,7 +149,6 @@
             </div>
         </div>
     </div>
-    <div id="notification_container" class="notification-container"></div>
     <script src="./js/withdraw.js"></script>
 </body>
 </html> 

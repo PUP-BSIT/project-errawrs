@@ -160,8 +160,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-y: auto;
+    overflow: hidden;
     position: relative;
 }
 
@@ -199,12 +198,12 @@ body {
 .search-container {
     width: 100%;
     max-width: 1000px;
-    margin: 0 auto 20px;
     background: var(--color-white);
     padding: 15px 25px;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     margin: 0 auto 30px;
+    position: relative;
 }
 
 .search-box {
@@ -221,7 +220,6 @@ body {
     align-items: center;
     border: 1px solid #e0e0e0;
     transition: all 0.3s ease;
-    margin-bottom: 30px;
 }
 
 .search-box:focus-within {
@@ -264,69 +262,34 @@ body {
     flex-direction: column;
     margin-top: 20px;
     align-items: center;
-    min-height: min-content;
     width: 100%;
+    overflow: hidden; /* Default to hidden */
+    padding-right: 5px;
 }
 
-/* Scrollbar Styles for Main Content */
-.main-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.main-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
-}
-
-/* Firefox scrollbar for main content */
-.main-content {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-mint) #f1f1f1;
-}
-
-/* Content Area Scrollbar */
-.content-area::-webkit-scrollbar {
-    width: 8px;
-}
-
-.content-area::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.content-area::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.content-area::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
+/* Only show scrollbar when there's search content */
+.content-area.has-search-results {
+    overflow-y: auto;
 }
 
 /* Search History */
 .search-history {
+    display: none;
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px 25px;
-    margin: 0 auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
+    padding: 10px 25px;
+    margin: 10px auto;
     max-width: 1000px;
-    display: flex;
-    flex-direction: column;
-    padding: 25px;
-    margin: 30px auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    max-width: 1000px;
+}
+
+.search-history.visible {
+    display: block;
+}
+
+.search-history.hidden {
+    display: none !important;
 }
 
 .search-history h2 {
@@ -335,8 +298,6 @@ body {
     color: var(--color-primary-black);
     margin-bottom: 20px;
     text-align: center;
-    position: sticky;
-    top: 0;
     background: var(--color-white);
     padding: 10px 0;
     z-index: 1;
@@ -369,9 +330,9 @@ body {
 }
 
 .history-body {
-    max-height: calc(65px * 5); /* Height for 5 items */
-    max-height: 400px;
     overflow-y: auto;
+    max-height: 325px; /* Height for 5 items */
+    padding-right: 5px; /* Add slight padding for scrollbar */
 }
 
 .history-row {
@@ -407,10 +368,8 @@ body {
 }
 
 .history-value.status.active {
-.history-value.status {
     color: var(--color-mint);
     font-weight: 600;
-}
 }
 
 .history-value.status.closed {
@@ -418,32 +377,8 @@ body {
     font-weight: 600;
 }
 
-/* Scrollbar Styles */
-.history-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-.history-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.history-body::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.history-body::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
-}
-
-/* Firefox scrollbar */
-.history-body {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-mint) #f1f1f1;
 .history-value.status.inactive {
     color: var(--color-red);
-}
 }
 
 /* Account Details */
@@ -481,16 +416,8 @@ body {
 .account-actions {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px;
-    width: 250px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 15px;
-    opacity: 0;
     padding: 25px;
-    width: 300px;
+    width: 250px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     flex-direction: column;
@@ -498,7 +425,21 @@ body {
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.3s ease;
-    margin-top: 0;
+}
+
+/* Center reopen button */
+.account-actions-center {
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.account-actions-center.visible {
+    display: flex;
+}
+
+.account-actions-center .action-btn.reopen {
+    margin: auto;
 }
 
 .account-actions.visible {
@@ -524,9 +465,6 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.account-actions.visible {
-    display: flex;
-    opacity: 1;
 .action-btn i {
     font-size: 20px;
 }
@@ -544,6 +482,11 @@ body {
 .action-btn.close {
     background: var(--color-red);
     color: var(--color-white);
+}
+
+.action-btn.reopen {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
 }
 
 .action-btn:hover {
@@ -684,7 +627,7 @@ body {
 /* Account Container */
 .account-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 750px;
     margin: 0 auto 20px;
     display: flex;
     flex-direction: column;
@@ -695,30 +638,23 @@ body {
 .card-wrapper {
     width: 100%;
     display: flex;
-    gap: 15px;
-    align-items: stretch;
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
     gap: 20px;
     transition: all 0.3s ease;
+    justify-content: center;
 }
 
 /* Account Card */
 .account-card {
     background: var(--color-white);
     border-radius: 15px;
-    padding: 20px 25px;
     padding: 30px;
-    flex: 1;
-    width: 700px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     flex: 1;
-    max-width: 800px;
+    max-width: 650px;
 }
 
 .account-card.visible {
@@ -728,36 +664,23 @@ body {
 /* Account Info Layout */
 .account-info {
     display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 15px;
-}
-
-.account-card.expanded {
-    width: 700px;
-}
-
-.account-info {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 25px;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
     align-items: center;
 }
 
+/* Account Label */
 .account-label {
     color: var(--color-gray);
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
-    color: var(--color-primary-black);
-    font-weight: 700;
-    font-size: 20px;
 }
 
+/* Account Value */
 .account-value {
     color: var(--color-primary-black);
-    font-size: 22px;
-    font-weight: 600;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .account-value.active {
@@ -765,7 +688,6 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    gap: 8px;
 }
 
 .account-value.closed {
@@ -818,21 +740,6 @@ body {
 .toggle-icon i {
     font-size: 14px;
     transition: transform 0.3s ease;
-}
-
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--color-white);
-    border: 2px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: absolute;
-    right: 30px;
-    top: 30px;
 }
 
 .toggle-icon:hover {
@@ -962,26 +869,6 @@ body {
     gap: 8px;
 }
 
-/* History Row Styles */
-.history-row {
-    display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
-    gap: 20px;
-    padding: 18px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
-    align-items: center;
-}
-
-.history-row:last-child {
-    border-bottom: none;
-}
-
-.history-row:hover {
-    background: var(--color-bg-gradient-start);
-}
-
 /* Notification Container */
 .notification-container {
     position: fixed;
@@ -1016,4 +903,108 @@ body {
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+/* Loading Indicator */
+#loading_indicator {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Loading Overlay */
+#loading_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.overlay-content {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.overlay-message {
+    margin-top: 15px;
+    color: var(--color-primary-black);
+    font-weight: 500;
+    font-size: 16px;
+}
+
+#loading_overlay .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--color-mint);
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Search Container Position */
+.search-container {
+    position: relative;
+}
+
+/* Search History Display States */
+.search-history.hidden {
+    display: none !important;
+}
+
+.search-history.visible {
+    display: block;
+}
+
+/* Transaction Modal */
+.transaction-modal.visible {
+    display: flex;
+}
+
+/* Card Height Matching */
+.account-actions.visible {
+    height: 100%;
+}
+
+/* Loading States */
+.loading-indicator-hidden {
+    display: none;
+}
+
+.loading-overlay-visible {
+    display: flex !important;
 }

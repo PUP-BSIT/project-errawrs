@@ -48,8 +48,9 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Always hide search history when displaying account details
+    // Always ensure search history is hidden when showing account details
     searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
 
     accounts.forEach((account) => {
         // Create a new card wrapper
@@ -60,7 +61,7 @@ function updateAccountDetails(accounts) {
         newCard.className = "account-card visible";
 
         // Format the balance properly with peso sign
-        const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ""));
+        const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
 
         newCard.innerHTML = `
             <div class="account-info">
@@ -77,9 +78,7 @@ function updateAccountDetails(accounts) {
                 <div class="account-value">${formatCurrency(balance)}</div>
                 
                 <div class="account-label">Account Status</div>
-                <div class="account-value ${
-                    account.status === "active" ? "active" : "closed"
-                }">
+                <div class="account-value ${account.status === "active" ? "active" : "closed"}">
                     ${account.status === "active" ? "Active" : "Closed"}
                 </div>
             </div>
@@ -90,25 +89,26 @@ function updateAccountDetails(accounts) {
 
         // Create actions container for this card
         const actionsContainer = document.createElement("div");
-        actionsContainer.className = "account-actions";
-        actionsContainer.innerHTML =
-            account.status === "active"
-                ? `
-            <button class="action-btn deposit">
-                <i class="fas fa-plus"></i> Deposit
-            </button>
-            <button class="action-btn withdraw">
-                <i class="fas fa-minus"></i> Withdraw
-            </button>
-            <button class="action-btn close">
-                <i class="fas fa-times"></i> Close Account
-            </button>
-        `
-                : `
-            <button class="action-btn reopen">
-                <i class="fas fa-redo"></i> Reopen Account
-            </button>
-        `;
+        actionsContainer.className = account.status === "active" 
+            ? "account-actions"
+            : "account-actions account-actions-center";
+        actionsContainer.innerHTML = account.status === "active" 
+            ? `
+                <button class="action-btn deposit">
+                    <i class="fas fa-plus"></i> Deposit
+                </button>
+                <button class="action-btn withdraw">
+                    <i class="fas fa-minus"></i> Withdraw
+                </button>
+                <button class="action-btn close">
+                    <i class="fas fa-times"></i> Close Account
+                </button>
+            `
+            : `
+                <button class="action-btn reopen">
+                    <i class="fas fa-redo"></i> Reopen Account
+                </button>
+            `;
 
         // Add event listeners to buttons
         const buttons = actionsContainer.getElementsByTagName("button");
@@ -116,37 +116,25 @@ function updateAccountDetails(accounts) {
             if (button.classList.contains("deposit")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     showDepositForm();
                 };
             } else if (button.classList.contains("withdraw")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     showWithdrawForm();
                 };
             } else if (button.classList.contains("close")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     closeAccount();
                 };
             } else if (button.classList.contains("reopen")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     reopenAccount();
                 };
             }
@@ -159,12 +147,6 @@ function updateAccountDetails(accounts) {
             const icon = newCard.querySelector(".toggle-icon i");
             icon.classList.toggle("fa-chevron-right");
             icon.classList.toggle("fa-chevron-left");
-
-            // Match action container height to card height
-            if (actionsContainer.classList.contains("visible")) {
-                const cardHeight = newCard.offsetHeight;
-                actionsContainer.style.height = `${cardHeight}px`;
-            }
         });
 
         // Add card and actions to wrapper, then add wrapper to container
@@ -206,19 +188,27 @@ function addToSearchHistory(account) {
         (item) => item.accountNumber === account.account_number
     );
 
+    // Create new history entry
+    const newEntry = {
+        name: account.user.name,
+        accountNumber: account.account_number,
+        balance: account.balance,
+        status: account.status,
+        timestamp: new Date().toISOString()
+    };
+
     if (existingIndex !== -1) {
         // Remove the existing entry
         searchHistory.splice(existingIndex, 1);
     }
 
     // Add to the beginning of the array
-    searchHistory.unshift({
-        name: account.user.name,
-        accountNumber: account.account_number,
-        balance: account.balance,
-        status: account.status,
-        timestamp: new Date().toISOString(), // Add timestamp for sorting
-    });
+    searchHistory.unshift(newEntry);
+
+    // Keep only the last 10 entries
+    if (searchHistory.length > 10) {
+        searchHistory.pop();
+    }
 
     // Save to localStorage with teller-specific key
     localStorage.setItem(
@@ -226,64 +216,64 @@ function addToSearchHistory(account) {
         JSON.stringify(searchHistory)
     );
 
-    // Update history UI
-    updateSearchHistory();
+    // Don't update history UI while searching
+    // updateSearchHistory();
 }
 
 // Update search history UI
 function updateSearchHistory() {
     historyBody.innerHTML = "";
+    
+    if (searchHistory.length === 0) {
+        searchHistoryContainer.classList.add("hidden");
+        return;
+    }
+
     searchHistory.forEach((item, index) => {
         const row = document.createElement("div");
         row.className = "history-row";
         row.onclick = () => selectFromHistory(item.accountNumber);
 
-        const balance = parseFloat(
-            item.balance.toString().replace(/[^0-9.-]+/g, "")
-        );
+        const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ""));
 
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
             <div class="history-value">${item.name}</div>
             <div class="history-value">${item.accountNumber}</div>
             <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value status ${
-                item.status === "active" ? "active" : "closed"
-            }">${
-            item.status.charAt(0).toUpperCase() + item.status.slice(1)
-        }</div>
+            <div class="history-value status ${item.status === "active" ? "active" : "closed"}">
+                ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            </div>
         `;
         historyBody.appendChild(row);
     });
 
-    // Show/hide search history container
-    searchHistoryContainer.classList.toggle(
-        "visible",
-        searchHistory.length > 0
-    );
-    searchHistoryContainer.classList.toggle(
-        "hidden",
-        searchHistory.length === 0
-    );
+    // Show search history container if we have entries
+    searchHistoryContainer.classList.remove("hidden");
+    searchHistoryContainer.style.display = "block";
 }
 
 // Search account - now runs instantly without delay
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
+    const contentArea = document.querySelector(".content-area");
 
-    // Always hide search history when there's a search term
-    if (searchTerm) {
-        searchHistoryContainer.classList.add("hidden");
-        searchHistoryContainer.style.display = "none";
-    }
+    // Always ensure search history is hidden when searching
+    searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
 
-    // Clear account container and show search history when search is empty
+    // Clear account container when search is empty
     if (!searchTerm) {
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
-        searchHistoryContainer.classList.remove("hidden");
-        searchHistoryContainer.style.display = "block";
+        // Only show search history when search is empty
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
         hideLoadingIndicator();
+        // Remove scrollbar when no search
+        contentArea.classList.remove("has-search-results");
         return;
     }
 
@@ -306,29 +296,33 @@ async function searchAccount() {
         }
 
         if (data.success && data.accounts && data.accounts.length > 0) {
-            // Filter accounts that start with the search term
+            // Filter accounts that match the search term
             const matchingAccounts = data.accounts.filter((account) =>
-                account.account_number
-                    .toLowerCase()
-                    .startsWith(searchTerm.toLowerCase())
+                account.account_number.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
             if (matchingAccounts.length > 0) {
-                // Ensure search history is hidden before showing results
+                // Keep search history hidden and show results
                 searchHistoryContainer.classList.add("hidden");
                 searchHistoryContainer.style.display = "none";
+                
+                // Show scrollbar when we have search results
+                contentArea.classList.add("has-search-results");
+                // Update UI with matching accounts
                 updateAccountDetails(matchingAccounts);
             } else {
-                const accountContainer =
-                    document.querySelector(".account-container");
+                const accountContainer = document.querySelector(".account-container");
                 accountContainer.innerHTML = "";
                 showNotification("No matching accounts found", true);
+                // Remove scrollbar when no results
+                contentArea.classList.remove("has-search-results");
             }
         } else {
-            const accountContainer =
-                document.querySelector(".account-container");
+            const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
             showNotification("No accounts found", true);
+            // Remove scrollbar when no results
+            contentArea.classList.remove("has-search-results");
         }
     } catch (error) {
         console.error("Search error:", error);
@@ -336,6 +330,8 @@ async function searchAccount() {
         showNotification(error.message || "Error searching for account", true);
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
+        // Remove scrollbar on error
+        contentArea.classList.remove("has-search-results");
     }
 }
 
@@ -346,46 +342,10 @@ function showLoadingIndicator() {
     if (!loadingIndicator) {
         loadingIndicator = document.createElement("div");
         loadingIndicator.id = "loading_indicator";
-        loadingIndicator.innerHTML =
-            '<div class="spinner"></div><span>Searching...</span>';
-        loadingIndicator.style.cssText = `
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-top: none;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        `;
-
-        // Add spinner styles
-        const style = document.createElement("style");
-        style.textContent = `
-            .spinner {
-                width: 16px;
-                height: 16px;
-                border: 2px solid #f3f3f3;
-                border-top: 2px solid #007bff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-
+        loadingIndicator.innerHTML = '<div class="spinner"></div><span>Searching...</span>';
+        
         // Add to search input container
         const searchContainer = searchInput.parentElement;
-        searchContainer.style.position = "relative";
         searchContainer.appendChild(loadingIndicator);
     }
 
@@ -508,60 +468,16 @@ function showLoadingOverlay(message) {
             </div>
         `;
         document.body.appendChild(overlay);
-
-        // Add styles
-        const style = document.createElement("style");
-        style.textContent = `
-            #loading_overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.6);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-            .overlay-content {
-                background: white;
-                padding: 30px 40px;
-                border-radius: 8px;
-                text-align: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-            .overlay-message {
-                margin-top: 15px;
-                color: var(--color-primary-black);
-                font-weight: 500;
-                font-size: 16px;
-            }
-            .spinner {
-                width: 50px;
-                height: 50px;
-                border: 5px solid #f3f3f3;
-                border-top: 5px solid var(--color-mint);
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
     }
     overlay.querySelector(".overlay-message").textContent = message;
-    overlay.style.display = "flex";
+    overlay.classList.add("loading-overlay-visible");
 }
 
 // Hide loading overlay
 function hideLoadingOverlay() {
     const overlay = document.getElementById("loading_overlay");
     if (overlay) {
-        overlay.style.display = "none";
+        overlay.classList.remove("loading-overlay-visible");
     }
 }
 
@@ -574,31 +490,26 @@ async function closeAccount() {
     }
 
     // Check if account has balance
-    const balance = parseFloat(
-        account.balance.toString().replace(/[^0-9.-]+/g, "")
-    );
+    const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
     if (balance > 0) {
         showNotification("Account must have zero balance before closing", true);
         return;
     }
 
-    // Show loading overlay
+    // Show loading overlay with green spinner
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/close_account.php`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    account_number: account.account_number,
-                    teller_number: tellerInfo.teller_number,
-                }),
-            }
-        );
+        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                teller_number: tellerInfo.teller_number,
+            }),
+        });
 
         const data = await response.json();
 
@@ -620,7 +531,6 @@ async function closeAccount() {
                 `searchHistory_${tellerInfo.teller_number}`,
                 JSON.stringify(searchHistory)
             );
-            updateSearchHistory();
         }
 
         // Update UI
@@ -642,23 +552,20 @@ async function reopenAccount() {
         return;
     }
 
-    // Show loading overlay
+    // Show loading overlay with green spinner
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/reopen_account.php`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    account_number: account.account_number,
-                    teller_number: tellerInfo.teller_number,
-                }),
-            }
-        );
+        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                teller_number: tellerInfo.teller_number,
+            }),
+        });
 
         const data = await response.json();
 
@@ -680,7 +587,6 @@ async function reopenAccount() {
                 `searchHistory_${tellerInfo.teller_number}`,
                 JSON.stringify(searchHistory)
             );
-            updateSearchHistory();
         }
 
         // Update UI
@@ -729,7 +635,6 @@ async function updateAccountBalance() {
                     `searchHistory_${tellerInfo.teller_number}`,
                     JSON.stringify(searchHistory)
                 );
-                updateSearchHistory();
             }
         }
     } catch (error) {
@@ -750,25 +655,27 @@ window.addEventListener("storage", (e) => {
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
-    // Show search history initially
-    searchHistoryContainer.classList.remove("hidden");
-    searchHistoryContainer.style.display = "block";
-
-    // Update search history display
-    updateSearchHistory();
+    const contentArea = document.querySelector(".content-area");
+    
+    // Show search history initially if we have entries and no search term
+    if (searchHistory.length > 0 && !searchInput.value.trim()) {
+        updateSearchHistory();
+    }
 
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim();
-
         if (!searchTerm) {
             // Clear account container and show search history immediately
-            const accountContainer =
-                document.querySelector(".account-container");
+            const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
-            searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
+            if (searchHistory.length > 0) {
+                searchHistoryContainer.classList.remove("hidden");
+                searchHistoryContainer.style.display = "block";
+            }
             hideLoadingIndicator();
+            // Remove scrollbar when clearing search
+            contentArea.classList.remove("has-search-results");
         } else {
             // Hide search history and perform search
             searchHistoryContainer.classList.add("hidden");
@@ -795,11 +702,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Close account actions when clicking outside
     document.addEventListener("click", (e) => {
         const cardWrappers = document.querySelectorAll(".card-wrapper");
-
         cardWrappers.forEach((wrapper) => {
             const card = wrapper.querySelector(".account-card");
             const actions = wrapper.querySelector(".account-actions");
-
             if (!card.contains(e.target) && !actions.contains(e.target)) {
                 actions.classList.remove("visible");
                 const icon = card.querySelector(".toggle-icon i");

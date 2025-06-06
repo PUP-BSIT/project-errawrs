@@ -10,9 +10,14 @@ if (!account || !tellerInfo) {
 }
 
 // Initialize page with account details
-document.getElementById('account_number').textContent = account.account_number;
-document.getElementById('account_name').textContent = account.user.name;
-document.getElementById('current_balance').textContent = formatCurrency(account.balance);
+function updateDisplayedBalance() {
+    document.getElementById('account_number').textContent = account.account_number;
+    document.getElementById('account_name').textContent = account.user.name;
+    document.getElementById('current_balance').textContent = formatCurrency(account.balance);
+}
+
+// Initial balance update
+updateDisplayedBalance();
 
 // Create validation message element
 const amountInput = document.getElementById('deposit_amount');
@@ -66,7 +71,6 @@ function updateSteps(currentStep) {
 
 // Go back to search page
 function goBack() {
-    // Instead of redirecting, just go back to the previous page
     window.history.back();
 }
 
@@ -75,7 +79,13 @@ function validateAmount(amount) {
     const confirmButton = document.querySelector('.btn.confirm');
     const amountInput = document.getElementById('deposit_amount');
     
-    if (amount > MAX_DEPOSIT_AMOUNT) {
+    if (isNaN(amount) || amount <= 0) {
+        amountInput.style.borderColor = 'var(--color-red)';
+        validationMessage.textContent = 'Please enter a valid amount';
+        validationMessage.style.display = 'block';
+        confirmButton.disabled = true;
+        return false;
+    } else if (amount > MAX_DEPOSIT_AMOUNT) {
         amountInput.style.borderColor = 'var(--color-red)';
         validationMessage.textContent = `Maximum deposit amount is ${formatCurrency(MAX_DEPOSIT_AMOUNT)}`;
         validationMessage.style.display = 'block';
@@ -93,23 +103,18 @@ function validateAmount(amount) {
 function confirmAmount() {
     const amount = parseFloat(document.getElementById('deposit_amount').value);
     
-    if (isNaN(amount) || amount <= 0) {
-        validationMessage.textContent = 'Please enter a valid amount';
-        validationMessage.style.display = 'block';
+    if (!validateAmount(amount)) {
         return;
     }
 
-    if (!validateAmount(amount)) {
-        showNotification('Please enter a valid amount', true);
-        return;
-    }
+    const newBalance = account.balance + amount;
 
     // Update confirmation screen
     document.getElementById('confirm_account_number').textContent = account.account_number;
     document.getElementById('confirm_account_name').textContent = account.user.name;
     document.getElementById('confirm_current_balance').textContent = formatCurrency(account.balance);
     document.getElementById('confirm_amount').textContent = formatCurrency(amount);
-    document.getElementById('new_balance').textContent = formatCurrency(account.balance + amount);
+    document.getElementById('new_balance').textContent = formatCurrency(newBalance);
 
     // Hide amount entry, show confirmation
     document.getElementById('amount_entry').classList.add('hidden');
@@ -119,14 +124,6 @@ function confirmAmount() {
     updateSteps(2);
 }
 
-// Submit deposit
-async function submitDeposit() {
-    const amount = parseFloat(document.getElementById('deposit_amount').value);
-    const submitButton = document.querySelector('#confirmation .btn.confirm');
-    
-    // Disable submit button and show loading
-    submitButton.disabled = true;
-    toggleLoading(true, amount);
 // Back to amount entry
 function backToAmount() {
     document.getElementById('confirmation').classList.add('hidden');
@@ -137,6 +134,11 @@ function backToAmount() {
 // Submit deposit
 async function submitDeposit() {
     const amount = parseFloat(document.getElementById('deposit_amount').value);
+    const submitButton = document.querySelector('#confirmation .btn.confirm');
+    
+    // Disable submit button and show loading
+    submitButton.disabled = true;
+    toggleLoading(true, amount);
     
     try {
         const response = await fetch('/project-errawrs/src/api/teller/deposit.php', {
@@ -179,17 +181,15 @@ async function submitDeposit() {
         // Update steps
         updateSteps(3);
 
-        // Update the current balance display
-        document.getElementById('current_balance').textContent = formatCurrency(newBalance);
-
-        // Update session storage with new balance
+        // Update account balance
         account.balance = newBalance;
         sessionStorage.setItem('currentAccount', JSON.stringify(account));
+        updateDisplayedBalance();
 
         // Update parent window if it exists
         if (window.opener && !window.opener.closed) {
             try {
-                // Update the parent window's session storage first
+                // Update the parent window's session storage
                 window.opener.sessionStorage.setItem('currentAccount', JSON.stringify(account));
                 
                 // Call the updateAccountBalance function in the parent window
@@ -211,15 +211,6 @@ async function submitDeposit() {
         toggleLoading(false);
     }
 }
-
-// Back to amount entry
-function backToAmount() {
-    document.getElementById('confirmation').classList.add('hidden');
-    document.getElementById('amount_entry').classList.remove('hidden');
-    updateSteps(1);
-}
-
-    }
 
 // Finish transaction and return to search
 function finishTransaction() {
