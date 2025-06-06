@@ -160,8 +160,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     position: relative;
+    overflow-y: auto; /* Enable scrolling for main content */
 }
 
 /* Top Bar */
@@ -263,8 +263,8 @@ body {
     margin-top: 20px;
     align-items: center;
     width: 100%;
-    overflow: hidden; /* Default to hidden */
-    padding-right: 5px;
+    min-height: min-content; /* Ensure content takes minimum required height */
+    padding-bottom: 30px; /* Add padding at bottom for better spacing */
 }
 
 /* Only show scrollbar when there's search content */
@@ -279,9 +279,10 @@ body {
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
-    padding: 10px 25px;
+    padding: 20px 25px;
     margin: 10px auto;
     max-width: 1000px;
+    margin-bottom: 30px; /* Add margin at bottom */
 }
 
 .search-history.visible {
@@ -309,10 +310,6 @@ body {
     gap: 20px;
     margin-bottom: 15px;
     padding: 10px 0;
-    background: var(--color-white);
-    position: sticky;
-    top: 0;
-    position: sticky;
     top: 60px;
     background: var(--color-white);
     z-index: 1;
@@ -320,7 +317,7 @@ body {
 }
 
 .header-cell {
-    background: var(--color-mint);
+    background: var(--color-lime-green);
     color: var(--color-primary-black);
     font-weight: 600;
     font-size: 18px;
@@ -330,17 +327,14 @@ body {
 }
 
 .history-body {
-    overflow-y: auto;
-    max-height: 325px; /* Height for 5 items */
-    padding-right: 5px; /* Add slight padding for scrollbar */
+    max-height: none; /* Remove max-height limitation */
+    padding-right: 0; /* Remove padding since we don't need scrollbar here */
 }
 
 .history-row {
     display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 80px 250px 190px 210px 100px;
     gap: 20px;
-    padding: 15px;
-    min-height: 65px;
     padding: 18px 20px;
     cursor: pointer;
     border-bottom: 1px solid #e0e0e0;
@@ -361,10 +355,9 @@ body {
 }
 
 .history-value {
-    font-size: 18px;
-    color: var(--color-primary-black);
-    text-align: center;
+    font-size: 16px;
     font-weight: 500;
+    text-align: center;
 }
 
 .history-value.status.active {
@@ -627,11 +620,22 @@ body {
 /* Account Container */
 .account-container {
     width: 100%;
-    max-width: 750px;
-    margin: 0 auto 20px;
+    max-width: 1200px;
+    margin: 0 auto 30px; /* Increase bottom margin */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Single card container */
+.account-container.single-card {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.account-container.single-card .card-wrapper {
+    max-width: 600px;
 }
 
 /* Card Wrapper */
@@ -646,15 +650,15 @@ body {
 /* Account Card */
 .account-card {
     background: var(--color-white);
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     flex: 1;
-    max-width: 650px;
+    width: 100%;
 }
 
 .account-card.visible {
@@ -664,96 +668,192 @@ body {
 /* Account Info Layout */
 .account-info {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    position: relative;
+    padding-top: 50px;
+}
+
+/* Status at Top */
+.status-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
     align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: rgba(126, 217, 87, 0.1);
+}
+
+.status-indicator.active {
+    color: var(--color-mint);
+}
+
+.status-indicator .status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.status-indicator.closed {
+    color: var(--color-red);
+    background-color: rgba(255, 71, 87, 0.1);
+}
+
+/* Account Field Container */
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* Account Label */
 .account-label {
-    color: var(--color-gray);
-    font-size: 18px;
+    color: #666;
+    font-size: 14px;
     font-weight: 500;
 }
 
 /* Account Value */
 .account-value {
     color: var(--color-primary-black);
-    font-size: 20px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* Account Number Value */
+.account-value.account-number {
+    font-size: 24px;
+    letter-spacing: -0.5px;
+}
+
+/* Balance Value - Both in card and history */
+.account-value.balance,
+.history-value.balance {
+    color: var(--color-mint);
+    font-weight: 700;
+}
+
+.account-value.balance {
+    font-size: 28px;
+}
+
+/* Account Type Badge */
+.account-type-badge,
+.history-value.type {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
     font-weight: 600;
 }
 
-.account-value.active {
-    color: var(--color-mint);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.account-type-badge.savings,
+.history-value.type.savings {
+    background-color: #EEF3FF;
+    color: #2563EB;
 }
 
-.account-value.closed {
-    color: var(--color-red);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.account-type-badge.credit,
+.history-value.type.credit {
+    background-color: #F3E8FF;
+    color: #9333EA;
 }
 
-.account-value.active::before,
-.account-value.closed::before {
-    content: "●";
-    font-size: 10px;
-}
-
-.history-value.status.active {
-    color: var(--color-mint);
-}
-
-.history-value.status.closed {
-    color: var(--color-red);
-}
-
-.account-value.active::before {
-    content: "✓";
-    color: var(--color-mint);
-}
-
-.account-value.closed::before {
-    content: "×";
-    color: var(--color-red);
-}
-
-/* Toggle Icon */
-.toggle-icon {
+/* More Options Menu */
+.more-options {
     position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 28px;
-    height: 28px;
+    top: 20px;
+    right: 20px;
+    color: #666;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--color-mint);
-    color: var(--color-white);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-.toggle-icon i {
-    font-size: 14px;
+.more-options i {
     transition: transform 0.3s ease;
+    pointer-events: none; /* This ensures the icon itself doesn't interfere with clicks */
 }
 
-.toggle-icon:hover {
-    border-color: var(--color-mint);
+.more-options:hover {
+    background-color: #f5f5f5;
 }
 
-.toggle-icon i {
+/* Card Actions */
+.card-actions {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1;
+    min-width: 200px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-actions.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    width: 100%;
+    border: none;
+    background: none;
     color: var(--color-primary-black);
     font-size: 16px;
-    transition: transform 0.3s ease;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.toggle-icon.active i {
-    transform: rotate(180deg);
+.card-action-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.card-action-btn.deposit {
+    color: var(--color-mint);
+}
+
+.card-action-btn.withdraw {
+    color: #2563EB;
+}
+
+.card-action-btn.close {
+    color: var(--color-red);
+}
+
+.card-action-btn.reopen {
+    color: var(--color-lime-green);
+}
+
+.card-action-btn i {
+    font-size: 18px;
 }
 
 /* Account Card Display States */
@@ -1007,4 +1107,9 @@ body {
 
 .loading-overlay-visible {
     display: flex !important;
+}
+
+/* Ensure proper spacing at the bottom of content */
+.content-area > *:last-child {
+    margin-bottom: 0;
 }

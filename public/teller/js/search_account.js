@@ -14,11 +14,24 @@ const accountActionsDropdown = document.getElementById(
 const searchHistoryContainer = document.getElementById("search_history");
 const historyBody = document.getElementById("history_body");
 
-// Initialize search history from localStorage
-let searchHistory =
-    JSON.parse(
-        localStorage.getItem(`searchHistory_${tellerInfo.teller_number}`)
-    ) || [];
+// Initialize search history
+let searchHistory = [];
+
+// Load search history
+async function loadSearchHistory() {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const data = await response.json();
+
+        if (data.success && data.history) {
+            searchHistory = data.history;
+            // Don't automatically update UI here
+        }
+    } catch (error) {
+        console.error("Error loading search history:", error);
+        showNotification("Error loading search history", true);
+    }
+}
 
 // Format currency
 function formatCurrency(amount) {
@@ -48,9 +61,19 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Always ensure search history is hidden when showing account details
-    searchHistoryContainer.classList.add("hidden");
-    searchHistoryContainer.style.display = "none";
+    // Hide search history when showing a single account
+    if (accounts.length === 1) {
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
+        accountContainer.classList.add("single-card");
+    } else {
+        accountContainer.classList.remove("single-card");
+        // Only show search history if we have entries
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
+    }
 
     accounts.forEach((account) => {
         // Create a new card wrapper
@@ -63,101 +86,134 @@ function updateAccountDetails(accounts) {
         // Format the balance properly with peso sign
         const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
 
+        // Determine account type display
+        const accountType = account.account_type ? account.account_type.toLowerCase() : 'savings';
+        const displayAccountType = accountType === 'credit' ? 'Credit' : 'Savings';
+
+        // Status indicator HTML
+        const statusIndicator = account.status === "active"
+            ? `<div class="status-indicator active">
+                 <div class="status-icon"></div>
+                 active
+               </div>`
+            : `<div class="status-indicator closed">
+                 <div class="status-icon"></div>
+                 closed
+               </div>`;
+
         newCard.innerHTML = `
             <div class="account-info">
-                <div class="account-label">Account Number</div>
-                <div class="account-value">${account.account_number}</div>
+                ${statusIndicator}
                 
-                <div class="account-label">Account Holder Name</div>
-                <div class="account-value">${account.user.name}</div>
+                <div class="account-field">
+                    <div class="account-label">Account No.</div>
+                    <div class="account-value account-number">${account.account_number}</div>
+                </div>
                 
-                <div class="account-label">Account Type</div>
-                <div class="account-value">Checking</div>
+                <div class="account-field">
+                    <div class="account-label">Account Name</div>
+                    <div class="account-value">${account.user.name}</div>
+                </div>
                 
-                <div class="account-label">Current Balance</div>
-                <div class="account-value">${formatCurrency(balance)}</div>
+                <div class="account-field">
+                    <div class="account-label">Balance</div>
+                    <div class="account-value balance">${formatCurrency(balance)}</div>
+                </div>
                 
-                <div class="account-label">Account Status</div>
-                <div class="account-value ${account.status === "active" ? "active" : "closed"}">
-                    ${account.status === "active" ? "Active" : "Closed"}
+                <div class="account-field">
+                    <div class="account-label">Type</div>
+                    <div class="account-type-badge ${accountType}">
+                        ${displayAccountType}
+                    </div>
                 </div>
             </div>
-            <div class="toggle-icon">
+            <div class="more-options">
                 <i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card-actions">
+                ${account.status === "active" ? `
+                    <button class="card-action-btn deposit">
+                        <i class="fas fa-plus"></i>
+                        Deposit
+                    </button>
+                    <button class="card-action-btn withdraw">
+                        <i class="fas fa-minus"></i>
+                        Withdraw
+                    </button>
+                    <button class="card-action-btn close">
+                        <i class="fas fa-times"></i>
+                        Close Account
+                    </button>
+                ` : `
+                    <button class="card-action-btn reopen">
+                        <i class="fas fa-redo"></i>
+                        Reopen Account
+                    </button>
+                `}
             </div>
         `;
 
-        // Create actions container for this card
-        const actionsContainer = document.createElement("div");
-        actionsContainer.className = account.status === "active" 
-            ? "account-actions"
-            : "account-actions account-actions-center";
-        actionsContainer.innerHTML = account.status === "active" 
-            ? `
-                <button class="action-btn deposit">
-                    <i class="fas fa-plus"></i> Deposit
-                </button>
-                <button class="action-btn withdraw">
-                    <i class="fas fa-minus"></i> Withdraw
-                </button>
-                <button class="action-btn close">
-                    <i class="fas fa-times"></i> Close Account
-                </button>
-            `
-            : `
-                <button class="action-btn reopen">
-                    <i class="fas fa-redo"></i> Reopen Account
-                </button>
-            `;
+        // Add click event for the entire card and more options icon
+        const moreOptions = newCard.querySelector('.more-options');
+        const cardActions = newCard.querySelector('.card-actions');
+        
+        function toggleMenu(e) {
+            if (!e.target.closest('.card-action-btn')) {
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = chevron.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
+                cardActions.classList.toggle('visible');
+            }
+        }
 
-        // Add event listeners to buttons
-        const buttons = actionsContainer.getElementsByTagName("button");
-        Array.from(buttons).forEach((button) => {
-            if (button.classList.contains("deposit")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showDepositForm();
-                };
-            } else if (button.classList.contains("withdraw")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showWithdrawForm();
-                };
-            } else if (button.classList.contains("close")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    closeAccount();
-                };
-            } else if (button.classList.contains("reopen")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    reopenAccount();
-                };
+        // Add click handlers to both card and more options
+        newCard.addEventListener('click', toggleMenu);
+        moreOptions.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent double-triggering
+            toggleMenu(e);
+        });
+
+        // Close actions menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!newCard.contains(e.target)) {
+                cardActions.classList.remove('visible');
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = 'rotate(0deg)';
             }
         });
 
-        // Add click event to toggle actions
-        newCard.addEventListener("click", (e) => {
-            e.stopPropagation();
-            actionsContainer.classList.toggle("visible");
-            const icon = newCard.querySelector(".toggle-icon i");
-            icon.classList.toggle("fa-chevron-right");
-            icon.classList.toggle("fa-chevron-left");
+        // Add event listeners to action buttons
+        const actionButtons = cardActions.getElementsByClassName('card-action-btn');
+        Array.from(actionButtons).forEach((button) => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cardActions.classList.remove('visible');
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = 'rotate(0deg)';
+                
+                if (button.classList.contains('deposit')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    showDepositForm();
+                } else if (button.classList.contains('withdraw')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    showWithdrawForm();
+                } else if (button.classList.contains('close')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    closeAccount();
+                } else if (button.classList.contains('reopen')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    reopenAccount();
+                }
+            });
         });
 
-        // Add card and actions to wrapper, then add wrapper to container
+        // Add card to wrapper, then add wrapper to container
         cardWrapper.appendChild(newCard);
-        cardWrapper.appendChild(actionsContainer);
         accountContainer.appendChild(cardWrapper);
     });
 
-    // Add to search history if there's exactly one account
-    if (accounts.length === 1) {
-        addToSearchHistory(accounts[0]);
+    // Only load search history if not showing a single account
+    if (accounts.length !== 1) {
+        loadSearchHistory();
     }
 }
 
@@ -185,16 +241,16 @@ function showWithdrawForm() {
 function addToSearchHistory(account) {
     // Check if the account already exists in search history
     const existingIndex = searchHistory.findIndex(
-        (item) => item.accountNumber === account.account_number
+        (item) => item.account_number === account.account_number
     );
 
     // Create new history entry
     const newEntry = {
-        name: account.user.name,
-        accountNumber: account.account_number,
+        account_name: account.user.name,
+        account_number: account.account_number,
         balance: account.balance,
-        status: account.status,
-        timestamp: new Date().toISOString()
+        account_type: account.account_type || 'savings',
+        status: account.status
     };
 
     if (existingIndex !== -1) {
@@ -210,14 +266,8 @@ function addToSearchHistory(account) {
         searchHistory.pop();
     }
 
-    // Save to localStorage with teller-specific key
-    localStorage.setItem(
-        `searchHistory_${tellerInfo.teller_number}`,
-        JSON.stringify(searchHistory)
-    );
-
-    // Don't update history UI while searching
-    // updateSearchHistory();
+    // Update the UI immediately
+    updateSearchHistory();
 }
 
 // Update search history UI
@@ -232,25 +282,30 @@ function updateSearchHistory() {
     searchHistory.forEach((item, index) => {
         const row = document.createElement("div");
         row.className = "history-row";
-        row.onclick = () => selectFromHistory(item.accountNumber);
+        row.onclick = () => selectFromHistory(item.account_number);
 
         const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ""));
+        const accountType = item.account_type ? item.account_type.toLowerCase() : 'savings';
+        const displayAccountType = accountType === 'credit' ? 'Credit' : 'Savings';
 
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
-            <div class="history-value">${item.name}</div>
-            <div class="history-value">${item.accountNumber}</div>
-            <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value status ${item.status === "active" ? "active" : "closed"}">
-                ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-            </div>
+            <div class="history-value">${item.account_name}</div>
+            <div class="history-value">${item.account_number}</div>
+            <div class="history-value balance">${formatCurrency(balance)}</div>
+            <div class="history-value type ${accountType}">${displayAccountType}</div>
         `;
         historyBody.appendChild(row);
     });
 
-    // Show search history container if we have entries
-    searchHistoryContainer.classList.remove("hidden");
-    searchHistoryContainer.style.display = "block";
+    // Show search history container if we have entries and not showing a single account
+    const accountContainer = document.querySelector(".account-container");
+    const hasAccounts = accountContainer.children.length > 0;
+    
+    if (!hasAccounts || accountContainer.children.length > 1) {
+        searchHistoryContainer.classList.remove("hidden");
+        searchHistoryContainer.style.display = "block";
+    }
 }
 
 // Search account - now runs instantly without delay
@@ -258,7 +313,7 @@ async function searchAccount() {
     const searchTerm = searchInput.value.trim();
     const contentArea = document.querySelector(".content-area");
 
-    // Always ensure search history is hidden when searching
+    // Always hide search history when searching
     searchHistoryContainer.classList.add("hidden");
     searchHistoryContainer.style.display = "none";
 
@@ -266,7 +321,7 @@ async function searchAccount() {
     if (!searchTerm) {
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
-        // Only show search history when search is empty
+        // Show search history when search is empty
         if (searchHistory.length > 0) {
             searchHistoryContainer.classList.remove("hidden");
             searchHistoryContainer.style.display = "block";
@@ -302,6 +357,11 @@ async function searchAccount() {
             );
 
             if (matchingAccounts.length > 0) {
+                // Add each matching account to search history
+                matchingAccounts.forEach(account => {
+                    addToSearchHistory(account);
+                });
+                
                 // Keep search history hidden and show results
                 searchHistoryContainer.classList.add("hidden");
                 searchHistoryContainer.style.display = "none";
@@ -314,6 +374,11 @@ async function searchAccount() {
                 const accountContainer = document.querySelector(".account-container");
                 accountContainer.innerHTML = "";
                 showNotification("No matching accounts found", true);
+                // Show search history when no matches found
+                if (searchHistory.length > 0) {
+                    searchHistoryContainer.classList.remove("hidden");
+                    searchHistoryContainer.style.display = "block";
+                }
                 // Remove scrollbar when no results
                 contentArea.classList.remove("has-search-results");
             }
@@ -321,6 +386,11 @@ async function searchAccount() {
             const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
             showNotification("No accounts found", true);
+            // Show search history when no accounts found
+            if (searchHistory.length > 0) {
+                searchHistoryContainer.classList.remove("hidden");
+                searchHistoryContainer.style.display = "block";
+            }
             // Remove scrollbar when no results
             contentArea.classList.remove("has-search-results");
         }
@@ -330,6 +400,11 @@ async function searchAccount() {
         showNotification(error.message || "Error searching for account", true);
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
+        // Show search history on error
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
         // Remove scrollbar on error
         contentArea.classList.remove("has-search-results");
     }
@@ -523,7 +598,7 @@ async function closeAccount() {
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(
-            (item) => item.accountNumber === account.account_number
+            (item) => item.account_number === account.account_number
         );
         if (historyIndex !== -1) {
             searchHistory[historyIndex].status = "closed";
@@ -579,19 +654,25 @@ async function reopenAccount() {
 
         // Update search history with new status
         const historyIndex = searchHistory.findIndex(
-            (item) => item.accountNumber === account.account_number
+            (item) => item.account_number === account.account_number
         );
         if (historyIndex !== -1) {
             searchHistory[historyIndex].status = "active";
-            localStorage.setItem(
-                `searchHistory_${tellerInfo.teller_number}`,
-                JSON.stringify(searchHistory)
-            );
         }
 
-        // Update UI
-        updateAccountDetails([account]);
-        showNotification("Account reopened successfully");
+        // Fetch updated account data to refresh the UI
+        const searchResponse = await fetch(
+            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+                account.account_number
+            )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
+        );
+        const searchData = await searchResponse.json();
+
+        if (searchData.success && searchData.accounts && searchData.accounts.length > 0) {
+            // Update UI with fresh account data
+            updateAccountDetails([searchData.accounts[0]]);
+            showNotification("Account reopened successfully");
+        }
     } catch (error) {
         console.error("Reopen account error:", error);
         showNotification(error.message, true);
@@ -627,7 +708,7 @@ async function updateAccountBalance() {
 
             // Update search history with new balance
             const historyIndex = searchHistory.findIndex(
-                (item) => item.accountNumber === account.account_number
+                (item) => item.account_number === account.account_number
             );
             if (historyIndex !== -1) {
                 searchHistory[historyIndex].balance = account.balance;
@@ -657,29 +738,34 @@ window.addEventListener("storage", (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     const contentArea = document.querySelector(".content-area");
     
-    // Show search history initially if we have entries and no search term
-    if (searchHistory.length > 0 && !searchInput.value.trim()) {
-        updateSearchHistory();
-    }
+    // Load search history initially
+    loadSearchHistory().then(() => {
+        // Only show search history if we have entries and no search term
+        if (searchHistory.length > 0 && !searchInput.value.trim()) {
+            updateSearchHistory();
+        }
+    });
 
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim();
+        
+        // Always hide search history when typing
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
+
         if (!searchTerm) {
-            // Clear account container and show search history immediately
+            // Clear account container when empty
             const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
+            // Show search history when search is cleared
             if (searchHistory.length > 0) {
                 searchHistoryContainer.classList.remove("hidden");
                 searchHistoryContainer.style.display = "block";
             }
             hideLoadingIndicator();
-            // Remove scrollbar when clearing search
             contentArea.classList.remove("has-search-results");
         } else {
-            // Hide search history and perform search
-            searchHistoryContainer.classList.add("hidden");
-            searchHistoryContainer.style.display = "none";
             searchAccount();
         }
     });
@@ -704,13 +790,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const cardWrappers = document.querySelectorAll(".card-wrapper");
         cardWrappers.forEach((wrapper) => {
             const card = wrapper.querySelector(".account-card");
-            const actions = wrapper.querySelector(".account-actions");
+            const actions = wrapper.querySelector(".card-actions");
             if (!card.contains(e.target) && !actions.contains(e.target)) {
                 actions.classList.remove("visible");
-                const icon = card.querySelector(".toggle-icon i");
-                icon.classList.remove("fa-chevron-left");
-                icon.classList.add("fa-chevron-right");
             }
         });
     });
 });
+
