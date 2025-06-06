@@ -333,7 +333,7 @@ body {
 
 .history-row {
     display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 80px 250px 210px 185px 100px;
     gap: 20px;
     padding: 18px 20px;
     cursor: pointer;
@@ -355,10 +355,9 @@ body {
 }
 
 .history-value {
-    font-size: 18px;
-    color: var(--color-primary-black);
-    text-align: center;
+    font-size: 16px;
     font-weight: 500;
+    text-align: center;
 }
 
 .history-value.status.active {
@@ -733,15 +732,20 @@ body {
     letter-spacing: -0.5px;
 }
 
-/* Balance Value */
+/* Balance Value - Both in card and history */
+.account-value.balance,
+.history-value.balance {
+    color: var(--color-mint);
+    font-weight: 700;
+}
+
 .account-value.balance {
     font-size: 28px;
-    font-weight: 700;
-    color: var(--color-primary-black);
 }
 
 /* Account Type Badge */
-.account-type-badge {
+.account-type-badge,
+.history-value.type {
     display: inline-flex;
     align-items: center;
     width: fit-content;
@@ -751,12 +755,14 @@ body {
     font-weight: 600;
 }
 
-.account-type-badge.savings {
+.account-type-badge.savings,
+.history-value.type.savings {
     background-color: #EEF3FF;
     color: #2563EB;
 }
 
-.account-type-badge.credit {
+.account-type-badge.credit,
+.history-value.type.credit {
     background-color: #F3E8FF;
     color: #9333EA;
 }

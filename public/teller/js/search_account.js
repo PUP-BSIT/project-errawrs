@@ -61,15 +61,18 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Always hide search history when showing account details
-    searchHistoryContainer.classList.add("hidden");
-    searchHistoryContainer.style.display = "none";
-
-    // Add single-card class if only one account
+    // Hide search history when showing a single account
     if (accounts.length === 1) {
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
         accountContainer.classList.add("single-card");
     } else {
         accountContainer.classList.remove("single-card");
+        // Only show search history if we have entries
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
     }
 
     accounts.forEach((account) => {
@@ -194,7 +197,7 @@ function updateAccountDetails(accounts) {
         accountContainer.appendChild(cardWrapper);
     });
 
-    // Show search history only if there are no accounts or multiple accounts
+    // Only load search history if not showing a single account
     if (accounts.length !== 1) {
         loadSearchHistory();
     }
@@ -274,21 +277,27 @@ function updateSearchHistory() {
         row.onclick = () => selectFromHistory(item.account_number);
 
         const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ""));
-        const displayAccountType = item.account_type ? item.account_type.toLowerCase() === 'credit' ? 'Credit' : 'Savings' : 'Savings';
+        const accountType = item.account_type ? item.account_type.toLowerCase() : 'savings';
+        const displayAccountType = accountType === 'credit' ? 'Credit' : 'Savings';
 
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
             <div class="history-value">${item.account_name}</div>
             <div class="history-value">${item.account_number}</div>
-            <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value">${displayAccountType}</div>
+            <div class="history-value balance">${formatCurrency(balance)}</div>
+            <div class="history-value type ${accountType}">${displayAccountType}</div>
         `;
         historyBody.appendChild(row);
     });
 
-    // Show search history container if we have entries
-    searchHistoryContainer.classList.remove("hidden");
-    searchHistoryContainer.style.display = "block";
+    // Show search history container if we have entries and not showing a single account
+    const accountContainer = document.querySelector(".account-container");
+    const hasAccounts = accountContainer.children.length > 0;
+    
+    if (!hasAccounts || accountContainer.children.length > 1) {
+        searchHistoryContainer.classList.remove("hidden");
+        searchHistoryContainer.style.display = "block";
+    }
 }
 
 // Search account - now runs instantly without delay
@@ -296,7 +305,7 @@ async function searchAccount() {
     const searchTerm = searchInput.value.trim();
     const contentArea = document.querySelector(".content-area");
 
-    // Always ensure search history is hidden when searching
+    // Always hide search history when searching
     searchHistoryContainer.classList.add("hidden");
     searchHistoryContainer.style.display = "none";
 
@@ -304,7 +313,7 @@ async function searchAccount() {
     if (!searchTerm) {
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
-        // Only show search history when search is empty
+        // Show search history when search is empty
         if (searchHistory.length > 0) {
             searchHistoryContainer.classList.remove("hidden");
             searchHistoryContainer.style.display = "block";
@@ -352,6 +361,11 @@ async function searchAccount() {
                 const accountContainer = document.querySelector(".account-container");
                 accountContainer.innerHTML = "";
                 showNotification("No matching accounts found", true);
+                // Show search history when no matches found
+                if (searchHistory.length > 0) {
+                    searchHistoryContainer.classList.remove("hidden");
+                    searchHistoryContainer.style.display = "block";
+                }
                 // Remove scrollbar when no results
                 contentArea.classList.remove("has-search-results");
             }
@@ -359,6 +373,11 @@ async function searchAccount() {
             const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
             showNotification("No accounts found", true);
+            // Show search history when no accounts found
+            if (searchHistory.length > 0) {
+                searchHistoryContainer.classList.remove("hidden");
+                searchHistoryContainer.style.display = "block";
+            }
             // Remove scrollbar when no results
             contentArea.classList.remove("has-search-results");
         }
@@ -368,6 +387,11 @@ async function searchAccount() {
         showNotification(error.message || "Error searching for account", true);
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
+        // Show search history on error
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
         // Remove scrollbar on error
         contentArea.classList.remove("has-search-results");
     }
@@ -706,21 +730,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim();
+        
+        // Always hide search history when typing
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
+
         if (!searchTerm) {
-            // Clear account container and show search history immediately
+            // Clear account container when empty
             const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
+            // Show search history when search is cleared
             if (searchHistory.length > 0) {
                 searchHistoryContainer.classList.remove("hidden");
                 searchHistoryContainer.style.display = "block";
             }
             hideLoadingIndicator();
-            // Remove scrollbar when clearing search
             contentArea.classList.remove("has-search-results");
         } else {
-            // Hide search history and perform search
-            searchHistoryContainer.classList.add("hidden");
-            searchHistoryContainer.style.display = "none";
             searchAccount();
         }
     });
