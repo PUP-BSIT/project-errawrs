@@ -60,7 +60,7 @@ function updateAccountDetails(accounts) {
         newCard.className = "account-card visible";
 
         // Format the balance properly with peso sign
-        const balance = parseFloat(account.balance.replace(/[^0-9.-]+/g, ""));
+        const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
 
         newCard.innerHTML = `
             <div class="account-info">
@@ -77,9 +77,7 @@ function updateAccountDetails(accounts) {
                 <div class="account-value">${formatCurrency(balance)}</div>
                 
                 <div class="account-label">Account Status</div>
-                <div class="account-value ${
-                    account.status === "active" ? "active" : "closed"
-                }">
+                <div class="account-value ${account.status === "active" ? "active" : "closed"}">
                     ${account.status === "active" ? "Active" : "Closed"}
                 </div>
             </div>
@@ -90,25 +88,26 @@ function updateAccountDetails(accounts) {
 
         // Create actions container for this card
         const actionsContainer = document.createElement("div");
-        actionsContainer.className = "account-actions";
-        actionsContainer.innerHTML =
-            account.status === "active"
-                ? `
-            <button class="action-btn deposit">
-                <i class="fas fa-plus"></i> Deposit
-            </button>
-            <button class="action-btn withdraw">
-                <i class="fas fa-minus"></i> Withdraw
-            </button>
-            <button class="action-btn close">
-                <i class="fas fa-times"></i> Close Account
-            </button>
-        `
-                : `
-            <button class="action-btn reopen">
-                <i class="fas fa-redo"></i> Reopen Account
-            </button>
-        `;
+        actionsContainer.className = account.status === "active" 
+            ? "account-actions"
+            : "account-actions account-actions-center";
+        actionsContainer.innerHTML = account.status === "active" 
+            ? `
+                <button class="action-btn deposit">
+                    <i class="fas fa-plus"></i> Deposit
+                </button>
+                <button class="action-btn withdraw">
+                    <i class="fas fa-minus"></i> Withdraw
+                </button>
+                <button class="action-btn close">
+                    <i class="fas fa-times"></i> Close Account
+                </button>
+            `
+            : `
+                <button class="action-btn reopen">
+                    <i class="fas fa-redo"></i> Reopen Account
+                </button>
+            `;
 
         // Add event listeners to buttons
         const buttons = actionsContainer.getElementsByTagName("button");
@@ -116,37 +115,25 @@ function updateAccountDetails(accounts) {
             if (button.classList.contains("deposit")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     showDepositForm();
                 };
             } else if (button.classList.contains("withdraw")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     showWithdrawForm();
                 };
             } else if (button.classList.contains("close")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     closeAccount();
                 };
             } else if (button.classList.contains("reopen")) {
                 button.onclick = (e) => {
                     e.stopPropagation();
-                    sessionStorage.setItem(
-                        "currentAccount",
-                        JSON.stringify({ ...account, balance: balance })
-                    );
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     reopenAccount();
                 };
             }
@@ -574,9 +561,7 @@ async function closeAccount() {
     }
 
     // Check if account has balance
-    const balance = parseFloat(
-        account.balance.toString().replace(/[^0-9.-]+/g, "")
-    );
+    const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
     if (balance > 0) {
         showNotification("Account must have zero balance before closing", true);
         return;
@@ -586,19 +571,16 @@ async function closeAccount() {
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/close_account.php`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    account_number: account.account_number,
-                    teller_number: tellerInfo.teller_number,
-                }),
-            }
-        );
+        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                teller_number: tellerInfo.teller_number,
+            }),
+        });
 
         const data = await response.json();
 
@@ -646,19 +628,16 @@ async function reopenAccount() {
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/reopen_account.php`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    account_number: account.account_number,
-                    teller_number: tellerInfo.teller_number,
-                }),
-            }
-        );
+        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                teller_number: tellerInfo.teller_number,
+            }),
+        });
 
         const data = await response.json();
 
