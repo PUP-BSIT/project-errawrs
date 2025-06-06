@@ -12,6 +12,7 @@ let totalItems = 0;
 let totalPages = 0;
 let lastFetchTime = null;
 const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const ITEMS_PER_VIEW = 5; // Fixed number of items to display per page
 
 // Table data storage
 let tableData = [];
@@ -150,16 +151,28 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
+    const actualPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+    const displayPages = Math.min(totalPages, actualPages);
+
+    if (displayPages <= 0) {
+        return; // No pages to display
+    }
+
+    // Adjust current page if it's beyond the actual data
+    if (currentPage > displayPages) {
+        currentPage = displayPages;
+    }
+
     // Calculate the range of page numbers to show
     let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    let endPage = Math.min(displayPages, currentPage + 2);
 
     // Always show at least 5 pages if available
-    if (endPage - startPage < 4 && totalPages > 4) {
+    if (endPage - startPage < 4 && displayPages > 4) {
         if (startPage === 1) {
-            endPage = Math.min(5, totalPages);
-        } else if (endPage === totalPages) {
-            startPage = Math.max(1, totalPages - 4);
+            endPage = Math.min(5, displayPages);
+        } else if (endPage === displayPages) {
+            startPage = Math.max(1, displayPages - 4);
         }
     }
 
@@ -177,32 +190,22 @@ function updatePaginationDisplay() {
     }
 
     // Add last page button if not in range
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
+    if (endPage < displayPages) {
+        if (endPage < displayPages - 1) {
             addEllipsis();
         }
-        addPageButton(totalPages);
+        addPageButton(displayPages);
     }
 
     // Update showing text with proper padding
     updateShowingText();
 
-    // Enable/disable navigation buttons
-    updateNavigationButtons();
-}
-
-// Update the showing text
-function updateShowingText() {
-    const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-    const showingText = document.getElementById("showing-text");
-    if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
-    }
+    // Enable/disable navigation buttons based on actual pages
+    updateNavigationButtons(displayPages);
 }
 
 // Update navigation buttons state
-function updateNavigationButtons() {
+function updateNavigationButtons(displayPages) {
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
 
@@ -210,7 +213,22 @@ function updateNavigationButtons() {
         prevBtn.disabled = currentPage === 1;
     }
     if (nextBtn) {
-        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.disabled = currentPage === displayPages;
+    }
+}
+
+// Update showing text
+function updateShowingText() {
+    const showingText = document.getElementById("showing-text");
+    if (showingText) {
+        if (totalItems === 0) {
+            showingText.textContent = "Showing 0 to 0 of 0 entries";
+        } else {
+            const startItem = ((currentPage - 1) * ITEMS_PER_VIEW) + 1;
+            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, totalItems);
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+        }
     }
 }
 
@@ -233,8 +251,8 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const startIndex = (currentPage - 1) * ITEMS_PER_VIEW;
+    const endIndex = startIndex + ITEMS_PER_VIEW;
     return filteredData.slice(startIndex, endIndex);
 }
 
@@ -364,14 +382,13 @@ function updateTableDisplay() {
         return;
     }
 
-    // Create new rows
+    // Create new rows (limited to ITEMS_PER_VIEW)
     currentPageData.forEach(function (item) {
         const row = createTableRow(item);
         tableBody.appendChild(row);
     });
 
-    // Update total items
-    totalItems = filteredData.length;
+    // Update total pages based on items per page selection
     totalPages = Math.ceil(totalItems / itemsPerPage);
 }
 

@@ -175,7 +175,8 @@ body {
     flex-direction: column;
     width: 95%;
     max-width: 1400px;
-    height: 70vh;
+    height: auto;
+    min-height: 600px;
 }
 
 .history-container h1 {
@@ -221,9 +222,10 @@ body {
 /* Table Body Styles */
 .table-body {
     flex: 1;
-    overflow-y: auto;
     margin-bottom: 20px;
-    min-height: 400px;
+    min-height: auto;
+    max-height: none;
+    overflow-y: hidden;
 }
 
 .table-row {
@@ -234,6 +236,7 @@ body {
     align-items: center;
     border-bottom: 1px solid var(--color-bg-gradient-end);
     transition: background-color 0.2s ease;
+    height: 60px;
 }
 
 .table-row:hover {
@@ -416,7 +419,12 @@ body {
 
 /* Empty State */
 .empty-state {
-    display: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    text-align: center;
+    grid-column: 1 / -1;
 }
 
 /* Top Bar Styles */
