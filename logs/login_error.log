@@ -1,0 +1,43 @@
+[06-Jun-2025 08:39:08 Europe/Berlin] [2025-06-06 08:39:08] Login attempt - Login type: user, Username/Teller: Heisenberg
+[06-Jun-2025 08:39:08 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:39:08 Europe/Berlin] Error creating database connection: Unknown database 'errawrs'
+[06-Jun-2025 08:39:08 Europe/Berlin] Stack trace: #0 C:\project-errawrs\src\config\database.php(103): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'errawrs', 3306)
+#1 C:\project-errawrs\src\config\database.php(61): DatabaseConnection->createConnection()
+#2 C:\project-errawrs\src\config\database.php(186): DatabaseConnection->getConnection()
+#3 C:\project-errawrs\src\api\auth\login.php(137): db_connect()
+#4 {main}
+[06-Jun-2025 08:39:13 Europe/Berlin] Database connection error in getConnection(): Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:13 Europe/Berlin] Database connection error in db_connect(): Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:13 Europe/Berlin] [2025-06-06 08:39:13] Login error: Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:13 Europe/Berlin] [2025-06-06 08:39:13] Stack trace: #0 C:\project-errawrs\src\config\database.php(186): DatabaseConnection->getConnection()
+#1 C:\project-errawrs\src\api\auth\login.php(137): db_connect()
+#2 {main}
+[06-Jun-2025 08:39:13 Europe/Berlin] [2025-06-06 08:39:13] Login error: An unexpected error occurred
+[06-Jun-2025 08:39:23 Europe/Berlin] [2025-06-06 08:39:23] Login attempt - Login type: user, Username/Teller: Heisenberg
+[06-Jun-2025 08:39:23 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:39:23 Europe/Berlin] Error creating database connection: Unknown database 'errawrs'
+[06-Jun-2025 08:39:23 Europe/Berlin] Stack trace: #0 C:\project-errawrs\src\config\database.php(103): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'errawrs', 3306)
+#1 C:\project-errawrs\src\config\database.php(61): DatabaseConnection->createConnection()
+#2 C:\project-errawrs\src\config\database.php(186): DatabaseConnection->getConnection()
+#3 C:\project-errawrs\src\api\auth\login.php(137): db_connect()
+#4 {main}
+[06-Jun-2025 08:39:28 Europe/Berlin] Database connection error in getConnection(): Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:28 Europe/Berlin] Database connection error in db_connect(): Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:28 Europe/Berlin] [2025-06-06 08:39:28] Login error: Could not get database connection: Connection pool exhausted
+[06-Jun-2025 08:39:28 Europe/Berlin] [2025-06-06 08:39:28] Stack trace: #0 C:\project-errawrs\src\config\database.php(186): DatabaseConnection->getConnection()
+#1 C:\project-errawrs\src\api\auth\login.php(137): db_connect()
+#2 {main}
+[06-Jun-2025 08:39:28 Europe/Berlin] [2025-06-06 08:39:28] Login error: An unexpected error occurred
+[06-Jun-2025 08:46:00 Europe/Berlin] [2025-06-06 08:46:00] Login attempt - Login type: user, Username/Teller: testuser
+[06-Jun-2025 08:46:00 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:00 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:00 Europe/Berlin] [2025-06-06 08:46:00] Successful login - Type: user, ID: 1
+[06-Jun-2025 08:50:54 Europe/Berlin] [2025-06-06 08:50:54] Login attempt - Login type: user, Username/Teller: Gerald123
+[06-Jun-2025 08:50:54 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:50:54 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:50:55 Europe/Berlin] [2025-06-06 08:50:55] Login attempt - Login type: user, Username/Teller: Gerald123
+[06-Jun-2025 08:50:55 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:50:55 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:50:57 Europe/Berlin] [2025-06-06 08:50:57] Login attempt - Login type: user, Username/Teller: Gerald123
+[06-Jun-2025 08:50:57 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:50:57 Europe/Berlin] Successfully connected to database

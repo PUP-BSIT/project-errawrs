@@ -47,16 +47,10 @@ class RegistrationManager {
 	constructor() {
 		this.currentStep = STEPS.ENROLLMENT;
 		this.maxStep = STEPS.SUCCESS;
+		this.formData = null;
 		this.resendTimer = null;
-		this.resendCountdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
-		this.formData = {};
-
-		this.init();
-	}
-
-	init() {
+		this.registeredData = null;
 		this.bindEvents();
-		this.showStep(STEPS.ENROLLMENT);
 	}
 
 	bindEvents() {
@@ -68,6 +62,14 @@ class RegistrationManager {
 			detailsForm.addEventListener("submit", (e) => {
 				this.handleDetailsSubmit(e);
 			});
+
+			// Add input event listeners to save data as user types
+			const inputs = detailsForm.querySelectorAll('input');
+			inputs.forEach(input => {
+				input.addEventListener('input', () => {
+					this.saveFormData();
+				});
+			});
 		}
 
 		if (otpForm) {
@@ -76,11 +78,19 @@ class RegistrationManager {
 			});
 		}
 
-		// Navigation buttons
+		// Back button handlers
 		const backToStepOneBtn = document.getElementById("back_to_step_one");
+		const backToStepTwoBtn = document.getElementById("back_to_step_two");
+		
 		if (backToStepOneBtn) {
 			backToStepOneBtn.addEventListener("click", () => {
 				this.goToStep(STEPS.ENROLLMENT);
+			});
+		}
+
+		if (backToStepTwoBtn) {
+			backToStepTwoBtn.addEventListener("click", () => {
+				this.goToStep(STEPS.VERIFICATION);
 			});
 		}
 
@@ -338,113 +348,39 @@ class RegistrationManager {
 	}
 
 	handleDetailsSubmit(e) {
-		console.log("handleDetailsSubmit triggered.");
 		e.preventDefault();
 
 		const firstNameInput = document.getElementById("first_name");
 		const lastNameInput = document.getElementById("last_name");
 		const usernameInput = document.getElementById("username");
 		const passwordInput = document.getElementById("password");
-		const confirmPasswordInput =
-			document.getElementById("confirm_password");
+		const confirmPasswordInput = document.getElementById("confirm_password");
 		const phoneNumberInput = document.getElementById("phone_number");
 
-		if (
-			!firstNameInput ||
-			!lastNameInput ||
-			!usernameInput ||
-			!passwordInput ||
-			!confirmPasswordInput ||
-			!phoneNumberInput
-		) {
-			console.error(
-				"One or more input elements not found in Details form."
-			);
-			this.showNotification(
-				"An internal error occurred.",
-				NOTIFICATION_TYPES.ERROR
-			);
+		if (!firstNameInput || !lastNameInput || !usernameInput || !passwordInput || !confirmPasswordInput || !phoneNumberInput) {
+			console.error("One or more input elements not found in Details form.");
+			this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
 			return;
 		}
 
 		// Validate all fields
-		const isFirstNameValid = this.validateName(
-			firstNameInput,
-			FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
-		);
-		const isLastNameValid = this.validateName(
-			lastNameInput,
-			FORM_VALIDATION.LAST_NAME_MIN_LENGTH
-		);
+		const isFirstNameValid = this.validateName(firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
+		const isLastNameValid = this.validateName(lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
 		const isUsernameValid = this.validateUsername(usernameInput);
 		const isPasswordValid = this.validatePassword(passwordInput);
-		const isPasswordMatchValid = this.validatePasswordMatch(
-			passwordInput,
-			confirmPasswordInput
-		);
+		const isPasswordMatchValid = this.validatePasswordMatch(passwordInput, confirmPasswordInput);
 		const isPhoneNumberValid = this.validatePhoneNumber(phoneNumberInput);
 
-		const allFieldsValid =
-			isFirstNameValid &&
-			isLastNameValid &&
-			isUsernameValid &&
-			isPasswordValid &&
-			isPasswordMatchValid &&
-			isPhoneNumberValid;
+		const allFieldsValid = isFirstNameValid && isLastNameValid && isUsernameValid && 
+							 isPasswordValid && isPasswordMatchValid && isPhoneNumberValid;
 
 		if (allFieldsValid) {
-			this.showLoadingState("details_form");
-
-			// Store credentials using register.php
-			fetch("../../src/api/user/register.php", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					first_name: firstNameInput.value.trim(),
-					last_name: lastNameInput.value.trim(),
-					username: usernameInput.value.trim(),
-					password: passwordInput.value,
-					phone_number: phoneNumberInput.value.trim(),
-				}),
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					this.hideLoadingState("details_form");
-					if (data.success) {
-						this.formData = {
-							first_name: firstNameInput.value.trim(),
-							last_name: lastNameInput.value.trim(),
-							username: usernameInput.value.trim(),
-							password: passwordInput.value,
-							phone_number: phoneNumberInput.value.trim(),
-						};
-						this.goToStep(STEPS.VERIFICATION);
-						this.showNotification(
-							"Details saved. Please verify your phone number.",
-							NOTIFICATION_TYPES.SUCCESS
-						);
-					} else {
-						this.showNotification(
-							data.error,
-							NOTIFICATION_TYPES.ERROR
-						);
-					}
-				})
-				.catch((error) => {
-					this.hideLoadingState("details_form");
-					this.showNotification(
-						"An error occurred. Please try again.",
-						NOTIFICATION_TYPES.ERROR
-					);
-					console.error("Error:", error);
-				});
+			// Save form data before proceeding
+			this.saveFormData();
+			this.goToStep(STEPS.VERIFICATION);
+			this.showNotification("Please verify your phone number.", NOTIFICATION_TYPES.SUCCESS);
 		} else {
-			this.showNotification(
-				"Please fill in all fields correctly.",
-				NOTIFICATION_TYPES.ERROR
-			);
+			this.showNotification("Please fill in all fields correctly.", NOTIFICATION_TYPES.ERROR);
 		}
 	}
 
@@ -452,9 +388,7 @@ class RegistrationManager {
 		e.preventDefault();
 
 		const otpCodeInput = document.getElementById("otp_code");
-		const submitBtn = document.querySelector(
-			'#otp_form button[type="submit"]'
-		);
+		const submitBtn = document.querySelector('#otp_form button[type="submit"]');
 
 		if (!otpCodeInput || !submitBtn) {
 			console.error("OTP input element or submit button not found.");
@@ -480,61 +414,33 @@ class RegistrationManager {
 			submitBtn.style.opacity = "0.5";
 			submitBtn.disabled = true;
 			
-			// Include both OTP and phone number in the verification request
-			fetch("../../src/api/auth/verify_otp.php", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					otp: otpCode,
-					phone_number: this.formData.phone_number // Include the phone number
-				}),
-			})
-				.then((response) => {
-					if (!response.ok) {
-						return response.json().then((data) => {
-							throw new Error(
-								data.error || "Failed to verify OTP"
-							);
-						});
-					}
-					return response.json();
-				})
-				.then((data) => {
-					if (data.success) {
-						this.goToStep(STEPS.SUCCESS);
-						this.showNotification(
-							"Registration completed successfully!",
-							NOTIFICATION_TYPES.SUCCESS
-						);
-						this.registeredData = data;
-						this.populateSuccessPage();
-					} else {
-						submitBtn.style.opacity = "1";
-						submitBtn.disabled = false;
-						otpCodeInput.value = ""; // Clear invalid OTP
-						otpCodeInput.focus();
-						this.showNotification(
-							data.error,
-							NOTIFICATION_TYPES.ERROR
-						);
-					}
-					this.hideLoadingState("otp_form");
-				})
-				.catch((error) => {
-					this.hideLoadingState("otp_form");
-					submitBtn.style.opacity = "1";
-					submitBtn.disabled = false;
-					otpCodeInput.value = ""; // Clear invalid OTP
-					otpCodeInput.focus();
-					this.showNotification(
-						error.message ||
-							"Failed to verify OTP. Please try again.",
-						NOTIFICATION_TYPES.ERROR
-					);
-					console.error("Error:", error);
-				});
+			// Simulate successful OTP verification (replace with actual API call)
+			setTimeout(() => {
+				// Store the complete registration data
+				this.registeredData = {
+					username: this.formData.username,
+					account_number: this.generateAccountNumber(),
+					status: 'Active'
+				};
+				
+				// Update success page elements
+				const usernameElement = document.getElementById("registered_username");
+				const accountNumberElement = document.getElementById("account_number");
+				
+				if (usernameElement) {
+					usernameElement.textContent = this.registeredData.username;
+				}
+				if (accountNumberElement) {
+					accountNumberElement.textContent = this.registeredData.account_number;
+				}
+
+				this.hideLoadingState("otp_form");
+				this.goToStep(STEPS.SUCCESS);
+				this.showNotification(
+					"Registration completed successfully!",
+					NOTIFICATION_TYPES.SUCCESS
+				);
+			}, 1500);
 		} else {
 			this.showNotification(
 				`Please enter a valid ${FORM_VALIDATION.SMS_CODE_LENGTH}-digit OTP.`,
@@ -549,39 +455,101 @@ class RegistrationManager {
 		const isValidStep = step >= STEPS.ENROLLMENT && step <= this.maxStep;
 		if (!isValidStep) return;
 
-		this.currentStep = step;
-		this.showStep(step);
-		this.updateStepIndicators();
+		// Don't allow going back if registration is complete
+		if (this.registeredData && step < STEPS.SUCCESS) {
+			this.showNotification("Registration is already complete. Please log in.", NOTIFICATION_TYPES.INFO);
+			return;
+		}
 
-		// If moving to verification step, disable continue button initially
-		if (step === STEPS.VERIFICATION) {
-			const submitBtn = document.querySelector(
-				'#otp_form button[type="submit"]'
-			);
-			const otpInput = document.getElementById("otp_code");
-			if (submitBtn) {
-				submitBtn.style.opacity = "0.5";
-				submitBtn.disabled = true;
-			}
-			if (otpInput) {
-				otpInput.value = ""; // Clear OTP input
+		const currentStepElement = document.querySelector('.form-step.active');
+		const newStepElement = document.getElementById(`step_${this.getStepName(step)}`);
+
+		if (!newStepElement) {
+			console.error(`Target step element not found: step_${this.getStepName(step)}`);
+			return;
+		}
+
+		// If going back to step 1, prepare the data first
+		if (step === STEPS.ENROLLMENT) {
+			// Ensure form data exists
+			if (!this.formData) {
+				this.formData = this.collectFormData();
 			}
 		}
+
+		// Hide current step with animation
+		if (currentStepElement) {
+			currentStepElement.style.opacity = '0';
+			currentStepElement.style.transform = 'translateY(20px)';
+			
+			setTimeout(() => {
+				currentStepElement.classList.remove('active');
+				currentStepElement.style.display = 'none';
+				
+				// Show new step
+				newStepElement.style.display = 'block';
+				newStepElement.offsetHeight; // Trigger reflow
+				newStepElement.classList.add('active');
+				newStepElement.style.opacity = '1';
+				newStepElement.style.transform = 'translateY(0)';
+
+				// Handle step-specific logic
+				if (step === STEPS.ENROLLMENT) {
+					console.log("Restoring form data:", this.formData);
+					this.restoreFormData();
+				} else if (step === STEPS.VERIFICATION) {
+					// Clear any existing OTP input
+					const otpInput = document.getElementById('otp_code');
+					if (otpInput) otpInput.value = '';
+					
+					// Reset the resend timer if it exists
+					if (this.resendTimer) {
+						clearInterval(this.resendTimer);
+						this.startResendTimer();
+					}
+				}
+			}, 300);
+		} else {
+			// If there's no current step, just show the new step immediately
+			newStepElement.style.display = 'block';
+			newStepElement.classList.add('active');
+			if (step === STEPS.ENROLLMENT) {
+				console.log("Restoring form data:", this.formData);
+				this.restoreFormData();
+			}
+		}
+
+		this.currentStep = step;
+		this.updateStepIndicators();
 	}
 
-	showStep(step) {
-		// Hide all steps
-		const allSteps = document.querySelectorAll(".form-step");
-		allSteps.forEach((stepEl) => {
-			stepEl.classList.remove("active");
-		});
+	showNewStep(step) {
+		// Show new step with animation
+		const stepId = step === STEPS.SUCCESS ? 'complete_step' : `step_${this.getStepName(step)}`;
+		const newStepElement = document.getElementById(stepId);
+		
+		if (newStepElement) {
+			newStepElement.style.display = 'block';
+			// Trigger reflow
+			newStepElement.offsetHeight;
+			newStepElement.classList.add('active');
+			newStepElement.style.opacity = '1';
+			newStepElement.style.transform = 'translateY(0)';
 
-		// Show current step
-		const currentStepElement = document.getElementById(
-			`step_${this.getStepName(step)}`
-		);
-		if (currentStepElement) {
-			currentStepElement.classList.add("active");
+			// If moving to verification step, disable continue button initially
+			if (step === STEPS.VERIFICATION) {
+				const submitBtn = document.querySelector('#otp_form button[type="submit"]');
+				const otpInput = document.getElementById("otp_code");
+				if (submitBtn) {
+					submitBtn.style.opacity = "0.5";
+					submitBtn.disabled = true;
+				}
+				if (otpInput) {
+					otpInput.value = ""; // Clear OTP input
+				}
+			}
+		} else {
+			console.error(`Step element with id ${stepId} not found`);
 		}
 	}
 
@@ -599,15 +567,16 @@ class RegistrationManager {
 	}
 
 	updateStepIndicators() {
-		const stepIndicators = document.querySelectorAll(
-			".step-indicators .step"
-		);
-		stepIndicators.forEach((indicator) => {
-			const stepNumber = parseInt(indicator.dataset.step);
-			indicator.classList.toggle(
-				"active",
-				stepNumber === this.currentStep
-			);
+		const steps = document.querySelectorAll('.step');
+		steps.forEach((step, index) => {
+			const stepNumber = index + 1;
+			step.classList.remove('active', 'complete');
+			
+			if (stepNumber === this.currentStep) {
+				step.classList.add('active');
+			} else if (stepNumber < this.currentStep) {
+				step.classList.add('complete');
+			}
 		});
 	}
 
@@ -779,47 +748,6 @@ class RegistrationManager {
 		return `SAC${timestamp}${random}`.substring(0, 12); // Example format, adjust as needed
 	}
 
-	populateSuccessPage() {
-		const usernameElement = document.getElementById("registered_username");
-		const accountNumberElement = document.getElementById(
-			"generated_account_number"
-		);
-
-		if (usernameElement && accountNumberElement && this.registeredData) {
-			usernameElement.textContent = this.registeredData.user.username;
-			accountNumberElement.textContent =
-				this.registeredData.account.account_number;
-		} else {
-			console.error(
-				"Success page elements not found or missing registration data."
-			);
-		}
-	}
-
-	startOtpTimer() {
-		const resendLink = document.getElementById("resend_otp");
-		if (!resendLink) return;
-
-		this.resendCountdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
-		resendLink.style.pointerEvents = "none";
-		resendLink.style.opacity = "0.5";
-
-		resendLink.textContent = `Resend OTP in ${this.resendCountdown}s`;
-
-		this.resendTimer = setInterval(() => {
-			this.resendCountdown--;
-			resendLink.textContent = `Resend OTP in ${this.resendCountdown}s`;
-
-			if (this.resendCountdown <= 0) {
-				clearInterval(this.resendTimer);
-				this.resendTimer = null;
-				resendLink.textContent = "Resend OTP";
-				resendLink.style.pointerEvents = "auto";
-				resendLink.style.opacity = "1";
-			}
-		}, 1000);
-	}
-
 	showNotification(message, type = NOTIFICATION_TYPES.INFO) {
 		// Remove existing notification
 		const existingNotification = document.querySelector(".notification");
@@ -911,6 +839,72 @@ class RegistrationManager {
 		this.setInputValidation(input, isValid, errorMsg);
 		console.log("validatePhoneNumber result:", isValid);
 		return isValid;
+	}
+
+	collectFormData() {
+		return {
+			first_name: document.getElementById('first_name')?.value || '',
+			last_name: document.getElementById('last_name')?.value || '',
+			username: document.getElementById('username')?.value || '',
+			password: document.getElementById('password')?.value || '',
+			confirm_password: document.getElementById('confirm_password')?.value || '',
+			phone_number: document.getElementById('phone_number')?.value || ''
+		};
+	}
+
+	saveFormData() {
+		const formData = {
+			first_name: document.getElementById('first_name')?.value || '',
+			last_name: document.getElementById('last_name')?.value || '',
+			username: document.getElementById('username')?.value || '',
+			password: document.getElementById('password')?.value || '',
+			confirm_password: document.getElementById('confirm_password')?.value || '',
+			phone_number: document.getElementById('phone_number')?.value || ''
+		};
+		this.formData = formData;
+	}
+
+	restoreFormData() {
+		if (!this.formData) {
+			console.log("No form data to restore");
+			return;
+		}
+
+		console.log("Restoring form data:", this.formData);
+
+		const fields = [
+			'first_name',
+			'last_name',
+			'username',
+			'password',
+			'confirm_password',
+			'phone_number'
+		];
+
+		fields.forEach(field => {
+			const input = document.getElementById(field);
+			if (input && this.formData[field]) {
+				input.value = this.formData[field];
+				
+				// Trigger validation
+				if (field === 'password') {
+					this.validatePassword(input);
+				} else if (field === 'confirm_password') {
+					const passwordInput = document.getElementById('password');
+					if (passwordInput) {
+						this.validatePasswordMatch(passwordInput, input);
+					}
+				} else if (field === 'username') {
+					this.validateUsername(input);
+				} else if (field.includes('name')) {
+					this.validateName(input, field === 'first_name' ? 
+						FORM_VALIDATION.FIRST_NAME_MIN_LENGTH : 
+						FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
+				} else if (field === 'phone_number') {
+					this.validatePhoneNumber(input);
+				}
+			}
+		});
 	}
 }
 

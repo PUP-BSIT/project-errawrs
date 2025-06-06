@@ -1,0 +1,144 @@
+[06-Jun-2025 08:46:02 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:02 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:02 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:46:02 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:46:02 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:46:02 Europe/Berlin] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => testuser
+            [type] => user
+            [logged_in_at] => 1749192360
+            [last_activity] => 1749192362
+            [first_name] => Test
+            [last_name] => User
+            [phone_number] => 09123456789
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 1
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[06-Jun-2025 08:46:02 Europe/Berlin] Processing transactions for user_id: 1
+[06-Jun-2025 08:46:02 Europe/Berlin] Attempting database connection
+[06-Jun-2025 08:46:02 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:02 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:02 Europe/Berlin] Database connection successful
+[06-Jun-2025 08:46:02 Europe/Berlin] Count query: SELECT COUNT(*) as total FROM transaction t
+                   JOIN account a ON t.account_id = a.account_id
+                   WHERE a.user_id = ? with user_id: 1
+[06-Jun-2025 08:46:02 Europe/Berlin] Error in transactions.php: Table 'errawrs.transaction' doesn't exist
+#0 C:\project-errawrs\src\api\user\transactions.php(37): mysqli->prepare('SELECT COUNT(*)...')
+#1 {main}
+[06-Jun-2025 08:46:02 Europe/Berlin] Connection closed
+[06-Jun-2025 08:46:02 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:46:06 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:06 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:06 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:46:06 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:46:06 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:46:08 Europe/Berlin] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => testuser
+            [type] => user
+            [logged_in_at] => 1749192360
+            [last_activity] => 1749192368
+            [first_name] => Test
+            [last_name] => User
+            [phone_number] => 09123456789
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 1
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[06-Jun-2025 08:46:08 Europe/Berlin] Processing transactions for user_id: 1
+[06-Jun-2025 08:46:08 Europe/Berlin] Attempting database connection
+[06-Jun-2025 08:46:08 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:08 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:08 Europe/Berlin] Database connection successful
+[06-Jun-2025 08:46:08 Europe/Berlin] Count query: SELECT COUNT(*) as total FROM transaction t
+                   JOIN account a ON t.account_id = a.account_id
+                   WHERE a.user_id = ? with user_id: 1
+[06-Jun-2025 08:46:08 Europe/Berlin] Error in transactions.php: Table 'errawrs.transaction' doesn't exist
+#0 C:\project-errawrs\src\api\user\transactions.php(37): mysqli->prepare('SELECT COUNT(*)...')
+#1 {main}
+[06-Jun-2025 08:46:08 Europe/Berlin] Connection closed
+[06-Jun-2025 08:46:08 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:46:09 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:09 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:09 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:46:09 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:46:09 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:46:26 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:46:26 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:46:26 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:46:26 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:46:26 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:50:37 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:50:37 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:50:37 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:50:37 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:50:37 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175
+[06-Jun-2025 08:50:38 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:50:38 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:50:38 Europe/Berlin] Fetching accounts for user ID: 1
+[06-Jun-2025 08:50:38 Europe/Berlin] Error in accounts.php: Unknown column 'account_type' in 'field list'
+[06-Jun-2025 08:50:38 Europe/Berlin] PHP Fatal error:  Uncaught Error: mysqli object is already closed in C:\project-errawrs\src\config\database.php:175
+Stack trace:
+#0 C:\project-errawrs\src\config\database.php(175): mysqli->close()
+#1 [internal function]: DatabaseConnection->__destruct()
+#2 {main}
+  thrown in C:\project-errawrs\src\config\database.php on line 175

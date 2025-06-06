@@ -1,0 +1,57 @@
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Session ID: q26t3g1pl74npete13s40fqrkb
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Session Data: Array
+(
+    [registration] => Array
+        (
+            [first_name] => Test
+            [last_name] => User
+            [username] => testuser
+            [password] => Test123456
+            [phone_number] => 09123456789
+            [created_at] => 1749192341
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09123456789
+            [created_at] => 1749192350
+            [attempts] => 0
+            [purpose] => general
+        )
+
+)
+
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] OTP verification request data: Array
+(
+    [otp] => 123456
+    [phone_number] => 09123456789
+)
+
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Stored OTP data: Array
+(
+    [code] => 123456
+    [phone_number] => 09123456789
+    [created_at] => 1749192350
+    [attempts] => 0
+    [purpose] => general
+)
+
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Is registration flow: yes
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Registration data: Array
+(
+    [first_name] => Test
+    [last_name] => User
+    [username] => testuser
+    [password] => Test123456
+    [phone_number] => 09123456789
+    [created_at] => 1749192341
+)
+
+[06-Jun-2025 08:45:56 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:45:56 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Starting user creation process
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] User created successfully with ID: 1
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Generated account number: 544250000001
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Account created successfully with ID: 1
+[06-Jun-2025 08:45:56 Europe/Berlin] [2025-06-06 08:45:56] Registration completed successfully
