@@ -102,28 +102,26 @@ function determineTransactionType(action, cardType) {
     }
 }
 
-// Pagination functions (called by onclick)
+// Pagination functions
 function goToPage(pageNum) {
-    if (pageNum >= 1 && pageNum <= totalPages) {
+    if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
         currentPage = pageNum;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
 }
 
 function goToPreviousPage() {
     if (currentPage > 1) {
-        currentPage--;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage - 1);
     }
 }
 
 function goToNextPage() {
     if (currentPage < totalPages) {
-        currentPage++;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage + 1);
     }
 }
 
@@ -131,16 +129,15 @@ function changeItemsPerPage() {
     const selectElement = document.getElementById("per-page-select");
     const newItemsPerPage = parseInt(selectElement.value);
     
-    itemsPerPage = newItemsPerPage;
-    totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    
-    // Reset to page 1 if current page is now out of bounds
-    if (currentPage > totalPages) {
-        currentPage = 1;
+    if (newItemsPerPage !== itemsPerPage) {
+        itemsPerPage = newItemsPerPage;
+        currentPage = 1; // Reset to first page when changing items per page
+        
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
-    
-    updatePaginationDisplay();
-    updateTableDisplay();
 }
 
 function applyPaginationSettings() {
@@ -157,8 +154,8 @@ function updatePaginationDisplay() {
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, currentPage + 2);
 
-    // Adjust the range to show at least 5 pages if possible
-    if (endPage - startPage < 4) {
+    // Always show at least 5 pages if available
+    if (endPage - startPage < 4 && totalPages > 4) {
         if (startPage === 1) {
             endPage = Math.min(5, totalPages);
         } else if (endPage === totalPages) {
@@ -166,7 +163,7 @@ function updatePaginationDisplay() {
         }
     }
 
-    // Add first page if not in range
+    // Add first page button if not in range
     if (startPage > 1) {
         addPageButton(1);
         if (startPage > 2) {
@@ -179,7 +176,7 @@ function updatePaginationDisplay() {
         addPageButton(i);
     }
 
-    // Add last page if not in range
+    // Add last page button if not in range
     if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
             addEllipsis();
@@ -187,15 +184,25 @@ function updatePaginationDisplay() {
         addPageButton(totalPages);
     }
 
-    // Update showing text
-    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    // Update showing text with proper padding
+    updateShowingText();
+
+    // Enable/disable navigation buttons
+    updateNavigationButtons();
+}
+
+// Update the showing text
+function updateShowingText() {
+    const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
+        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries`;
     }
+}
 
-    // Enable/disable navigation buttons
+// Update navigation buttons state
+function updateNavigationButtons() {
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
 
@@ -267,9 +274,13 @@ function createTableRow(item) {
     accountNameCell.className = "table-cell";
     accountNameCell.textContent = item.account_name;
 
+    const accountTypeCell = document.createElement("div");
+    accountTypeCell.className = "table-cell";
+    accountTypeCell.textContent = item.card_type || "—";
+
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = item.amount ? formatCurrency(item.amount) : "—";
+    amountCell.textContent = formatCurrency(item.amount);
 
     const detailsCell = document.createElement("div");
     detailsCell.className = "table-cell details-cell";
@@ -285,6 +296,7 @@ function createTableRow(item) {
     row.appendChild(timeCell);
     row.appendChild(accountNumberCell);
     row.appendChild(accountNameCell);
+    row.appendChild(accountTypeCell);
     row.appendChild(amountCell);
     row.appendChild(detailsCell);
 
@@ -462,12 +474,21 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
+    // Convert amount to a number if it's a string
+    const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
+    
+    // Check if it's a valid number
+    if (isNaN(numericAmount)) {
+        return "—";
+    }
+
+    // Format the number using Intl.NumberFormat
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
-    }).format(amount);
+    }).format(numericAmount);
 }
 
 function formatDate(dateString) {

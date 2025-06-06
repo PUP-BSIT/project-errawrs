@@ -173,8 +173,10 @@ body {
     margin: 10px auto;
     display: flex;
     flex-direction: column;
-    width: 950px;
-    max-width: 100%;
+    width: 95%;
+    max-width: 1400px;
+    min-height: 600px;
+    height: calc(100vh - 100px);
 }
 
 .history-container h1 {
@@ -183,6 +185,15 @@ body {
     color: var(--color-primary-black);
     margin-bottom: 25px;
     text-align: center;
+}
+
+/* Table Container */
+.table-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 20px;
 }
 
 /* Table Header Styles */
@@ -195,7 +206,7 @@ body {
 
 .header-row {
     display: grid;
-    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr 1fr;
+    grid-template-columns: 0.7fr 0.7fr 1fr 1.2fr 0.8fr 0.8fr 1fr;
     gap: 20px;
     align-items: center;
 }
@@ -213,11 +224,12 @@ body {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 20px;
+    min-height: 400px;
 }
 
 .table-row {
     display: grid;
-    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr 1fr;
+    grid-template-columns: 0.7fr 0.7fr 1fr 1.2fr 0.8fr 0.8fr 1fr;
     gap: 20px;
     padding: 15px 20px;
     align-items: center;
@@ -233,14 +245,24 @@ body {
     font-size: 1rem;
     color: var(--color-primary-black);
     padding: 0 10px;
+    overflow: visible;
+    word-wrap: break-word;
+}
+
+/* Specific cell styles */
+.table-cell.date,
+.table-cell.time {
+    font-family: var(--font-main);
+    white-space: nowrap;
 }
 
 .table-cell.currency {
     font-family: var(--font-main);
     text-align: right;
+    white-space: nowrap;
 }
 
-/* Transaction Type Styles */
+/* Details cell specific styles */
 .details-cell {
     display: flex;
     align-items: center;
@@ -252,6 +274,12 @@ body {
     font-size: 1rem;
 }
 
+.details-cell span {
+    white-space: nowrap;
+    overflow: visible;
+}
+
+/* Status colors */
 .details-deposit {
     color: var(--color-success);
 }
@@ -265,7 +293,21 @@ body {
 }
 
 .details-reopen {
-    color: var(--color-mint);
+    color: var(--color-success);
+}
+
+/* Selected row styles */
+.table-row.selected {
+    background-color: var(--color-lime-green);
+}
+
+.table-row.selected .table-cell {
+    color: var(--color-primary-black);
+    font-weight: 500;
+}
+
+.table-row.selected:hover {
+    background-color: var(--color-lime-green);
 }
 
 /* Pagination Styles */
@@ -273,20 +315,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    padding-top: 20px;
+    padding: 20px 0;
     border-top: 1px solid var(--color-bg-gradient-end);
+    margin-top: auto;
 }
 
 .pagination-left {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
 }
 
 .page-numbers {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 }
 
@@ -300,6 +342,8 @@ body {
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.2s ease;
+    min-width: 40px;
+    text-align: center;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -310,10 +354,56 @@ body {
 .pagination-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .pagination-btn.active {
     background: var(--color-mint);
+}
+
+.pagination-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.per-page-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.per-page-select {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    outline: none;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.per-page-label {
+    color: var(--color-primary-black);
+    font-size: 0.9rem;
+}
+
+.showing-container {
+    border-left: 1px solid var(--color-border);
+    padding-left: 24px;
+}
+
+#showing-text {
+    color: var(--color-primary-black);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.page-ellipsis {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    padding: 0 4px;
 }
 
 /* Status Styles */
@@ -445,16 +535,6 @@ body {
     animation: fade-out 0.3s ease forwards;
 }
 
-/* Table Row Selection Styles */
-.table-row.selected {
-    background-color: var(--color-mint);
-    color: var(--color-white);
-}
-
-.table-row.selected .table-cell {
-    color: var(--color-white);
-}
-
 /* Notification Animation Styles */
 .notification.fade-out {
     animation: fade-out 0.3s ease forwards;
@@ -479,11 +559,4 @@ body {
 /* Date Format Styles */
 .date {
     font-family: var(--font-main);
-}
-
-/* Ellipsis style */
-.page-ellipsis {
-    color: var(--color-primary-black);
-    font-weight: 500;
-    padding: 0 4px;
 }
