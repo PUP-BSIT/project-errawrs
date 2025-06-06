@@ -537,23 +537,13 @@ async function closeAccount(e) {
     // Show loading overlay
     showLoadingOverlay('Closing account...');
 
-    // Immediately update UI
+    // Store references to elements
     const statusElement = cardWrapper.querySelector('.account-value:last-child');
     const actionsContainer = cardWrapper.querySelector('.account-actions');
     
-    // Update status display immediately
-    if (statusElement) {
-        statusElement.textContent = 'Closed';
-        statusElement.className = 'account-value closed';
-    }
-
-    // Update actions immediately
+    // Hide actions during the operation
     if (actionsContainer) {
-        actionsContainer.innerHTML = `
-            <button class="action-btn reopen" disabled>
-                <i class="fas fa-redo"></i> Reopen Account
-            </button>
-        `;
+        actionsContainer.style.visibility = 'hidden';
     }
     
     try {
@@ -571,43 +561,6 @@ async function closeAccount(e) {
         const data = await response.json();
 
         if (!response.ok) {
-            // Revert UI changes if the API call fails
-            if (statusElement) {
-                statusElement.textContent = 'Active';
-                statusElement.className = 'account-value active';
-            }
-            if (actionsContainer) {
-                actionsContainer.innerHTML = `
-                    <button class="action-btn deposit">
-                        <i class="fas fa-plus"></i> Deposit
-                    </button>
-                    <button class="action-btn withdraw">
-                        <i class="fas fa-minus"></i> Withdraw
-                    </button>
-                    <button class="action-btn close">
-                        <i class="fas fa-times"></i> Close Account
-                    </button>
-                `;
-                // Reattach event listeners
-                const buttons = actionsContainer.getElementsByTagName('button');
-                Array.from(buttons).forEach(button => {
-                    if (button.classList.contains('deposit')) {
-                        button.onclick = (e) => {
-                            e.stopPropagation();
-                            sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
-                            showDepositForm();
-                        };
-                    } else if (button.classList.contains('withdraw')) {
-                        button.onclick = (e) => {
-                            e.stopPropagation();
-                            sessionStorage.setItem('currentAccount', JSON.stringify({...account, balance: balance}));
-                            showWithdrawForm();
-                        };
-                    } else if (button.classList.contains('close')) {
-                        button.onclick = (e) => closeAccount(e);
-                    }
-                });
-            }
             throw new Error(data.error || 'Failed to close account');
         }
 
@@ -623,19 +576,34 @@ async function closeAccount(e) {
             updateSearchHistory();
         }
 
-        // Re-enable the reopen button and add its event listener
+        // Update UI after successful operation
+        if (statusElement) {
+            statusElement.textContent = 'Closed';
+            statusElement.className = 'account-value closed';
+        }
+
         if (actionsContainer) {
+            actionsContainer.innerHTML = `
+                <button class="action-btn reopen">
+                    <i class="fas fa-redo"></i> Reopen Account
+                </button>
+            `;
             const reopenBtn = actionsContainer.querySelector('.reopen');
             if (reopenBtn) {
-                reopenBtn.disabled = false;
                 reopenBtn.onclick = (e) => reopenAccount(e);
             }
+            // Show actions container after setting up the new button
+            actionsContainer.style.visibility = 'visible';
         }
 
         showNotification('Account closed successfully');
 
     } catch (error) {
         console.error('Close account error:', error);
+        // Show actions container again in case of error
+        if (actionsContainer) {
+            actionsContainer.style.visibility = 'visible';
+        }
         showNotification(error.message, true);
     } finally {
         hideLoadingOverlay();
@@ -659,29 +627,13 @@ async function reopenAccount(e) {
     // Show loading overlay
     showLoadingOverlay('Reopening account...');
 
-    // Immediately update UI
+    // Store references to elements
     const statusElement = cardWrapper.querySelector('.account-value:last-child');
     const actionsContainer = cardWrapper.querySelector('.account-actions');
     
-    // Update status display immediately
-    if (statusElement) {
-        statusElement.textContent = 'Active';
-        statusElement.className = 'account-value active';
-    }
-
-    // Update actions immediately
+    // Hide actions during the operation
     if (actionsContainer) {
-        actionsContainer.innerHTML = `
-            <button class="action-btn deposit" disabled>
-                <i class="fas fa-plus"></i> Deposit
-            </button>
-            <button class="action-btn withdraw" disabled>
-                <i class="fas fa-minus"></i> Withdraw
-            </button>
-            <button class="action-btn close" disabled>
-                <i class="fas fa-times"></i> Close Account
-            </button>
-        `;
+        actionsContainer.style.visibility = 'hidden';
     }
     
     try {
@@ -699,23 +651,6 @@ async function reopenAccount(e) {
         const data = await response.json();
 
         if (!response.ok) {
-            // Revert UI changes if the API call fails
-            if (statusElement) {
-                statusElement.textContent = 'Closed';
-                statusElement.className = 'account-value closed';
-            }
-            if (actionsContainer) {
-                actionsContainer.innerHTML = `
-                    <button class="action-btn reopen">
-                        <i class="fas fa-redo"></i> Reopen Account
-                    </button>
-                `;
-                // Reattach event listener to reopen button
-                const reopenBtn = actionsContainer.querySelector('.reopen');
-                if (reopenBtn) {
-                    reopenBtn.onclick = (e) => reopenAccount(e);
-                }
-            }
             throw new Error(data.error || 'Failed to reopen account');
         }
 
@@ -731,11 +666,28 @@ async function reopenAccount(e) {
             updateSearchHistory();
         }
 
-        // Re-enable all buttons and add their event listeners
+        // Update UI after successful operation
+        if (statusElement) {
+            statusElement.textContent = 'Active';
+            statusElement.className = 'account-value active';
+        }
+
         if (actionsContainer) {
+            actionsContainer.innerHTML = `
+                <button class="action-btn deposit">
+                    <i class="fas fa-plus"></i> Deposit
+                </button>
+                <button class="action-btn withdraw">
+                    <i class="fas fa-minus"></i> Withdraw
+                </button>
+                <button class="action-btn close">
+                    <i class="fas fa-times"></i> Close Account
+                </button>
+            `;
+            
+            // Add event listeners to new buttons
             const buttons = actionsContainer.getElementsByTagName('button');
             Array.from(buttons).forEach(button => {
-                button.disabled = false;
                 if (button.classList.contains('deposit')) {
                     button.onclick = (e) => {
                         e.stopPropagation();
@@ -752,12 +704,19 @@ async function reopenAccount(e) {
                     button.onclick = (e) => closeAccount(e);
                 }
             });
+            
+            // Show actions container after setting up all buttons
+            actionsContainer.style.visibility = 'visible';
         }
 
         showNotification('Account reopened successfully');
 
     } catch (error) {
         console.error('Reopen account error:', error);
+        // Show actions container again in case of error
+        if (actionsContainer) {
+            actionsContainer.style.visibility = 'visible';
+        }
         showNotification(error.message, true);
     } finally {
         hideLoadingOverlay();
