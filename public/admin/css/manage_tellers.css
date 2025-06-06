@@ -8,6 +8,11 @@
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
+    --color-error: #dc3545;
+}
+
+body {
+    overflow: hidden;
 }
 
 .page-content {
@@ -27,7 +32,7 @@
 /* Search Box */
 .search-box {
     position: relative;
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
 }
 
@@ -41,10 +46,10 @@
 
 .search-box input {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    padding: 1rem 1rem 1rem 3rem;
     border: 1px solid #dce1e4;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     transition: border-color 0.2s;
 }
 
@@ -68,7 +73,30 @@
     transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-lime-green);
+}
+
+.btn-primary:disabled {
+    background-color: #e2e2e2;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-primary:disabled:hover {
+    background-color: #e2e2e2;
+    transform: none;
+}
+
+.btn-primary.valid-form {
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
+    cursor: pointer;
+    opacity: 1;
+}
+
+.btn-primary.valid-form:hover {
     background-color: var(--color-lime-green);
 }
 
@@ -301,8 +329,10 @@
     padding: 1.5rem;
 }
 
+/* Form Validation Styles */
 .form-group {
     margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-group label {
@@ -315,16 +345,74 @@
 .form-group input {
     width: 100%;
     padding: 0.75rem 1rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #dce1e4;
     border-radius: 8px;
     font-size: 0.95rem;
     transition: all 0.3s ease;
+    margin-bottom: 0.25rem;
 }
 
 .form-group input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     outline: none;
+    border-color: var(--color-gray);
+    box-shadow: 0 0 0 3px rgba(163, 163, 163, 0.1);
+}
+
+.form-group input.valid {
+    border-color: var(--color-mint);
+}
+
+.form-group input.valid:focus {
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.1);
+}
+
+.form-group input.invalid {
+    border-color: var(--color-error);
+}
+
+.form-group input.invalid:focus {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.help-text {
+    display: none;
+    color: var(--color-error);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+
+.form-group input.invalid ~ .help-text {
+    display: block;
+}
+
+/* Hide help text when input is valid */
+.form-group input.valid ~ .help-text {
+    display: none;
+}
+
+.error-message,
+.help-text {
+    display: none;
+    color: var(--color-error);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+
+.form-group input.invalid ~ .error-message {
+    display: block;
+}
+
+.help-text.show {
+    display: block;
+}
+
+/* Hide error message when input is valid */
+.form-group input.valid ~ .error-message {
+    display: none;
 }
 
 .password-input {
@@ -341,21 +429,6 @@
     color: #6b7280;
     cursor: pointer;
     padding: 0.25rem;
-}
-
-.help-text {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: #6b7280;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1.5rem;
-    border-top: 1px solid #e5e7eb;
 }
 
 /* Success Modal Specifics */
