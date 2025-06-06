@@ -10,6 +10,9 @@ let currentPage = 1;
 let itemsPerPage = 5;
 let totalItems = 0;
 let totalPages = 0;
+let lastFetchTime = null;
+const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const ITEMS_PER_VIEW = 5; // Fixed number of items to display per page
 
 // Table data storage
 let tableData = [];
@@ -28,68 +31,98 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    await fetchSearchHistory();
+    await fetchTransactionHistory();
     updateTableDisplay();
     updatePaginationDisplay();
+    setupAutoRefresh();
 }
 
-// Fetch search history from the server
-async function fetchSearchHistory() {
+// Setup auto-refresh functionality
+function setupAutoRefresh() {
+    setInterval(async () => {
+        const now = new Date().getTime();
+        if (lastFetchTime && (now - lastFetchTime) >= REFRESH_INTERVAL) {
+            await fetchTransactionHistory();
+            updateTableDisplay();
+            updatePaginationDisplay();
+        }
+    }, 60000); // Check every minute
+}
+
+// Fetch transaction history from the server
+async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch search history");
+            throw new Error(data.error || "Failed to fetch transaction history");
         }
 
-        if (data.success && data.history) {
-            tableData = data.history.map(item => ({
-                id: item.account_number, // Using account number as ID
-                date: new Date(item.timestamp),
+        if (data.success && data.transactions) {
+            tableData = data.transactions.map(item => ({
+                id: item.account_number,
+                date: new Date(item.date),
+                time: item.time,
                 account_number: item.account_number,
                 account_name: item.account_name,
-                timestamp: item.timestamp,
-                amount: item.amount
+                amount: item.amount,
+                card_type: item.card_type,
+                action: item.action,
+                type: determineTransactionType(item.action, item.card_type)
             }));
             filteredData = [...tableData];
-            totalItems = filteredData.length;
-            totalPages = Math.ceil(totalItems / itemsPerPage);
+            totalItems = data.pagination.total_records;
+            totalPages = data.pagination.total_pages;
+            lastFetchTime = new Date().getTime();
         } else {
             tableData = [];
             filteredData = [];
             totalItems = 0;
             totalPages = 0;
-            showNotification("No search history found", "info");
+            showNotification("No transaction history found", "info");
         }
     } catch (error) {
-        console.error("Error fetching search history:", error);
-        showNotification(error.message || "Error fetching search history", "error");
+        console.error("Error fetching transaction history:", error);
+        showNotification(error.message || "Error fetching transaction history", "error");
     }
 }
 
-// Pagination functions (called by onclick)
+// Helper function to determine transaction type for icon and styling
+function determineTransactionType(action, cardType) {
+    if (action.toLowerCase().includes('deposit')) {
+        return 'deposit';
+    } else if (action.toLowerCase().includes('withdraw')) {
+        return 'withdraw';
+    } else if (action.toLowerCase().includes('closed')) {
+        return 'close';
+    } else if (action.toLowerCase().includes('reopened')) {
+        return 'reopen';
+    } else {
+        return cardType?.toLowerCase() || 'unknown';
+    }
+}
+
+// Pagination functions
 function goToPage(pageNum) {
-    if (pageNum >= 1 && pageNum <= totalPages) {
+    if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
         currentPage = pageNum;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
 }
 
 function goToPreviousPage() {
     if (currentPage > 1) {
-        currentPage--;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage - 1);
     }
 }
 
 function goToNextPage() {
     if (currentPage < totalPages) {
-        currentPage++;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage + 1);
     }
 }
 
@@ -97,16 +130,15 @@ function changeItemsPerPage() {
     const selectElement = document.getElementById("per-page-select");
     const newItemsPerPage = parseInt(selectElement.value);
     
-    itemsPerPage = newItemsPerPage;
-    totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    
-    // Reset to page 1 if current page is now out of bounds
-    if (currentPage > totalPages) {
-        currentPage = 1;
+    if (newItemsPerPage !== itemsPerPage) {
+        itemsPerPage = newItemsPerPage;
+        currentPage = 1; // Reset to first page when changing items per page
+        
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
-    
-    updatePaginationDisplay();
-    updateTableDisplay();
 }
 
 function applyPaginationSettings() {
@@ -119,20 +151,32 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
+    const actualPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+    const displayPages = Math.min(totalPages, actualPages);
+
+    if (displayPages <= 0) {
+        return; // No pages to display
+    }
+
+    // Adjust current page if it's beyond the actual data
+    if (currentPage > displayPages) {
+        currentPage = displayPages;
+    }
+
     // Calculate the range of page numbers to show
     let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    let endPage = Math.min(displayPages, currentPage + 2);
 
-    // Adjust the range to show at least 5 pages if possible
-    if (endPage - startPage < 4) {
+    // Always show at least 5 pages if available
+    if (endPage - startPage < 4 && displayPages > 4) {
         if (startPage === 1) {
-            endPage = Math.min(5, totalPages);
-        } else if (endPage === totalPages) {
-            startPage = Math.max(1, totalPages - 4);
+            endPage = Math.min(5, displayPages);
+        } else if (endPage === displayPages) {
+            startPage = Math.max(1, displayPages - 4);
         }
     }
 
-    // Add first page if not in range
+    // Add first page button if not in range
     if (startPage > 1) {
         addPageButton(1);
         if (startPage > 2) {
@@ -145,23 +189,23 @@ function updatePaginationDisplay() {
         addPageButton(i);
     }
 
-    // Add last page if not in range
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
+    // Add last page button if not in range
+    if (endPage < displayPages) {
+        if (endPage < displayPages - 1) {
             addEllipsis();
         }
-        addPageButton(totalPages);
+        addPageButton(displayPages);
     }
 
-    // Update showing text
-    const startItem = (currentPage - 1) * itemsPerPage + 1;
-    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-    const showingText = document.getElementById("showing-text");
-    if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
-    }
+    // Update showing text with proper padding
+    updateShowingText();
 
-    // Enable/disable navigation buttons
+    // Enable/disable navigation buttons based on actual pages
+    updateNavigationButtons(displayPages);
+}
+
+// Update navigation buttons state
+function updateNavigationButtons(displayPages) {
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
 
@@ -169,7 +213,22 @@ function updatePaginationDisplay() {
         prevBtn.disabled = currentPage === 1;
     }
     if (nextBtn) {
-        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.disabled = currentPage === displayPages;
+    }
+}
+
+// Update showing text
+function updateShowingText() {
+    const showingText = document.getElementById("showing-text");
+    if (showingText) {
+        if (totalItems === 0) {
+            showingText.textContent = "Showing 0 to 0 of 0 entries";
+        } else {
+            const startItem = ((currentPage - 1) * ITEMS_PER_VIEW) + 1;
+            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, totalItems);
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+        }
     }
 }
 
@@ -192,8 +251,8 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const startIndex = (currentPage - 1) * ITEMS_PER_VIEW;
+    const endIndex = startIndex + ITEMS_PER_VIEW;
     return filteredData.slice(startIndex, endIndex);
 }
 
@@ -223,7 +282,7 @@ function createTableRow(item) {
 
     const timeCell = document.createElement("div");
     timeCell.className = "table-cell time";
-    timeCell.textContent = formatTime(item.date);
+    timeCell.textContent = item.time || formatTime(item.date);
 
     const accountNumberCell = document.createElement("div");
     accountNumberCell.className = "table-cell";
@@ -233,15 +292,19 @@ function createTableRow(item) {
     accountNameCell.className = "table-cell";
     accountNameCell.textContent = item.account_name;
 
+    const accountTypeCell = document.createElement("div");
+    accountTypeCell.className = "table-cell";
+    accountTypeCell.textContent = item.card_type || "—";
+
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = item.amount ? formatCurrency(item.amount) : "—";
+    amountCell.textContent = formatCurrency(item.amount);
 
     const detailsCell = document.createElement("div");
     detailsCell.className = "table-cell details-cell";
     
-    // Set the details content based on transaction type
-    const detailsContent = getTransactionDetails(item.type);
+    // Set the details content based on transaction type and card type
+    const detailsContent = getTransactionDetails(item.type, item.card_type, item.action);
     detailsCell.innerHTML = `
         <i class="${detailsContent.icon}"></i>
         <span class="${detailsContent.class}">${detailsContent.text}</span>
@@ -251,6 +314,7 @@ function createTableRow(item) {
     row.appendChild(timeCell);
     row.appendChild(accountNumberCell);
     row.appendChild(accountNameCell);
+    row.appendChild(accountTypeCell);
     row.appendChild(amountCell);
     row.appendChild(detailsCell);
 
@@ -258,36 +322,38 @@ function createTableRow(item) {
 }
 
 // Helper function to get transaction details
-function getTransactionDetails(type) {
+function getTransactionDetails(type, cardType, action) {
+    // First check for specific transaction types
     switch (type?.toLowerCase()) {
         case 'deposit':
             return {
                 icon: 'fas fa-plus-circle',
-                text: 'Deposit',
+                text: action || 'Deposit',
                 class: 'details-deposit'
             };
         case 'withdraw':
             return {
                 icon: 'fas fa-minus-circle',
-                text: 'Withdraw',
+                text: action || 'Withdrawal',
                 class: 'details-withdraw'
             };
         case 'close':
             return {
                 icon: 'fas fa-times-circle',
-                text: 'Close Account',
+                text: action || 'Close Account',
                 class: 'details-close'
             };
         case 'reopen':
             return {
                 icon: 'fas fa-redo-alt',
-                text: 'Reopen Account',
+                text: action || 'Reopen Account',
                 class: 'details-reopen'
             };
         default:
+            // If no specific transaction type, show card type
             return {
-                icon: 'fas fa-info-circle',
-                text: 'View Details',
+                icon: 'fas fa-credit-card',
+                text: cardType ? `${cardType} Account` : action || 'View Details',
                 class: ''
             };
     }
@@ -316,14 +382,13 @@ function updateTableDisplay() {
         return;
     }
 
-    // Create new rows
+    // Create new rows (limited to ITEMS_PER_VIEW)
     currentPageData.forEach(function (item) {
         const row = createTableRow(item);
         tableBody.appendChild(row);
     });
 
-    // Update total items
-    totalItems = filteredData.length;
+    // Update total pages based on items per page selection
     totalPages = Math.ceil(totalItems / itemsPerPage);
 }
 
@@ -426,12 +491,21 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
+    // Convert amount to a number if it's a string
+    const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
+    
+    // Check if it's a valid number
+    if (isNaN(numericAmount)) {
+        return "—";
+    }
+
+    // Format the number using Intl.NumberFormat
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
-    }).format(amount);
+    }).format(numericAmount);
 }
 
 function formatDate(dateString) {
