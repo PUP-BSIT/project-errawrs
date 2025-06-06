@@ -46,16 +46,15 @@ try {
         a.account_id,
         a.account_number,
         a.balance,
+        a.account_type,
         a.status as account_status,
-        CONCAT(u.first_name, ' ', u.last_name) as account_name,
-        u.phone_number,
-        MAX(t.created_at) as last_interaction
+        CONCAT(u.first_name, ' ', u.last_name) as account_name
     FROM transaction t
     JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
     JOIN user u ON a.user_id = u.user_id
     WHERE t.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    GROUP BY a.account_id, a.account_number, a.balance, a.status, account_name, u.phone_number
-    ORDER BY last_interaction DESC
+    GROUP BY a.account_id, a.account_number, a.balance, a.account_type, a.status, account_name
+    ORDER BY MAX(t.created_at) DESC
     LIMIT 10";
 
     $history_stmt = mysqli_prepare($conn, $history_sql);
@@ -68,9 +67,8 @@ try {
             'account_number' => $row['account_number'],
             'account_name' => $row['account_name'],
             'balance' => number_format($row['balance'], 2),
-            'status' => $row['account_status'],
-            'phone_number' => $row['phone_number'],
-            'last_interaction' => $row['last_interaction']
+            'account_type' => $row['account_type'],
+            'status' => $row['account_status']
         ];
     }
 

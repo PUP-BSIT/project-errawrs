@@ -67,28 +67,23 @@ try {
 
     // Search accounts with all necessary information
     $search_sql = "SELECT 
-        a.account_id,
         a.account_number,
+        CONCAT(u.first_name, ' ', u.last_name) as account_name,
         a.balance,
-        a.status,
-        a.account_type,
-        CONCAT(u.first_name, ' ', u.last_name) as account_holder_name,
-        u.phone_number
+        a.status
     FROM account a
     JOIN user u ON a.user_id = u.user_id
     WHERE (
         a.account_number LIKE ? OR
         u.first_name LIKE ? OR
-        u.last_name LIKE ? OR
-        u.phone_number LIKE ?
+        u.last_name LIKE ?
     )
     ORDER BY a.account_number
     LIMIT 10";
 
     $search_pattern = "%{$search_term}%";
     $search_stmt = mysqli_prepare($conn, $search_sql);
-    mysqli_stmt_bind_param($search_stmt, "ssss", 
-        $search_pattern,
+    mysqli_stmt_bind_param($search_stmt, "sss", 
         $search_pattern,
         $search_pattern,
         $search_pattern
@@ -98,15 +93,15 @@ try {
     $search_result = mysqli_stmt_get_result($search_stmt);
 
     $accounts = [];
+    $counter = 1;
     while ($row = mysqli_fetch_assoc($search_result)) {
         // Format the data
         $accounts[] = [
+            'number' => $counter++,
+            'account_name' => $row['account_name'],
             'account_number' => $row['account_number'],
-            'account_holder_name' => $row['account_holder_name'],
-            'account_type' => ucfirst($row['account_type']), // Capitalize first letter
-            'current_balance' => 'P' . number_format($row['balance'], 2),
-            'account_status' => $row['status'],
-            'phone_number' => $row['phone_number']
+            'balance' => 'P' . number_format($row['balance'], 2),
+            'status' => $row['status']
         ];
     }
 
