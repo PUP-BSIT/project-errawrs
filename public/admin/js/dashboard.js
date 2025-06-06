@@ -1,6 +1,8 @@
 class AdminDashboard {
     constructor() {
         this.init();
+        // Set up auto-refresh every 5 minutes
+        this.setupAutoRefresh();
     }
 
     init() {
@@ -8,6 +10,11 @@ class AdminDashboard {
         this.setupEventListeners();
         this.loadDashboardStats();
         this.setupSidebarToggle();
+    }
+
+    setupAutoRefresh() {
+        // Refresh dashboard stats every 5 minutes
+        setInterval(() => this.loadDashboardStats(), 5 * 60 * 1000);
     }
 
     setupEventListeners() {
@@ -173,19 +180,68 @@ class AdminDashboard {
     }
 
     updateDashboardStats(stats) {
-        // Update statistics
-        const elements = {
-            total_users: document.getElementById('total_users'),
-            total_transactions: document.getElementById('total_transactions'),
-            active_tellers: document.getElementById('active_tellers'),
-            pending_issues: document.getElementById('pending_issues')
+        const statCards = {
+            total_users: {
+                numberEl: document.getElementById('total_users'),
+                changeEl: document.getElementById('total_users').nextElementSibling,
+                icon: 'fa-users'
+            },
+            total_transactions: {
+                numberEl: document.getElementById('total_transactions'),
+                changeEl: document.getElementById('total_transactions').nextElementSibling,
+                icon: 'fa-money-bill-wave'
+            },
+            active_tellers: {
+                numberEl: document.getElementById('active_tellers'),
+                changeEl: document.getElementById('active_tellers').nextElementSibling,
+                icon: 'fa-user-tie'
+            },
+            pending_issues: {
+                numberEl: document.getElementById('pending_issues'),
+                changeEl: document.getElementById('pending_issues').nextElementSibling,
+                icon: 'fa-exclamation-triangle'
+            }
         };
 
-        for (const [key, element] of Object.entries(elements)) {
-            if (element && stats[key] !== undefined) {
-                element.textContent = this.formatNumber(stats[key]);
+        // Update each stat card with animation
+        for (const [key, elements] of Object.entries(statCards)) {
+            if (stats[key] && elements.numberEl) {
+                // Animate number change
+                this.animateNumber(elements.numberEl, stats[key].count);
+                
+                // Update change percentage
+                if (elements.changeEl) {
+                    const change = stats[key].change;
+                    const changeText = change === 0 ? 'No change' : 
+                                    `${change > 0 ? '+' : ''}${change}% from last month`;
+                    
+                    elements.changeEl.textContent = changeText;
+                    
+                    // Update change status class
+                    elements.changeEl.className = 'stat-change ' + 
+                        (change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral');
+                }
             }
         }
+    }
+
+    animateNumber(element, newValue) {
+        const startValue = parseInt(element.textContent.replace(/,/g, '')) || 0;
+        const duration = 1000; // Animation duration in milliseconds
+        const steps = 60; // Number of steps in animation
+        const increment = (newValue - startValue) / steps;
+        let currentStep = 0;
+
+        const animation = setInterval(() => {
+            currentStep++;
+            const currentValue = Math.round(startValue + (increment * currentStep));
+            element.textContent = this.formatNumber(currentValue);
+
+            if (currentStep >= steps) {
+                clearInterval(animation);
+                element.textContent = this.formatNumber(newValue);
+            }
+        }, duration / steps);
     }
 
     formatNumber(number) {
