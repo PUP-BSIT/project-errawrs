@@ -14,11 +14,24 @@ const accountActionsDropdown = document.getElementById(
 const searchHistoryContainer = document.getElementById("search_history");
 const historyBody = document.getElementById("history_body");
 
-// Initialize search history from localStorage
-let searchHistory =
-    JSON.parse(
-        localStorage.getItem(`searchHistory_${tellerInfo.teller_number}`)
-    ) || [];
+// Initialize search history
+let searchHistory = [];
+
+// Load search history from API
+async function loadSearchHistory() {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const data = await response.json();
+
+        if (data.success && data.history) {
+            searchHistory = data.history;
+            updateSearchHistory();
+        }
+    } catch (error) {
+        console.error("Error loading search history:", error);
+        showNotification("Error loading search history", true);
+    }
+}
 
 // Format currency
 function formatCurrency(amount) {
@@ -48,9 +61,16 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Always ensure search history is hidden when showing account details
+    // Always hide search history when showing account details
     searchHistoryContainer.classList.add("hidden");
     searchHistoryContainer.style.display = "none";
+
+    // Add single-card class if only one account
+    if (accounts.length === 1) {
+        accountContainer.classList.add("single-card");
+    } else {
+        accountContainer.classList.remove("single-card");
+    }
 
     accounts.forEach((account) => {
         // Create a new card wrapper
@@ -63,8 +83,26 @@ function updateAccountDetails(accounts) {
         // Format the balance properly with peso sign
         const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
 
+        // Determine account type display and icon
+        const accountType = account.account_type ? account.account_type.toLowerCase() : 'savings';
+        const displayAccountType = accountType === 'credit' ? 'Credit' : 'Savings';
+        const accountTypeIcon = accountType === 'credit' ? 'fa-credit-card' : 'fa-piggy-bank';
+
+        // Status indicator HTML
+        const statusIndicator = account.status === "active"
+            ? `<div class="status-indicator active">
+                 <div class="status-icon">●</div>
+                 Active
+               </div>`
+            : `<div class="status-indicator closed">
+                 <div class="status-icon">×</div>
+                 Closed
+               </div>`;
+
         newCard.innerHTML = `
             <div class="account-info">
+                ${statusIndicator}
+                
                 <div class="account-label">Account Number</div>
                 <div class="account-value">${account.account_number}</div>
                 
@@ -72,15 +110,13 @@ function updateAccountDetails(accounts) {
                 <div class="account-value">${account.user.name}</div>
                 
                 <div class="account-label">Account Type</div>
-                <div class="account-value">Checking</div>
+                <div class="account-value">
+                    <i class="fas ${accountTypeIcon} account-type-icon"></i>
+                    ${displayAccountType}
+                </div>
                 
                 <div class="account-label">Current Balance</div>
                 <div class="account-value">${formatCurrency(balance)}</div>
-                
-                <div class="account-label">Account Status</div>
-                <div class="account-value ${account.status === "active" ? "active" : "closed"}">
-                    ${account.status === "active" ? "Active" : "Closed"}
-                </div>
             </div>
             <div class="toggle-icon">
                 <i class="fas fa-chevron-right"></i>
@@ -155,9 +191,9 @@ function updateAccountDetails(accounts) {
         accountContainer.appendChild(cardWrapper);
     });
 
-    // Add to search history if there's exactly one account
-    if (accounts.length === 1) {
-        addToSearchHistory(accounts[0]);
+    // Show search history only if there are no accounts or multiple accounts
+    if (accounts.length !== 1) {
+        loadSearchHistory();
     }
 }
 
@@ -232,18 +268,17 @@ function updateSearchHistory() {
     searchHistory.forEach((item, index) => {
         const row = document.createElement("div");
         row.className = "history-row";
-        row.onclick = () => selectFromHistory(item.accountNumber);
+        row.onclick = () => selectFromHistory(item.account_number);
 
         const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ""));
+        const displayAccountType = item.account_type ? item.account_type.toLowerCase() === 'credit' ? 'Credit' : 'Savings' : 'Savings';
 
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
-            <div class="history-value">${item.name}</div>
-            <div class="history-value">${item.accountNumber}</div>
+            <div class="history-value">${item.account_name}</div>
+            <div class="history-value">${item.account_number}</div>
             <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value status ${item.status === "active" ? "active" : "closed"}">
-                ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-            </div>
+            <div class="history-value">${displayAccountType}</div>
         `;
         historyBody.appendChild(row);
     });
@@ -657,6 +692,9 @@ window.addEventListener("storage", (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     const contentArea = document.querySelector(".content-area");
     
+    // Load search history initially
+    loadSearchHistory();
+
     // Show search history initially if we have entries and no search term
     if (searchHistory.length > 0 && !searchInput.value.trim()) {
         updateSearchHistory();
