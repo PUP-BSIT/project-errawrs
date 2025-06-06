@@ -50,6 +50,8 @@ class RegistrationManager {
 		this.formData = null;
 		this.resendTimer = null;
 		this.registeredData = null;
+		this.idImage = null;
+		this.isUnder18 = false;
 		this.bindEvents();
 	}
 
@@ -140,6 +142,53 @@ class RegistrationManager {
 
 		// Real-time form validation
 		this.setupFormValidation();
+
+		// Date of birth validation
+		const dobInput = document.getElementById('date_of_birth');
+		if (dobInput) {
+			dobInput.addEventListener('change', (e) => this.validateAge(e.target));
+			// Set max date to 18 years ago
+			const today = new Date();
+			const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+			dobInput.max = maxDate.toISOString().split('T')[0];
+		}
+
+		// File upload handling
+		const fileInput = document.getElementById('id_image');
+		const uploadContainer = document.querySelector('.file-upload-container');
+
+		if (fileInput && uploadContainer) {
+			fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+
+			// Drag and drop events
+			uploadContainer.addEventListener('dragover', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				if (!this.idImage) {
+					uploadContainer.classList.add('drag-over');
+				}
+			});
+
+			uploadContainer.addEventListener('dragleave', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				uploadContainer.classList.remove('drag-over');
+			});
+
+			uploadContainer.addEventListener('drop', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				uploadContainer.classList.remove('drag-over');
+				
+				if (!this.idImage) {
+					const files = e.dataTransfer.files;
+					if (files.length) {
+						fileInput.files = files;
+						this.handleFileSelect({ target: fileInput });
+					}
+				}
+			});
+		}
 	}
 
 	setupFormValidation() {
@@ -244,22 +293,53 @@ class RegistrationManager {
 	}
 
 	validatePassword(input) {
-		console.log("validatePassword called.");
 		const value = input.value;
-		const hasMinLength =
-			value.length >= FORM_VALIDATION.PASSWORD_MIN_LENGTH;
-		const hasUppercase = /[A-Z]/.test(value);
-		const hasLowercase = /[a-z]/.test(value);
-		const hasNumber = /\d/.test(value);
-		const isValid =
-			hasMinLength && hasUppercase && hasLowercase && hasNumber;
+		const requirements = {
+			length: value.length >= FORM_VALIDATION.PASSWORD_MIN_LENGTH,
+			uppercase: /[A-Z]/.test(value),
+			lowercase: /[a-z]/.test(value),
+			number: /\d/.test(value),
+			symbol: /[!@#$%^&*(),.?":{}|<>]/.test(value)
+		};
 
-		const errorMsg =
-			`Password must be at least ` +
-			`${FORM_VALIDATION.PASSWORD_MIN_LENGTH} characters with ` +
-			`uppercase, lowercase, and number`;
-		this.setInputValidation(input, isValid, errorMsg);
-		console.log("validatePassword result:", isValid);
+		// Update requirements display
+		const requirementsDiv = input.parentElement.querySelector('.password-requirements');
+		if (!requirementsDiv) {
+			const newRequirementsDiv = document.createElement('div');
+			newRequirementsDiv.className = 'password-requirements';
+			newRequirementsDiv.innerHTML = `
+				<span class="requirement ${requirements.length ? 'met' : ''}" data-requirement="length">
+					<i class="fas ${requirements.length ? 'fa-check' : 'fa-times'}"></i> 8+ characters
+				</span>
+				<span class="requirement ${requirements.uppercase ? 'met' : ''}" data-requirement="uppercase">
+					<i class="fas ${requirements.uppercase ? 'fa-check' : 'fa-times'}"></i> Uppercase
+				</span>
+				<span class="requirement ${requirements.lowercase ? 'met' : ''}" data-requirement="lowercase">
+					<i class="fas ${requirements.lowercase ? 'fa-check' : 'fa-times'}"></i> Lowercase
+				</span>
+				<span class="requirement ${requirements.number ? 'met' : ''}" data-requirement="number">
+					<i class="fas ${requirements.number ? 'fa-check' : 'fa-times'}"></i> Number
+				</span>
+				<span class="requirement ${requirements.symbol ? 'met' : ''}" data-requirement="symbol">
+					<i class="fas ${requirements.symbol ? 'fa-check' : 'fa-times'}"></i> Symbol
+				</span>
+			`;
+			input.parentElement.appendChild(newRequirementsDiv);
+		} else {
+			Object.keys(requirements).forEach(req => {
+				const reqElement = requirementsDiv.querySelector(`[data-requirement="${req}"]`);
+				if (reqElement) {
+					reqElement.classList.toggle('met', requirements[req]);
+					const icon = reqElement.querySelector('i');
+					if (icon) {
+						icon.className = `fas ${requirements[req] ? 'fa-check' : 'fa-times'}`;
+					}
+				}
+			});
+		}
+
+		const isValid = Object.values(requirements).every(Boolean);
+		this.setInputValidation(input, isValid, "Please meet all password requirements");
 		return isValid;
 	}
 
@@ -350,47 +430,123 @@ class RegistrationManager {
 	handleDetailsSubmit(e) {
 		e.preventDefault();
 
-		const firstNameInput = document.getElementById("first_name");
-		const lastNameInput = document.getElementById("last_name");
-		const usernameInput = document.getElementById("username");
-		const passwordInput = document.getElementById("password");
-		const confirmPasswordInput = document.getElementById("confirm_password");
-		const phoneNumberInput = document.getElementById("phone_number");
-
-		if (!firstNameInput || !lastNameInput || !usernameInput || !passwordInput || !confirmPasswordInput || !phoneNumberInput) {
-			console.error("One or more input elements not found in Details form.");
-			this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
+		// Check age first
+		const dobInput = document.getElementById('date_of_birth');
+		if (dobInput && !this.validateAge(dobInput)) {
+			this.showNotification('You must be at least 18 years old to register.', NOTIFICATION_TYPES.ERROR);
 			return;
 		}
 
-		// Validate all fields
-		const isFirstNameValid = this.validateName(firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
-		const isLastNameValid = this.validateName(lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
-		const isUsernameValid = this.validateUsername(usernameInput);
-		const isPasswordValid = this.validatePassword(passwordInput);
-		const isPasswordMatchValid = this.validatePasswordMatch(passwordInput, confirmPasswordInput);
-		const isPhoneNumberValid = this.validatePhoneNumber(phoneNumberInput);
+		// Get all form inputs
+		const inputs = {
+			firstNameInput: document.getElementById("first_name"),
+			lastNameInput: document.getElementById("last_name"),
+			dateOfBirthInput: document.getElementById("date_of_birth"),
+			nationalityInput: document.getElementById("nationality"),
+			streetInput: document.getElementById("street"),
+			cityInput: document.getElementById("city"),
+			zipCodeInput: document.getElementById("zip_code"),
+			countryInput: document.getElementById("country"),
+			emailInput: document.getElementById("email"),
+			phoneNumberInput: document.getElementById("phone_number"),
+			idTypeInput: document.getElementById("id_type"),
+			idImageInput: document.getElementById("id_image"),
+			usernameInput: document.getElementById("username"),
+			passwordInput: document.getElementById("password"),
+			confirmPasswordInput: document.getElementById("confirm_password"),
+			securityQ1Input: document.getElementById("security_q1"),
+			securityQ2Input: document.getElementById("security_q2"),
+			securityQ3Input: document.getElementById("security_q3")
+		};
 
-		const allFieldsValid = isFirstNameValid && isLastNameValid && isUsernameValid && 
-							 isPasswordValid && isPasswordMatchValid && isPhoneNumberValid;
+		// Check if all inputs exist
+		for (const [key, input] of Object.entries(inputs)) {
+			if (!input) {
+				console.error(`${key} not found in form.`);
+				this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
+				return;
+			}
+		}
+
+		// Validate all fields
+		const validations = {
+			isFirstNameValid: this.validateName(inputs.firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH),
+			isLastNameValid: this.validateName(inputs.lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH),
+			isDateOfBirthValid: inputs.dateOfBirthInput.value.trim() !== "",
+			isNationalityValid: inputs.nationalityInput.value.trim() !== "",
+			isStreetValid: inputs.streetInput.value.trim() !== "",
+			isCityValid: inputs.cityInput.value.trim() !== "",
+			isZipCodeValid: inputs.zipCodeInput.value.trim() !== "",
+			isCountryValid: inputs.countryInput.value.trim() !== "",
+			isEmailValid: this.validateEmail(inputs.emailInput),
+			isPhoneNumberValid: this.validatePhoneNumber(inputs.phoneNumberInput),
+			isIdTypeValid: inputs.idTypeInput.value !== "",
+			isIdImageValid: this.idImage !== null,
+			isUsernameValid: this.validateUsername(inputs.usernameInput),
+			isPasswordValid: this.validatePassword(inputs.passwordInput),
+			isPasswordMatchValid: this.validatePasswordMatch(inputs.passwordInput, inputs.confirmPasswordInput),
+			isSecurityQ1Valid: inputs.securityQ1Input.value.trim() !== "",
+			isSecurityQ2Valid: inputs.securityQ2Input.value.trim() !== "",
+			isSecurityQ3Valid: inputs.securityQ3Input.value.trim() !== ""
+		};
+
+		const allFieldsValid = Object.values(validations).every(isValid => isValid);
+
+		if (!validations.isIdImageValid) {
+			this.showNotification("Please upload your ID image.", NOTIFICATION_TYPES.ERROR);
+			return;
+		}
 
 		if (allFieldsValid) {
 			// Save form data before proceeding
 			this.saveFormData();
 
+			// Create FormData object for file upload
+			const formData = new FormData();
+			
+			// Add all text fields
+			const formFields = {
+				first_name: inputs.firstNameInput.value.trim(),
+				last_name: inputs.lastNameInput.value.trim(),
+				date_of_birth: inputs.dateOfBirthInput.value,
+				nationality: inputs.nationalityInput.value.trim(),
+				street: inputs.streetInput.value.trim(),
+				city: inputs.cityInput.value.trim(),
+				zip_code: inputs.zipCodeInput.value.trim(),
+				country: inputs.countryInput.value.trim(),
+				email: inputs.emailInput.value.trim(),
+				phone_number: inputs.phoneNumberInput.value.trim(),
+				id_type: inputs.idTypeInput.value,
+				username: inputs.usernameInput.value.trim(),
+				password: inputs.passwordInput.value,
+				security_questions: {
+					first_school: inputs.securityQ1Input.value.trim(),
+					childhood_friend: inputs.securityQ2Input.value.trim(),
+					favorite_show: inputs.securityQ3Input.value.trim()
+				}
+			};
+
+			// Add the form fields as a JSON string
+			formData.append('data', JSON.stringify(formFields));
+			
+			// Add the ID image
+			if (this.idImage) {
+				// Convert base64 to blob
+				const byteString = atob(this.idImage.data.split(',')[1]);
+				const mimeString = this.idImage.data.split(',')[0].split(':')[1].split(';')[0];
+				const ab = new ArrayBuffer(byteString.length);
+				const ia = new Uint8Array(ab);
+				for (let i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+				}
+				const blob = new Blob([ab], { type: mimeString });
+				formData.append('id_image', blob, this.idImage.name);
+			}
+
 			// Send registration data to API
 			fetch('/project-errawrs/src/api/user/register.php', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					first_name: firstNameInput.value.trim(),
-					last_name: lastNameInput.value.trim(),
-					username: usernameInput.value.trim(),
-					password: passwordInput.value,
-					phone_number: phoneNumberInput.value.trim()
-				})
+				body: formData
 			})
 			.then(response => response.json())
 			.then(data => {
@@ -903,26 +1059,36 @@ class RegistrationManager {
 	}
 
 	collectFormData() {
-		return {
+		const data = {
 			first_name: document.getElementById('first_name')?.value || '',
 			last_name: document.getElementById('last_name')?.value || '',
+			date_of_birth: document.getElementById('date_of_birth')?.value || '',
+			nationality: document.getElementById('nationality')?.value || '',
+			street: document.getElementById('street')?.value || '',
+			city: document.getElementById('city')?.value || '',
+			zip_code: document.getElementById('zip_code')?.value || '',
+			country: document.getElementById('country')?.value || '',
+			email: document.getElementById('email')?.value || '',
+			phone_number: document.getElementById('phone_number')?.value || '',
+			id_type: document.getElementById('id_type')?.value || '',
 			username: document.getElementById('username')?.value || '',
 			password: document.getElementById('password')?.value || '',
 			confirm_password: document.getElementById('confirm_password')?.value || '',
-			phone_number: document.getElementById('phone_number')?.value || ''
+			security_q1: document.getElementById('security_q1')?.value || '',
+			security_q2: document.getElementById('security_q2')?.value || '',
+			security_q3: document.getElementById('security_q3')?.value || ''
 		};
+
+		// Keep the ID image data if it exists
+		if (this.idImage) {
+			data.id_image = this.idImage;
+		}
+
+		return data;
 	}
 
 	saveFormData() {
-		const formData = {
-			first_name: document.getElementById('first_name')?.value || '',
-			last_name: document.getElementById('last_name')?.value || '',
-			username: document.getElementById('username')?.value || '',
-			password: document.getElementById('password')?.value || '',
-			confirm_password: document.getElementById('confirm_password')?.value || '',
-			phone_number: document.getElementById('phone_number')?.value || ''
-		};
-		this.formData = formData;
+		this.formData = this.collectFormData();
 	}
 
 	restoreFormData() {
@@ -936,10 +1102,21 @@ class RegistrationManager {
 		const fields = [
 			'first_name',
 			'last_name',
+			'date_of_birth',
+			'nationality',
+			'street',
+			'city',
+			'zip_code',
+			'country',
+			'email',
+			'phone_number',
+			'id_type',
 			'username',
 			'password',
 			'confirm_password',
-			'phone_number'
+			'security_q1',
+			'security_q2',
+			'security_q3'
 		];
 
 		fields.forEach(field => {
@@ -963,9 +1140,205 @@ class RegistrationManager {
 						FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
 				} else if (field === 'phone_number') {
 					this.validatePhoneNumber(input);
+				} else if (field === 'email') {
+					this.validateEmail(input);
 				}
 			}
 		});
+
+		// Restore ID image if it exists
+		if (this.formData.id_image) {
+			this.idImage = this.formData.id_image;
+			const preview = document.getElementById('id_image_preview');
+			if (preview) {
+				preview.style.display = 'block';
+				preview.innerHTML = `
+					<img src="${this.idImage.data}" alt="ID Preview"/>
+					<button type="button" class="remove-image" aria-label="Remove image">
+						<i class="fas fa-times"></i>
+					</button>
+				`;
+
+				const removeBtn = preview.querySelector('.remove-image');
+				if (removeBtn) {
+					removeBtn.addEventListener('click', () => this.clearFilePreview());
+				}
+
+				const container = document.querySelector('.file-upload-container');
+				if (container) {
+					container.classList.add('has-file');
+				}
+			}
+		}
+	}
+
+	validateEmail(input) {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		const isValid = emailRegex.test(input.value);
+		this.setInputValidation(input, isValid, "Please enter a valid email address");
+		return isValid;
+	}
+
+	handleFileSelect(event) {
+		const file = event.target.files[0];
+		const container = document.querySelector('.file-upload-container');
+		const preview = document.getElementById('id_image_preview');
+		const maxSize = 5 * 1024 * 1024; // 5MB
+
+		if (!file) {
+			this.clearFilePreview();
+			return;
+		}
+
+		// If we already have an image, don't allow another upload
+		if (this.idImage) {
+			this.showNotification('Please remove the current image before uploading a new one.', NOTIFICATION_TYPES.WARNING);
+			event.target.value = ''; // Clear the file input
+			return;
+		}
+
+		// Validate file type
+		if (!file.type.startsWith('image/')) {
+			this.showNotification('Please select an image file (JPG, PNG, etc.).', NOTIFICATION_TYPES.ERROR);
+			this.clearFilePreview();
+			return;
+		}
+
+		// Validate file size
+		if (file.size > maxSize) {
+			this.showNotification('File size must be less than 5MB. Please choose a smaller file.', NOTIFICATION_TYPES.ERROR);
+			this.clearFilePreview();
+			return;
+		}
+
+		// Show loading state
+		container.classList.add('loading');
+		preview.innerHTML = `
+			<div class="upload-progress">
+				<i class="fas fa-spinner fa-spin"></i>
+				<span>Processing image...</span>
+			</div>
+		`;
+
+		// Read and preview the file
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			// Create an image element to check dimensions
+			const img = new Image();
+			img.onload = () => {
+				// Store the file data
+				this.idImage = {
+					data: e.target.result,
+					type: file.type,
+					name: file.name,
+					width: img.width,
+					height: img.height
+				};
+
+				// Show preview with enhanced UI
+				preview.style.display = 'block';
+				preview.innerHTML = `
+					<div class="preview-header">
+						<span class="preview-title">
+							<i class="fas fa-id-card"></i>
+							ID Preview
+						</span>
+						<button type="button" class="remove-image" aria-label="Remove image">
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+					<div class="preview-image">
+						<img src="${e.target.result}" alt="ID Preview"/>
+					</div>
+					<div class="preview-info">
+						<span><i class="fas fa-file"></i> ${file.name}</span>
+						<span><i class="fas fa-ruler"></i> ${img.width}x${img.height}px</span>
+						<span><i class="fas fa-weight"></i> ${(file.size / 1024 / 1024).toFixed(2)}MB</span>
+					</div>
+				`;
+
+				// Add remove button handler
+				const removeBtn = preview.querySelector('.remove-image');
+				if (removeBtn) {
+					removeBtn.addEventListener('click', () => this.clearFilePreview());
+				}
+
+				// Update container state
+				container.classList.remove('loading');
+				container.classList.add('has-file');
+
+				// Disable the file input
+				const fileInput = document.getElementById('id_image');
+				if (fileInput) {
+					fileInput.disabled = true;
+				}
+			};
+			img.src = e.target.result;
+		};
+
+		reader.onerror = () => {
+			this.showNotification('Error reading file. Please try again.', NOTIFICATION_TYPES.ERROR);
+			container.classList.remove('loading');
+			this.clearFilePreview();
+		};
+
+		reader.readAsDataURL(file);
+	}
+
+	clearFilePreview() {
+		const fileInput = document.getElementById('id_image');
+		const preview = document.getElementById('id_image_preview');
+		const container = document.querySelector('.file-upload-container');
+
+		if (fileInput) {
+			fileInput.value = '';
+			fileInput.disabled = false;
+		}
+		if (preview) {
+			preview.style.display = 'none';
+			preview.innerHTML = '';
+		}
+		if (container) {
+			container.classList.remove('has-file', 'loading', 'error');
+		}
+
+		this.idImage = null;
+	}
+
+	validateAge(input) {
+		const dob = new Date(input.value);
+		const today = new Date();
+		const age = today.getFullYear() - dob.getFullYear();
+		const monthDiff = today.getMonth() - dob.getMonth();
+		
+		// If birthday hasn't occurred this year, subtract one year
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+			age--;
+		}
+
+		const isValid = age >= 18;
+		this.isUnder18 = !isValid;
+
+		// Show/hide warning message
+		const warningElement = document.getElementById('age_warning');
+		if (warningElement) {
+			warningElement.style.display = isValid ? 'none' : 'flex';
+		}
+
+		// Add visual feedback
+		input.classList.toggle('invalid', !isValid);
+
+		// Enable/disable other form fields
+		const formGroups = document.querySelectorAll('.form-group:not(:has(#date_of_birth))');
+		formGroups.forEach(group => {
+			const inputs = group.querySelectorAll('input, select, textarea');
+			inputs.forEach(input => {
+				input.disabled = !isValid;
+			});
+			group.classList.toggle('disabled', !isValid);
+		});
+
+		return isValid;
 	}
 }
 
