@@ -195,8 +195,9 @@ body {
 
 .header-row {
     display: grid;
-    grid-template-columns: 1fr 1.2fr 1fr 1.2fr 1fr;
+    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr;
     gap: 20px;
+    align-items: center;
 }
 
 .header-cell {
@@ -204,26 +205,39 @@ body {
     font-weight: 600;
     font-size: 1rem;
     text-align: left;
+    padding: 0 10px;
 }
 
 /* Table Body Styles */
 .table-body {
     flex: 1;
     overflow-y: auto;
+    margin-bottom: 20px;
 }
 
 .table-row {
     display: grid;
-    grid-template-columns: 1fr 1.2fr 1fr 1.2fr 1fr;
+    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr;
     gap: 20px;
     padding: 15px 20px;
     align-items: center;
     border-bottom: 1px solid var(--color-bg-gradient-end);
+    transition: background-color 0.2s ease;
+}
+
+.table-row:hover {
+    background-color: #f5f5f5;
 }
 
 .table-cell {
     font-size: 1rem;
     color: var(--color-primary-black);
+    padding: 0 10px;
+}
+
+.table-cell.currency {
+    font-family: var(--font-main);
+    text-align: right;
 }
 
 /* Pagination Styles */
@@ -238,7 +252,14 @@ body {
 
 .pagination-left {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 20px;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 12px;
+    align-items: center;
 }
 
 .pagination-btn {
@@ -246,10 +267,16 @@ body {
     background: var(--color-primary-black);
     color: var(--color-white);
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--color-mint);
+    transform: translateY(-1px);
 }
 
 .pagination-btn:disabled {
@@ -257,22 +284,8 @@ body {
     cursor: not-allowed;
 }
 
-.pagination-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: var(--color-primary-black);
-    font-size: 0.9rem;
-}
-
-.per-page-input {
-    width: 50px;
-    padding: 5px 10px;
-    border: 1px solid var(--color-gray);
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.9rem;
-    background: #f5f5f5;
+.pagination-btn.active {
+    background: var(--color-mint);
 }
 
 /* Status Styles */

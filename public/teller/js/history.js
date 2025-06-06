@@ -28,23 +28,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    await fetchTransactionHistory();
+    await fetchSearchHistory();
     updateTableDisplay();
     updatePaginationDisplay();
 }
 
-// Fetch transaction history from the server
-async function fetchTransactionHistory() {
+// Fetch search history from the server
+async function fetchSearchHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/.get_serch_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch transaction history");
+            throw new Error(data.error || "Failed to fetch search history");
         }
 
-        if (data.success && data.transactions) {
-            tableData = data.transactions;
+        if (data.success && data.history) {
+            tableData = data.history.map(item => ({
+                id: item.account_number, // Using account number as ID
+                date: new Date(item.timestamp),
+                account_number: item.account_number,
+                account_name: item.account_name,
+                timestamp: item.timestamp,
+                amount: item.amount
+            }));
             filteredData = [...tableData];
             totalItems = filteredData.length;
             totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -53,11 +60,11 @@ async function fetchTransactionHistory() {
             filteredData = [];
             totalItems = 0;
             totalPages = 0;
-            showNotification("No transaction history found", "info");
+            showNotification("No search history found", "info");
         }
     } catch (error) {
-        console.error("Error fetching transaction history:", error);
-        showNotification(error.message || "Error fetching transaction history", "error");
+        console.error("Error fetching search history:", error);
+        showNotification(error.message || "Error fetching search history", "error");
     }
 }
 
@@ -203,47 +210,38 @@ function getStatusIcon(status) {
 }
 
 // Create table row
-function createTableRow(transaction) {
+function createTableRow(item) {
     const row = document.createElement("div");
     row.className = "table-row";
     row.onclick = function (event) {
-        handleRowClick(event, row, transaction.id);
+        handleRowClick(event, row, item.id);
     };
-    row.ondblclick = function () {
-        showTransactionDetails(transaction);
-    };
-
-    const statusClass = `status-${transaction.status.toLowerCase()}`;
-    const statusIcon = getStatusIcon(transaction.status);
 
     const dateCell = document.createElement("div");
     dateCell.className = "table-cell date";
-    dateCell.textContent = formatDate(transaction.date);
+    dateCell.textContent = formatDate(item.date);
 
     const timeCell = document.createElement("div");
     timeCell.className = "table-cell time";
-    timeCell.textContent = formatTime(transaction.date);
+    timeCell.textContent = formatTime(item.date);
 
-    const typeCell = document.createElement("div");
-    typeCell.className = "table-cell";
-    typeCell.textContent = transaction.type;
+    const accountNumberCell = document.createElement("div");
+    accountNumberCell.className = "table-cell";
+    accountNumberCell.textContent = item.account_number;
+
+    const accountNameCell = document.createElement("div");
+    accountNameCell.className = "table-cell";
+    accountNameCell.textContent = item.account_name;
 
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = formatCurrency(transaction.amount);
-
-    const statusCell = document.createElement("div");
-    statusCell.className = `table-cell ${statusClass}`;
-    statusCell.innerHTML = `
-        <div class="status-icon">${statusIcon}</div>
-        ${transaction.status}
-    `;
+    amountCell.textContent = item.amount ? formatCurrency(item.amount) : "—";
 
     row.appendChild(dateCell);
     row.appendChild(timeCell);
-    row.appendChild(typeCell);
+    row.appendChild(accountNumberCell);
+    row.appendChild(accountNameCell);
     row.appendChild(amountCell);
-    row.appendChild(statusCell);
 
     return row;
 }
@@ -272,8 +270,8 @@ function updateTableDisplay() {
     }
 
     // Create new rows
-    currentPageData.forEach(function (transaction) {
-        const row = createTableRow(transaction);
+    currentPageData.forEach(function (item) {
+        const row = createTableRow(item);
         tableBody.appendChild(row);
     });
 
@@ -381,10 +379,11 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("en-PH", {
-        style: "currency",
-        currency: "PHP",
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
         minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     }).format(amount);
 }
 
