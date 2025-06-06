@@ -90,12 +90,12 @@ function updateAccountDetails(accounts) {
         // Status indicator HTML
         const statusIndicator = account.status === "active"
             ? `<div class="status-indicator active">
-                 <div class="status-icon">●</div>
-                 Active
+                 <div class="status-icon"></div>
+                 active
                </div>`
             : `<div class="status-indicator closed">
-                 <div class="status-icon">×</div>
-                 Closed
+                 <div class="status-icon"></div>
+                 closed
                </div>`;
 
         newCard.innerHTML = `
@@ -103,95 +103,94 @@ function updateAccountDetails(accounts) {
                 ${statusIndicator}
                 
                 <div class="account-field">
-                    <div class="account-label">Account Number</div>
-                    <div class="account-value">${account.account_number}</div>
+                    <div class="account-label">Account No.</div>
+                    <div class="account-value account-number">${account.account_number}</div>
                 </div>
                 
                 <div class="account-field">
-                    <div class="account-label">Account Holder Name</div>
+                    <div class="account-label">Account Name</div>
                     <div class="account-value">${account.user.name}</div>
                 </div>
                 
                 <div class="account-field">
-                    <div class="account-label">Account Type</div>
-                    <div class="account-value">${displayAccountType}</div>
+                    <div class="account-label">Balance</div>
+                    <div class="account-value balance">${formatCurrency(balance)}</div>
                 </div>
                 
                 <div class="account-field">
-                    <div class="account-label">Current Balance</div>
-                    <div class="account-value balance">${formatCurrency(balance)}</div>
+                    <div class="account-label">Type</div>
+                    <div class="account-type-badge ${accountType}">
+                        ${displayAccountType}
+                    </div>
                 </div>
             </div>
-            <div class="toggle-icon">
-                <i class="fas fa-chevron-right"></i>
+            <div class="more-options">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+            <div class="card-actions">
+                ${account.status === "active" ? `
+                    <button class="card-action-btn deposit">
+                        <i class="fas fa-plus"></i>
+                        Deposit
+                    </button>
+                    <button class="card-action-btn withdraw">
+                        <i class="fas fa-minus"></i>
+                        Withdraw
+                    </button>
+                    <button class="card-action-btn close">
+                        <i class="fas fa-times"></i>
+                        Close Account
+                    </button>
+                ` : `
+                    <button class="card-action-btn deposit">
+                        <i class="fas fa-redo"></i>
+                        Reopen Account
+                    </button>
+                `}
             </div>
         `;
 
-        // Create actions container for this card
-        const actionsContainer = document.createElement("div");
-        actionsContainer.className = account.status === "active" 
-            ? "account-actions"
-            : "account-actions account-actions-center";
-        actionsContainer.innerHTML = account.status === "active" 
-            ? `
-                <button class="action-btn deposit">
-                    <i class="fas fa-plus"></i> Deposit
-                </button>
-                <button class="action-btn withdraw">
-                    <i class="fas fa-minus"></i> Withdraw
-                </button>
-                <button class="action-btn close">
-                    <i class="fas fa-times"></i> Close Account
-                </button>
-            `
-            : `
-                <button class="action-btn reopen">
-                    <i class="fas fa-redo"></i> Reopen Account
-                </button>
-            `;
+        // Add click event for more options
+        const moreOptions = newCard.querySelector('.more-options');
+        const cardActions = newCard.querySelector('.card-actions');
+        
+        moreOptions.addEventListener('click', (e) => {
+            e.stopPropagation();
+            cardActions.classList.toggle('visible');
+        });
 
-        // Add event listeners to buttons
-        const buttons = actionsContainer.getElementsByTagName("button");
-        Array.from(buttons).forEach((button) => {
-            if (button.classList.contains("deposit")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showDepositForm();
-                };
-            } else if (button.classList.contains("withdraw")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showWithdrawForm();
-                };
-            } else if (button.classList.contains("close")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    closeAccount();
-                };
-            } else if (button.classList.contains("reopen")) {
-                button.onclick = (e) => {
-                    e.stopPropagation();
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    reopenAccount();
-                };
+        // Close actions menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!cardActions.contains(e.target) && !moreOptions.contains(e.target)) {
+                cardActions.classList.remove('visible');
             }
         });
 
-        // Add click event to toggle actions
-        newCard.addEventListener("click", (e) => {
-            e.stopPropagation();
-            actionsContainer.classList.toggle("visible");
-            const icon = newCard.querySelector(".toggle-icon i");
-            icon.classList.toggle("fa-chevron-right");
-            icon.classList.toggle("fa-chevron-left");
+        // Add event listeners to action buttons
+        const actionButtons = cardActions.getElementsByClassName('card-action-btn');
+        Array.from(actionButtons).forEach((button) => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cardActions.classList.remove('visible');
+                
+                if (button.classList.contains('deposit')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    showDepositForm();
+                } else if (button.classList.contains('withdraw')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    showWithdrawForm();
+                } else if (button.classList.contains('close')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    closeAccount();
+                } else if (button.classList.contains('reopen')) {
+                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
+                    reopenAccount();
+                }
+            });
         });
 
-        // Add card and actions to wrapper, then add wrapper to container
+        // Add card to wrapper, then add wrapper to container
         cardWrapper.appendChild(newCard);
-        cardWrapper.appendChild(actionsContainer);
         accountContainer.appendChild(cardWrapper);
     });
 
@@ -746,13 +745,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const cardWrappers = document.querySelectorAll(".card-wrapper");
         cardWrappers.forEach((wrapper) => {
             const card = wrapper.querySelector(".account-card");
-            const actions = wrapper.querySelector(".account-actions");
+            const actions = wrapper.querySelector(".card-actions");
             if (!card.contains(e.target) && !actions.contains(e.target)) {
                 actions.classList.remove("visible");
-                const icon = card.querySelector(".toggle-icon i");
-                icon.classList.remove("fa-chevron-left");
-                icon.classList.add("fa-chevron-right");
             }
         });
     });
 });
+

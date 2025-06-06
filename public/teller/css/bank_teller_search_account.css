@@ -651,9 +651,9 @@ body {
 /* Account Card */
 .account-card {
     background: var(--color-white);
-    border-radius: 15px;
-    padding: 35px; /* Increased padding */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -669,10 +669,41 @@ body {
 /* Account Info Layout */
 .account-info {
     display: grid;
-    grid-template-columns: repeat(2, 180px);
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
     position: relative;
-    padding-top: 50px; /* Increased space for larger status indicator */
+    padding-top: 50px;
+}
+
+/* Status at Top */
+.status-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: rgba(126, 217, 87, 0.1);
+}
+
+.status-indicator.active {
+    color: var(--color-mint);
+}
+
+.status-indicator .status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.status-indicator.closed {
+    color: var(--color-red);
+    background-color: rgba(255, 71, 87, 0.1);
 }
 
 /* Account Field Container */
@@ -684,149 +715,125 @@ body {
 
 /* Account Label */
 .account-label {
-    color: var(--color-primary-black);
-    font-size: 20px;
-    font-weight: 400;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Account Value */
 .account-value {
     color: var(--color-primary-black);
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 700;
-    padding-left: 4px;
+}
+
+/* Account Number Value */
+.account-value.account-number {
+    font-size: 24px;
+    letter-spacing: -0.5px;
 }
 
 /* Balance Value */
 .account-value.balance {
-    color: var(--color-mint);
     font-size: 28px;
+    font-weight: 700;
+    color: var(--color-primary-black);
 }
 
-/* Status Indicator */
-.status-indicator {
+/* Account Type Badge */
+.account-type-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.account-type-badge.savings {
+    background-color: #EEF3FF;
+    color: #2563EB;
+}
+
+.account-type-badge.credit {
+    background-color: #F3E8FF;
+    color: #9333EA;
+}
+
+/* More Options Menu */
+.more-options {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    right: 20px;
+    color: #666;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.more-options:hover {
+    background-color: #f5f5f5;
+}
+
+/* Card Actions */
+.card-actions {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1;
+    min-width: 200px;
+}
+
+.card-actions.visible {
+    display: block;
+}
+
+.card-action-btn {
     display: flex;
     align-items: center;
     gap: 12px;
+    padding: 16px 24px;
+    width: 100%;
+    border: none;
+    background: none;
+    color: var(--color-primary-black);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card-action-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.card-action-btn.deposit {
+    color: var(--color-mint);
+}
+
+.card-action-btn.withdraw {
+    color: #2563EB;
+}
+
+.card-action-btn.close {
+    color: var(--color-red);
+}
+
+.card-action-btn i {
     font-size: 18px;
-    font-weight: 600;
-}
-
-.status-indicator .status-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-}
-
-.status-indicator.active {
-    color: var(--color-mint);
-}
-
-.status-indicator.active .status-icon {
-    background-color: var(--color-mint);
-    color: var(--color-white);
-}
-
-.status-indicator.closed {
-    color: var(--color-red);
-}
-
-.status-indicator.closed .status-icon {
-    background-color: var(--color-red);
-    color: var(--color-white);
-}
-
-/* Account Type Icon */
-.account-type-icon {
-    margin-right: 8px;
-    font-size: 16px;
-}
-
-/* Account Value */
-.account-value {
-    color: var(--color-primary-black);
-    font-size: 20px;
-    font-weight: 600;
-}
-
-.account-value.active {
-    color: var(--color-mint);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.account-value.closed {
-    color: var(--color-red);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.account-value.active::before,
-.account-value.closed::before {
-    content: "●";
-    font-size: 10px;
-}
-
-.history-value.status.active {
-    color: var(--color-mint);
-}
-
-.history-value.status.closed {
-    color: var(--color-red);
-}
-
-.account-value.active::before {
-    content: "✓";
-    color: var(--color-mint);
-}
-
-.account-value.closed::before {
-    content: "×";
-    color: var(--color-red);
-}
-
-/* Toggle Icon */
-.toggle-icon {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--color-mint);
-    color: var(--color-white);
-    transition: all 0.3s ease;
-}
-
-.toggle-icon i {
-    font-size: 14px;
-    transition: transform 0.3s ease;
-}
-
-.toggle-icon:hover {
-    border-color: var(--color-mint);
-}
-
-.toggle-icon i {
-    color: var(--color-primary-black);
-    font-size: 16px;
-    transition: transform 0.3s ease;
-}
-
-.toggle-icon.active i {
-    transform: rotate(180deg);
 }
 
 /* Account Card Display States */
