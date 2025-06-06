@@ -145,7 +145,7 @@ function updateAccountDetails(accounts) {
                         Close Account
                     </button>
                 ` : `
-                    <button class="card-action-btn deposit">
+                    <button class="card-action-btn reopen">
                         <i class="fas fa-redo"></i>
                         Reopen Account
                     </button>
@@ -153,21 +153,28 @@ function updateAccountDetails(accounts) {
             </div>
         `;
 
-        // Add click event for more options
+        // Add click event for the entire card and more options icon
         const moreOptions = newCard.querySelector('.more-options');
         const cardActions = newCard.querySelector('.card-actions');
         
+        function toggleMenu(e) {
+            if (!e.target.closest('.card-action-btn')) {
+                const chevron = moreOptions.querySelector('.fa-chevron-right');
+                chevron.style.transform = chevron.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
+                cardActions.classList.toggle('visible');
+            }
+        }
+
+        // Add click handlers to both card and more options
+        newCard.addEventListener('click', toggleMenu);
         moreOptions.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // Toggle the rotation of the chevron icon
-            const chevron = moreOptions.querySelector('.fa-chevron-right');
-            chevron.style.transform = chevron.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
-            cardActions.classList.toggle('visible');
+            e.stopPropagation(); // Prevent double-triggering
+            toggleMenu(e);
         });
 
         // Close actions menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!cardActions.contains(e.target) && !moreOptions.contains(e.target)) {
+            if (!newCard.contains(e.target)) {
                 cardActions.classList.remove('visible');
                 const chevron = moreOptions.querySelector('.fa-chevron-right');
                 chevron.style.transform = 'rotate(0deg)';
@@ -651,15 +658,21 @@ async function reopenAccount() {
         );
         if (historyIndex !== -1) {
             searchHistory[historyIndex].status = "active";
-            localStorage.setItem(
-                `searchHistory_${tellerInfo.teller_number}`,
-                JSON.stringify(searchHistory)
-            );
         }
 
-        // Update UI
-        updateAccountDetails([account]);
-        showNotification("Account reopened successfully");
+        // Fetch updated account data to refresh the UI
+        const searchResponse = await fetch(
+            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+                account.account_number
+            )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
+        );
+        const searchData = await searchResponse.json();
+
+        if (searchData.success && searchData.accounts && searchData.accounts.length > 0) {
+            // Update UI with fresh account data
+            updateAccountDetails([searchData.accounts[0]]);
+            showNotification("Account reopened successfully");
+        }
     } catch (error) {
         console.error("Reopen account error:", error);
         showNotification(error.message, true);

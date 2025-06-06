@@ -317,7 +317,7 @@ body {
 }
 
 .header-cell {
-    background: var(--color-mint);
+    background: var(--color-lime-green);
     color: var(--color-primary-black);
     font-weight: 600;
     font-size: 18px;
@@ -787,6 +787,7 @@ body {
 
 .more-options i {
     transition: transform 0.3s ease;
+    pointer-events: none; /* This ensures the icon itself doesn't interfere with clicks */
 }
 
 .more-options:hover {
@@ -845,6 +846,10 @@ body {
 
 .card-action-btn.close {
     color: var(--color-red);
+}
+
+.card-action-btn.reopen {
+    color: var(--color-lime-green);
 }
 
 .card-action-btn i {
