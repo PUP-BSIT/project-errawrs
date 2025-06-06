@@ -146,12 +146,6 @@ function updateAccountDetails(accounts) {
             const icon = newCard.querySelector(".toggle-icon i");
             icon.classList.toggle("fa-chevron-right");
             icon.classList.toggle("fa-chevron-left");
-
-            // Match action container height to card height
-            if (actionsContainer.classList.contains("visible")) {
-                const cardHeight = newCard.offsetHeight;
-                actionsContainer.style.height = `${cardHeight}px`;
-            }
         });
 
         // Add card and actions to wrapper, then add wrapper to container
@@ -333,46 +327,10 @@ function showLoadingIndicator() {
     if (!loadingIndicator) {
         loadingIndicator = document.createElement("div");
         loadingIndicator.id = "loading_indicator";
-        loadingIndicator.innerHTML =
-            '<div class="spinner"></div><span>Searching...</span>';
-        loadingIndicator.style.cssText = `
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-top: none;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        `;
-
-        // Add spinner styles
-        const style = document.createElement("style");
-        style.textContent = `
-            .spinner {
-                width: 16px;
-                height: 16px;
-                border: 2px solid #f3f3f3;
-                border-top: 2px solid #007bff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-
+        loadingIndicator.innerHTML = '<div class="spinner"></div><span>Searching...</span>';
+        
         // Add to search input container
         const searchContainer = searchInput.parentElement;
-        searchContainer.style.position = "relative";
         searchContainer.appendChild(loadingIndicator);
     }
 
@@ -495,60 +453,16 @@ function showLoadingOverlay(message) {
             </div>
         `;
         document.body.appendChild(overlay);
-
-        // Add styles
-        const style = document.createElement("style");
-        style.textContent = `
-            #loading_overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.6);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-            .overlay-content {
-                background: white;
-                padding: 30px 40px;
-                border-radius: 8px;
-                text-align: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-            .overlay-message {
-                margin-top: 15px;
-                color: var(--color-primary-black);
-                font-weight: 500;
-                font-size: 16px;
-            }
-            .spinner {
-                width: 50px;
-                height: 50px;
-                border: 5px solid #f3f3f3;
-                border-top: 5px solid var(--color-mint);
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
     }
     overlay.querySelector(".overlay-message").textContent = message;
-    overlay.style.display = "flex";
+    overlay.classList.add("loading-overlay-visible");
 }
 
 // Hide loading overlay
 function hideLoadingOverlay() {
     const overlay = document.getElementById("loading_overlay");
     if (overlay) {
-        overlay.style.display = "none";
+        overlay.classList.remove("loading-overlay-visible");
     }
 }
 
