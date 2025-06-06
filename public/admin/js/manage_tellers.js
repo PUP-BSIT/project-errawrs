@@ -11,60 +11,60 @@ document.addEventListener('DOMContentLoaded', init);
 function init() {
     setupEventListeners();
     loadTellers();
-}
+    }
 
 function setupEventListeners() {
-    // Search
-    const searchInput = document.getElementById('search_teller');
-    if (searchInput) {
+        // Search
+        const searchInput = document.getElementById('search_teller');
+        if (searchInput) {
         searchInput.addEventListener('input', handleSearch);
-    }
+        }
 
-    // Create teller button
-    const createBtn = document.getElementById('create_teller_btn');
-    if (createBtn) {
+        // Create teller button
+        const createBtn = document.getElementById('create_teller_btn');
+        if (createBtn) {
         createBtn.addEventListener('click', showCreateModal);
-    }
+        }
 
-    // Modal close buttons
-    document.querySelectorAll('.close-btn').forEach(btn => {
+        // Modal close buttons
+        document.querySelectorAll('.close-btn').forEach(btn => {
         btn.addEventListener('click', (e) => closeModal(e.target.closest('.modal')));
-    });
+        });
 
-    // Save teller
-    const saveBtn = document.getElementById('save_btn');
-    if (saveBtn) {
+        // Save teller
+        const saveBtn = document.getElementById('save_btn');
+        if (saveBtn) {
         saveBtn.addEventListener('click', saveTeller);
-    }
+        }
 
-    // Cancel button
-    const cancelBtn = document.getElementById('cancel_btn');
-    if (cancelBtn) {
+        // Cancel button
+        const cancelBtn = document.getElementById('cancel_btn');
+        if (cancelBtn) {
         cancelBtn.addEventListener('click', () => closeModal(document.getElementById('teller_modal')));
-    }
+        }
 
-    // Success modal buttons
-    const doneBtn = document.getElementById('done_btn');
-    const createAnotherBtn = document.getElementById('create_another_btn');
-    if (doneBtn) {
+        // Success modal buttons
+        const doneBtn = document.getElementById('done_btn');
+        const createAnotherBtn = document.getElementById('create_another_btn');
+        if (doneBtn) {
         doneBtn.addEventListener('click', () => closeModal(document.getElementById('success_modal')));
-    }
-    if (createAnotherBtn) {
-        createAnotherBtn.addEventListener('click', () => {
+        }
+        if (createAnotherBtn) {
+            createAnotherBtn.addEventListener('click', () => {
             closeModal(document.getElementById('success_modal'));
             showCreateModal();
-        });
-    }
+            });
+        }
 
-    // Password toggle
-    const passwordToggle = document.querySelector('.password-toggle');
-    if (passwordToggle) {
+        // Password toggle
+        const passwordToggle = document.querySelector('.password-toggle');
+        if (passwordToggle) {
         passwordToggle.addEventListener('click', togglePasswordVisibility);
-    }
+        }
 
-    // Logout
-    const logoutBtn = document.getElementById('logout_btn');
-    if (logoutBtn) {
+        // Logout
+        const logoutBtn = document.getElementById('logout_btn');
+        if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
 
@@ -106,7 +106,7 @@ function setupEventListeners() {
 function handleSearch(e) {
     if (searchTimeout) {
         clearTimeout(searchTimeout);
-    }
+        }
 
     searchTerm = e.target.value.trim();
     searchTimeout = setTimeout(() => {
@@ -116,123 +116,121 @@ function handleSearch(e) {
 }
 
 async function loadTellers() {
-    try {
-        const container = document.getElementById('teller_cards');
-        if (!container) return;
+        try {
+            const container = document.getElementById('teller_cards');
+            if (!container) return;
 
-        container.classList.add('loading');
+            container.classList.add('loading');
 
-        const params = new URLSearchParams({
+            const params = new URLSearchParams({
             page: currentPage,
             limit: pageSize,
             search: searchTerm
-        });
+            });
 
-        const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
-            credentials: 'include'
-        });
+            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+                credentials: 'include'
+            });
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch tellers: ${response.status}`);
-        }
+            if (!response.ok) {
+                throw new Error(`Failed to fetch tellers: ${response.status}`);
+            }
 
-        const data = await response.json();
-        
-        if (data.success) {
+            const data = await response.json();
+            
+            if (data.success) {
             totalTellers = data.total || 0;
             displayTellers(data.tellers || []);
             updatePagination();
-        } else {
-            throw new Error(data.message || 'Failed to load tellers');
-        }
-    } catch (error) {
-        console.error('Error loading tellers:', error);
+            } else {
+                throw new Error(data.message || 'Failed to load tellers');
+            }
+        } catch (error) {
+            console.error('Error loading tellers:', error);
         showToast('Failed to load tellers. Please try again.', 'error');
-    } finally {
-        const container = document.getElementById('teller_cards');
-        if (container) {
-            container.classList.remove('loading');
+        } finally {
+            const container = document.getElementById('teller_cards');
+            if (container) {
+                container.classList.remove('loading');
+            }
         }
     }
-}
 
 function displayTellers(tellers) {
-    const container = document.getElementById('teller_cards');
-    if (!container) return;
+        const container = document.getElementById('teller_cards');
+        if (!container) return;
 
-    if (tellers.length === 0) {
-        container.innerHTML = `
-            <div class="no-results">
-                <i class="fas fa-search"></i>
-                <p>No tellers found</p>
-            </div>`;
-        return;
-    }
+        if (tellers.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No tellers found</p>
+                </div>`;
+            return;
+        }
 
-    container.innerHTML = tellers.map(teller => `
-        <div class="teller-card">
-            <div class="teller-header">
-                <div class="teller-info">
-                    <h3>${teller.first_name} ${teller.last_name}</h3>
-                    <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
-                </div>
-                <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
-                    ${teller.status}
-                </span>
-            </div>
-            <div class="teller-details">
-                <div class="detail-row">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${teller.email}</span>
-                </div>
-            </div>
-            <div class="teller-actions">
-                <button class="action-btn" onclick="editTeller(${teller.teller_id})" title="Edit">
+        container.innerHTML = tellers.map(teller => `
+            <div class="teller-card">
+                <button class="action-btn edit" onclick="editTeller(${teller.teller_id})" title="Edit">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
+                <button class="action-btn toggle-status ${teller.status === 'active' ? 'warning' : 'success'}" 
                         onclick="toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
                         title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
                     <i class="fas fa-power-off"></i>
                 </button>
+                <div class="teller-header">
+                    <div class="teller-info">
+                        <h3>${teller.first_name} ${teller.last_name}</h3>
+                        <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
+                    </div>
+                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                        ${teller.status}
+                    </span>
+                </div>
+                <div class="teller-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">${teller.email}</span>
+                    </div>
+                </div>
             </div>
-        </div>
-    `).join('');
-}
-
-function updatePagination() {
-    const container = document.getElementById('pagination');
-    if (!container) return;
-
-    const totalPages = Math.ceil(totalTellers / pageSize);
-    
-    let html = '';
-    
-    // Previous button
-    html += `
-        <button ${currentPage <= 1 ? 'disabled' : ''} 
-                onclick="changePage(${currentPage - 1})">
-            Previous
-        </button>`;
-
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        html += `
-            <button class="${i === currentPage ? 'active' : ''}"
-                    onclick="changePage(${i})">
-                ${i}
-            </button>`;
+        `).join('');
     }
 
-    // Next button
-    html += `
+function updatePagination() {
+        const container = document.getElementById('pagination');
+        if (!container) return;
+
+    const totalPages = Math.ceil(totalTellers / pageSize);
+        
+        let html = '';
+        
+        // Previous button
+        html += `
+        <button ${currentPage <= 1 ? 'disabled' : ''} 
+                onclick="changePage(${currentPage - 1})">
+                Previous
+            </button>`;
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            html += `
+            <button class="${i === currentPage ? 'active' : ''}"
+                    onclick="changePage(${i})">
+                    ${i}
+                </button>`;
+        }
+
+        // Next button
+        html += `
         <button ${currentPage >= totalPages ? 'disabled' : ''} 
                 onclick="changePage(${currentPage + 1})">
-            Next
-        </button>`;
+                Next
+            </button>`;
 
-    container.innerHTML = html;
-}
+        container.innerHTML = html;
+    }
 
 function showCreateModal() {
     const modal = document.getElementById('teller_modal');
@@ -246,18 +244,20 @@ function showCreateModal() {
         form.querySelectorAll('input').forEach(input => {
             input.classList.remove('valid', 'invalid');
         });
+        // Clear teller ID
+        document.getElementById('teller_id').value = '';
     }
 
-    // Update modal title
+    // Update modal title and button text
     const title = document.getElementById('modal_title');
+    const saveBtn = document.getElementById('save_btn');
     if (title) {
         title.textContent = 'Create New Teller';
     }
-
-    // Disable create button initially
-    const saveBtn = document.getElementById('save_btn');
     if (saveBtn) {
+        saveBtn.textContent = 'Create Teller';
         saveBtn.disabled = true;
+        saveBtn.classList.remove('valid-form');
     }
 
     // Show modal
@@ -279,17 +279,32 @@ async function editTeller(tellerId) {
         if (data.success) {
             const modal = document.getElementById('teller_modal');
             const form = document.getElementById('teller_form');
+            const saveBtn = document.getElementById('save_btn');
             
-            if (modal && form) {
+            if (modal && form && saveBtn) {
                 // Populate form
                 document.getElementById('teller_id').value = data.teller.teller_id;
                 document.getElementById('first_name').value = data.teller.first_name;
                 document.getElementById('last_name').value = data.teller.last_name;
                 document.getElementById('email').value = data.teller.email;
-                document.getElementById('password').value = '';
+                
+                // Clear password field and mark it as valid since it's optional in edit mode
+                const passwordInput = document.getElementById('password');
+                passwordInput.value = '';
+                passwordInput.classList.add('valid');
 
-                // Update modal title
+                // Mark all other fields as valid since they're populated
+                form.querySelectorAll('input:not([type="hidden"]):not([type="password"])').forEach(input => {
+                    input.classList.add('valid');
+                });
+
+                // Update modal title and button text
                 document.getElementById('modal_title').textContent = 'Edit Teller';
+                saveBtn.textContent = 'Update Teller';
+                
+                // Enable save button since all required fields are valid
+                saveBtn.disabled = false;
+                saveBtn.classList.add('valid-form');
 
                 // Show modal
                 modal.classList.add('show');
@@ -308,38 +323,47 @@ async function saveTeller() {
         const form = document.getElementById('teller_form');
         if (!form) return;
 
-        // Validate all inputs
+        // Get form data
+        const tellerId = document.getElementById('teller_id').value;
+        const isEdit = !!tellerId;
+        const password = document.getElementById('password').value;
+
+        // In edit mode, only validate password if it's provided
+        if (isEdit && !password) {
+            document.getElementById('password').classList.add('valid');
+        }
+
+        // Validate all inputs except password in edit mode
         const inputs = form.querySelectorAll('input:not([type="hidden"])');
         let isValid = true;
         inputs.forEach(input => {
+            if (input.type === 'password' && isEdit && !password) {
+                // Skip password validation in edit mode if empty
+                return;
+            }
             if (!validateInput(input)) {
                 isValid = false;
             }
         });
 
-        // Validate password specifically
-        const passwordInput = document.getElementById('password');
-        if (passwordInput && !passwordInput.classList.contains('valid')) {
-            isValid = false;
-        }
-
         if (!isValid) {
-            showToast('Please fill all fields correctly', 'error');
+            showToast('Please fill all required fields correctly', 'error');
             return;
         }
-
-        const tellerId = document.getElementById('teller_id').value;
-        const isEdit = !!tellerId;
 
         const formData = {
             first_name: document.getElementById('first_name').value,
             last_name: document.getElementById('last_name').value,
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value
+            email: document.getElementById('email').value
         };
 
         if (isEdit) {
             formData.teller_id = tellerId;
+            if (password) {
+                formData.password = password;
+            }
+        } else {
+            formData.password = password;
         }
 
         const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
@@ -376,133 +400,133 @@ async function saveTeller() {
 }
 
 async function toggleTellerStatus(tellerId, currentStatus) {
-    try {
-        const confirmMessage = currentStatus === 'active' 
-            ? 'Are you sure you want to deactivate this teller?' 
-            : 'Are you sure you want to activate this teller?';
+        try {
+            const confirmMessage = currentStatus === 'active' 
+                ? 'Are you sure you want to deactivate this teller?' 
+                : 'Are you sure you want to activate this teller?';
 
-        if (!confirm(confirmMessage)) {
-            return;
-        }
+            if (!confirm(confirmMessage)) {
+                return;
+            }
 
-        const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({ teller_id: tellerId })
-        });
+            const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ teller_id: tellerId })
+            });
 
-        if (!response.ok) {
-            throw new Error(`Failed to update status: ${response.status}`);
-        }
+            if (!response.ok) {
+                throw new Error(`Failed to update status: ${response.status}`);
+            }
 
-        const data = await response.json();
-        
-        if (data.success) {
+            const data = await response.json();
+            
+            if (data.success) {
             showToast(`Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 'success');
             await loadTellers();
-        } else {
-            throw new Error(data.message || 'Failed to update teller status');
-        }
-    } catch (error) {
-        console.error('Error toggling teller status:', error);
+            } else {
+                throw new Error(data.message || 'Failed to update teller status');
+            }
+        } catch (error) {
+            console.error('Error toggling teller status:', error);
         showToast(error.message, 'error');
+        }
     }
-}
 
 function showSuccessModal(teller, isEdit) {
-    const modal = document.getElementById('success_modal');
-    if (!modal) return;
+        const modal = document.getElementById('success_modal');
+        if (!modal) return;
 
-    // Update success message
-    document.getElementById('success_message').textContent = 
-        isEdit ? 'Teller updated successfully!' : 'Teller created successfully!';
+        // Update success message
+        document.getElementById('success_message').textContent = 
+            isEdit ? 'Teller updated successfully!' : 'Teller created successfully!';
 
-    // Update teller details
-    document.getElementById('success_teller_number').textContent = teller.teller_number;
-    document.getElementById('success_teller_name').textContent = `${teller.first_name} ${teller.last_name}`;
-    document.getElementById('success_teller_email').textContent = teller.email;
+        // Update teller details
+        document.getElementById('success_teller_number').textContent = teller.teller_number;
+        document.getElementById('success_teller_name').textContent = `${teller.first_name} ${teller.last_name}`;
+        document.getElementById('success_teller_email').textContent = teller.email;
 
-    // Show/hide create another button
-    const createAnotherBtn = document.getElementById('create_another_btn');
-    if (createAnotherBtn) {
-        createAnotherBtn.style.display = isEdit ? 'none' : 'block';
+        // Show/hide create another button
+        const createAnotherBtn = document.getElementById('create_another_btn');
+        if (createAnotherBtn) {
+            createAnotherBtn.style.display = isEdit ? 'none' : 'block';
+        }
+
+        // Show modal
+        modal.classList.add('show');
     }
-
-    // Show modal
-    modal.classList.add('show');
-}
 
 function closeModal(modal) {
-    if (modal) {
-        modal.classList.remove('show');
+        if (modal) {
+            modal.classList.remove('show');
+        }
     }
-}
 
 function togglePasswordVisibility() {
-    const input = document.getElementById('password');
-    const icon = document.querySelector('.password-toggle i');
-    
-    if (input && icon) {
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
+        const input = document.getElementById('password');
+        const icon = document.querySelector('.password-toggle i');
+        
+        if (input && icon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
         }
     }
-}
 
 function showToast(message, type = 'info') {
-    const container = document.querySelector('.toast-container');
-    if (!container) return;
+        const container = document.querySelector('.toast-container');
+        if (!container) return;
 
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    
-    toast.innerHTML = `
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        toast.innerHTML = `
         <i class="${getToastIcon(type)}"></i>
-        <span>${message}</span>
-        <button class="toast-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
+            <span>${message}</span>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
 
-    container.appendChild(toast);
+        container.appendChild(toast);
 
-    // Add close button functionality
-    const closeBtn = toast.querySelector('.toast-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            toast.remove();
-        });
-    }
-
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (toast && toast.parentElement) {
-            toast.remove();
+        // Add close button functionality
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                toast.remove();
+            });
         }
-    }, 5000);
-}
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (toast && toast.parentElement) {
+                toast.remove();
+            }
+        }, 5000);
+    }
 
 function getToastIcon(type) {
-    switch (type) {
-        case 'success':
-            return 'fas fa-check-circle';
-        case 'error':
-            return 'fas fa-exclamation-circle';
-        case 'warning':
-            return 'fas fa-exclamation-triangle';
-        default:
-            return 'fas fa-info-circle';
+        switch (type) {
+            case 'success':
+                return 'fas fa-check-circle';
+            case 'error':
+                return 'fas fa-exclamation-circle';
+            case 'warning':
+                return 'fas fa-exclamation-triangle';
+            default:
+                return 'fas fa-info-circle';
+        }
     }
-}
 
 function validateInput(input) {
     input.classList.remove('valid', 'invalid');
@@ -626,17 +650,17 @@ function updateCreateButtonState() {
 function changePage(page) {
     currentPage = page;
     loadTellers();
-}
+    }
 
 function handleLogout(e) {
-    e.preventDefault();
-    
-    // Clear session storage
-    sessionStorage.clear();
-    
-    // Redirect to login page
-    window.location.href = '/project-errawrs/public/admin/login.html';
-}
+        e.preventDefault();
+        
+        // Clear session storage
+        sessionStorage.clear();
+        
+        // Redirect to login page
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    }
 
 // Make functions globally available
 window.editTeller = editTeller;
