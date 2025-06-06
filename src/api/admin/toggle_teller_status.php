@@ -1,76 +1,100 @@
 <?php
-require_once __DIR__ . '/../../config/database.php';
 session_start();
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Credentials: true');
+// Prevent any HTML error output
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+// Set JSON header first before any output
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json");
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['admin_id'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+// Function to handle errors
+function sendError($message, $code = 400) {
+    error_log("Toggle Teller Status Error: " . $message);
+    http_response_code($code);
+    echo json_encode(['success' => false, 'message' => $message]);
     exit();
 }
 
 try {
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
+    require_once '../../config/database.php';
+} catch (Exception $e) {
+    sendError('Configuration error: ' . $e->getMessage(), 500);
+}
 
-    if (!isset($data['teller_id'])) {
-        throw new Exception('Teller ID is required');
-    }
+// Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    sendError('Method not allowed', 405);
+}
 
+// Verify admin is logged in
+if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+    sendError('Unauthorized access', 401);
+}
+
+// Get and validate input data
+$input = file_get_contents("php://input");
+if (!$input) {
+    sendError('No input data received');
+}
+
+$data = json_decode($input, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    sendError('Invalid JSON: ' . json_last_error_msg());
+}
+
+if (!isset($data['teller_id'])) {
+    sendError('Missing teller ID');
+}
+
+try {
+    // Get database connection
     $conn = db_connect();
-    
+
     // Get current status
-    $stmt = $conn->prepare('SELECT status FROM teller WHERE teller_id = ?');
-    $stmt->bind_param('i', $data['teller_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows === 0) {
-        throw new Exception('Teller not found');
+    $stmt = $conn->prepare("SELECT status FROM teller WHERE teller_id = ?");
+    if (!$stmt) {
+        throw new Exception($conn->error);
     }
     
-    $current_status = $result->fetch_assoc()['status'];
-    $new_status = $current_status === 'active' ? 'inactive' : 'active';
-    
-    // Update status
-    $stmt = $conn->prepare('UPDATE teller SET status = ? WHERE teller_id = ?');
-    $stmt->bind_param('si', $new_status, $data['teller_id']);
-    
+    $stmt->bind_param("i", $data['teller_id']);
     if (!$stmt->execute()) {
-        throw new Exception('Failed to update teller status');
+        throw new Exception($stmt->error);
     }
     
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        sendError('Teller not found', 404);
+    }
+    
+    $row = $result->fetch_assoc();
+    $new_status = $row['status'] === 'active' ? 'inactive' : 'active';
+
+    // Update status
+    $stmt = $conn->prepare("UPDATE teller SET status = ? WHERE teller_id = ?");
+    if (!$stmt) {
+        throw new Exception($conn->error);
+    }
+    
+    $stmt->bind_param("si", $new_status, $data['teller_id']);
+    if (!$stmt->execute()) {
+        throw new Exception($stmt->error);
+    }
+
+    // Return success response
     echo json_encode([
         'success' => true,
         'message' => 'Teller status updated successfully',
-        'teller' => [
-            'teller_id' => $data['teller_id'],
-            'status' => $new_status
-        ]
+        'status' => $new_status
     ]);
 
+    // Close database connection
+    db_close($conn);
+
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
-} finally {
-    if (isset($stmt)) {
-        $stmt->close();
-    }
-    if (isset($conn)) {
-        $conn->close();
-    }
+    error_log("Toggle Teller Status Exception: " . $e->getMessage());
+    sendError('Server error: ' . $e->getMessage(), 500);
 } 
