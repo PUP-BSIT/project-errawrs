@@ -115,88 +115,145 @@ function handleSearch(e) {
     }, 300);
 }
 
-async function loadTellers() {
-        try {
-            const container = document.getElementById('teller_cards');
-            if (!container) return;
-
-            container.classList.add('loading');
-
-            const params = new URLSearchParams({
-            page: currentPage,
-            limit: pageSize,
-            search: searchTerm
-            });
-
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch tellers: ${response.status}`);
-            }
-
-            const data = await response.json();
-            
-            if (data.success) {
-            totalTellers = data.total || 0;
-            displayTellers(data.tellers || []);
-            updatePagination();
-            } else {
-                throw new Error(data.message || 'Failed to load tellers');
-            }
-        } catch (error) {
-            console.error('Error loading tellers:', error);
-        showToast('Failed to load tellers. Please try again.', 'error');
-        } finally {
-            const container = document.getElementById('teller_cards');
-            if (container) {
-                container.classList.remove('loading');
-            }
+async function loadTellers(searchTerm = '', page = 1) {
+    try {
+        const params = new URLSearchParams({
+            page: page,
+            limit: 10,
+            include_stats: true // Add this parameter
+        });
+        
+        if (searchTerm) {
+            params.append('search', searchTerm);
         }
-    }
+        
+        const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params.toString()}`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch tellers: ${response.status}`);
+        }
 
-function displayTellers(tellers) {
-        const container = document.getElementById('teller_cards');
-        if (!container) return;
+        const data = await response.json();
 
-        if (tellers.length === 0) {
+        if (data.success) {
+            const container = document.getElementById('teller_cards');
+            container.innerHTML = ''; // Clear existing cards
+
+            if (data.tellers.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No tellers found</p>
+                    </div>`;
+                return;
+            }
+
+            data.tellers.forEach(teller => {
+                const card = document.createElement('div');
+                card.className = 'teller-card';
+                card.innerHTML = `
+                    <div class="teller-header">
+                        <div class="teller-info">
+                            <h3>${teller.first_name} ${teller.last_name}</h3>
+                            <div class="teller-number">${teller.teller_number}</div>
+                        </div>
+                        <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${teller.status}
+                        </span>
+                    </div>
+                    <div class="teller-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">${teller.email}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Last Active:</span>
+                            <span class="detail-value">${formatDate(teller.last_active)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Accounts Managed:</span>
+                            <span class="detail-value">${teller.stats?.total_accounts || 0}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Today's Transactions:</span>
+                            <span class="detail-value">${teller.stats?.today_transactions || 0}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Active Accounts:</span>
+                            <span class="detail-value">${teller.stats?.active_accounts || 0}</span>
+                        </div>
+                    </div>
+                    <div class="teller-actions">
+                        <button class="action-btn edit" onclick="editTeller(${teller.teller_id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
+                                onclick="toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
+                                title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                        <button class="action-btn info" onclick="viewTellerAccounts(${teller.teller_id})" title="View Accounts">
+                            <i class="fas fa-users"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update pagination if there are results
+            if (data.total > 0) {
+                updatePagination(data.total, data.page, data.limit);
+            }
+        } else {
+            console.error('Failed to load tellers:', data.message);
+            // Show error message to user
+            const container = document.getElementById('teller_cards');
             container.innerHTML = `
-                <div class="no-results">
-                    <i class="fas fa-search"></i>
-                    <p>No tellers found</p>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load tellers. Please try again.</p>
                 </div>`;
-            return;
+        }
+    } catch (error) {
+        console.error('Error loading tellers:', error);
+        // Show error message to user
+        const container = document.getElementById('teller_cards');
+        container.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>An error occurred while loading tellers. Please try again.</p>
+            </div>`;
+    }
+}
+
+// Add new function to view teller accounts
+async function viewTellerAccounts(tellerId) {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/admin/teller_accounts.php?teller_id=${tellerId}`, {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch teller accounts');
         }
 
-        container.innerHTML = tellers.map(teller => `
-            <div class="teller-card">
-                <button class="action-btn edit" onclick="editTeller(${teller.teller_id})" title="Edit">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn toggle-status ${teller.status === 'active' ? 'warning' : 'success'}" 
-                        onclick="toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
-                        title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
-                    <i class="fas fa-power-off"></i>
-                </button>
-                <div class="teller-header">
-                    <div class="teller-info">
-                        <h3>${teller.first_name} ${teller.last_name}</h3>
-                        <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
-                    </div>
-                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
-                        ${teller.status}
-                    </span>
-                </div>
-                <div class="teller-details">
-                    <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-value">${teller.email}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+        const data = await response.json();
+        
+        if (data.success) {
+            // Store teller ID in session storage for the accounts page
+            sessionStorage.setItem('selected_teller_id', tellerId);
+            // Redirect to user accounts page with teller filter
+            window.location.href = `user_accounts.html?teller_id=${tellerId}`;
+        } else {
+            showToast(data.message || 'Failed to load teller accounts', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('An error occurred while loading teller accounts', 'error');
     }
+}
 
 function updatePagination() {
         const container = document.getElementById('pagination');

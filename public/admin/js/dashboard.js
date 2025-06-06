@@ -10,11 +10,15 @@ class AdminDashboard {
         this.setupEventListeners();
         this.loadDashboardStats();
         this.setupSidebarToggle();
+        this.loadRecentUserAccounts();
     }
 
     setupAutoRefresh() {
         // Refresh dashboard stats every 5 minutes
-        setInterval(() => this.loadDashboardStats(), 5 * 60 * 1000);
+        setInterval(() => {
+            this.loadDashboardStats();
+            this.loadRecentUserAccounts();
+        }, 5 * 60 * 1000);
     }
 
     setupEventListeners() {
@@ -299,6 +303,96 @@ class AdminDashboard {
                 return 'fa-exclamation-triangle';
             default:
                 return 'fa-info-circle';
+        }
+    }
+
+    async loadRecentUserAccounts() {
+        try {
+            const response = await fetch('/project-errawrs/src/api/admin/recent_accounts.php', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch recent accounts');
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                this.updateRecentAccounts(data.accounts);
+            } else {
+                console.error('Failed to load recent accounts:', data.message);
+            }
+        } catch (error) {
+            console.error('Error loading recent accounts:', error);
+        }
+    }
+
+    updateRecentAccounts(accounts) {
+        const activityList = document.getElementById('recent_activity');
+        if (!activityList) return;
+
+        activityList.innerHTML = accounts.map(account => `
+            <div class="activity-item">
+                <div class="activity-icon ${this.getAccountStatusIcon(account.status)}">
+                    <i class="fas ${this.getAccountTypeIcon(account.account_type)}"></i>
+                </div>
+                <div class="activity-details">
+                    <div class="activity-text">
+                        ${account.first_name} ${account.last_name} - ${account.account_number}
+                    </div>
+                    <div class="activity-info">
+                        <span class="account-type">${account.account_type}</span>
+                        <span class="account-status ${account.status}">${account.status}</span>
+                    </div>
+                    <div class="activity-time">
+                        ${this.formatTimeAgo(account.created_at)}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    getAccountStatusIcon(status) {
+        switch (status) {
+            case 'active':
+                return 'status-active';
+            case 'inactive':
+                return 'status-inactive';
+            case 'closed':
+                return 'status-closed';
+            default:
+                return '';
+        }
+    }
+
+    getAccountTypeIcon(type) {
+        switch (type.toLowerCase()) {
+            case 'savings':
+                return 'fa-piggy-bank';
+            case 'credit':
+                return 'fa-credit-card';
+            default:
+                return 'fa-user-circle';
+        }
+    }
+
+    formatTimeAgo(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) {
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            return 'Just now';
         }
     }
 }
