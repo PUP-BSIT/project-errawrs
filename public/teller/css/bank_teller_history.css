@@ -175,8 +175,7 @@ body {
     flex-direction: column;
     width: 95%;
     max-width: 1400px;
-    min-height: 600px;
-    height: calc(100vh - 100px);
+    height: 70vh;
 }
 
 .history-container h1 {

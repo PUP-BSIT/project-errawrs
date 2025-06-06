@@ -197,7 +197,7 @@ function updateShowingText() {
     const endItem = Math.min(currentPage * itemsPerPage, totalItems);
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries`;
+        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
     }
 }
 
