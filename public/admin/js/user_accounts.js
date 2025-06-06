@@ -46,18 +46,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Search accounts function
     async function searchAccounts(searchTerm) {
         try {
-            const params = new URLSearchParams();
-            
-            if (searchTerm) {
-                params.append('search', searchTerm);
-            }
-            
-            // Add teller ID to params if present
-            if (tellerId) {
-                params.append('teller_id', tellerId);
-            }
+            // Show loading state
+            accountContainer.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Searching accounts...</p>
+                </div>`;
 
-            const response = await fetch(`/project-errawrs/src/api/admin/search_accounts.php?${params.toString()}`, {
+            const params = new URLSearchParams({
+                search: searchTerm || '',
+                teller_number: 'ADMIN' // Use ADMIN as teller number for full access
+            });
+
+            const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?${params.toString()}`, {
                 credentials: 'include'
             });
 
@@ -71,10 +72,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayAccounts(data.accounts);
             } else {
                 showToast('error', data.error || 'Failed to search accounts');
+                accountContainer.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load accounts. Please try again.</p>
+                    </div>`;
             }
         } catch (error) {
             console.error('Error searching accounts:', error);
             showToast('error', 'Failed to search accounts');
+            accountContainer.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>An error occurred while searching accounts.</p>
+                </div>`;
         }
     }
 
@@ -82,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayAccounts(accounts) {
         accountContainer.innerHTML = '';
         
-        if (accounts.length === 0) {
+        if (!accounts || accounts.length === 0) {
             accountContainer.innerHTML = `
                 <div class="no-results">
                     <i class="fas fa-search"></i>
@@ -115,29 +126,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="account-field">
                     <span class="account-label">Balance</span>
-                    <span class="account-value balance">$${parseFloat(account.balance).toFixed(2)}</span>
+                    <span class="account-value balance">$${account.balance}</span>
                 </div>
                 <div class="account-field">
                     <span class="account-label">Account Holder</span>
-                    <span class="account-value">${account.user_name || 'N/A'}</span>
+                    <span class="account-value">${account.user.name}</span>
                 </div>
                 <div class="account-field">
                     <span class="account-label">Account Type</span>
                     <span class="account-type-badge ${account.account_type.toLowerCase()}">${account.account_type}</span>
                 </div>
-                ${account.teller ? `
-                <div class="account-field">
-                    <span class="account-label">Last Managed By</span>
-                    <span class="account-value teller">${account.teller.name} (${account.teller.teller_number})</span>
-                </div>
-                ` : ''}
                 <div class="account-field">
                     <span class="account-label">Phone Number</span>
-                    <span class="account-value">${account.phone_number || 'N/A'}</span>
-                </div>
-                <div class="account-field">
-                    <span class="account-label">Email</span>
-                    <span class="account-value">${account.email || 'N/A'}</span>
+                    <span class="account-value">${account.user.phone_number || 'N/A'}</span>
                 </div>
             </div>
             
@@ -192,11 +193,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <span>${message}</span>
         `;
         
-        document.querySelector('.toast-container').appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
+        const container = document.querySelector('.toast-container');
+        if (container) {
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
     }
 
     // Initial load
