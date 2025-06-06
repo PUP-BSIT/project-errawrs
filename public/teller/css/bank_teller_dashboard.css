@@ -251,9 +251,13 @@ body {
 /* Welcome Section */
 .welcome-section {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 70px;
     margin: 0px 0px 5px 0px;
+}
+
+.greeting-container {
+    text-align: center;
 }
 
 .hello-text,
@@ -266,7 +270,8 @@ body {
 }
 
 .name-text {
-    margin-left: 30px;
+    color: var(--color-mint);
+    margin-top: 10px;
 }
 
 .search-container {
@@ -350,7 +355,7 @@ body {
 }
 
 .summary-header-cell {
-    background: #7ed957;
+    background: var(--color-lime-green);
     color: var(--color-primary-black);
     padding: 12px 24px;
     border-radius: 20px;
