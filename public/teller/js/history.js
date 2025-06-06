@@ -1,3 +1,10 @@
+// Get teller info from session storage
+const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error("No teller info found in session storage");
+    window.location.href = "./bank_teller_login.html";
+}
+
 // Global variables
 let currentPage = 1;
 let itemsPerPage = 5;
@@ -12,23 +19,46 @@ let selectedRows = new Set();
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
     initializeApplication();
+    // Update teller name in the UI
+    const userNameElement = document.querySelector(".user-name");
+    if (userNameElement && tellerInfo.name) {
+        userNameElement.textContent = tellerInfo.name;
+    }
 });
 
-function initializeApplication() {
+async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    // Clear any existing data in localStorage
-    localStorage.removeItem('transactionHistory');
-    initializeTableData();
+    await fetchTransactionHistory();
     updateTableDisplay();
     updatePaginationDisplay();
 }
 
-// Initialize table data
-function initializeTableData() {
-    tableData = [];
-    filteredData = [];
-    totalItems = 0;
-    totalPages = 0;
+// Fetch transaction history from the server
+async function fetchTransactionHistory() {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/.get_serch_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch transaction history");
+        }
+
+        if (data.success && data.transactions) {
+            tableData = data.transactions;
+            filteredData = [...tableData];
+            totalItems = filteredData.length;
+            totalPages = Math.ceil(totalItems / itemsPerPage);
+        } else {
+            tableData = [];
+            filteredData = [];
+            totalItems = 0;
+            totalPages = 0;
+            showNotification("No transaction history found", "info");
+        }
+    } catch (error) {
+        console.error("Error fetching transaction history:", error);
+        showNotification(error.message || "Error fetching transaction history", "error");
+    }
 }
 
 // Pagination functions (called by onclick)
@@ -200,10 +230,10 @@ function createTableRow(transaction) {
 
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = transaction.amount;
+    amountCell.textContent = formatCurrency(transaction.amount);
 
     const statusCell = document.createElement("div");
-    statusCell.className = statusClass;
+    statusCell.className = `table-cell ${statusClass}`;
     statusCell.innerHTML = `
         <div class="status-icon">${statusIcon}</div>
         ${transaction.status}

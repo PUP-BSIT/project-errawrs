@@ -63,9 +63,9 @@
                 <div class="table-header">
                     <div class="header-row">
                         <div class="header-cell">DATE</div>
-                        <div class="header-cell">ACCOUNT NUMBER</div>
+                        <div class="header-cell">TIME</div>
+                        <div class="header-cell">TYPE</div>
                         <div class="header-cell">AMOUNT</div>
-                        <div class="header-cell">DESCRIPTION</div>
                         <div class="header-cell">STATUS</div>
                     </div>
                 </div>
@@ -77,12 +77,18 @@
                 <div class="pagination-container">
                     <div class="pagination-left">
                         <button id="prev-btn" class="pagination-btn">Previous</button>
+                        <div id="page-numbers" class="page-numbers"></div>
                         <button id="next-btn" class="pagination-btn">Next</button>
                     </div>
                     
                     <div class="pagination-right">
                         <span>Per Page</span>
-                        <input type="text" class="per-page-input" id="per-page-select" value="05" readonly>
+                        <select id="per-page-select" class="per-page-select" onchange="changeItemsPerPage()">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">15</option>
+                            <option value="50">20</option>
+                        </select>
                         <span id="showing-text">Showing 1 to 05 of 15</span>
                     </div>
                 </div>
