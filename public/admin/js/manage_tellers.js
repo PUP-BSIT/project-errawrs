@@ -463,21 +463,11 @@ class TellerManager {
     async handleLogout(e) {
         e.preventDefault();
         
-        try {
-            const response = await fetch('/project-errawrs/src/auth/logout.php', {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                window.location.href = 'login.html';
-            } else {
-                throw new Error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-            this.showToast('Failed to logout. Please try again.', 'error');
-        }
+        // Clear session storage
+        sessionStorage.clear();
+        
+        // Redirect to login page
+        window.location.href = '/project-errawrs/public/admin/login.html';
     }
 
     // Initialize the manager
