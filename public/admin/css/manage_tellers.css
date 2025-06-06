@@ -17,8 +17,6 @@ body {
 
 .page-content {
     padding: 2rem;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
 }
 
 .content-header {
@@ -464,13 +462,13 @@ body {
 }
 
 .pagination button:hover:not(:disabled) {
-    background-color: #f8f9fa;
-    border-color: #3498db;
+    background-color: var(--color-mint);
+    border-color: var(--color-mint);
 }
 
 .pagination button.active {
-    background-color: #3498db;
-    border-color: #3498db;
+    background-color: var(--color-lime-green);
+    border-color: var(--color-white);
     color: white;
 }
 
