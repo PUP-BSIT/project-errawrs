@@ -237,13 +237,60 @@ function createTableRow(item) {
     amountCell.className = "table-cell currency";
     amountCell.textContent = item.amount ? formatCurrency(item.amount) : "—";
 
+    const detailsCell = document.createElement("div");
+    detailsCell.className = "table-cell details-cell";
+    
+    // Set the details content based on transaction type
+    const detailsContent = getTransactionDetails(item.type);
+    detailsCell.innerHTML = `
+        <i class="${detailsContent.icon}"></i>
+        <span class="${detailsContent.class}">${detailsContent.text}</span>
+    `;
+
     row.appendChild(dateCell);
     row.appendChild(timeCell);
     row.appendChild(accountNumberCell);
     row.appendChild(accountNameCell);
     row.appendChild(amountCell);
+    row.appendChild(detailsCell);
 
     return row;
+}
+
+// Helper function to get transaction details
+function getTransactionDetails(type) {
+    switch (type?.toLowerCase()) {
+        case 'deposit':
+            return {
+                icon: 'fas fa-plus-circle',
+                text: 'Deposit',
+                class: 'details-deposit'
+            };
+        case 'withdraw':
+            return {
+                icon: 'fas fa-minus-circle',
+                text: 'Withdraw',
+                class: 'details-withdraw'
+            };
+        case 'close':
+            return {
+                icon: 'fas fa-times-circle',
+                text: 'Close Account',
+                class: 'details-close'
+            };
+        case 'reopen':
+            return {
+                icon: 'fas fa-redo-alt',
+                text: 'Reopen Account',
+                class: 'details-reopen'
+            };
+        default:
+            return {
+                icon: 'fas fa-info-circle',
+                text: 'View Details',
+                class: ''
+            };
+    }
 }
 
 // Update table display

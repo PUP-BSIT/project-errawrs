@@ -195,7 +195,7 @@ body {
 
 .header-row {
     display: grid;
-    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr;
+    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr 1fr;
     gap: 20px;
     align-items: center;
 }
@@ -217,7 +217,7 @@ body {
 
 .table-row {
     display: grid;
-    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr;
+    grid-template-columns: 0.8fr 0.8fr 1fr 1.2fr 1fr 1fr;
     gap: 20px;
     padding: 15px 20px;
     align-items: center;
@@ -238,6 +238,34 @@ body {
 .table-cell.currency {
     font-family: var(--font-main);
     text-align: right;
+}
+
+/* Transaction Type Styles */
+.details-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.details-cell i {
+    font-size: 1rem;
+}
+
+.details-deposit {
+    color: var(--color-success);
+}
+
+.details-withdraw {
+    color: #ff9800;
+}
+
+.details-close {
+    color: var(--color-failed);
+}
+
+.details-reopen {
+    color: var(--color-mint);
 }
 
 /* Pagination Styles */
