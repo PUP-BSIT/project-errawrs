@@ -316,13 +316,11 @@ body {
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     width: 100%;
-    padding: 25px;
+    padding: 10px 25px;
     margin: 10px auto;
     max-width: 1000px;
     max-height: 500px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
 }
 
 .search-history h2 {
