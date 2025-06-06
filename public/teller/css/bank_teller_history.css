@@ -170,9 +170,11 @@ body {
     background: var(--color-white);
     border-radius: 15px;
     padding: 30px;
-    margin: 10px 0;
+    margin: 10px auto;
     display: flex;
     flex-direction: column;
+    width: 950px;
+    max-width: 100%;
 }
 
 .history-container h1 {
@@ -180,6 +182,7 @@ body {
     font-weight: 700;
     color: var(--color-primary-black);
     margin-bottom: 25px;
+    text-align: center;
 }
 
 /* Table Header Styles */
@@ -283,9 +286,7 @@ body {
 
 /* Empty State */
 .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--color-gray);
+    display: none;
 }
 
 /* Top Bar Styles */
