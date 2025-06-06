@@ -92,4 +92,3 @@ function db_close($conn) {
         $conn->close();
     }
 }
-?>

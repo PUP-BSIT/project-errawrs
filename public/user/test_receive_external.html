@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Receive External API</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Receive External API (POST)</h1>
+        <p>Fill out the form below to send a POST request to the API.</p>
+        
+        <form action="../../src/api/user/receive_external.php" method="POST">
+            <div>
+                <label for="transaction_amount">Transaction Amount:</label>
+                <input type="number" id="transaction_amount" name="transaction_amount" step="0.01" value="100.00" required>
+            </div>
+            <div>
+                <label for="source_account_no">Source Account Number (External):</label>
+                <input type="text" id="source_account_no" name="source_account_no" value="EXT123456789" required>
+            </div>
+            <div>
+                <label for="source_bank_code">Source Bank Code (External):</label>
+                <input type="text" id="source_bank_code" name="source_bank_code" value="BANKXYZ" required>
+            </div>
+            <div>
+                <label for="recipient_account_no">Recipient Account Number (Internal):</label>
+                <input type="text" id="recipient_account_no" name="recipient_account_no" value="544250000001" required>
+            </div>
+            <button type="submit">Send POST Request</button>
+        </form>
+        
+        <p style="margin-top: 20px; font-size: 0.9em; color: #555;">Note: This form sends data using standard form encoding (application/x-www-form-urlencoded), not raw JSON. The PHP API should be able to parse this correctly via <code>$_POST</code>.</p>
+    </div>
+</body>
+</html> 
