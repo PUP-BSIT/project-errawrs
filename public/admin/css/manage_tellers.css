@@ -1,4 +1,15 @@
 /* Page Content */
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+}
+
 .page-content {
     padding: 2rem;
     height: calc(100vh - 70px);
@@ -25,7 +36,7 @@
     left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #95a5a6;
+    color: var(--color-gray);
 }
 
 .search-box input {
@@ -39,13 +50,13 @@
 
 .search-box input:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: var(--color-mint);
 }
 
 /* Buttons */
 .btn-primary {
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -58,12 +69,12 @@
 }
 
 .btn-primary:hover {
-    background-color: #1d4ed8;
+    background-color: var(--color-lime-green);
 }
 
 .btn-secondary {
-    background-color: #f3f4f6;
-    color: #374151;
+    background-color: var(--color-bg-gradient-start);
+    color: var(--color-primary-black);
     border: 1px solid #e5e7eb;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -73,7 +84,7 @@
 }
 
 .btn-secondary:hover {
-    background-color: #e5e7eb;
+    background-color: var(--color-bg-gradient-end);
 }
 
 .btn-danger {
@@ -119,7 +130,7 @@
 }
 
 .teller-card {
-    background: white;
+    background: var(--color-white);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
@@ -141,12 +152,12 @@
 .teller-info h3 {
     margin: 0;
     font-size: 1.2rem;
-    color: #2c3e50;
+    color: var(--color-primary-black);
 }
 
 .teller-number {
     font-size: 0.9rem;
-    color: #7f8c8d;
+    color: var(--color-gray);
     margin-top: 0.25rem;
 }
 
@@ -159,8 +170,8 @@
 }
 
 .status-active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: var(--color-bg-gradient-start);
+    color: var(--color-mint);
 }
 
 .status-inactive {
