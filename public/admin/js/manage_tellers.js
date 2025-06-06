@@ -255,7 +255,7 @@ class TellerManager {
             }
         } catch (error) {
             console.error('Error loading teller details:', error);
-            this.showToast('Failed to load teller details', 'error');
+            this.showToast(error.message, 'error');
         }
     }
 
