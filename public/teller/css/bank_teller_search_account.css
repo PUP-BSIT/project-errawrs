@@ -26,6 +26,8 @@ body {
     display: flex;
     min-height: 100vh;
     position: relative;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Sidebar Styles */
@@ -159,6 +161,8 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-y: auto;
+    position: relative;
 }
 
 /* Top Bar */
@@ -200,6 +204,7 @@ body {
     padding: 15px 25px;
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin: 0 auto 30px;
 }
 
 .search-box {
@@ -211,17 +216,25 @@ body {
     border: 2px solid #e0e0e0;
     transition: all 0.3s ease;
     width: 100%;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
 }
 
 .search-box:focus-within {
     border-color: var(--color-mint);
     box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.1);
+    box-shadow: 0 2px 8px rgba(126, 217, 87, 0.15);
 }
 
 .search-icon {
     color: #9e9e9e;
     margin-right: 15px;
     font-size: 20px;
+    font-size: 24px;
 }
 
 .search-input {
@@ -234,6 +247,10 @@ body {
     font-weight: 500;
     width: 100%;
     background: transparent;
+    font-size: 20px;
+    color: var(--color-primary-black);
+    font-family: var(--font-main);
+    font-weight: 500;
 }
 
 .search-input::placeholder {
@@ -306,6 +323,10 @@ body {
     max-width: 1000px;
     display: flex;
     flex-direction: column;
+    padding: 25px;
+    margin: 30px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 1000px;
 }
 
 .search-history h2 {
@@ -314,6 +335,11 @@ body {
     color: var(--color-primary-black);
     margin-bottom: 20px;
     text-align: center;
+    position: sticky;
+    top: 0;
+    background: var(--color-white);
+    padding: 10px 0;
+    z-index: 1;
 }
 
 .history-header {
@@ -325,6 +351,11 @@ body {
     background: var(--color-white);
     position: sticky;
     top: 0;
+    position: sticky;
+    top: 60px;
+    background: var(--color-white);
+    z-index: 1;
+    padding: 10px 0;
 }
 
 .header-cell {
@@ -339,6 +370,7 @@ body {
 
 .history-body {
     max-height: calc(65px * 5); /* Height for 5 items */
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -348,6 +380,7 @@ body {
     gap: 20px;
     padding: 15px;
     min-height: 65px;
+    padding: 18px 20px;
     cursor: pointer;
     border-bottom: 1px solid #e0e0e0;
     transition: all 0.3s ease;
@@ -362,6 +395,10 @@ body {
     background: var(--color-bg-gradient-start);
 }
 
+.history-row:last-child {
+    border-bottom: none;
+}
+
 .history-value {
     font-size: 18px;
     color: var(--color-primary-black);
@@ -370,6 +407,7 @@ body {
 }
 
 .history-value.status.active {
+.history-value.status {
     color: var(--color-mint);
     font-weight: 600;
 }
@@ -402,6 +440,8 @@ body {
 .history-body {
     scrollbar-width: thin;
     scrollbar-color: var(--color-mint) #f1f1f1;
+.history-value.status.inactive {
+    color: var(--color-red);
 }
 
 /* Account Details */
@@ -447,12 +487,67 @@ body {
     justify-content: center;
     gap: 15px;
     opacity: 0;
+    padding: 25px;
+    width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(20px);
     transition: all 0.3s ease;
+    margin-top: 0;
 }
 
 .account-actions.visible {
     display: flex;
     opacity: 1;
+    transform: translateX(0);
+}
+
+.action-btn {
+    padding: 20px 30px;
+    border: none;
+    border-radius: 30px;
+    font-family: var(--font-main);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.account-actions.visible {
+    display: flex;
+    opacity: 1;
+.action-btn i {
+    font-size: 20px;
+}
+
+.action-btn.deposit {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.action-btn.withdraw {
+    background: var(--color-red);
+    color: var(--color-white);
+}
+
+.action-btn.close {
+    background: var(--color-red);
+    color: var(--color-white);
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Transaction Modal */
@@ -600,6 +695,11 @@ body {
     display: flex;
     gap: 15px;
     align-items: stretch;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease;
 }
 
 /* Account Card */
@@ -607,6 +707,9 @@ body {
     background: var(--color-white);
     border-radius: 15px;
     padding: 20px 25px;
+    padding: 30px;
+    flex: 1;
+    width: 700px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     display: none;
     cursor: pointer;
@@ -625,6 +728,16 @@ body {
     display: grid;
     grid-template-columns: 180px 1fr;
     gap: 15px;
+}
+
+.account-card.expanded {
+    width: 700px;
+}
+
+.account-info {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 25px;
     align-items: center;
 }
 
@@ -632,12 +745,17 @@ body {
     color: var(--color-gray);
     font-size: 20px;
     font-weight: 500;
+    color: var(--color-primary-black);
+    font-weight: 700;
+    font-size: 20px;
 }
 
 .account-value {
     color: var(--color-primary-black);
     font-size: 22px;
     font-weight: 600;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .account-value.active {
@@ -645,6 +763,7 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+    gap: 8px;
 }
 
 .account-value.closed {
@@ -658,6 +777,24 @@ body {
 .account-value.closed::before {
     content: "●";
     font-size: 10px;
+}
+
+.history-value.status.active {
+    color: var(--color-mint);
+}
+
+.history-value.status.closed {
+    color: var(--color-red);
+}
+
+.account-value.active::before {
+    content: "✓";
+    color: var(--color-mint);
+}
+
+.account-value.closed::before {
+    content: "×";
+    color: var(--color-red);
 }
 
 /* Toggle Icon */
@@ -681,6 +818,35 @@ body {
     transition: transform 0.3s ease;
 }
 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
+.toggle-icon:hover {
+    border-color: var(--color-mint);
+}
+
+.toggle-icon i {
+    color: var(--color-primary-black);
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon.active i {
+    transform: rotate(180deg);
+}
+
 /* Account Card Display States */
 .account-card.hidden {
     display: none;
@@ -698,11 +864,13 @@ body {
 .account-actions.visible {
     display: flex;
     opacity: 1;
+    transform: translateX(0);
 }
 
 /* Search History Container States */
 .search-history.hidden {
     display: none !important;
+    display: none;
 }
 
 .search-history.visible {
@@ -741,11 +909,23 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .action-btn i {
     font-size: 18px;
+    font-size: 1.2rem;
 }
 
 .action-btn.deposit {
@@ -778,6 +958,26 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* History Row Styles */
+.history-row {
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
+    gap: 20px;
+    padding: 18px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    align-items: center;
+}
+
+.history-row:last-child {
+    border-bottom: none;
+}
+
+.history-row:hover {
+    background: var(--color-bg-gradient-start);
 }
 
 /* Notification Container */

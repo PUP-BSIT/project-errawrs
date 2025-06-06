@@ -106,6 +106,13 @@ function confirmAmount() {
     }
 
     if (!validateAmount(amount)) {
+
+        showNotification('Please enter a valid amount', true);
+        return;
+    }
+
+    if (amount > account.balance) {
+        showNotification('Insufficient balance', true);
         return;
     }
 
@@ -132,6 +139,17 @@ async function submitWithdrawal() {
     // Disable submit button and show loading
     submitButton.disabled = true;
     toggleLoading(true, amount);
+  
+// Back to amount entry
+function backToAmount() {
+    document.getElementById('confirmation').classList.add('hidden');
+    document.getElementById('amount_entry').classList.remove('hidden');
+    updateSteps(1);
+}
+
+// Submit withdrawal
+async function submitWithdrawal() {
+    const amount = parseFloat(document.getElementById('withdraw_amount').value);
     
     try {
         const response = await fetch('/project-errawrs/src/api/teller/withdraw.php', {
@@ -166,7 +184,7 @@ async function submitWithdrawal() {
 
         // Hide loading before showing receipt
         toggleLoading(false);
-
+      
         // Hide confirmation, show receipt
         document.getElementById('confirmation').classList.add('hidden');
         document.getElementById('receipt').classList.remove('hidden');
@@ -212,6 +230,9 @@ function backToAmount() {
     document.getElementById('confirmation').classList.add('hidden');
     document.getElementById('amount_entry').classList.remove('hidden');
     updateSteps(1);
+}
+
+    }
 }
 
 // Finish transaction and return to search

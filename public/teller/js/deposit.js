@@ -100,6 +100,7 @@ function confirmAmount() {
     }
 
     if (!validateAmount(amount)) {
+        showNotification('Please enter a valid amount', true);
         return;
     }
 
@@ -126,6 +127,16 @@ async function submitDeposit() {
     // Disable submit button and show loading
     submitButton.disabled = true;
     toggleLoading(true, amount);
+// Back to amount entry
+function backToAmount() {
+    document.getElementById('confirmation').classList.add('hidden');
+    document.getElementById('amount_entry').classList.remove('hidden');
+    updateSteps(1);
+}
+
+// Submit deposit
+async function submitDeposit() {
+    const amount = parseFloat(document.getElementById('deposit_amount').value);
     
     try {
         const response = await fetch('/project-errawrs/src/api/teller/deposit.php', {
@@ -160,7 +171,7 @@ async function submitDeposit() {
 
         // Hide loading before showing receipt
         toggleLoading(false);
-
+      
         // Hide confirmation, show receipt
         document.getElementById('confirmation').classList.add('hidden');
         document.getElementById('receipt').classList.remove('hidden');
@@ -206,6 +217,9 @@ function backToAmount() {
     document.getElementById('confirmation').classList.add('hidden');
     document.getElementById('amount_entry').classList.remove('hidden');
     updateSteps(1);
+}
+
+    }
 }
 
 // Finish transaction and return to search

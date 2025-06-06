@@ -65,6 +65,19 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
+    // Get teller information
+    $teller_sql = "SELECT teller_id, first_name, last_name FROM teller WHERE teller_number = ? AND status = 'active'";
+    $teller_stmt = mysqli_prepare($conn, $teller_sql);
+    mysqli_stmt_bind_param($teller_stmt, "s", $teller_number);
+    mysqli_stmt_execute($teller_stmt);
+    $teller_result = mysqli_stmt_get_result($teller_stmt);
+
+    if (mysqli_num_rows($teller_result) !== 1) {
+        throw new Exception('Unauthorized. Invalid or inactive teller.');
+    }
+
+    $teller = mysqli_fetch_assoc($teller_result);
+
     // Search accounts
     $search_sql = "SELECT 
         a.account_id,
@@ -116,12 +129,16 @@ try {
         ];
     }
 
-    // Return success response
+    // Return success response with teller info
     echo json_encode([
         'success' => true,
         'accounts' => $accounts,
         'count' => count($accounts),
         'search_term' => $search_term,
+        'teller' => [
+            'id' => $teller['teller_id'],
+            'name' => $teller['first_name'] . ' ' . $teller['last_name']
+        ],
         'debug' => [
             'method' => $_SERVER['REQUEST_METHOD'],
             'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $data : $_GET
