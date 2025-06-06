@@ -2,6 +2,9 @@
 const account = JSON.parse(sessionStorage.getItem('currentAccount'));
 const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
 
+// Define maximum withdrawal amount
+const MAX_WITHDRAW_AMOUNT = 40000;
+
 if (!account || !tellerInfo) {
     window.location.href = './bank_teller_search_account.html';
 }
@@ -11,12 +14,29 @@ document.getElementById('account_number').textContent = account.account_number;
 document.getElementById('account_name').textContent = account.user.name;
 document.getElementById('current_balance').textContent = formatCurrency(account.balance);
 
+// Create validation message element
+const amountInput = document.getElementById('withdraw_amount');
+const validationMessage = document.createElement('div');
+validationMessage.className = 'validation-message';
+amountInput.parentElement.appendChild(validationMessage);
+
 // Format currency
 function formatCurrency(amount) {
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP'
     }).format(amount);
+}
+
+// Show/hide loading overlay
+function toggleLoading(show, amount = 0) {
+    const overlay = document.getElementById('loading_overlay');
+    if (show) {
+        document.getElementById('processing_amount').textContent = formatCurrency(amount);
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
 }
 
 // Show notification
@@ -50,11 +70,43 @@ function goBack() {
     window.history.back();
 }
 
+// Validate amount and update UI
+function validateAmount(amount) {
+    const confirmButton = document.querySelector('.btn.confirm');
+    const amountInput = document.getElementById('withdraw_amount');
+    
+    if (amount > MAX_WITHDRAW_AMOUNT) {
+        amountInput.style.borderColor = 'var(--color-red)';
+        validationMessage.textContent = `Maximum withdrawal amount is ${formatCurrency(MAX_WITHDRAW_AMOUNT)}`;
+        validationMessage.style.display = 'block';
+        confirmButton.disabled = true;
+        return false;
+    } else if (amount > account.balance) {
+        amountInput.style.borderColor = 'var(--color-red)';
+        validationMessage.textContent = 'Insufficient balance';
+        validationMessage.style.display = 'block';
+        confirmButton.disabled = true;
+        return false;
+    } else {
+        amountInput.style.borderColor = '';
+        validationMessage.style.display = 'none';
+        confirmButton.disabled = false;
+        return true;
+    }
+}
+
 // Confirm amount and show confirmation screen
 function confirmAmount() {
     const amount = parseFloat(document.getElementById('withdraw_amount').value);
     
     if (isNaN(amount) || amount <= 0) {
+        validationMessage.textContent = 'Please enter a valid amount';
+        validationMessage.style.display = 'block';
+        return;
+    }
+
+    if (!validateAmount(amount)) {
+
         showNotification('Please enter a valid amount', true);
         return;
     }
@@ -79,6 +131,15 @@ function confirmAmount() {
     updateSteps(2);
 }
 
+// Submit withdrawal
+async function submitWithdrawal() {
+    const amount = parseFloat(document.getElementById('withdraw_amount').value);
+    const submitButton = document.querySelector('#confirmation .btn.confirm');
+    
+    // Disable submit button and show loading
+    submitButton.disabled = true;
+    toggleLoading(true, amount);
+  
 // Back to amount entry
 function backToAmount() {
     document.getElementById('confirmation').classList.add('hidden');
@@ -121,6 +182,9 @@ async function submitWithdrawal() {
         document.getElementById('transaction_date').textContent = data.data.transaction_date;
         document.getElementById('teller_number').textContent = data.data.teller_number;
 
+        // Hide loading before showing receipt
+        toggleLoading(false);
+      
         // Hide confirmation, show receipt
         document.getElementById('confirmation').classList.add('hidden');
         document.getElementById('receipt').classList.remove('hidden');
@@ -156,6 +220,18 @@ async function submitWithdrawal() {
     } catch (error) {
         console.error('Withdrawal error:', error);
         showNotification(error.message || 'Error processing withdrawal', true);
+        submitButton.disabled = false;
+        toggleLoading(false);
+    }
+}
+
+// Back to amount entry
+function backToAmount() {
+    document.getElementById('confirmation').classList.add('hidden');
+    document.getElementById('amount_entry').classList.remove('hidden');
+    updateSteps(1);
+}
+
     }
 }
 
@@ -203,4 +279,11 @@ document.getElementById('withdraw_amount').addEventListener('input', function(e)
     }
     
     e.target.value = value;
+    
+    // Validate amount after input
+    if (value === '') {
+        validationMessage.style.display = 'none';
+    } else {
+        validateAmount(parseFloat(value) || 0);
+    }
 }); 

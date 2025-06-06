@@ -85,6 +85,12 @@ body {
     background-color: var(--color-mint);
 }
 
+}
+
+.step.active .step-number {
+    background-color: var(--color-mint);
+}
+
 .step-label {
     color: var(--color-gray);
     font-weight: 500;
@@ -177,6 +183,25 @@ body {
 
 input[type="number"] {
     width: 100%;
+}
+
+.amount-input {
+    position: relative;
+    width: 100%;
+}
+
+.currency {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: var(--color-primary-black);
+    font-weight: 500;
+}
+
+input[type="number"] {
+    width: 100%;
     padding: 20px 20px 20px 45px;
     font-size: 24px;
     border: 2px solid #e0e0e0;
@@ -237,6 +262,28 @@ input[type="number"]:focus {
 /* Confirmation Details */
 .confirmation-details {
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Confirmation Details */
+.confirmation-details {
+    margin-bottom: 30px;
 }
 
 .detail-row {
@@ -251,6 +298,10 @@ input[type="number"]:focus {
 }
 
 .detail-row.highlight {
+    border-radius: 15px;
+    background-color: var(--color-bg-gradient-end);
+    margin: 0 -20px;
+    padding: 20px 20px;
     background-color: var(--color-bg-gradient-start);
     margin: 0 -40px;
     padding: 20px 40px;
@@ -333,12 +384,55 @@ input[type="number"]:focus {
     font-size: 18px;
 }
 
+}
+
+.receipt-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.receipt-label {
+    color: var(--color-primary-black);
+    font-weight: 600;
+    font-size: 16px;
+    min-width: 160px;
+}
+
+.receipt-value {
+    color: var(--color-primary-black);
+    font-weight: 500;
+    font-size: 16px;
+    text-align: right;
+}
+
+.receipt-row.highlight {
+    background-color: var(--color-bg-gradient-start);
+    margin: 0 -20px;
+    padding: 15px 20px;
+}
+
+/* Add highlight for important values */
+.receipt-row.amount .receipt-value,
+.receipt-row.balance .receipt-value,
+.detail-row.amount .detail-value,
+.detail-row.balance .detail-value {
+    color: var(--color-mint);
+    font-weight: 700;
+    font-size: 18px;
+}
+
 /* Notifications */
 .notification-container {
     position: fixed;
     top: 20px;
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
 }
 
 .notification {
@@ -351,6 +445,11 @@ input[type="number"]:focus {
     display: flex;
     align-items: center;
     gap: 10px;
+    animation: slideDown 0.3s ease-out;
+    pointer-events: auto;
+    min-width: 300px;
+    text-align: center;
+    justify-content: center;
     animation: slideIn 0.3s ease-out;
 }
 
@@ -358,13 +457,89 @@ input[type="number"]:focus {
     background-color: var(--color-red);
 }
 
-@keyframes slideIn {
+@keyframes slideDown {
     from {
-        transform: translateX(100%);
+        transform: translateY(-100%);
         opacity: 0;
     }
     to {
-        transform: translateX(0);
+        transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Validation Message */
+.validation-message {
+    color: var(--color-red);
+    font-size: 14px;
+    margin-top: 8px;
+    display: none;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-box {
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-width: 300px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--color-bg-gradient-start);
+    border-top: 5px solid var(--color-mint);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: var(--color-primary-black);
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.processing-amount {
+    color: var(--color-mint);
+    font-weight: 700;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Disabled button styles */
+.btn.confirm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 } 
