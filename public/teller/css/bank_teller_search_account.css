@@ -160,8 +160,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-y: auto;
+    overflow: hidden;
     position: relative;
 }
 
@@ -263,56 +262,19 @@ body {
     flex-direction: column;
     margin-top: 20px;
     align-items: center;
-    min-height: min-content;
     width: 100%;
+    overflow: hidden; /* Default to hidden */
+    padding-right: 5px;
 }
 
-/* Scrollbar Styles for Main Content */
-.main-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.main-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.main-content::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
-}
-
-/* Firefox scrollbar for main content */
-.main-content {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-mint) #f1f1f1;
-}
-
-/* Content Area Scrollbar */
-.content-area::-webkit-scrollbar {
-    width: 8px;
-}
-
-.content-area::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.content-area::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.content-area::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
+/* Only show scrollbar when there's search content */
+.content-area.has-search-results {
+    overflow-y: auto;
 }
 
 /* Search History */
 .search-history {
+    display: none;
     background: var(--color-white);
     border-radius: 15px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -320,8 +282,14 @@ body {
     padding: 10px 25px;
     margin: 10px auto;
     max-width: 1000px;
-    max-height: 500px;
-    overflow: hidden;
+}
+
+.search-history.visible {
+    display: block;
+}
+
+.search-history.hidden {
+    display: none !important;
 }
 
 .search-history h2 {
@@ -364,7 +332,7 @@ body {
 .history-body {
     overflow-y: auto;
     max-height: 325px; /* Height for 5 items */
-    padding-right: 10px;
+    padding-right: 5px; /* Add slight padding for scrollbar */
 }
 
 .history-row {
@@ -407,31 +375,6 @@ body {
 .history-value.status.closed {
     color: var(--color-red);
     font-weight: 600;
-}
-
-/* Scrollbar Styles */
-.history-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-.history-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.history-body::-webkit-scrollbar-thumb {
-    background: var(--color-mint);
-    border-radius: 4px;
-}
-
-.history-body::-webkit-scrollbar-thumb:hover {
-    background: #6bc746;
-}
-
-/* Firefox scrollbar */
-.history-body {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-mint) #f1f1f1;
 }
 
 .history-value.status.inactive {
@@ -926,26 +869,6 @@ body {
     gap: 8px;
 }
 
-/* History Row Styles */
-.history-row {
-    display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr;
-    gap: 20px;
-    padding: 18px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
-    align-items: center;
-}
-
-.history-row:last-child {
-    border-bottom: none;
-}
-
-.history-row:hover {
-    background: var(--color-bg-gradient-start);
-}
-
 /* Notification Container */
 .notification-container {
     position: fixed;
@@ -1045,6 +968,7 @@ body {
     border-top: 5px solid var(--color-mint);
     border-radius: 50%;
     margin: 0 auto;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -1082,5 +1006,5 @@ body {
 }
 
 .loading-overlay-visible {
-    display: flex;
+    display: flex !important;
 }

@@ -48,8 +48,9 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Always hide search history when displaying account details
+    // Always ensure search history is hidden when showing account details
     searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
 
     accounts.forEach((account) => {
         // Create a new card wrapper
@@ -187,19 +188,27 @@ function addToSearchHistory(account) {
         (item) => item.accountNumber === account.account_number
     );
 
+    // Create new history entry
+    const newEntry = {
+        name: account.user.name,
+        accountNumber: account.account_number,
+        balance: account.balance,
+        status: account.status,
+        timestamp: new Date().toISOString()
+    };
+
     if (existingIndex !== -1) {
         // Remove the existing entry
         searchHistory.splice(existingIndex, 1);
     }
 
     // Add to the beginning of the array
-    searchHistory.unshift({
-        name: account.user.name,
-        accountNumber: account.account_number,
-        balance: account.balance,
-        status: account.status,
-        timestamp: new Date().toISOString(), // Add timestamp for sorting
-    });
+    searchHistory.unshift(newEntry);
+
+    // Keep only the last 10 entries
+    if (searchHistory.length > 10) {
+        searchHistory.pop();
+    }
 
     // Save to localStorage with teller-specific key
     localStorage.setItem(
@@ -207,64 +216,64 @@ function addToSearchHistory(account) {
         JSON.stringify(searchHistory)
     );
 
-    // Update history UI
-    updateSearchHistory();
+    // Don't update history UI while searching
+    // updateSearchHistory();
 }
 
 // Update search history UI
 function updateSearchHistory() {
     historyBody.innerHTML = "";
+    
+    if (searchHistory.length === 0) {
+        searchHistoryContainer.classList.add("hidden");
+        return;
+    }
+
     searchHistory.forEach((item, index) => {
         const row = document.createElement("div");
         row.className = "history-row";
         row.onclick = () => selectFromHistory(item.accountNumber);
 
-        const balance = parseFloat(
-            item.balance.toString().replace(/[^0-9.-]+/g, "")
-        );
+        const balance = parseFloat(item.balance.toString().replace(/[^0-9.-]+/g, ""));
 
         row.innerHTML = `
             <div class="history-value">${index + 1}</div>
             <div class="history-value">${item.name}</div>
             <div class="history-value">${item.accountNumber}</div>
             <div class="history-value">${formatCurrency(balance)}</div>
-            <div class="history-value status ${
-                item.status === "active" ? "active" : "closed"
-            }">${
-            item.status.charAt(0).toUpperCase() + item.status.slice(1)
-        }</div>
+            <div class="history-value status ${item.status === "active" ? "active" : "closed"}">
+                ${item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            </div>
         `;
         historyBody.appendChild(row);
     });
 
-    // Show/hide search history container
-    searchHistoryContainer.classList.toggle(
-        "visible",
-        searchHistory.length > 0
-    );
-    searchHistoryContainer.classList.toggle(
-        "hidden",
-        searchHistory.length === 0
-    );
+    // Show search history container if we have entries
+    searchHistoryContainer.classList.remove("hidden");
+    searchHistoryContainer.style.display = "block";
 }
 
 // Search account - now runs instantly without delay
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
+    const contentArea = document.querySelector(".content-area");
 
-    // Always hide search history when there's a search term
-    if (searchTerm) {
-        searchHistoryContainer.classList.add("hidden");
-        searchHistoryContainer.style.display = "none";
-    }
+    // Always ensure search history is hidden when searching
+    searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
 
-    // Clear account container and show search history when search is empty
+    // Clear account container when search is empty
     if (!searchTerm) {
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
-        searchHistoryContainer.classList.remove("hidden");
-        searchHistoryContainer.style.display = "block";
+        // Only show search history when search is empty
+        if (searchHistory.length > 0) {
+            searchHistoryContainer.classList.remove("hidden");
+            searchHistoryContainer.style.display = "block";
+        }
         hideLoadingIndicator();
+        // Remove scrollbar when no search
+        contentArea.classList.remove("has-search-results");
         return;
     }
 
@@ -287,29 +296,33 @@ async function searchAccount() {
         }
 
         if (data.success && data.accounts && data.accounts.length > 0) {
-            // Filter accounts that start with the search term
+            // Filter accounts that match the search term
             const matchingAccounts = data.accounts.filter((account) =>
-                account.account_number
-                    .toLowerCase()
-                    .startsWith(searchTerm.toLowerCase())
+                account.account_number.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
             if (matchingAccounts.length > 0) {
-                // Ensure search history is hidden before showing results
+                // Keep search history hidden and show results
                 searchHistoryContainer.classList.add("hidden");
                 searchHistoryContainer.style.display = "none";
+                
+                // Show scrollbar when we have search results
+                contentArea.classList.add("has-search-results");
+                // Update UI with matching accounts
                 updateAccountDetails(matchingAccounts);
             } else {
-                const accountContainer =
-                    document.querySelector(".account-container");
+                const accountContainer = document.querySelector(".account-container");
                 accountContainer.innerHTML = "";
                 showNotification("No matching accounts found", true);
+                // Remove scrollbar when no results
+                contentArea.classList.remove("has-search-results");
             }
         } else {
-            const accountContainer =
-                document.querySelector(".account-container");
+            const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
             showNotification("No accounts found", true);
+            // Remove scrollbar when no results
+            contentArea.classList.remove("has-search-results");
         }
     } catch (error) {
         console.error("Search error:", error);
@@ -317,6 +330,8 @@ async function searchAccount() {
         showNotification(error.message || "Error searching for account", true);
         const accountContainer = document.querySelector(".account-container");
         accountContainer.innerHTML = "";
+        // Remove scrollbar on error
+        contentArea.classList.remove("has-search-results");
     }
 }
 
@@ -481,7 +496,7 @@ async function closeAccount() {
         return;
     }
 
-    // Show loading overlay
+    // Show loading overlay with green spinner
     showLoadingOverlay("Closing account...");
 
     try {
@@ -516,7 +531,6 @@ async function closeAccount() {
                 `searchHistory_${tellerInfo.teller_number}`,
                 JSON.stringify(searchHistory)
             );
-            updateSearchHistory();
         }
 
         // Update UI
@@ -538,7 +552,7 @@ async function reopenAccount() {
         return;
     }
 
-    // Show loading overlay
+    // Show loading overlay with green spinner
     showLoadingOverlay("Reopening account...");
 
     try {
@@ -573,7 +587,6 @@ async function reopenAccount() {
                 `searchHistory_${tellerInfo.teller_number}`,
                 JSON.stringify(searchHistory)
             );
-            updateSearchHistory();
         }
 
         // Update UI
@@ -622,7 +635,6 @@ async function updateAccountBalance() {
                     `searchHistory_${tellerInfo.teller_number}`,
                     JSON.stringify(searchHistory)
                 );
-                updateSearchHistory();
             }
         }
     } catch (error) {
@@ -643,25 +655,27 @@ window.addEventListener("storage", (e) => {
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
-    // Show search history initially
-    searchHistoryContainer.classList.remove("hidden");
-    searchHistoryContainer.style.display = "block";
-
-    // Update search history display
-    updateSearchHistory();
+    const contentArea = document.querySelector(".content-area");
+    
+    // Show search history initially if we have entries and no search term
+    if (searchHistory.length > 0 && !searchInput.value.trim()) {
+        updateSearchHistory();
+    }
 
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim();
-
         if (!searchTerm) {
             // Clear account container and show search history immediately
-            const accountContainer =
-                document.querySelector(".account-container");
+            const accountContainer = document.querySelector(".account-container");
             accountContainer.innerHTML = "";
-            searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
+            if (searchHistory.length > 0) {
+                searchHistoryContainer.classList.remove("hidden");
+                searchHistoryContainer.style.display = "block";
+            }
             hideLoadingIndicator();
+            // Remove scrollbar when clearing search
+            contentArea.classList.remove("has-search-results");
         } else {
             // Hide search history and perform search
             searchHistoryContainer.classList.add("hidden");
@@ -688,11 +702,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Close account actions when clicking outside
     document.addEventListener("click", (e) => {
         const cardWrappers = document.querySelectorAll(".card-wrapper");
-
         cardWrappers.forEach((wrapper) => {
             const card = wrapper.querySelector(".account-card");
             const actions = wrapper.querySelector(".account-actions");
-
             if (!card.contains(e.target) && !actions.contains(e.target)) {
                 actions.classList.remove("visible");
                 const icon = card.querySelector(".toggle-icon i");
