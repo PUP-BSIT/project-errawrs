@@ -65,29 +65,14 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
-    // Get teller information
-    $teller_sql = "SELECT teller_id, first_name, last_name FROM teller WHERE teller_number = ? AND status = 'active'";
-    $teller_stmt = mysqli_prepare($conn, $teller_sql);
-    mysqli_stmt_bind_param($teller_stmt, "s", $teller_number);
-    mysqli_stmt_execute($teller_stmt);
-    $teller_result = mysqli_stmt_get_result($teller_stmt);
-
-    if (mysqli_num_rows($teller_result) !== 1) {
-        throw new Exception('Unauthorized. Invalid or inactive teller.');
-    }
-
-    $teller = mysqli_fetch_assoc($teller_result);
-
-    // Search accounts
+    // Search accounts with all necessary information
     $search_sql = "SELECT 
         a.account_id,
         a.account_number,
         a.balance,
         a.status,
-        a.created_at,
-        u.user_id,
-        u.first_name,
-        u.last_name,
+        a.account_type,
+        CONCAT(u.first_name, ' ', u.last_name) as account_holder_name,
         u.phone_number
     FROM account a
     JOIN user u ON a.user_id = u.user_id
@@ -116,33 +101,20 @@ try {
     while ($row = mysqli_fetch_assoc($search_result)) {
         // Format the data
         $accounts[] = [
-            'account_id' => $row['account_id'],
             'account_number' => $row['account_number'],
-            'balance' => number_format((float)$row['balance'], 2),
-            'status' => $row['status'],
-            'created_at' => $row['created_at'],
-            'user' => [
-                'id' => $row['user_id'],
-                'name' => $row['first_name'] . ' ' . $row['last_name'],
-                'phone_number' => $row['phone_number']
-            ]
+            'account_holder_name' => $row['account_holder_name'],
+            'account_type' => ucfirst($row['account_type']), // Capitalize first letter
+            'current_balance' => 'P' . number_format($row['balance'], 2),
+            'account_status' => $row['status'],
+            'phone_number' => $row['phone_number']
         ];
     }
 
-    // Return success response with teller info
+    // Return success response
     echo json_encode([
         'success' => true,
         'accounts' => $accounts,
-        'count' => count($accounts),
-        'search_term' => $search_term,
-        'teller' => [
-            'id' => $teller['teller_id'],
-            'name' => $teller['first_name'] . ' ' . $teller['last_name']
-        ],
-        'debug' => [
-            'method' => $_SERVER['REQUEST_METHOD'],
-            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $data : $_GET
-        ]
+        'count' => count($accounts)
     ]);
 
 } catch (Exception $e) {
@@ -150,12 +122,7 @@ try {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug' => [
-            'method' => $_SERVER['REQUEST_METHOD'],
-            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? 
-                (isset($data) ? $data : []) : $_GET
-        ]
+        'error' => $e->getMessage()
     ]);
 } finally {
     // Clean up
