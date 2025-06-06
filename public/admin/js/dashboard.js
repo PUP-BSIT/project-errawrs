@@ -194,22 +194,12 @@ class AdminDashboard {
 
     async handleLogout(e) {
         e.preventDefault();
-
-        try {
-            const response = await fetch('/src/auth/logout.php', {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                window.location.href = 'login.html';
-            } else {
-                throw new Error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-            alert('Failed to logout. Please try again.');
-        }
+        
+        // Clear session storage
+        sessionStorage.clear();
+        
+        // Redirect to login page
+        window.location.href = '/project-errawrs/public/admin/login.html';
     }
 
     showNotification(message, type = 'info') {
