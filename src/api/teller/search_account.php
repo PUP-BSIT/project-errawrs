@@ -40,11 +40,6 @@ try {
         $teller_number = isset($_GET['teller_number']) ? trim($_GET['teller_number']) : '';
     }
 
-    // Debug logging
-    error_log("Method: " . $_SERVER['REQUEST_METHOD']);
-    error_log("Search term: " . $search_term);
-    error_log("Teller number: " . $teller_number);
-
     // Validate input
     if (empty($search_term)) {
         throw new Exception('Search term is required');
@@ -55,37 +50,28 @@ try {
     }
 
     // Verify teller exists and is active
-    $teller_sql = "SELECT teller_id, status FROM teller WHERE teller_number = ? AND status = 'active'";
+    $teller_sql = "SELECT teller_id FROM teller WHERE teller_number = ? AND status = 'active'";
     $teller_stmt = mysqli_prepare($conn, $teller_sql);
+    if (!$teller_stmt) {
+        throw new Exception('Failed to prepare teller query: ' . mysqli_error($conn));
+    }
+    
     mysqli_stmt_bind_param($teller_stmt, "s", $teller_number);
-    mysqli_stmt_execute($teller_stmt);
+    if (!mysqli_stmt_execute($teller_stmt)) {
+        throw new Exception('Failed to execute teller query: ' . mysqli_stmt_error($teller_stmt));
+    }
+    
     $teller_result = mysqli_stmt_get_result($teller_stmt);
-
     if (mysqli_num_rows($teller_result) !== 1) {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
-    // Get teller information
-    $teller_sql = "SELECT teller_id, first_name, last_name FROM teller WHERE teller_number = ? AND status = 'active'";
-    $teller_stmt = mysqli_prepare($conn, $teller_sql);
-    mysqli_stmt_bind_param($teller_stmt, "s", $teller_number);
-    mysqli_stmt_execute($teller_stmt);
-    $teller_result = mysqli_stmt_get_result($teller_stmt);
-
-    if (mysqli_num_rows($teller_result) !== 1) {
-        throw new Exception('Unauthorized. Invalid or inactive teller.');
-    }
-
-    $teller = mysqli_fetch_assoc($teller_result);
-
-    // Search accounts
+    // Search accounts with all necessary information
     $search_sql = "SELECT 
-        a.account_id,
         a.account_number,
         a.balance,
         a.status,
-        a.created_at,
-        u.user_id,
+        a.account_type,
         u.first_name,
         u.last_name,
         u.phone_number
@@ -95,54 +81,68 @@ try {
         a.account_number LIKE ? OR
         u.first_name LIKE ? OR
         u.last_name LIKE ? OR
-        u.phone_number LIKE ?
+        u.phone_number LIKE ? OR
+        CONCAT(u.first_name, ' ', u.last_name) LIKE ?
     )
-    ORDER BY a.account_number
+    AND a.status != 'deleted'
+    ORDER BY 
+        CASE 
+            WHEN a.account_number = ? THEN 0
+            WHEN a.account_number LIKE ? THEN 1
+            WHEN CONCAT(u.first_name, ' ', u.last_name) = ? THEN 2
+            ELSE 3
+        END,
+        a.account_number ASC
     LIMIT 10";
 
     $search_pattern = "%{$search_term}%";
     $search_stmt = mysqli_prepare($conn, $search_sql);
-    mysqli_stmt_bind_param($search_stmt, "ssss", 
-        $search_pattern,
-        $search_pattern,
-        $search_pattern,
-        $search_pattern
+    if (!$search_stmt) {
+        throw new Exception('Failed to prepare search query: ' . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($search_stmt, "ssssssss", 
+        $search_pattern,    // account_number LIKE
+        $search_pattern,    // first_name LIKE
+        $search_pattern,    // last_name LIKE
+        $search_pattern,    // phone_number LIKE
+        $search_pattern,    // full name LIKE
+        $search_term,       // exact account number match
+        $search_pattern,    // partial account number match
+        $search_term       // exact full name match
     );
 
-    mysqli_stmt_execute($search_stmt);
+    if (!mysqli_stmt_execute($search_stmt)) {
+        throw new Exception('Failed to execute search query: ' . mysqli_stmt_error($search_stmt));
+    }
+
     $search_result = mysqli_stmt_get_result($search_stmt);
+    if (!$search_result) {
+        throw new Exception('Failed to get search results: ' . mysqli_error($conn));
+    }
 
     $accounts = [];
+    $counter = 1;
     while ($row = mysqli_fetch_assoc($search_result)) {
-        // Format the data
+        // Format the data exactly as UI expects
         $accounts[] = [
-            'account_id' => $row['account_id'],
+            'number' => $counter++,
             'account_number' => $row['account_number'],
             'balance' => number_format((float)$row['balance'], 2),
-            'status' => $row['status'],
-            'created_at' => $row['created_at'],
+            'status' => strtolower($row['status']),
+            'account_type' => $row['account_type'],
             'user' => [
-                'id' => $row['user_id'],
-                'name' => $row['first_name'] . ' ' . $row['last_name'],
+                'name' => trim($row['first_name'] . ' ' . $row['last_name']),
                 'phone_number' => $row['phone_number']
             ]
         ];
     }
 
-    // Return success response with teller info
+    // Return success response
     echo json_encode([
         'success' => true,
         'accounts' => $accounts,
-        'count' => count($accounts),
-        'search_term' => $search_term,
-        'teller' => [
-            'id' => $teller['teller_id'],
-            'name' => $teller['first_name'] . ' ' . $teller['last_name']
-        ],
-        'debug' => [
-            'method' => $_SERVER['REQUEST_METHOD'],
-            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? $data : $_GET
-        ]
+        'count' => count($accounts)
     ]);
 
 } catch (Exception $e) {
@@ -150,12 +150,7 @@ try {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug' => [
-            'method' => $_SERVER['REQUEST_METHOD'],
-            'received_params' => $_SERVER['REQUEST_METHOD'] === 'POST' ? 
-                (isset($data) ? $data : []) : $_GET
-        ]
+        'error' => $e->getMessage()
     ]);
 } finally {
     // Clean up
