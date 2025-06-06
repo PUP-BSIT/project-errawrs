@@ -141,7 +141,15 @@ try {
     
     // Insert new user
     $stmt = $db->prepare('INSERT INTO user (username, password_hash, first_name, last_name, phone_number) VALUES (?, ?, ?, ?, ?)');
-    $password_hash = password_hash($registration['password'], PASSWORD_DEFAULT);
+    
+    // Ensure password is properly hashed using PASSWORD_DEFAULT
+    $password = $registration['password'];
+    $password_hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
+    
+    if ($password_hash === false) {
+        throw new Exception('Failed to hash password');
+    }
+    
     $stmt->bind_param('sssss', 
         $registration['username'],
         $password_hash,

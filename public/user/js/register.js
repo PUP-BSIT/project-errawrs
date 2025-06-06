@@ -377,8 +377,37 @@ class RegistrationManager {
 		if (allFieldsValid) {
 			// Save form data before proceeding
 			this.saveFormData();
-			this.goToStep(STEPS.VERIFICATION);
-			this.showNotification("Please verify your phone number.", NOTIFICATION_TYPES.SUCCESS);
+
+			// Send registration data to API
+			fetch('/project-errawrs/src/api/user/register.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					first_name: firstNameInput.value.trim(),
+					last_name: lastNameInput.value.trim(),
+					username: usernameInput.value.trim(),
+					password: passwordInput.value,
+					phone_number: phoneNumberInput.value.trim()
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					this.goToStep(STEPS.VERIFICATION);
+					this.showNotification("Please verify your phone number.", NOTIFICATION_TYPES.SUCCESS);
+				} else {
+					this.showNotification(data.error || "Registration failed. Please try again.", NOTIFICATION_TYPES.ERROR);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				this.showNotification(
+					"An error occurred during registration. Please try again.",
+					NOTIFICATION_TYPES.ERROR
+				);
+			});
 		} else {
 			this.showNotification("Please fill in all fields correctly.", NOTIFICATION_TYPES.ERROR);
 		}
@@ -414,33 +443,64 @@ class RegistrationManager {
 			submitBtn.style.opacity = "0.5";
 			submitBtn.disabled = true;
 			
-			// Simulate successful OTP verification (replace with actual API call)
-			setTimeout(() => {
-				// Store the complete registration data
-				this.registeredData = {
-					username: this.formData.username,
-					account_number: this.generateAccountNumber(),
-					status: 'Active'
-				};
-				
-				// Update success page elements
-				const usernameElement = document.getElementById("registered_username");
-				const accountNumberElement = document.getElementById("account_number");
-				
-				if (usernameElement) {
-					usernameElement.textContent = this.registeredData.username;
-				}
-				if (accountNumberElement) {
-					accountNumberElement.textContent = this.registeredData.account_number;
-				}
+			// Make actual API call to verify OTP
+			fetch('/project-errawrs/src/api/auth/verify_otp.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					otp: otpCode,
+					phone_number: this.formData.phone_number
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					// Store the registration data from the API response
+					this.registeredData = {
+						username: data.user.username,
+						account_number: data.user.account_number,
+						status: 'Active'
+					};
+					
+					// Update success page elements
+					const usernameElement = document.getElementById("registered_username");
+					const accountNumberElement = document.getElementById("account_number");
+					
+					if (usernameElement) {
+						usernameElement.textContent = this.registeredData.username;
+					}
+					if (accountNumberElement) {
+						accountNumberElement.textContent = this.registeredData.account_number;
+					}
 
+					this.hideLoadingState("otp_form");
+					this.goToStep(STEPS.SUCCESS);
+					this.showNotification(
+						"Registration completed successfully!",
+						NOTIFICATION_TYPES.SUCCESS
+					);
+				} else {
+					this.hideLoadingState("otp_form");
+					submitBtn.style.opacity = "1";
+					submitBtn.disabled = false;
+					this.showNotification(
+						data.error || "Failed to verify OTP. Please try again.",
+						NOTIFICATION_TYPES.ERROR
+					);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
 				this.hideLoadingState("otp_form");
-				this.goToStep(STEPS.SUCCESS);
+				submitBtn.style.opacity = "1";
+				submitBtn.disabled = false;
 				this.showNotification(
-					"Registration completed successfully!",
-					NOTIFICATION_TYPES.SUCCESS
+					"An error occurred while verifying OTP. Please try again.",
+					NOTIFICATION_TYPES.ERROR
 				);
-			}, 1500);
+			});
 		} else {
 			this.showNotification(
 				`Please enter a valid ${FORM_VALIDATION.SMS_CODE_LENGTH}-digit OTP.`,
@@ -742,10 +802,11 @@ class RegistrationManager {
 	}
 
 	generateAccountNumber() {
-		// Simple timestamp-based account number
-		const timestamp = Date.now();
-		const random = Math.floor(Math.random() * 1000);
-		return `SAC${timestamp}${random}`.substring(0, 12); // Example format, adjust as needed
+		// Format: 544250000XXX where XXX is a random number
+		const prefix = "54425";  // Fixed prefix
+		const middle = "0000";   // Fixed middle part
+		const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // Random 3 digits
+		return `${prefix}${middle}${random}`; // Will create format like 544250000105
 	}
 
 	showNotification(message, type = NOTIFICATION_TYPES.INFO) {
