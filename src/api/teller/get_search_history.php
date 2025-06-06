@@ -43,14 +43,18 @@ try {
     // Get the teller's recent transactions which represent their search history
     // We'll use the transaction table to find accounts they've interacted with
     $history_sql = "SELECT DISTINCT 
+        a.account_id,
         a.account_number,
-        CONCAT(u.first_name, ' ', u.last_name) as account_name,
-        t.created_at as search_timestamp
+        a.balance,
+        a.account_type,
+        a.status as account_status,
+        CONCAT(u.first_name, ' ', u.last_name) as account_name
     FROM transaction t
     JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
     JOIN user u ON a.user_id = u.user_id
     WHERE t.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    ORDER BY t.created_at DESC
+    GROUP BY a.account_id, a.account_number, a.balance, a.account_type, a.status, account_name
+    ORDER BY MAX(t.created_at) DESC
     LIMIT 10";
 
     $history_stmt = mysqli_prepare($conn, $history_sql);
@@ -62,7 +66,9 @@ try {
         $search_history[] = [
             'account_number' => $row['account_number'],
             'account_name' => $row['account_name'],
-            'timestamp' => $row['search_timestamp']
+            'balance' => number_format($row['balance'], 2),
+            'account_type' => $row['account_type'],
+            'status' => $row['account_status']
         ];
     }
 

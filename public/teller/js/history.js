@@ -1,8 +1,15 @@
+// Get teller info from session storage
+const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error("No teller info found in session storage");
+    window.location.href = "./bank_teller_login.html";
+}
+
 // Global variables
 let currentPage = 1;
 let itemsPerPage = 5;
-let totalItems = 15;
-let totalPages = Math.ceil(totalItems / itemsPerPage);
+let totalItems = 0;
+let totalPages = 0;
 
 // Table data storage
 let tableData = [];
@@ -12,168 +19,53 @@ let selectedRows = new Set();
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
     initializeApplication();
+    // Update teller name in the UI
+    const userNameElement = document.querySelector(".user-name");
+    if (userNameElement && tellerInfo.name) {
+        userNameElement.textContent = tellerInfo.name;
+    }
 });
 
-function initializeApplication() {
+async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    initializeTableData();
-    filteredData = [...tableData];
+    await fetchSearchHistory();
     updateTableDisplay();
     updatePaginationDisplay();
 }
 
-// Initialize table data
-function initializeTableData() {
-    // Load data from localStorage
-    const savedData = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
-    
-    // If no saved data, use sample data
-    if (savedData.length === 0) {
-        tableData = [
-            {
-                id: 1,
-                date: "2025-05-02",
-                type: "Deposit",
-                amount: "₱5,000.00",
-                accountNo: "1234-5678-9012",
-                accountName: "John Michael Smith",
-                status: "Success",
-            },
-            {
-                id: 2,
-                date: "2025-05-02",
-                type: "Transfer",
-                amount: "₱12,000.00",
-                accountNo: "2345-6789-0123",
-                accountName: "Maria Elena Santos",
-                status: "Success",
-            },
-            {
-                id: 3,
-                date: "2025-05-01",
-                type: "Transfer",
-                amount: "₱3,500.00",
-                accountNo: "3456-7890-1234",
-                accountName: "Robert James Wilson",
-                status: "Success",
-            },
-            {
-                id: 4,
-                date: "2025-04-30",
-                type: "Deposit",
-                amount: "₱1,000.00",
-                accountNo: "4567-8901-2345",
-                accountName: "Sarah Jane Parker",
-                status: "Failed",
-            },
-            {
-                id: 5,
-                date: "2025-04-29",
-                type: "Transfer",
-                amount: "₱4,000.00",
-                accountNo: "5678-9012-3456",
-                accountName: "David Lee Cooper",
-                status: "Failed",
-            },
-            {
-                id: 6,
-                date: "2025-04-28",
-                type: "Withdrawal",
-                amount: "₱2,500.00",
-                accountNo: "6789-0123-4567",
-                accountName: "Emily Rose Taylor",
-                status: "Success",
-            },
-            {
-                id: 7,
-                date: "2025-04-27",
-                type: "Deposit",
-                amount: "₱8,000.00",
-                accountNo: "7890-1234-5678",
-                accountName: "William Henry Brown",
-                status: "Success",
-            },
-            {
-                id: 8,
-                date: "2025-04-26",
-                type: "Transfer",
-                amount: "₱1,500.00",
-                accountNo: "8901-2345-6789",
-                accountName: "Anna Marie Johnson",
-                status: "Success",
-            },
-            {
-                id: 9,
-                date: "2025-04-25",
-                type: "Deposit",
-                amount: "₱3,200.00",
-                accountNo: "9012-3456-7890",
-                accountName: "Christopher Lee",
-                status: "Success",
-            },
-            {
-                id: 10,
-                date: "2025-04-24",
-                type: "Transfer",
-                amount: "₱6,700.00",
-                accountNo: "0123-4567-8901",
-                accountName: "Patricia Ann Davis",
-                status: "Failed",
-            },
-            {
-                id: 11,
-                date: "2025-04-23",
-                type: "Withdrawal",
-                amount: "₱1,800.00",
-                accountNo: "1234-5678-9012",
-                accountName: "Thomas James White",
-                status: "Success",
-            },
-            {
-                id: 12,
-                date: "2025-04-22",
-                type: "Transfer",
-                amount: "₱9,500.00",
-                accountNo: "2345-6789-0123",
-                accountName: "Elizabeth Grace",
-                status: "Failed",
-            },
-            {
-                id: 13,
-                date: "2025-04-21",
-                type: "Deposit",
-                amount: "₱4,400.00",
-                accountNo: "3456-7890-1234",
-                accountName: "Michael Scott Chen",
-                status: "Success",
-            },
-            {
-                id: 14,
-                date: "2025-04-20",
-                type: "Transfer",
-                amount: "₱2,100.00",
-                accountNo: "4567-8901-2345",
-                accountName: "Jennifer Rose Kim",
-                status: "Success",
-            },
-            {
-                id: 15,
-                date: "2025-04-19",
-                type: "Deposit",
-                amount: "₱5,800.00",
-                accountNo: "5678-9012-3456",
-                accountName: "Richard Paul Clark",
-                status: "Success",
-            },
-        ];
-    } else {
-        tableData = savedData;
-    }
+// Fetch search history from the server
+async function fetchSearchHistory() {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const data = await response.json();
 
-    // Update filtered data and total items
-    filteredData = [...tableData];
-    totalItems = tableData.length;
-    totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch search history");
+        }
+
+        if (data.success && data.history) {
+            tableData = data.history.map(item => ({
+                id: item.account_number, // Using account number as ID
+                date: new Date(item.timestamp),
+                account_number: item.account_number,
+                account_name: item.account_name,
+                timestamp: item.timestamp,
+                amount: item.amount
+            }));
+            filteredData = [...tableData];
+            totalItems = filteredData.length;
+            totalPages = Math.ceil(totalItems / itemsPerPage);
+        } else {
+            tableData = [];
+            filteredData = [];
+            totalItems = 0;
+            totalPages = 0;
+            showNotification("No search history found", "info");
+        }
+    } catch (error) {
+        console.error("Error fetching search history:", error);
+        showNotification(error.message || "Error fetching search history", "error");
+    }
 }
 
 // Pagination functions (called by onclick)
@@ -318,49 +210,87 @@ function getStatusIcon(status) {
 }
 
 // Create table row
-function createTableRow(transaction) {
+function createTableRow(item) {
     const row = document.createElement("div");
     row.className = "table-row";
     row.onclick = function (event) {
-        handleRowClick(event, row, transaction.id);
+        handleRowClick(event, row, item.id);
     };
-    row.ondblclick = function () {
-        showTransactionDetails(transaction);
-    };
-
-    const statusClass = `status-${transaction.status.toLowerCase()}`;
-    const statusIcon = getStatusIcon(transaction.status);
 
     const dateCell = document.createElement("div");
     dateCell.className = "table-cell date";
-    dateCell.textContent = formatDate(transaction.date);
+    dateCell.textContent = formatDate(item.date);
 
     const timeCell = document.createElement("div");
     timeCell.className = "table-cell time";
-    timeCell.textContent = formatTime(transaction.date);
+    timeCell.textContent = formatTime(item.date);
 
-    const typeCell = document.createElement("div");
-    typeCell.className = "table-cell";
-    typeCell.textContent = transaction.type;
+    const accountNumberCell = document.createElement("div");
+    accountNumberCell.className = "table-cell";
+    accountNumberCell.textContent = item.account_number;
+
+    const accountNameCell = document.createElement("div");
+    accountNameCell.className = "table-cell";
+    accountNameCell.textContent = item.account_name;
 
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = transaction.amount;
+    amountCell.textContent = item.amount ? formatCurrency(item.amount) : "—";
 
-    const statusCell = document.createElement("div");
-    statusCell.className = statusClass;
-    statusCell.innerHTML = `
-        <div class="status-icon">${statusIcon}</div>
-        ${transaction.status}
+    const detailsCell = document.createElement("div");
+    detailsCell.className = "table-cell details-cell";
+    
+    // Set the details content based on transaction type
+    const detailsContent = getTransactionDetails(item.type);
+    detailsCell.innerHTML = `
+        <i class="${detailsContent.icon}"></i>
+        <span class="${detailsContent.class}">${detailsContent.text}</span>
     `;
 
     row.appendChild(dateCell);
     row.appendChild(timeCell);
-    row.appendChild(typeCell);
+    row.appendChild(accountNumberCell);
+    row.appendChild(accountNameCell);
     row.appendChild(amountCell);
-    row.appendChild(statusCell);
+    row.appendChild(detailsCell);
 
     return row;
+}
+
+// Helper function to get transaction details
+function getTransactionDetails(type) {
+    switch (type?.toLowerCase()) {
+        case 'deposit':
+            return {
+                icon: 'fas fa-plus-circle',
+                text: 'Deposit',
+                class: 'details-deposit'
+            };
+        case 'withdraw':
+            return {
+                icon: 'fas fa-minus-circle',
+                text: 'Withdraw',
+                class: 'details-withdraw'
+            };
+        case 'close':
+            return {
+                icon: 'fas fa-times-circle',
+                text: 'Close Account',
+                class: 'details-close'
+            };
+        case 'reopen':
+            return {
+                icon: 'fas fa-redo-alt',
+                text: 'Reopen Account',
+                class: 'details-reopen'
+            };
+        default:
+            return {
+                icon: 'fas fa-info-circle',
+                text: 'View Details',
+                class: ''
+            };
+    }
 }
 
 // Update table display
@@ -371,19 +301,30 @@ function updateTableDisplay() {
     // Clear existing rows
     tableBody.innerHTML = "";
 
+    if (currentPageData.length === 0) {
+        // Show empty state message
+        const emptyRow = document.createElement("div");
+        emptyRow.className = "table-row empty-state";
+        emptyRow.innerHTML = `
+            <div class="empty-state-container">
+                <i class="fa-regular fa-folder-open empty-state-icon"></i>
+                <div class="empty-state-title">No transactions found</div>
+                <div class="empty-state-subtitle">Transaction history will appear here</div>
+            </div>
+        `;
+        tableBody.appendChild(emptyRow);
+        return;
+    }
+
     // Create new rows
-    currentPageData.forEach(function (transaction) {
-        const row = createTableRow(transaction);
+    currentPageData.forEach(function (item) {
+        const row = createTableRow(item);
         tableBody.appendChild(row);
     });
 
     // Update total items
     totalItems = filteredData.length;
     totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    console.log(
-        `Loading page ${currentPage} with ${itemsPerPage} items per page`
-    );
 }
 
 // Row interaction functions
@@ -485,10 +426,11 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("en-PH", {
-        style: "currency",
-        currency: "PHP",
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
         minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     }).format(amount);
 }
 
