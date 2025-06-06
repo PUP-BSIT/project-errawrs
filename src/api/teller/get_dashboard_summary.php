@@ -22,95 +22,99 @@ try {
     // Get database connection
     $conn = db_connect();
 
-    // Get teller number from request
-    $teller_number = isset($_GET['teller_number']) ? trim($_GET['teller_number']) : '';
-
-    if (empty($teller_number)) {
-        throw new Exception('Teller number is required');
-    }
-
-    // Verify teller exists and is active
-    $teller_sql = "SELECT teller_id FROM teller WHERE teller_number = ? AND status = 'active'";
-    $teller_stmt = mysqli_prepare($conn, $teller_sql);
-    mysqli_stmt_bind_param($teller_stmt, "s", $teller_number);
-    mysqli_stmt_execute($teller_stmt);
-    $teller_result = mysqli_stmt_get_result($teller_stmt);
-
-    if (mysqli_num_rows($teller_result) !== 1) {
-        throw new Exception('Unauthorized. Invalid or inactive teller.');
-    }
-
-    // Get today's date in MySQL format
-    $today = date('Y-m-d');
+    // Get today's date range
+    $today_start = date('Y-m-d 00:00:00');
+    $today_end = date('Y-m-d 23:59:59');
+    $current_date = date('Y-m-d');
 
     // Get total deposits today
-    $deposits_sql = "SELECT COALESCE(SUM(amount), 0) as total 
-                    FROM transaction 
-                    WHERE DATE(created_at) = ? 
-                    AND transaction_type = 'deposit'
-                    AND completed_at IS NOT NULL";
-    $deposits_stmt = mysqli_prepare($conn, $deposits_sql);
-    mysqli_stmt_bind_param($deposits_stmt, "s", $today);
+    $deposits_query = "SELECT COALESCE(SUM(amount), 0) as total 
+                      FROM transaction 
+                      WHERE created_at BETWEEN ? AND ?
+                      AND transaction_type = 'deposit'
+                      AND status = 'completed'";
+    $deposits_stmt = mysqli_prepare($conn, $deposits_query);
+    mysqli_stmt_bind_param($deposits_stmt, 'ss', $today_start, $today_end);
     mysqli_stmt_execute($deposits_stmt);
-    $total_deposits = mysqli_fetch_assoc(mysqli_stmt_get_result($deposits_stmt))['total'];
+    $deposits_result = mysqli_stmt_get_result($deposits_stmt);
+    $total_deposits = mysqli_fetch_assoc($deposits_result)['total'];
 
     // Get total withdrawals today
-    $withdrawals_sql = "SELECT COALESCE(SUM(amount), 0) as total 
-                       FROM transaction 
-                       WHERE DATE(created_at) = ? 
-                       AND transaction_type = 'withdrawal'
-                       AND completed_at IS NOT NULL";
-    $withdrawals_stmt = mysqli_prepare($conn, $withdrawals_sql);
-    mysqli_stmt_bind_param($withdrawals_stmt, "s", $today);
+    $withdrawals_query = "SELECT COALESCE(SUM(amount), 0) as total 
+                         FROM transaction 
+                         WHERE created_at BETWEEN ? AND ?
+                         AND transaction_type = 'withdrawal'
+                         AND status = 'completed'";
+    $withdrawals_stmt = mysqli_prepare($conn, $withdrawals_query);
+    mysqli_stmt_bind_param($withdrawals_stmt, 'ss', $today_start, $today_end);
     mysqli_stmt_execute($withdrawals_stmt);
-    $total_withdrawals = mysqli_fetch_assoc(mysqli_stmt_get_result($withdrawals_stmt))['total'];
+    $withdrawals_result = mysqli_stmt_get_result($withdrawals_stmt);
+    $total_withdrawals = mysqli_fetch_assoc($withdrawals_result)['total'];
 
     // Get total closed accounts today
-    $closed_sql = "SELECT COUNT(*) as total 
-                   FROM transaction 
-                   WHERE DATE(created_at) = ? 
-                   AND transaction_type = 'withdrawal'
-                   AND description LIKE '%Account closed%'
-                   AND completed_at IS NOT NULL";
-    $closed_stmt = mysqli_prepare($conn, $closed_sql);
-    mysqli_stmt_bind_param($closed_stmt, "s", $today);
+    $closed_query = "SELECT COUNT(*) as total 
+                    FROM account 
+                    WHERE DATE(created_at) = ? 
+                    AND status = 'closed'";
+    $closed_stmt = mysqli_prepare($conn, $closed_query);
+    mysqli_stmt_bind_param($closed_stmt, 's', $current_date);
     mysqli_stmt_execute($closed_stmt);
-    $total_closed = mysqli_fetch_assoc(mysqli_stmt_get_result($closed_stmt))['total'];
+    $closed_result = mysqli_stmt_get_result($closed_stmt);
+    $total_closed = mysqli_fetch_assoc($closed_result)['total'];
 
     // Get total reopened accounts today
-    $reopened_sql = "SELECT COUNT(*) as total 
-                     FROM transaction 
-                     WHERE DATE(created_at) = ? 
-                     AND transaction_type = 'deposit'
-                     AND description LIKE '%Account reopened%'
-                     AND completed_at IS NOT NULL";
-    $reopened_stmt = mysqli_prepare($conn, $reopened_sql);
-    mysqli_stmt_bind_param($reopened_stmt, "s", $today);
+    $reopened_query = "SELECT COUNT(*) as total 
+                      FROM account 
+                      WHERE DATE(created_at) = ? 
+                      AND status = 'active'
+                      AND account_id IN (
+                          SELECT account_id 
+                          FROM transaction 
+                          WHERE transaction_type = 'deposit' 
+                          AND description LIKE '%Account reopened%'
+                          AND DATE(created_at) = ?
+                      )";
+    $reopened_stmt = mysqli_prepare($conn, $reopened_query);
+    mysqli_stmt_bind_param($reopened_stmt, 'ss', $current_date, $current_date);
     mysqli_stmt_execute($reopened_stmt);
-    $total_reopened = mysqli_fetch_assoc(mysqli_stmt_get_result($reopened_stmt))['total'];
+    $reopened_result = mysqli_stmt_get_result($reopened_stmt);
+    $total_reopened = mysqli_fetch_assoc($reopened_result)['total'];
 
-    // Return success response
-    echo json_encode([
+    // Current date in YYYY-MM-DD format
+    $last_updated = date('Y-m-d');
+
+    // Format the response to match UI
+    $response = [
         'success' => true,
         'summary' => [
-            'deposits' => [
-                'amount' => number_format($total_deposits, 2),
-                'last_updated' => date('g:i A')
+            [
+                'icon' => '💰',
+                'title' => 'Total Deposits Today',
+                'amount_count' => 'P' . number_format($total_deposits, 2),
+                'date' => $last_updated
             ],
-            'withdrawals' => [
-                'amount' => number_format($total_withdrawals, 2),
-                'last_updated' => date('g:i A')
+            [
+                'icon' => '💸',
+                'title' => 'Total Withdrawals Today',
+                'amount_count' => 'P' . number_format($total_withdrawals, 2),
+                'date' => $last_updated
             ],
-            'closed_accounts' => [
-                'count' => $total_closed,
-                'last_updated' => date('g:i A')
+            [
+                'icon' => '🔒',
+                'title' => 'Total Closed Accounts',
+                'amount_count' => $total_closed . ' Accounts',
+                'date' => $last_updated
             ],
-            'reopened_accounts' => [
-                'count' => $total_reopened,
-                'last_updated' => date('g:i A')
+            [
+                'icon' => '🔓',
+                'title' => 'Total Re-opened Accounts',
+                'amount_count' => $total_reopened . ' Accounts',
+                'date' => $last_updated
             ]
         ]
-    ]);
+    ];
+
+    echo json_encode($response);
 
 } catch (Exception $e) {
     error_log("Dashboard Summary Error: " . $e->getMessage());
@@ -121,7 +125,6 @@ try {
     ]);
 } finally {
     // Clean up
-    if (isset($teller_stmt)) mysqli_stmt_close($teller_stmt);
     if (isset($deposits_stmt)) mysqli_stmt_close($deposits_stmt);
     if (isset($withdrawals_stmt)) mysqli_stmt_close($withdrawals_stmt);
     if (isset($closed_stmt)) mysqli_stmt_close($closed_stmt);
