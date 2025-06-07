@@ -52,7 +52,7 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`../../src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
+        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
         const data = await response.json();
 
         if (!response.ok) {

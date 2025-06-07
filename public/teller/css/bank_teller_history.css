@@ -82,8 +82,23 @@ body {
     overflow: hidden;
     margin: 0 auto 16px;
     border: 3px solid var(--color-mint);
+    background-color: var(--color-mint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.user-avatar .initials {
+    color: var(--color-white);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .user-name {
     font-size: 1.5rem;
@@ -156,7 +171,6 @@ body {
 }
 
 .nav-logout i {
-    font-size: 14px;
     font-size: 1.2rem;
 }
 
