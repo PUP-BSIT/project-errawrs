@@ -4,3 +4,8 @@
 .env.development
 .env.test
 .env.production
+dev.stackovercash.site.conf
+nginx.conf
+techblinders_api.md
+./src/api/services/EXTERNAL_API_DOC.md
+./src/api/services/README.md
