@@ -20,7 +20,7 @@ let searchHistory = [];
 // Load search history
 async function loadSearchHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`../../src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
         const data = await response.json();
 
         if (data.success && data.history) {
