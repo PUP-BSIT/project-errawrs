@@ -101,18 +101,39 @@ const NotificationManager = {
 // Form Validation
 const FormValidator = {
     validatePassword: (password, confirmPassword) => {
-        if (!password) return true;
+        if (!password) return true; // Allow empty password (no change)
 
         const { PASSWORD_PATTERNS, MIN_PASSWORD_LENGTH } = CONFIG.VALIDATION;
         const hasUppercase = PASSWORD_PATTERNS.UPPERCASE.test(password);
         const hasLowercase = PASSWORD_PATTERNS.LOWERCASE.test(password);
         const hasNumber = PASSWORD_PATTERNS.NUMBER.test(password);
+        const hasMinLength = password.length >= MIN_PASSWORD_LENGTH;
 
-        if (password.length < MIN_PASSWORD_LENGTH || !hasUppercase || 
-            !hasLowercase || !hasNumber) {
+        // Calculate password strength
+        let strength = 0;
+        if (hasMinLength) strength++;
+        if (hasUppercase) strength++;
+        if (hasLowercase) strength++;
+        if (hasNumber) strength++;
+
+        // Update password strength indicator
+        const strengthBar = document.querySelector('.password-strength-bar');
+        if (strengthBar) {
+            strengthBar.className = 'password-strength-bar';
+            if (strength >= 4) strengthBar.classList.add('strong');
+            else if (strength >= 3) strengthBar.classList.add('medium');
+            else strengthBar.classList.add('weak');
+        }
+
+        if (!hasMinLength || !hasUppercase || !hasLowercase || !hasNumber) {
+            const requirements = [];
+            if (!hasMinLength) requirements.push('at least 8 characters');
+            if (!hasUppercase) requirements.push('an uppercase letter');
+            if (!hasLowercase) requirements.push('a lowercase letter');
+            if (!hasNumber) requirements.push('a number');
+
             NotificationManager.show(
-                'Password must be at least 8 characters long and include ' +
-                'uppercase, lowercase, and number.',
+                `Password must include ${requirements.join(', ')}.`,
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
@@ -120,7 +141,7 @@ const FormValidator = {
 
         if (password !== confirmPassword) {
             NotificationManager.show(
-                'Password and Confirm Password do not match',
+                'Passwords do not match',
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
@@ -132,13 +153,43 @@ const FormValidator = {
         const required = ['first_name', 'last_name', 'username', 'phone_number'];
         const missing = required.filter(field => !data[field]?.trim());
         
+        // Reset all form fields to default state
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.classList.remove('error', 'success');
+        });
+
         if (missing.length > 0) {
+            // Mark missing fields with error class
+            missing.forEach(field => {
+                const input = document.getElementById(`edit_${field}`);
+                if (input) input.classList.add('error');
+            });
+
             NotificationManager.show(
-                `Please fill in all required fields: ${missing.join(', ')}`,
+                `Please fill in all required fields: ${missing.map(field => field.replace('_', ' ')).join(', ')}`,
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
         }
+
+        // Phone number validation
+        const phoneRegex = /^09\d{9}$/;
+        if (!phoneRegex.test(data.phone_number)) {
+            const phoneInput = document.getElementById('edit_phone_number');
+            if (phoneInput) phoneInput.classList.add('error');
+            NotificationManager.show(
+                'Please enter a valid 11-digit phone number starting with 09',
+                CONFIG.NOTIFICATION.TYPES.ERROR
+            );
+            return false;
+        }
+
+        // Mark all fields as success
+        required.forEach(field => {
+            const input = document.getElementById(`edit_${field}`);
+            if (input) input.classList.add('success');
+        });
+
         return true;
     }
 };
@@ -455,6 +506,54 @@ const EventHandlers = {
                 });
             }
         });
+
+        // Password visibility toggle
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                const targetId = e.target.closest('.toggle-password').dataset.target;
+                const input = document.getElementById(targetId);
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // Password strength real-time validation
+        const passwordInput = DOM.editPasswordInput;
+        if (passwordInput) {
+            passwordInput.addEventListener('input', (e) => {
+                const password = e.target.value;
+                if (password) {
+                    FormValidator.validatePassword(password, password);
+                } else {
+                    // Reset strength indicator if password field is empty
+                    const strengthBar = document.querySelector('.password-strength-bar');
+                    if (strengthBar) {
+                        strengthBar.className = 'password-strength-bar';
+                    }
+                }
+            });
+        }
+
+        // Real-time phone number formatting
+        const phoneInput = DOM.editPhoneNumberInput;
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                if (value.length >= 2 && value.slice(0, 2) !== '09') {
+                    value = '09' + value.slice(2);
+                }
+                e.target.value = value;
+            });
+        }
     }
 };
 

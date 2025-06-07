@@ -15,6 +15,7 @@ const profile_edit_modal = document.getElementById('edit_profile_modal'); // Ass
 // State
 let user_data = {}; // Will be populated from API
 let user_accounts = []; // Will be populated from API
+let accountNumbersMasked = true;
 
 
 function show_notification(message, type) {
@@ -96,90 +97,177 @@ async function fetchUserAccounts() {
     }
 }
 
-// Update Account Display (similar to account.js but for dashboard)
-function updateAccountDisplay() {
-     if (!account_display_container || !account_balance_element || !transfer_now_btn) return;
-
-     account_display_container.innerHTML = ''; // Clear existing content
-
-     // Debug log to see what accounts data we have
-     console.log('User accounts data:', user_accounts);
-
-     const active_accounts = user_accounts.filter(account => account.status === 'active');
-
-     if (active_accounts.length > 0) {
-        // Find the first active account to display initially
-        const primaryAccount = active_accounts[0];
-
-        if (active_accounts.length === 1) {
-            // Display single account number if only one active account
-             const account_number_span = document.createElement('span');
-             account_number_span.classList.add('account-number-display'); // Use a class for styling
-             account_number_span.textContent = `Account No. ${primaryAccount.account_number}`;
-             account_display_container.appendChild(account_number_span);
-
-        } else {
-            // Display dropdown if multiple active accounts
-             const select_container = document.createElement('div');
-             select_container.classList.add('custom-select', 'account-select'); // Use custom-select class for styling
-
-             const account_select = document.createElement('select');
-             account_select.id = 'dashboard_account_select'; // Give it a unique ID
-
-             active_accounts.forEach(account => {
-                 const option = document.createElement('option');
-                 option.value = account.account_number;
-                 
-                 // Format account_type for display
-                 const accountType = account.account_type 
-                     ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
-                     : 'Standard';
-                 
-                 option.textContent = `${accountType} Account No. ${account.account_number}`;
-                 option.dataset.balance = account.balance; // Store balance
-                 account_select.appendChild(option);
-             });
-
-             const select_arrow = document.createElement('i');
-             select_arrow.classList.add('fas', 'fa-angle-down', 'select-arrow');
-
-             select_container.appendChild(account_select);
-             select_container.appendChild(select_arrow);
-             account_display_container.appendChild(select_container);
-
-             // Add event listener to update balance on select change
-             account_select.addEventListener('change', (event) => {
-                 const selectedAccountNumber = event.target.value;
-                 const selectedAccount = active_accounts.find(acc => acc.account_number === selectedAccountNumber);
-                 if(selectedAccount) {
-                     update_balance_display(parseFloat(selectedAccount.balance));
-                     // Optionally reload transactions for the selected account
-                     // fetchRecentTransactions(selectedAccount.account_number); // Needs modification in fetchRecentTransactions
-                 }
-             });
-        }
-
-         // Always update balance display for the initially selected account (the primary one)
-         update_balance_display(parseFloat(primaryAccount.balance));
-
-         // Enable/Disable transfer button based on primary account balance
-         if (parseFloat(primaryAccount.balance) > 0) {
-            transfer_now_btn.classList.remove('disabled'); // Assuming a 'disabled' class
-            transfer_now_btn.style.pointerEvents = 'auto';
-         } else {
-             transfer_now_btn.classList.add('disabled');
-             transfer_now_btn.style.pointerEvents = 'none';
-         }
-
-     } else {
-         // No active accounts
-         account_display_container.innerHTML = `<p class="no-account-message">No active accounts linked</p>`;
-         update_balance_display(0);
-          transfer_now_btn.classList.add('disabled');
-          transfer_now_btn.style.pointerEvents = 'none';
-     }
+// Add this helper function for masking account numbers
+function maskAccountNumber(accountNumber) {
+    if (!accountNumber) return '';
+    return accountNumbersMasked ? 
+        '*'.repeat(accountNumber.length - 4) + accountNumber.slice(-4) : 
+        accountNumber;
 }
 
+// Update Account Display (similar to account.js but for dashboard)
+function updateAccountDisplay() {
+    if (!account_display_container || !account_balance_element || !transfer_now_btn) return;
+
+    account_display_container.innerHTML = ''; // Clear existing content
+    console.log('User accounts data:', user_accounts);
+
+    const active_accounts = user_accounts.filter(account => account.status === 'active');
+
+    if (active_accounts.length > 0) {
+        // Find the account with the lowest account number (544250000007)
+        const defaultAccount = active_accounts.reduce((lowest, current) => {
+            return current.account_number < lowest.account_number ? current : lowest;
+        }, active_accounts[0]);
+
+        // Create the main account display container
+        const accountSelector = document.createElement('div');
+        accountSelector.classList.add('account-number-display');
+
+        // Create the account number text display
+        const accountNumberText = document.createElement('span');
+        accountNumberText.classList.add('account-number-text');
+        accountNumberText.textContent = maskAccountNumber(defaultAccount.account_number);
+        accountNumberText.setAttribute('data-account-number', defaultAccount.account_number);
+
+        // Create controls container
+        const controls = document.createElement('div');
+        controls.classList.add('account-controls');
+
+        // Add toggle mask button
+        const toggleMaskBtn = document.createElement('button');
+        toggleMaskBtn.classList.add('account-toggle-mask');
+        toggleMaskBtn.innerHTML = `<i class="fas ${accountNumbersMasked ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
+        toggleMaskBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAccountNumberMask();
+        });
+
+        // Only add dropdown if there are multiple accounts
+        if (active_accounts.length > 1) {
+            // Add dropdown arrow
+            const dropdownArrow = document.createElement('button');
+            dropdownArrow.classList.add('account-dropdown-arrow');
+            dropdownArrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
+
+            // Create dropdown container
+            const dropdownContainer = document.createElement('div');
+            dropdownContainer.classList.add('dropdown-container');
+
+            // Function to create dropdown items
+            const createDropdownItem = (account, currentDisplayedAccount) => {
+                if (account.account_number === currentDisplayedAccount) return null;
+                
+                const dropdownItem = document.createElement('div');
+                dropdownItem.classList.add('dropdown-item');
+                dropdownItem.textContent = maskAccountNumber(account.account_number);
+                dropdownItem.setAttribute('data-account-number', account.account_number);
+                dropdownItem.setAttribute('data-balance', account.balance);
+                
+                dropdownItem.addEventListener('click', () => {
+                    // Update displayed account
+                    accountNumberText.textContent = maskAccountNumber(account.account_number);
+                    accountNumberText.setAttribute('data-account-number', account.account_number);
+                    update_balance_display(parseFloat(account.balance));
+
+                    // Rebuild dropdown with new items
+                    dropdownContainer.innerHTML = '';
+                    active_accounts.forEach(acc => {
+                        const newItem = createDropdownItem(acc, account.account_number);
+                        if (newItem) dropdownContainer.appendChild(newItem);
+                    });
+
+                    // Hide dropdown after selection
+                    dropdownContainer.classList.remove('active');
+                    dropdownArrow.querySelector('i').classList.remove('active');
+                });
+                
+                return dropdownItem;
+            };
+
+            // Add initial dropdown items
+            active_accounts.forEach(account => {
+                const dropdownItem = createDropdownItem(account, defaultAccount.account_number);
+                if (dropdownItem) dropdownContainer.appendChild(dropdownItem);
+            });
+
+            // Toggle dropdown on arrow click
+            dropdownArrow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownContainer.classList.toggle('active');
+                dropdownArrow.querySelector('i').classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!accountSelector.contains(e.target)) {
+                    dropdownContainer.classList.remove('active');
+                    dropdownArrow.querySelector('i').classList.remove('active');
+                }
+            });
+
+            controls.appendChild(toggleMaskBtn);
+            controls.appendChild(dropdownArrow);
+            accountSelector.appendChild(accountNumberText);
+            accountSelector.appendChild(controls);
+            accountSelector.appendChild(dropdownContainer);
+        } else {
+            // Single account display
+            controls.appendChild(toggleMaskBtn);
+            accountSelector.appendChild(accountNumberText);
+            accountSelector.appendChild(controls);
+        }
+
+        account_display_container.appendChild(accountSelector);
+
+        // Update balance display for the displayed account
+        update_balance_display(parseFloat(defaultAccount.balance));
+
+        // Enable/Disable transfer button based on displayed account balance
+        if (parseFloat(defaultAccount.balance) > 0) {
+            transfer_now_btn.classList.remove('disabled');
+            transfer_now_btn.style.pointerEvents = 'auto';
+        } else {
+            transfer_now_btn.classList.add('disabled');
+            transfer_now_btn.style.pointerEvents = 'none';
+        }
+    } else {
+        // No active accounts
+        account_display_container.innerHTML = `<p class="no-account-message">No active accounts linked</p>`;
+        update_balance_display(0);
+        transfer_now_btn.classList.add('disabled');
+        transfer_now_btn.style.pointerEvents = 'none';
+    }
+}
+
+// Add this new function to toggle account number masking
+function toggleAccountNumberMask() {
+    accountNumbersMasked = !accountNumbersMasked;
+    
+    // Update all account number displays
+    const accountNumbers = document.querySelectorAll('.account-number-text');
+    const options = document.querySelectorAll('#dashboard_account_select option');
+    const toggleButtons = document.querySelectorAll('.account-toggle-mask');
+    
+    // Update the eye icon on all toggle buttons
+    toggleButtons.forEach(btn => {
+        btn.innerHTML = `<i class="fas ${accountNumbersMasked ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
+    });
+    
+    // Update account numbers in single display
+    accountNumbers.forEach(element => {
+        const accountNumber = element.getAttribute('data-account-number');
+        if (accountNumber) {
+            element.textContent = maskAccountNumber(accountNumber);
+        }
+    });
+    
+    // Update account numbers in dropdown
+    options.forEach(option => {
+        const accountNumber = option.value;
+        option.textContent = maskAccountNumber(accountNumber);
+    });
+}
 
 // Update Balance Display
 function update_balance_display(balance) {
@@ -195,9 +283,8 @@ function update_balance_display(balance) {
 // Fetch recent transactions from API
 async function fetchRecentTransactions() {
      try {
-        // Assuming an API endpoint for recent transactions
-        // This endpoint might need to accept an account number parameter if we want transactions per account
-        const response = await fetch('../../src/api/user/transactions.php?limit=3');
+        // Update the API endpoint path
+        const response = await fetch('/project-errawrs/src/api/user/transactions.php?limit=3');
         const data = await response.json();
 
         if (data.success && data.transactions.length > 0) {
@@ -220,11 +307,9 @@ async function fetchRecentTransactions() {
             if (transaction_list_element) {
                 transaction_list_element.innerHTML = '<p class="no-transactions-message">No recent transactions.</p>';
             }
-             show_notification(data.error || 'No recent transactions found', 'info');
         }
     } catch (error) {
-        show_notification('Error fetching transactions', 'error');
-        console.error('Error:', error);
+        console.error('Error fetching transactions:', error);
          if (transaction_list_element) {
              transaction_list_element.innerHTML = '<p class="no-transactions-message">Failed to load transactions.</p>';
          }
@@ -499,3 +584,4 @@ if (logout_btn) {
 }
 
 // --- END OF FILE ---
+

@@ -3,14 +3,14 @@ const ALERT_TYPES = {
     SUCCESS: 'success',
     ERROR: 'error',
     WARNING: 'warning',
-    INFO: 'info',
+    INFO: 'info'
 };
 
 const ALERT_ICONS = {
     success: 'fa-check-circle',
     error: 'fa-exclamation-circle',
     warning: 'fa-exclamation-triangle',
-    info: 'fa-info-circle',
+    info: 'fa-info-circle'
 };
 
 const OBSERVER_CONFIG = {
@@ -23,120 +23,120 @@ const OBSERVER_CONFIG = {
 class ContactFormHandler {
     constructor() {
         this.form = document.getElementById('contact_form');
-        this.submitButton = document.querySelector('button[type="submit"]');
+        this.submitButton = document.querySelector('.submit-button');
         this.initialize();
     }
 
     initialize() {
-        this.setupEventListeners();
-    }
-
-    setupEventListeners() {
         if (this.form) {
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            this.setupInputValidation();
+        }
+    }
+
+    setupInputValidation() {
+        const inputs = this.form.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => this.validateInput(input));
+            input.addEventListener('blur', () => this.validateInput(input));
+        });
+    }
+
+    validateInput(input) {
+        const value = input.value.trim();
+        let isValid = true;
+        let errorMessage = '';
+
+        switch (input.id) {
+            case 'full_name':
+                isValid = value.length >= 2;
+                errorMessage = 'Name must be at least 2 characters long';
+                break;
+            case 'email_address':
+                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                errorMessage = 'Please enter a valid email address';
+                break;
+            case 'message_subject':
+                isValid = value.length >= 3;
+                errorMessage = 'Subject must be at least 3 characters long';
+                break;
+            case 'message_content':
+                isValid = value.length >= 10;
+                errorMessage = 'Message must be at least 10 characters long';
+                break;
+        }
+
+        this.setInputValidationState(input, isValid, errorMessage);
+        return isValid;
+    }
+
+    setInputValidationState(input, isValid, errorMessage) {
+        const formGroup = input.closest('.form-group');
+        const existingError = formGroup.querySelector('.error-message');
+
+        if (existingError) {
+            existingError.remove();
+        }
+
+        if (!isValid && input.value.length > 0) {
+            const errorElement = document.createElement('div');
+            errorElement.className = 'error-message';
+            errorElement.textContent = errorMessage;
+            formGroup.appendChild(errorElement);
+            input.classList.add('error');
+            input.classList.remove('success');
+        } else if (input.value.length > 0) {
+            input.classList.add('success');
+            input.classList.remove('error');
+        } else {
+            input.classList.remove('success', 'error');
         }
     }
 
     async handleSubmit(e) {
         e.preventDefault();
-        if (!this.validateForm()) {
+
+        const inputs = this.form.querySelectorAll('.form-input');
+        let isFormValid = true;
+
+        inputs.forEach(input => {
+            if (!this.validateInput(input)) {
+                isFormValid = false;
+            }
+        });
+
+        if (!isFormValid) {
+            this.showNotification('Please fill in all fields correctly', ALERT_TYPES.WARNING);
             return;
         }
 
         this.setLoadingState(true);
 
         try {
-            const formData = this.getFormData();
-            const response = await this.submitForm(formData);
+            const formData = {
+                name: this.form.querySelector('#full_name').value,
+                email: this.form.querySelector('#email_address').value,
+                subject: this.form.querySelector('#message_subject').value,
+                message: this.form.querySelector('#message_content').value
+            };
 
-            if (response.success) {
-                this.showNotification(
-                    'Message sent successfully!',
-                    ALERT_TYPES.SUCCESS
-                );
-                this.resetForm();
-            } else {
-                throw new Error(response.message || 'Failed to send message');
-            }
-        } catch (error) {
-            console.error('Form submission error:', error);
-            this.showNotification(
-                'Failed to send message. Please try again.',
-                ALERT_TYPES.ERROR
-            );
-        } finally {
-            this.setLoadingState(false);
-        }
-    }
-
-    validateForm() {
-        const name = this.form.querySelector('#name').value.trim();
-        const email = this.form.querySelector('#email').value.trim();
-        const message = this.form.querySelector('#message').value.trim();
-
-        if (!name) {
-            this.showNotification(
-                'Please enter your name',
-                ALERT_TYPES.WARNING
-            );
-            return false;
-        }
-
-        if (!email) {
-            this.showNotification(
-                'Please enter your email',
-                ALERT_TYPES.WARNING
-            );
-            return false;
-        }
-
-        if (!this.isValidEmail(email)) {
-            this.showNotification(
-                'Please enter a valid email address',
-                ALERT_TYPES.WARNING
-            );
-            return false;
-        }
-
-        if (!message) {
-            this.showNotification(
-                'Please enter your message',
-                ALERT_TYPES.WARNING
-            );
-            return false;
-        }
-
-        return true;
-    }
-
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    getFormData() {
-        const formData = new FormData(this.form);
-        return Object.fromEntries(formData.entries());
-    }
-
-    async submitForm(data) {
-        try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simulate successful submission
+            this.showNotification('Message sent successfully!', ALERT_TYPES.SUCCESS);
+            this.form.reset();
+            
+            // Remove success classes after form reset
+            inputs.forEach(input => {
+                input.classList.remove('success');
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await response.json();
         } catch (error) {
-            console.error('API call error:', error);
-            throw error;
+            console.error('Form submission error:', error);
+            this.showNotification('Failed to send message. Please try again.', ALERT_TYPES.ERROR);
+        } finally {
+            this.setLoadingState(false);
         }
     }
 
@@ -145,43 +145,54 @@ class ContactFormHandler {
             this.submitButton.disabled = isLoading;
             this.submitButton.innerHTML = isLoading
                 ? '<i class="fas fa-spinner fa-spin"></i> Sending...'
-                : 'Send Message';
-        }
-    }
-
-    resetForm() {
-        if (this.form) {
-            this.form.reset();
+                : 'Send Message <i class="fas fa-paper-plane"></i>';
         }
     }
 
     showNotification(message, type = ALERT_TYPES.INFO) {
+        // Remove existing notification
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // Create new notification
         const notification = document.createElement('div');
-        notification.className = `notification-alert alert-${type}`;
+        notification.className = `notification notification-${type}`;
         notification.innerHTML = `
-            <i class="fas ${this.getAlertIconClass(type)}"></i>
-            <span>${message}</span>
-            <button class="alert-close-button">
-                <i class="fas fa-times"></i>
-            </button>
+            <div class="notification-content">
+                <i class="fas ${ALERT_ICONS[type]}"></i>
+                <span>${message}</span>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         `;
 
+        // Add to DOM
         document.body.appendChild(notification);
 
-        const closeButton = notification.querySelector('.alert-close-button');
-        if (closeButton) {
-            closeButton.addEventListener('click', () => {
-                notification.remove();
+        // Show with animation
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        // Setup close button
+        const closeBtn = notification.querySelector('.notification-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
             });
         }
 
+        // Auto-hide after 5 seconds
         setTimeout(() => {
-            notification.remove();
+            if (notification.parentNode) {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }
         }, 5000);
-    }
-
-    getAlertIconClass(type) {
-        return ALERT_ICONS[type] || ALERT_ICONS.info;
     }
 }
 

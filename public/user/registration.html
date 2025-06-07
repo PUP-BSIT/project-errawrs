@@ -20,17 +20,17 @@
     </head>
     <body>
         <!-- Header -->
-        <header class="header">
-            <div class="container">
+        <header>
+            <div class="container-nav">
                 <div class="logo">
-                    <span class="logo-stack">Stack</span
-                    ><span class="logo-overcash">Overcash</span>
+                    <span class="white">Stack</span>
+                    <span class="green">Overcash</span>
                 </div>
-                <nav class="nav">
-                    <a href="./index.html" class="nav-link">Home</a>
-                    <a href="./contact_us.html" class="nav-link">Contact Us</a>
-                    <a href="#" class="nav-link">Privacy Policy</a>
-                </nav>
+                <ul class="nav-links">
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./contact_us.html">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
             </div>
         </header>
 
@@ -39,10 +39,9 @@
             <div class="container">
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="#" class="breadcrumb-link">Login</a>
+                    <a href="./login_account_holder.html" class="breadcrumb-link">Login</a>
                     <span class="breadcrumb-separator">&gt;</span>
-                    <span class="breadcrumb-current">
-                        Register to StackOvercash</span>
+                    <span class="breadcrumb-current">Register to StackOvercash</span>
                 </div>
 
                 <!-- Registration Form -->
@@ -69,98 +68,276 @@
                     <div class="form-step active" id="step_one">
                         <div class="form-header">
                             <h2>Register for StackOvercash</h2>
-                            <p>Enter your details to create your account.</p>
+                            <p>Please fill in your details to create your account.</p>
                         </div>
 
                         <form class="registration-form" id="details_form">
-                            <div class="form-row">
+                            <!-- Personal Information Section -->
+                            <div class="form-section">
+                                <h3>Personal Information</h3>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input
+                                            type="text"
+                                            id="first_name"
+                                            placeholder="Enter your first name"
+                                            pattern="[A-Za-z -]+"
+                                            title="Please enter only letters, spaces, or hyphens"
+                                            required
+                                            autocomplete="given-name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name">Surname</label>
+                                        <input
+                                            type="text"
+                                            id="last_name"
+                                            placeholder="Enter your surname"
+                                            pattern="[A-Za-z -]+"
+                                            title="Please enter only letters, spaces, or hyphens"
+                                            required
+                                            autocomplete="family-name"/>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth</label>
+                                    <input
+                                        type="date"
+                                        id="date_of_birth"
+                                        required
+                                        autocomplete="bday"
+                                        max="2006-12-31"/>
+                                    <div id="age_warning" class="warning-text" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        You must be at least 18 years old to register.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nationality">Nationality/Citizenship</label>
                                     <input
                                         type="text"
-                                        id="first_name"
-                                        placeholder="First Name"
+                                        id="nationality"
+                                        placeholder="Enter your nationality"
                                         required/>
                                 </div>
+
+                                <!-- Residential Address -->
                                 <div class="form-group">
+                                    <label for="street">Street Address</label>
                                     <input
                                         type="text"
-                                        id="last_name"
-                                        placeholder="Last Name"
-                                        required/>
+                                        id="street"
+                                        placeholder="Enter your street address"
+                                        required
+                                        autocomplete="street-address"/>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input
+                                            type="text"
+                                            id="city"
+                                            placeholder="Enter your city"
+                                            required
+                                            autocomplete="address-level2"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="zip_code">ZIP Code</label>
+                                        <input
+                                            type="text"
+                                            id="zip_code"
+                                            placeholder="Enter ZIP code"
+                                            required
+                                            autocomplete="postal-code"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="country">Country</label>
+                                    <input
+                                        type="text"
+                                        id="country"
+                                        placeholder="Enter your country"
+                                        required
+                                        autocomplete="country-name"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        placeholder="Enter your email address"
+                                        required
+                                        autocomplete="email"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone_number">Phone Number</label>
+                                    <div class="phone-input-group">
+                                        <span class="phone-flag"></span>
+                                        <input
+                                            type="tel"
+                                            id="phone_number"
+                                            placeholder="+63 XXX XXX XXXX"
+                                            required
+                                            autocomplete="tel"
+                                            pattern="(\+63|0)[0-9]{10}"
+                                            title="Please enter a valid Philippine phone number"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <input
-                                    type="text"
-                                    id="username"
-                                    placeholder="Desired Username"
-                                    required/>
+                            <!-- Identification Documents Section -->
+                            <div class="form-section">
+                                <h3>Identification Documents</h3>
+                                
+                                <div class="form-group">
+                                    <label for="id_type">ID Type</label>
+                                    <select id="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="passport">Passport</option>
+                                        <option value="national_id">National ID</option>
+                                        <option value="drivers_license">Driver's License</option>
+                                        <option value="school_id">School ID (for students)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_image">Upload ID Image</label>
+                                    <div class="file-upload-container">
+                                        <input
+                                            type="file"
+                                            id="id_image"
+                                            accept="image/*"
+                                            required
+                                            class="file-input"
+                                            aria-describedby="id_image_help"/>
+                                        <label for="id_image" class="file-upload-label">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <span>Choose a file or drag it here</span>
+                                        </label>
+                                        <div id="id_image_preview" class="image-preview"></div>
+                                    </div>
+                                    <div id="id_image_help" class="help-text">
+                                        Upload a clear photo of your selected ID. Make sure all details are visible.
+                                        Accepted formats: JPG, PNG (Max size: 5MB)
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group password-group">
-                                <input
-                                    type="password"
-                                    id="password"
-                                    placeholder="Password"
-                                    required/>
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    data-target="password">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
+                            <!-- Account Security Setup Section -->
+                            <div class="form-section">
+                                <h3>Account Security Setup</h3>
+                                
+                                <div class="form-group">
+                                    <label for="username">Desired Username</label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        placeholder="Choose a username"
+                                        required
+                                        autocomplete="username"/>
+                                </div>
+
+                                <div class="form-group password-group">
+                                    <label for="password">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        placeholder="Create a strong password"
+                                        required
+                                        autocomplete="new-password"/>
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        data-target="password"
+                                        aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                    <div class="password-requirements">
+                                        Must be at least 8 characters with uppercase, lowercase, number, and symbol
+                                    </div>
+                                </div>
+
+                                <div class="form-group password-group">
+                                    <label for="confirm_password">Confirm Password</label>
+                                    <input
+                                        type="password"
+                                        id="confirm_password"
+                                        placeholder="Confirm your password"
+                                        required
+                                        autocomplete="new-password"/>
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        data-target="confirm_password"
+                                        aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="form-group password-group">
-                                <input
-                                    type="password"
-                                    id="confirm_password"
-                                    placeholder="Confirm Password"
-                                    required/>
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    data-target="confirm_password">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
-                            </div>
+                            <!-- Security Questions Section -->
+                            <div class="form-section">
+                                <h3>Security Questions</h3>
+                                
+                                <div class="form-group">
+                                    <label for="security_q1">What was your first school?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q1"
+                                        placeholder="Enter your answer"
+                                        required/>
+                                </div>
 
-                            <div class="form-group">
-                                <input
-                                    type="text"
-                                    id="phone_number"
-                                    placeholder="Phone Number"
-                                    required/>
+                                <div class="form-group">
+                                    <label for="security_q2">What is the name of your childhood best friend?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q2"
+                                        placeholder="Enter your answer"
+                                        required/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="security_q3">What is your favorite childhood TV show?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q3"
+                                        placeholder="Enter your answer"
+                                        required/>
+                                </div>
                             </div>
 
                             <div class="form-actions">
-                                <button type="button" class="btn btn-back">
-                                    BACK
-                                </button>
                                 <button type="submit" class="btn btn-continue">
-                                    CONTINUE
+                                    Continue <i class="fas fa-arrow-right"></i>
                                 </button>
                             </div>
 
                             <div class="form-footer">
                                 <p>
-                                    This site is protected by reCAPTCHA and the
-                                    Google <a href="#">Privacy Policy</a> and
+                                    Already have an account? <a href="./login_account_holder.html">Log in</a>
+                                </p>
+                                <p>
+                                    This site is protected by reCAPTCHA and the Google
+                                    <a href="#">Privacy Policy</a> and
                                     <a href="#">Terms of Service</a> apply.
                                 </p>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Step 2: OTP Verification -->
-                    <div class="form-step" id="step_two">
+                    <!-- Step 2: Verification -->
+                    <div class="form-step" id="step_two" style="display: none;">
                         <div class="form-header">
-                            <h2>Verify Your Phone Number</h2>
-                            <p>
-                                We have sent a one-time password (OTP) to your
-                                registered phone number.
-                            </p>
+                            <h2>Verify Your Phone</h2>
+                            <p>We've sent a verification code to your phone number.</p>
                         </div>
 
                         <form class="registration-form" id="otp_form">
@@ -168,8 +345,11 @@
                                 <input
                                     type="text"
                                     id="otp_code"
-                                    placeholder="Enter OTP"
-                                    required/>
+                                    placeholder="Enter 6-digit OTP"
+                                    maxlength="6"
+                                    pattern="[0-9]{6}"
+                                    required
+                                    autocomplete="one-time-code"/>
                                 <button
                                     type="button"
                                     class="send-btn"
@@ -179,9 +359,8 @@
                             </div>
 
                             <div class="resend-link">
-                                <span>Didn't receive the OTP?</span>
-                                <a href="#" id="resend_otp"
-                                    >Resend OTP in 60s</a>
+                                <span>Didn't receive the code?</span>
+                                <a href="#" id="resend_otp">Resend code in 60s</a>
                             </div>
 
                             <div class="form-actions">
@@ -189,77 +368,39 @@
                                     type="button"
                                     class="btn btn-back"
                                     id="back_to_step_one">
-                                    BACK
+                                    Back
                                 </button>
                                 <button type="submit" class="btn btn-continue">
-                                    VERIFY
+                                    Verify
                                 </button>
-                            </div>
-
-                            <div class="form-footer">
-                                <p>
-                                    This site is protected by reCAPTCHA and the
-                                    Google <a href="#">Privacy Policy</a> and
-                                    <a href="#">Terms of Service</a> apply.
-                                </p>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Step 3: Success -->
-                    <div class="form-step" id="step_three">
-                        <div class="success-container">
-                            <div class="success-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <h2>Congratulations!</h2>
-                            <p>Your account has been successfully created.</p>
-
-                            <div class="account-details">
-                                <div class="detail-row">
-                                    <span class="detail-label">Username:</span>
-                                    <span
-                                        class="detail-value"
-                                        id="registered_username"></span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">
-                                        Account Number:</span>
-                                    <span
-                                        class="detail-value"
-                                        id="generated_account_number">
-                                    </span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Status:</span>
-                                    <span class="detail-value status-active">
-                                        Active</span>
-                                </div>
-                            </div>
-
-                            <button
-                                class="btn btn-dashboard"
-                                id="login_now_btn">
-                                LOG IN TO ACCOUNT
-                            </button>
+                    <!-- Step 3: Complete -->
+                    <div class="form-step" id="step_three" style="display: none;">
+                        <div class="success-animation">
+                            <i class="fas fa-check-circle"></i>
                         </div>
-
-                        <!-- Progress Steps at Bottom -->
-                        <div class="bottom-steps">
-                            <div class="bottom-step completed">
-                                <div class="bottom-step-circle">1</div>
-                                <span>Details</span>
+                        <h2>Registration Complete!</h2>
+                        <div class="account-details">
+                            <p>Welcome to StackOvercash!</p>
+                            <p>Your account has been successfully created.</p>
+                            <div class="account-info">
+                                <p>
+                                    <strong>Account Number</strong>
+                                    <span id="account_number"></span>
+                                </p>
+                                <p>
+                                    <strong>Username</strong>
+                                    <span id="registered_username"></span>
+                                </p>
                             </div>
-                            <div class="bottom-step completed">
-                                <div class="bottom-step-circle">2</div>
-                                <span>Verify</span>
-                            </div>
-                            <div class="bottom-step completed">
-                                <div class="bottom-step-circle">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <span>Complete</span>
-                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <a href="login_account_holder.html" class="btn btn-continue">
+                                Proceed to Login <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>

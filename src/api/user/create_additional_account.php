@@ -23,7 +23,7 @@ if (!$account_type) {
 }
 
 // Validate account_type values
-if (!in_array($account_type, ['savings', 'checking', 'time_deposit'])) {
+if (!in_array($account_type, ['savings', 'checking', 'time_deposit', 'credit'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid account type']);
     exit();

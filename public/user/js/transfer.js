@@ -11,6 +11,13 @@ const your_account_select = document.getElementById('your-account');
 const receiver_account_input = document.getElementById('receiver-account');
 const amount_input = document.getElementById('amount');
 
+// Add warning message element after amount input
+const amountFormGroup = amount_input.closest('.form-group');
+const balanceWarning = document.createElement('div');
+balanceWarning.className = 'balance-warning';
+balanceWarning.innerHTML = '<i class="fas fa-exclamation-circle"></i><span></span>';
+amountFormGroup.appendChild(balanceWarning);
+
 // Debug logging of DOM elements
 console.log('DOM Elements loaded:');
 console.log('- select_bank_panel:', select_bank_panel ? 'found' : 'NOT FOUND');
@@ -307,6 +314,70 @@ function populate_profile_form() {
     edit_phone_number_input.value = user_data.phone_number || '';
 }
 
+// Function to validate transfer amount
+function validateTransferAmount() {
+    if (!your_account_select.value || !amount_input.value) return;
+
+    const selectedOption = your_account_select.options[your_account_select.selectedIndex];
+    const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
+    const transferAmount = parseFloat(amount_input.value);
+
+    if (isNaN(transferAmount)) return;
+
+    const warningText = balanceWarning.querySelector('span');
+    
+    if (accountBalance === 0) {
+        warningText.textContent = 'No balance on your account';
+        balanceWarning.classList.add('show');
+        amount_input.classList.add('invalid');
+        send_money_button.disabled = true;
+        info_correct_checkbox.checked = false;
+    } else if (transferAmount > accountBalance) {
+        warningText.textContent = 'Not enough balance';
+        balanceWarning.classList.add('show');
+        amount_input.classList.add('invalid');
+        send_money_button.disabled = true;
+        info_correct_checkbox.checked = false;
+    } else {
+        balanceWarning.classList.remove('show');
+        amount_input.classList.remove('invalid');
+        send_money_button.disabled = !is_info_correct();
+    }
+}
+
+// Event listeners for real-time validation
+amount_input.addEventListener('input', validateTransferAmount);
+your_account_select.addEventListener('change', validateTransferAmount);
+
+// Modify the info_correct_checkbox event listener
+if (info_correct_checkbox) {
+    info_correct_checkbox.addEventListener('change', () => {
+        if (send_money_button) {
+            // Only enable the button if the amount is valid
+            const selectedOption = your_account_select.options[your_account_select.selectedIndex];
+            const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
+            const transferAmount = parseFloat(amount_input.value || 0);
+            const warningText = balanceWarning.querySelector('span');
+
+            if (accountBalance === 0) {
+                warningText.textContent = 'No balance on your account';
+                send_money_button.disabled = true;
+                info_correct_checkbox.checked = false;
+                balanceWarning.classList.add('show');
+                amount_input.classList.add('invalid');
+            } else if (transferAmount > accountBalance) {
+                warningText.textContent = 'Not enough balance';
+                send_money_button.disabled = true;
+                info_correct_checkbox.checked = false;
+                balanceWarning.classList.add('show');
+                amount_input.classList.add('invalid');
+            } else {
+                send_money_button.disabled = !is_info_correct();
+            }
+        }
+    });
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
     fetchUserData();
@@ -325,8 +396,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (next_button) {
         next_button.addEventListener('click', () => {
             if (is_bank_selected()) {
-                select_bank_panel.style.display = 'none';
-                account_details_panel.style.display = 'block';
+                // Animate transition
+                select_bank_panel.style.opacity = '0';
+                select_bank_panel.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    select_bank_panel.style.display = 'none';
+                    account_details_panel.style.display = 'block';
+                    
+                    // Trigger reflow
+                    account_details_panel.offsetHeight;
+                    
+                    // Reset and animate account details panel
+                    account_details_panel.style.opacity = '1';
+                    account_details_panel.style.transform = 'translateX(0)';
+                }, 200);
             }
         });
     }
@@ -439,6 +523,49 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.log('Send Money button not found');
     }
+
+    // Add back button handler
+    const back_to_bank_button = document.getElementById('back-to-bank');
+
+    if (back_to_bank_button) {
+        back_to_bank_button.addEventListener('click', () => {
+            // Reset account details form
+            your_account_select.selectedIndex = 0;
+            receiver_account_input.value = '';
+            amount_input.value = '';
+            info_correct_checkbox.checked = false;
+            balanceWarning.classList.remove('show');
+            amount_input.classList.remove('invalid');
+            
+            // Switch panels with animation
+            account_details_panel.style.opacity = '0';
+            account_details_panel.style.transform = 'translateX(20px)';
+            
+            setTimeout(() => {
+                account_details_panel.style.display = 'none';
+                select_bank_panel.style.display = 'block';
+                
+                // Trigger reflow
+                select_bank_panel.offsetHeight;
+                
+                // Animate select bank panel
+                select_bank_panel.style.opacity = '1';
+                select_bank_panel.style.transform = 'translateX(0)';
+            }, 200);
+        });
+    }
+
+    // Add CSS transitions to panels
+    const addTransitionStyle = (element) => {
+        if (element) {
+            element.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            element.style.opacity = '1';
+            element.style.transform = 'translateX(0)';
+        }
+    };
+    
+    addTransitionStyle(select_bank_panel);
+    addTransitionStyle(account_details_panel);
 });
 
 // Validate transfer form

@@ -1,0 +1,52 @@
+[06-Jun-2025 08:45:41 Europe/Berlin] [2025-06-06 08:45:41] Session ID: q26t3g1pl74npete13s40fqrkb
+[06-Jun-2025 08:45:41 Europe/Berlin] [2025-06-06 08:45:41] Session Data: Array
+(
+)
+
+[06-Jun-2025 08:45:41 Europe/Berlin] [2025-06-06 08:45:41] Registration request data: Array
+(
+    [first_name] => Test
+    [last_name] => User
+    [username] => testuser
+    [password] => Test123456
+    [phone_number] => 09123456789
+)
+
+[06-Jun-2025 08:45:41 Europe/Berlin] Attempting to connect to database at localhost:3306
+[06-Jun-2025 08:45:41 Europe/Berlin] Successfully connected to database
+[06-Jun-2025 08:45:41 Europe/Berlin] [2025-06-06 08:45:41] Session data after storing registration: Array
+(
+    [registration] => Array
+        (
+            [first_name] => Test
+            [last_name] => User
+            [username] => testuser
+            [password] => Test123456
+            [phone_number] => 09123456789
+            [created_at] => 1749192341
+        )
+
+)
+
+[06-Jun-2025 08:45:41 Europe/Berlin] [2025-06-06 08:45:41] Session data after storing OTP: Array
+(
+    [registration] => Array
+        (
+            [first_name] => Test
+            [last_name] => User
+            [username] => testuser
+            [password] => Test123456
+            [phone_number] => 09123456789
+            [created_at] => 1749192341
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09123456789
+            [created_at] => 1749192341
+            [attempts] => 0
+        )
+
+)
+

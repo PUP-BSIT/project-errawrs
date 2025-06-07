@@ -7,9 +7,8 @@
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
-    --color-login-button: #ee5634;
-    --color-input-bg: #e5e5e5;
-    --color-border: #ddd;
+    --color-input-bg: #f5f5f5;
+    --color-border: #e0e0e0;
     --color-text-muted: #666;
     --color-success: #28a745;
     --color-error: #dc3545;
@@ -30,89 +29,244 @@
     --transition-default: 0.3s ease;
 }
 
-/* Specific styles for Profile page */
+/* Profile Content Layout */
 .profile-content {
-    padding: 20px;
-    background-color: var(--color-white);
-    border-radius: 16px;
-    box-shadow: var(--box-shadow-light);
-    max-width: 600px; /* Adjust as needed for the form */
-    margin: 24px auto; /* Center the container */
+    padding: 20px 40px;
+    margin: 12px 24px;
+    background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
+    border-radius: 24px;
+    min-height: calc(100vh - 100px);
 }
 
-.profile-content h2 {
-    font-size: 24px;
+.profile-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.profile-header h2 {
+    font-size: 28px;
     font-weight: 700;
     color: var(--color-primary-black);
-    margin-bottom: 24px;
-    text-align: center;
+    margin-bottom: 8px;
 }
 
-.profile-form-container {
-    padding: 0 20px;
+.profile-header p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-/* Styling for form groups and inputs (similar to registration/modal forms) */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Profile Card */
+.profile-card {
+    background: var(--color-white);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-card-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-lime-green);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.profile-card-icon i {
+    font-size: 20px;
+    color: var(--color-primary-black);
+}
+
+.profile-card-title {
+    flex: 1;
+}
+
+.profile-card-title h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary-black);
+    margin: 0;
+}
+
+.profile-card-title p {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin: 4px 0 0;
+}
+
+/* Form Styling */
 .form-group {
-    margin-bottom: 15px;
-    text-align: left;
+    margin-bottom: 16px;
+    position: relative;
 }
 
 .form-group label {
     display: block;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--color-primary-black);
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .form-input {
-    display: block;
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
+    padding: 12px 16px;
+    padding-right: 40px; /* Space for the icon */
+    border: 2px solid var(--color-border);
+    border-radius: 12px;
     font-family: var(--font-main);
-    font-size: 16px;
+    font-size: 15px;
     background-color: var(--color-input-bg);
-    outline: none;
+    transition: all 0.3s ease;
 }
 
-.form-input::placeholder {
-    color: var(--color-gray);
+.helper-text {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
 }
 
-/* Styling for buttons (similar to existing buttons) */
-.btn {
-    display: inline-block; /* Allow buttons to be next to each other */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    font-family: var(--font-main);
-    font-size: 16px;
-    font-weight: 700;
+/* Password visibility toggle */
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 38px; /* Adjusted to align with input */
+    color: var(--color-text-muted);
     cursor: pointer;
-    transition: background-color var(--transition-default);
-    margin-top: 15px; /* Space above buttons */
-    margin-right: 10px; /* Space between buttons */
+    padding: 4px;
+    transition: color 0.3s ease;
+}
+
+.input-icon:hover {
+    color: var(--color-primary-black);
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 8px;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.password-strength-bar.weak { width: 33.33%; background-color: var(--color-error); }
+.password-strength-bar.medium { width: 66.66%; background-color: var(--color-warning); }
+.password-strength-bar.strong { width: 100%; background-color: var(--color-success); }
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    padding: 0 24px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .primary-btn {
     background-color: var(--color-lime-green);
     color: var(--color-primary-black);
+    flex: 1;
 }
 
 .primary-btn:hover {
-     background-color: var(--color-mint);
+    background-color: #a7f535;
+    transform: translateY(-2px);
 }
 
 .secondary-btn {
-    background-color: var(--color-gray);
-    color: var(--color-white);
+    background-color: var(--color-input-bg);
+    color: var(--color-primary-black);
 }
 
 .secondary-btn:hover {
-    background-color: #888;
+    background-color: var(--color-border);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .profile-content {
+        padding: 24px;
+        margin: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-content {
+        padding: 16px;
+        margin: 12px;
+    }
+    
+    .profile-card {
+        padding: 24px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
 }
 
 /* Notification Container (for consistency) */

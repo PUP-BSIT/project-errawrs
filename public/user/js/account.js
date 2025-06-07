@@ -183,7 +183,6 @@ function createAccountItem(account) {
             </button>
             <div class="action-menu hidden">
                 <button class="menu-item transfer-button">Transfer</button>
-                <button class="menu-item unlink-button">Unlink</button>
                 <button class="menu-item close-button">Close</button>
             </div>
         </div>

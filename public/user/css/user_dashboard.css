@@ -364,62 +364,129 @@ body {
     text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Styles for dynamic account display in balance card */
+/* Account display container */
 #account-display-container {
-    margin-bottom: 20px; /* Increased space between account info and balance */
-    min-height: 30px; /* Ensure space even when empty and accommodate larger text */
-    /* Position at the top */
-}
-
-.account-number-display {
-    font-size: 24px; /* Increased font size */
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
-    margin-bottom: 5px;
-}
-
-.account-select-container {
+    margin-bottom: 20px;
+    min-height: 30px;
     position: relative;
-    display: inline-block;
-    color: var(--color-primary-black);
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    padding: 2px;
+    z-index: 10;
 }
 
-.account-select-container select {
-    padding: 2px 25px 2px 5px;
-    border: none;
-    border-radius: 4px;
-    font-family: var(--font-main);
-    font-size: 24px; /* Increased font size */
-    background-color: transparent;
-    color: rgba(255, 255, 255, 0.95); /* Make text brighter white to compliment green */
-    outline: none;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+/* Account number display */
+.account-number-display {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 20px 24px;
+    color: var(--color-white);
+    font-size: 22px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+    min-height: 70px;
+    transition: all 0.3s ease;
 }
 
-.account-select-container select option {
-    background-color: var(--color-white); /* White background for options */
-    color: var(--color-primary-black); /* Black text color for options */
-    padding: 5px 10px; /* Add some padding to options */
+.account-number-text {
+    flex: 1;
+    font-size: 24px;
+    font-weight: 600;
+    margin-right: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.account-select-container .select-arrow {
+/* Account controls */
+.account-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.account-toggle-mask,
+.account-dropdown-arrow {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.account-toggle-mask:hover,
+.account-dropdown-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Dropdown container */
+.dropdown-container {
     position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.95); /* Match arrow color to text color */
-    pointer-events: none;
-    font-size: 14px;
+    left: 0;
+    top: calc(100% + 8px);
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 20;
+    display: none;
+    overflow: hidden;
 }
 
-/* Transfer Button - UPDATED - Matching wider size */
+.dropdown-container.active {
+    display: block;
+    animation: dropdownFadeIn 0.3s ease forwards;
+}
+
+/* Dropdown items */
+.dropdown-item {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary-black);
+    background: #FFFFFF;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+/* Balance amount - ensure it's below the account display */
+.balance-amount {
+    margin-top: 24px;
+    position: relative;
+    z-index: 5;
+}
+
+/* Transfer Button Styles */
 .transfer-btn {
     background-color: #666666;
     color: var(--color-white);
@@ -435,17 +502,25 @@ body {
     max-width: 560px;
     min-width: 480px;
     letter-spacing: -0.2px;
-    margin-top: 20px; /* Adjust top margin to move it up */
+    margin-top: 32px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-    text-decoration: none; /* Remove underline from link */
-    text-align: center; /* Center the text */
-    display: block; /* Make it a block element to properly center text */
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    position: relative;
+    z-index: 5;
 }
 
 .transfer-btn:hover {
     background-color: #5a5a5a;
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.transfer-btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 /* Right Section */
@@ -756,4 +831,223 @@ body {
 .modal-content .primary-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Account Selector Styles */
+.account-selector {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 16px 20px;
+    position: relative;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+}
+
+.account-selector select {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--color-white);
+    font-family: 'Montserrat', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    letter-spacing: 0.5px;
+    padding: 4px 0;
+    margin-right: 16px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+}
+
+/* Style the dropdown options container */
+.account-selector select option {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 16px 20px;
+    font-size: 22px;
+    font-family: 'Montserrat', monospace;
+    letter-spacing: 0.5px;
+    color: var(--color-primary-black);
+    margin: 4px 0;
+    text-align: center;
+}
+
+/* Ensure dropdown list matches container width */
+.account-selector select:focus {
+    outline: none;
+}
+
+select#dashboard_account_select {
+    position: relative;
+    text-align-last: center;
+}
+
+/* Style for the dropdown list */
+select#dashboard_account_select option {
+    text-align: center;
+    text-align-last: center;
+    padding: 16px 20px;
+}
+
+/* Webkit browsers custom styling */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .account-selector select {
+        width: 100%;
+        text-align: center;
+        text-align-last: center;
+}
+
+    .account-selector select option {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        text-align: center;
+    }
+}
+
+/* Firefox specific styles */
+@-moz-document url-prefix() {
+    .account-selector select {
+        width: 100%;
+        text-indent: 0;
+        padding-right: 16px;
+        text-align: center;
+        text-align-last: center;
+}
+
+    .account-selector select option {
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 16px 20px;
+        text-align: center;
+    }
+}
+
+/* Single Account Display - Match width and center content */
+.account-number-display {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 20px 24px;
+    color: var(--color-white);
+    font-size: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+    min-height: 70px;
+    transition: all 0.3s ease;
+}
+
+.account-number-display:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.account-number-text {
+    flex: 1;
+    text-align: center;
+    font-family: 'Montserrat', monospace;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Account Controls - Adjust for centered layout */
+.account-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    position: absolute;
+    right: 20px;
+}
+
+.account-toggle-mask,
+.account-dropdown-arrow {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--color-white);
+    cursor: pointer;
+    padding: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-toggle-mask:hover,
+.account-dropdown-arrow:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.account-dropdown-arrow i {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.account-dropdown-arrow i.active {
+    transform: rotate(180deg);
+}
+
+/* Dropdown hover and focus styles */
+.account-selector select option:hover,
+.account-selector select option:focus {
+    background-color: rgba(126, 217, 87, 0.1);
+    color: var(--color-primary-black);
+}
+
+/* Custom dropdown styling for different browsers */
+.account-selector select option:checked {
+    background: linear-gradient(rgba(126, 217, 87, 0.1), rgba(126, 217, 87, 0.1));
+}
+
+/* Style the dropdown arrow in Firefox */
+@-moz-document url-prefix() {
+    .account-selector select {
+        text-indent: 0;
+        padding-right: 16px;
+    }
+}
+
+/* Style the dropdown arrow in Chrome/Safari */
+.account-selector select::-ms-expand {
+    display: none;
+}
+
+/* Improve dropdown options appearance */
+.account-selector select option:hover,
+.account-selector select option:focus,
+.account-selector select option:active,
+.account-selector select option:checked {
+    background-color: rgba(126, 217, 87, 0.1);
+    color: var(--color-primary-black);
 }

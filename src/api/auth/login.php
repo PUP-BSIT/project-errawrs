@@ -180,9 +180,13 @@ try {
     
     // Verify password
     if (!password_verify($password, $user['password_hash'])) {
+        error_log("Login failed for user: " . $identifier);
+        error_log("Password verification failed");
         $errorMsg = $loginType === 'teller' ? 'Invalid teller number or password' : 'Invalid username or password';
         handleError($errorMsg, 401, false);
     }
+    
+    error_log("Login successful for user: " . $identifier);
     
     // Get additional data for user type if needed
     $additionalData = [];
