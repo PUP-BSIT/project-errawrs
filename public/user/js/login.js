@@ -40,7 +40,7 @@ async function handleLogin(e) {
 
     try {
         const response = await fetch(
-            '/project-errawrs/src/api/auth/login.php',
+            '../../src/api/auth/login.php',
             {
                 method: 'POST',
                 headers: {
