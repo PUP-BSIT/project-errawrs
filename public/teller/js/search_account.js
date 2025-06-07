@@ -738,6 +738,22 @@ window.addEventListener("storage", (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     const contentArea = document.querySelector(".content-area");
     
+    // Update user profile
+    if (tellerInfo) {
+        const userNameElement = document.querySelector(".user-name");
+        const initialsElement = document.querySelector(".initials");
+        if (userNameElement) {
+            userNameElement.textContent = tellerInfo.name;
+        }
+        if (initialsElement && tellerInfo.name) {
+            const names = tellerInfo.name.split(' ');
+            const initials = names.length > 1 
+                ? (names[0][0] + names[names.length - 1][0]).toUpperCase()
+                : names[0][0].toUpperCase();
+            initialsElement.textContent = initials;
+        }
+    }
+    
     // Load search history initially
     loadSearchHistory().then(() => {
         // Only show search history if we have entries and no search term
@@ -776,14 +792,6 @@ document.addEventListener("DOMContentLoaded", () => {
             searchAccount();
         }
     });
-
-    // Update user profile if available
-    if (tellerInfo) {
-        const userNameElement = document.querySelector(".user-name");
-        if (userNameElement) {
-            userNameElement.textContent = tellerInfo.name;
-        }
-    }
 
     // Close account actions when clicking outside
     document.addEventListener("click", (e) => {

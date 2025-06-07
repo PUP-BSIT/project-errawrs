@@ -20,25 +20,25 @@ let filteredData = [];
 let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-    initializeApplication();
-    
-    // Update teller name and initials in the UI
-    const userNameElement = document.querySelector(".user-name");
-    const initialsElement = document.querySelector(".initials");
-    
-    if (userNameElement && tellerInfo.name) {
-        userNameElement.textContent = tellerInfo.name;
-        
-        // Set initials
-        if (initialsElement) {
+document.addEventListener("DOMContentLoaded", () => {
+    // Update user profile
+    if (tellerInfo) {
+        const userNameElement = document.querySelector(".user-name");
+        const initialsElement = document.querySelector(".initials");
+        if (userNameElement) {
+            userNameElement.textContent = tellerInfo.name;
+        }
+        if (initialsElement && tellerInfo.name) {
             const names = tellerInfo.name.split(' ');
             const initials = names.length > 1 
                 ? (names[0][0] + names[names.length - 1][0]).toUpperCase()
-                : names[0].substring(0, 2).toUpperCase();
+                : names[0][0].toUpperCase();
             initialsElement.textContent = initials;
         }
     }
+
+    // Load initial history data
+    loadHistoryData();
 });
 
 async function initializeApplication() {
