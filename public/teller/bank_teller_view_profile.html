@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Teller Profile</title>
+    <title>Bank Teller View Profile</title>
     <link 
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" 
           rel="stylesheet">
     <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/bank_teller_profile.css">
+    <link rel="stylesheet" href="./css/bank_teller_view_profile.css">
 </head>
 <body>
     <div class="container">
@@ -24,61 +24,65 @@
             
             <div class="user-profile">
                 <div class="user-avatar">
-                    <div class="initials">--</div>
+                    <img src="../assets/images/profile_bank_teller.jpg" 
+                          alt="Bank Teller Profile" />
                 </div>
-                <div class="user-name" data-field="sidebar_name">Loading...</div>
+                <div class="user-name">Jovani Avi</div>
             </div>
             
             <div class="nav-menu">
-                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
-                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
+                <a href="bank_teller_dashboard.html" class="nav-item">
+                      Dashboard</a>
+                <a href="bank_teller_search_account.html" class="nav-item">
+                      Search Account</a>
                 <a href="bank_teller_history.html" class="nav-item">History</a>
-                <div class="nav-selected">Profile</div>
             </div>
             
             <div class="nav-logout">
                 <a href="./bank_teller_login.html">
-                    Log out <i class="fa-solid fa-right-from-bracket"></i>
+                    Log out
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
         </div>
 
         <div class="main-content">
+            <!-- Top Bar -->
             <div class="top-bar">
-                <div id="notification_container" class="notification-container"></div>
+                <div id="notification_container" 
+                      class="notification-container"></div>
                 <div class="top-icons">
-                    <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
-                    <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
+                    <div class="top-icon"><i class="fa-regular fa-bell"></i>
+                      </div>
+                    <div class="top-icon"><i class="fa-regular fa-square-plus">
+                    </i></div>
                 </div>
             </div>
 
             <div class="page-header">
-                <span>Profile</span>
+                <span>View Account</span>
             </div>
             
             <div class="account-card">
                 <div class="account-avatar">
-                    <div class="initials">--</div>
+                    <img src="../assets/images/profile_bank_teller.jpg" 
+                        alt="Customer Profile" />
                 </div>
                 <div class="account-info">
-                    <span class="label">Teller Number</span>
-                    <span class="value" data-field="teller_number">Loading...</span>
-
                     <span class="label">First Name</span>
-                    <span class="value" data-field="first_name">Loading...</span>
+                    <span class="value">John</span>
                     
                     <span class="label">Last Name</span>
-                    <span class="value" data-field="last_name">Loading...</span>
+                    <span class="value">Doe</span>
                     
                     <span class="label">Email Address</span>
-                    <span class="value" data-field="email_address">Loading...</span>
+                    <span class="value">johndoe@gmail.com</span>
                     
                     <span class="label">Status</span>
-                    <span class="status-active" data-field="status">Loading...</span>
+                    <span class="status-active">Active</span>
                 </div>
             </div>
         </div>
     </div>
-    <script src="./js/bank_teller_profile.js"></script>
 </body>
-</html> 
+</html>

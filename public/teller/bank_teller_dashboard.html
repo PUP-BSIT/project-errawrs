@@ -5,37 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller Dashboard</title>
     <link 
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
-        rel="stylesheet">
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
+          rel="stylesheet">
     <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/bank_teller_dashboard.css">
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="logo">
-                <h1>
-                    <span class="stack">Stack</span>
+                <h1><span class="stack">Stack</span>
                     <span class="overcash">Overcash</span>
                 </h1>
             </div>
             
             <div class="user-profile">
-                <div class="user-avatar">
-                    <div class="initials">JA</div>
-                </div>
-                <div class="user-name">Jovani Avi</div>
+                <a href="bank_teller_view_profile.html">
+                    <img src="../assets/images/profile_bank_teller.jpg"
+                     alt="User Avatar" class="user-avatar"></a>
+                <div class="user-name"></div>
             </div>
             
             <div class="nav-menu">
                 <div class="nav-selected">Dashboard</div>
-                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
-                <a href="bank_teller_history.html" class="nav-item">History</a>
-                <a href="bank_teller_profile.html" class="nav-item">Profile</a>
+                <a href="bank_teller_search_account.html" 
+                      class="nav-item">Search Account</a>
+                <a href="bank_teller_history.html" 
+                      class="nav-item">History</a>
             </div>
-
+            
             <div class="nav-logout">
                 <a href="./bank_teller_login.html">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
@@ -98,6 +98,7 @@
             </div>
         </div>
     </div>
+    <div id="notification_container" class="notification-container"></div>
     <script src="./js/teller_dashboard.js"></script>
 </body>
 </html>

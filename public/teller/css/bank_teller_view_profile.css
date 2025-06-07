@@ -175,73 +175,52 @@ body {
 
 .account-card {
     background: var(--color-white);
-    width: 900px;
+    width: 700px;
     border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 50px;
+    gap: 30px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0 auto auto auto;
 }
 
 .account-avatar {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .account-avatar img {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid var(--color-mint);
 }
 
 .account-info {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 25px 40px;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
     align-content: center;
 }
 
 .label {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--color-gray);
-    white-space: nowrap;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
 }
 
 .value {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     font-weight: 500;
     color: var(--color-primary-black);
 }
 
-[data-field="teller_number"] {
-    font-family: var(--font-main);
-    font-weight: 600;
-    color: var(--color-mint);
-}
-
 .status-active {
     color: var(--color-mint);
-    font-size: 1.6rem;
-    font-weight: 600;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
-
-.status-active::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    background: var(--color-mint);
-    border-radius: 50%;
-    margin-right: 8px;
-    display: inline-block;
+    font-size: 1.8rem;
+    font-weight: 500;
 }
 
 /* Top Bar Styles */
