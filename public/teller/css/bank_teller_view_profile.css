@@ -217,6 +217,12 @@ body {
     color: var(--color-primary-black);
 }
 
+[data-field="teller_number"] {
+    font-family: var(--font-main);
+    font-weight: 600;
+    color: var(--color-mint);
+}
+
 .status-active {
     color: var(--color-mint);
     font-size: 1.8rem;
