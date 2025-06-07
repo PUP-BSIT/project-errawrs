@@ -94,6 +94,15 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.nav-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.nav-item.disabled .nav-link {
+    pointer-events: none;
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
