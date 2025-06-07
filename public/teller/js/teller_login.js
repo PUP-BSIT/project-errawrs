@@ -42,28 +42,29 @@ function togglePassword() {
     }
 }
 
-// Show error message
-function showError(message) {
-    // Remove any existing error message
-    const existingError = document.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
+// Show message (error or success)
+function showMessage(message, type = 'error') {
+    // Remove any existing message
+    const existingMessage = document.querySelector('.message-container');
+    if (existingMessage) {
+        existingMessage.remove();
     }
 
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.cssText = 'color: #dc3545; margin-top: 10px; text-align: center; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;';
-    errorDiv.textContent = message;
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message-container ${type}-message`;
+    messageDiv.textContent = message;
 
-    const loginForm = document.getElementById('loginForm');
-    loginForm.appendChild(errorDiv);
+    document.body.appendChild(messageDiv);
 
-    // Remove the error message after 5 seconds
+    // Remove the message after 5 seconds with fade out animation
     setTimeout(() => {
-        if (errorDiv.parentNode) {
-            errorDiv.remove();
-        }
-    }, 5000);
+        messageDiv.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.remove();
+            }
+        }, 300);
+    }, 4700);
 }
 
 // Test API connectivity
@@ -96,19 +97,19 @@ async function handleLogin(event) {
 
     // Basic validation
     if (!tellerNumber || !password) {
-        showError('Please fill in all fields');
+        showMessage('Please fill in all fields', 'error');
         return;
     }
 
     // Validate teller number format (basic check)
     if (tellerNumber.length < 1) {
-        showError('Please enter a valid teller number');
+        showMessage('Please enter a valid teller number', 'error');
         return;
     }
 
     // Validate password length
     if (password.length < 8) {
-        showError('Password must be at least 8 characters long');
+        showMessage('Password must be at least 8 characters long', 'error');
         return;
     }
 
@@ -173,7 +174,7 @@ async function handleLogin(event) {
             sessionStorage.setItem('tellerInfo', JSON.stringify(tellerInfo));
 
             // Show success message briefly before redirect
-            showError('Login successful! Redirecting...');
+            showMessage('Login successful! Redirecting...', 'success');
             
             // Redirect to dashboard after a short delay
             setTimeout(() => {
@@ -200,18 +201,18 @@ async function handleLogin(event) {
             errorMessage = error.message;
         }
         
-        showError(errorMessage);
+        showMessage(errorMessage, 'error');
     }
 }
 
 // Handle forgot username
 function handleForgotUsername() {
-    showError("Please contact your administrator to recover your username.");
+    showMessage("Please contact your administrator to recover your username.", 'error');
 }
 
 // Handle forgot password
 function handleForgotPassword() {
-    showError("Please contact your administrator to reset your password.");
+    showMessage("Please contact your administrator to reset your password.", 'error');
 }
 
 // Add configuration check when page loads
@@ -230,10 +231,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const isConnected = await testAPIConnection();
         if (!isConnected) {
-            showError('Warning: Unable to connect to the server. Please ensure your local server is running.');
+            showMessage('Warning: Unable to connect to the server. Please ensure your local server is running.', 'error');
         }
     } catch (error) {
         console.error('Initial connection test failed:', error);
-        showError('Warning: Server connection could not be established. Please check your setup.');
+        showMessage('Warning: Server connection could not be established. Please check your setup.', 'error');
     }
 });

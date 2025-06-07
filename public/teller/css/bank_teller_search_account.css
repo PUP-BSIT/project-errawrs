@@ -73,6 +73,16 @@ body {
     overflow: hidden;
     margin: 0 auto 16px;
     border: 3px solid var(--color-mint);
+    background-color: var(--color-mint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar .initials {
+    color: var(--color-white);
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 .user-name {
