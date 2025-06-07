@@ -19,31 +19,10 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Function to get URL parameters
-function getUrlParameter(name) {
-    const params = new URLSearchParams(window.location.search);
-    return params.get(name);
-}
-
 // Function to load teller profile
 async function loadTellerProfile() {
     try {
-        const tellerNumber = getUrlParameter('teller_number');
-        
-        if (!tellerNumber) {
-            showNotification('Please provide a teller number in the URL (e.g., ?teller_number=123)', 'error');
-            
-            // Update UI to show error state
-            const fieldsToUpdate = ['teller_number', 'first_name', 'last_name', 'email_address', 'status'];
-            fieldsToUpdate.forEach(field => {
-                document.querySelector(`[data-field="${field}"]`).textContent = 'N/A';
-            });
-            document.querySelector('.user-name').textContent = 'Invalid Profile';
-            
-            return;
-        }
-
-        const response = await fetch(`../../src/api/teller/view_profile.php?teller_number=${tellerNumber}`);
+        const response = await fetch('../../src/api/teller/profile.php');
         const data = await response.json();
 
         if (!data.success) {
@@ -51,14 +30,17 @@ async function loadTellerProfile() {
         }
 
         // Update profile information
-        document.querySelector('.user-name').textContent = `${data.first_name} ${data.last_name}`;
-        
-        // Update account card information
-        document.querySelector('[data-field="teller_number"]').textContent = tellerNumber;
+        document.querySelector('[data-field="teller_number"]').textContent = data.teller_number;
         document.querySelector('[data-field="first_name"]').textContent = data.first_name;
         document.querySelector('[data-field="last_name"]').textContent = data.last_name;
         document.querySelector('[data-field="email_address"]').textContent = data.email_address;
         document.querySelector('[data-field="status"]').textContent = data.status;
+
+        // Update initials
+        const initials = `${data.first_name[0]}${data.last_name[0]}`;
+        document.querySelectorAll('.initials').forEach(element => {
+            element.textContent = initials;
+        });
 
         showNotification('Profile loaded successfully', 'success');
 
@@ -71,7 +53,6 @@ async function loadTellerProfile() {
         fieldsToUpdate.forEach(field => {
             document.querySelector(`[data-field="${field}"]`).textContent = 'Error';
         });
-        document.querySelector('.user-name').textContent = 'Error Loading Profile';
     }
 }
 
