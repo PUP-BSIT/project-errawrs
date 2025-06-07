@@ -427,96 +427,84 @@ document.addEventListener('DOMContentLoaded', () => {
     // Send money button
     if (send_money_button) {
         console.log('Send Money button found:', send_money_button);
-        
         // Ensure the button has the correct styling
         send_money_button.className = 'send-btn';
         send_money_button.disabled = !is_info_correct();
-        
+
         send_money_button.addEventListener('click', async (e) => {
             console.log('Send Money button clicked');
             e.preventDefault();
-            
-            // Validate form fields
             if (!validateTransferForm()) {
                 console.log('Form validation failed');
                 return;
             }
-
-            // Get selected account balance
             const selectedOption = your_account_select.options[your_account_select.selectedIndex];
             const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
             const transferAmount = parseFloat(amount_input.value);
-            
-            console.log('Transfer details:', {
-                sourceAccount: your_account_select.value,
-                recipientAccount: receiver_account_input.value,
-                amount: transferAmount,
-                balance: accountBalance
-            });
-            
-            // Check if sufficient balance
-            if (transferAmount > accountBalance) {
-                console.log('Insufficient balance');
-                showNotification('Insufficient balance for this transfer', 'error');
-                return;
-            }
-
-            // Disable button to prevent double submission
+            const bankValue = document.querySelector('input[name="bank"]:checked').value;
+            const isInternal = bankValue === 'StackOvercash Bank';
+            const recipientBankCode = getBankCode(bankValue);
+            const transferApi = isInternal ? '../../src/api/user/fund_transfer.php' : '../../src/api/user/external_transfer.php';
+            const transferPayload = isInternal
+                ? {
+                    transaction_amount: transferAmount,
+                    source_account_no: your_account_select.value,
+                    recipient_account_no: receiver_account_input.value,
+                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
+                }
+                : {
+                    transaction_amount: transferAmount,
+                    source_account_no: your_account_select.value,
+                    recipient_bank_code: recipientBankCode,
+                    recipient_account_no: receiver_account_input.value,
+                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
+                };
             send_money_button.disabled = true;
-            
             try {
-                console.log('Sending transfer request...');
-                // Send transfer request with updated parameter names
-                const response = await fetch('../../src/api/user/fund_transfer.php', {
+                // Step 1: Initiate transfer to store session and get phone number
+                const transferResp = await fetch(transferApi, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        transaction_amount: transferAmount,
-                        source_account_no: your_account_select.value,
-                        recipient_account_no: receiver_account_input.value,
-                        redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(transferPayload)
                 });
-                
-                console.log('Transfer response received');
-                
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    // Handle non-JSON response
-                    const text = await response.text();
-                    console.error('Server returned non-JSON response:', text);
-                    throw new Error('Server returned an invalid response. Please try again later.');
+                const transferData = await transferResp.json();
+                if (!transferData.success) {
+                    showNotification(transferData.error || 'Transfer failed. Please try again.', 'error');
+                    return;
                 }
-                
-                const data = await response.json();
-                console.log('Transfer response data:', data);
-                
-                if (data.success) {
-                    if (data.requires_verification) {
-                        console.log('Transfer requires OTP verification');
-                        showOTPVerificationModal(data);
-                    } else {
-                        console.log('Transfer successful');
-                        showNotification('Transfer successful!', 'success');
-                        
-                        // Show transfer details
-                        showTransferReceipt(data);
-                        
-                        // Reset form
-                        resetTransferForm();
-                    }
-                } else {
-                    console.log('Transfer failed:', data.error);
-                    showNotification(data.error || 'Transfer failed. Please try again.', 'error');
+                // Step 2: Send OTP
+                let phone_number = transferData.data?.phone_number;
+                if (!phone_number && transferData.dev_otp) phone_number = user_data.phone_number; // fallback
+                if (!phone_number) {
+                    showNotification('Could not determine phone number for OTP.', 'error');
+                    return;
                 }
+                const otpResp = await fetch('../../src/api/auth/send_otp.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone_number, purpose: 'fund_transfer' })
+                });
+                const otpData = await otpResp.json();
+                if (!otpData.success) {
+                    showNotification(otpData.error || 'Failed to send OTP.', 'error');
+                    return;
+                }
+                // Step 3: Show OTP modal
+                showOTPVerificationModal({
+                    transfer_details: {
+                        amount: transferAmount,
+                        source_account: your_account_select.value,
+                        recipient_account: receiver_account_input.value
+                    },
+                    dev_otp: otpData.debug_otp,
+                    phone_number,
+                    transferApi,
+                    transferPayload
+                });
             } catch (error) {
                 console.error('Error during transfer:', error);
                 showNotification('An error occurred during the transfer. Please try again.', 'error');
             } finally {
-                // Re-enable button
                 send_money_button.disabled = false;
             }
         });
@@ -769,52 +757,45 @@ function showOTPVerificationModal(data) {
     // Verify OTP button click
     verifyButton.addEventListener('click', async () => {
         const otp = otpInput.value.trim();
-        
         if (!otp || otp.length !== 6) {
             otpError.textContent = 'Please enter a valid 6-digit OTP';
             otpError.style.display = 'block';
             return;
         }
-        
         try {
             verifyButton.disabled = true;
             verifyButton.textContent = 'Verifying...';
-            
-            const response = await fetch('../../src/api/user/verify_transfer_otp.php', {
+            // Step 4: Verify OTP
+            const verifyResp = await fetch('../../src/api/auth/verify_otp.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ otp })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ otp, phone_number: data.phone_number })
             });
-            
-            // Check if response is JSON
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                // Handle non-JSON response
-                const text = await response.text();
-                console.error('Server returned non-JSON response:', text);
-                throw new Error('Server returned an invalid response. Please try again later.');
+            const verifyData = await verifyResp.json();
+            if (!verifyData.success) {
+                otpError.textContent = verifyData.error || 'Invalid OTP. Please try again.';
+                otpError.style.display = 'block';
+                return;
             }
-            
-            const result = await response.json();
-            
-            if (result.success) {
+            // Step 5: Complete transfer (call fund_transfer/external_transfer again)
+            const completeResp = await fetch(data.transferApi, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data.transferPayload)
+            });
+            const completeData = await completeResp.json();
+            if (completeData.success) {
                 otpModal.remove();
                 showNotification('Transfer successful!', 'success');
-                
-                // If redirect is needed, go to the URL
-                if (result.redirect && result.redirect_url) {
-                    console.log('Redirecting to:', result.redirect_url);
-                    window.location.href = result.redirect_url;
+                if (completeData.redirect_url) {
+                    window.location.href = completeData.redirect_url;
                     return;
                 }
-                
-                // Otherwise show the receipt
-                showTransferReceipt(result);
-                resetTransferForm();
+                // Do NOT show the floating receipt modal after success
+                // showTransferReceipt(completeData);
+                // resetTransferForm();
             } else {
-                otpError.textContent = result.error || 'Invalid OTP. Please try again.';
+                otpError.textContent = completeData.error || 'Transfer failed after OTP.';
                 otpError.style.display = 'block';
             }
         } catch (error) {
@@ -875,4 +856,11 @@ if (logout_btn) {
         handleLogout();
         // If not preventing default, the browser will navigate after this function runs
     });
+}
+
+// Map the selected bank label to the required code for external transfers
+function getBankCode(bankLabel) {
+    if (bankLabel === 'Techy Blinders Bank') return 'Blinders';
+    if (bankLabel === 'Dragon Fly Bank') return 'Dragon';
+    return '';
 }

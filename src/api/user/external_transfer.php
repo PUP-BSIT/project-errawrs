@@ -92,66 +92,63 @@ if (isset($_SESSION['external_transfer']) && isset($_SESSION['otp_verified']) &&
             throw new Exception('Failed to update source account balance');
         }
 
-        // Generate transaction ID
-        $transaction_id = time() . rand(1000, 9999);
-
-        // Record the transaction
-        $stmt = $db->prepare("
-            INSERT INTO transaction (
-                transaction_id,
-                transaction_type,
-                amount,
-                sender_account_id,
-                external_bank_code,
-                external_account_number,
-                status,
-                description,
-                created_at,
-                completed_at
-            ) VALUES (?, 'transfer_external_out', ?, ?, ?, ?, 'completed', ?, NOW(), NOW())
-        ");
-
+        // Record the transaction (use correct ENUM value and columns)
+        $stmt = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, external_bank_code, external_account_number, status, description, created_at, completed_at) VALUES ('transfer_external_out', ?, ?, NULL, ?, ?, 'completed', ?, NOW(), NOW())");
         $description = "External transfer to {$transfer['recipient_bank_code']} account {$transfer['recipient_account_no']}";
-        
-        $stmt->bind_param(
-            'sdisss',
-            $transaction_id,
-            $transfer['transaction_amount'],
-            $source['account_id'],
-            $transfer['recipient_bank_code'],
-            $transfer['recipient_account_no'],
-            $description
-        );
-        
+        $stmt->bind_param('disss', $transfer['transaction_amount'], $source['account_id'], $transfer['recipient_bank_code'], $transfer['recipient_account_no'], $description);
         $stmt->execute();
+        if ($stmt->affected_rows !== 1) throw new Exception('Failed to create transaction record');
 
-        if ($stmt->affected_rows !== 1) {
-            throw new Exception('Failed to create transaction record');
-        }
+        $transaction_id = $db->insert_id; // Get the auto-incremented ID
 
         // Get external bank API URL from environment variables
         $external_api_url = getExternalBankApiUrl($transfer['recipient_bank_code']);
-        
-        // Call external bank's API
-        $ch = curl_init($external_api_url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        // Prepare payload
+        $external_payload = [
             'transaction_amount' => $transfer['transaction_amount'],
             'source_account_no' => $transfer['source_account_no'],
             'source_bank_code' => 'StackOverCash',
             'recipient_account_no' => $transfer['recipient_account_no']
-        ]));
+        ];
+        // Debug logs
+        error_log('External API URL: ' . $external_api_url);
+        error_log('External API Payload: ' . json_encode($external_payload));
+        // Call external bank's API
+        $ch = curl_init($external_api_url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($external_payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json'
         ]);
-
+        // Add timeout settings
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        // Enable SSL verification but allow self-signed certificates
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+        $curl_errno = curl_errno($ch);
+        
+        error_log('External API URL: ' . $external_api_url);
+        error_log('External API Payload: ' . json_encode($external_payload));
+        error_log('External API HTTP code: ' . $http_code);
+        error_log('External API response: ' . $response);
+        if ($curl_error) {
+            error_log('Curl error: ' . $curl_error . ' (code: ' . $curl_errno . ')');
+        }
+        
         curl_close($ch);
-
+        
+        if ($curl_errno) {
+            throw new Exception('Failed to connect to external bank API: ' . $curl_error);
+        }
+        
         if ($http_code !== 200) {
-            throw new Exception('Failed to process transfer with external bank');
+            throw new Exception('External bank API returned error code: ' . $http_code . '. Response: ' . $response);
         }
 
         // Commit transaction
@@ -162,9 +159,7 @@ if (isset($_SESSION['external_transfer']) && isset($_SESSION['otp_verified']) &&
         unset($_SESSION['otp_verified']);
 
         // Redirect to success URL
-        $redirect_url = $transfer['redirect_url'] . 
-            (strpos($transfer['redirect_url'], '?') === false ? '?' : '&') .
-            'fund_transfer_success=true&transaction_id=' . $transaction_id;
+        $redirect_url = $transfer['redirect_url'] . (strpos($transfer['redirect_url'], '?') === false ? '?' : '&') . 'fund_transfer_success=true&transaction_id=' . $transaction_id;
 
         echo json_encode([
             'success' => true,
@@ -313,15 +308,32 @@ try {
 
 // Helper function to get external bank API URL from environment variables
 function getExternalBankApiUrl($bank_code) {
+    // Debug all environment variables
+    error_log('All environment variables: ' . print_r($_ENV, true));
+    error_log('All server variables: ' . print_r($_SERVER, true));
+    
     $bank_apis = [
         'Blinders' => getenv('BLINDVAULT_API'),
         'Dragon' => getenv('DRAGONVAULT_API')
     ];
 
+    // Debug log the environment variables
+    error_log('BLINDVAULT_API from getenv(): ' . getenv('BLINDVAULT_API'));
+    error_log('BLINDVAULT_API from $_ENV: ' . (isset($_ENV['BLINDVAULT_API']) ? $_ENV['BLINDVAULT_API'] : 'not set'));
+    error_log('BLINDVAULT_API from $_SERVER: ' . (isset($_SERVER['BLINDVAULT_API']) ? $_SERVER['BLINDVAULT_API'] : 'not set'));
+    error_log('DRAGONVAULT_API from getenv(): ' . getenv('DRAGONVAULT_API'));
+    error_log('DRAGONVAULT_API from $_ENV: ' . (isset($_ENV['DRAGONVAULT_API']) ? $_ENV['DRAGONVAULT_API'] : 'not set'));
+    error_log('DRAGONVAULT_API from $_SERVER: ' . (isset($_SERVER['DRAGONVAULT_API']) ? $_SERVER['DRAGONVAULT_API'] : 'not set'));
+
     if (!isset($bank_apis[$bank_code])) {
-        throw new Exception('Unsupported bank code');
+        throw new Exception('Unsupported bank code: ' . $bank_code);
     }
 
-    return $bank_apis[$bank_code];
+    $api_url = $bank_apis[$bank_code];
+    if (empty($api_url)) {
+        throw new Exception('API URL not configured for bank code: ' . $bank_code . '. Please check your .env file configuration.');
+    }
+
+    return $api_url;
 }
 ?> 

@@ -105,6 +105,7 @@ if ($otp !== $storedOTP['code']) {
 
 // If this is not a registration flow, just return success
 if (!$isRegistration) {
+    $_SESSION['otp_verified'] = true;
     echo json_encode([
         'success' => true,
         'message' => 'OTP verified successfully'

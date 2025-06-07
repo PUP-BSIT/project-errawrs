@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transfer Failed - StackOvercash</title>
+    <link rel="stylesheet" href="./css/user_dashboard.css" />
+    <link rel="stylesheet" href="./css/transfer.css" />
+    <style>
+        .result-container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px 32px 32px 32px;
+            text-align: center;
+        }
+        .result-icon {
+            font-size: 60px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .result-message {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 24px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .back-btn:hover {
+            background: #b52a37;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <div class="result-container">
+        <div class="result-icon">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="result-title">Transfer Failed</div>
+        <div class="result-message" id="fail-message">An error occurred while processing your transfer.</div>
+        <a href="./transfer.html" class="back-btn">Back to Transfer</a>
+    </div>
+    <script>
+        // Show error message from URL if present
+        const params = new URLSearchParams(window.location.search);
+        const errorMsg = params.get('error_message');
+        if (errorMsg) {
+            document.getElementById('fail-message').textContent = decodeURIComponent(errorMsg.replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+</html> 

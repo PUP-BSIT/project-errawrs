@@ -1,35 +1,52 @@
 <?php
 /**
+ * Load environment variables from .env file
+ */
+function loadEnv() {
+    $envFile = __DIR__ . '/../../.env';
+    
+    if (!file_exists($envFile)) {
+        throw new Exception('.env file not found at: ' . $envFile);
+    }
+    
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    
+    if ($lines === false) {
+        throw new Exception('Failed to read .env file');
+    }
+    
+    foreach ($lines as $line) {
+        if (strpos($line, '#') === 0) continue; // Skip comments
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            
+            // Remove quotes if present
+            if (strpos($value, '"') === 0 && strrpos($value, '"') === strlen($value) - 1) {
+                $value = substr($value, 1, -1);
+            }
+            
+            // Set environment variable
+            putenv("$key=$value");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
+// Load environment variables
+loadEnv();
+
+/**
  * Database connection function
  */
 function db_connect() {
     try {
-        // Read .env file from project root
-        $envFile = __DIR__ . '/../../.env';
-        
-        if (!file_exists($envFile)) {
-            throw new Exception('.env file not found at: ' . $envFile);
-        }
-        
-        $envVars = [];
-        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        
-        if ($lines === false) {
-            throw new Exception('Failed to read .env file');
-        }
-        
-        foreach ($lines as $line) {
-            if (strpos($line, '#') === 0) continue; // Skip comments
-            if (strpos($line, '=') !== false) {
-                list($key, $value) = explode('=', $line, 2);
-                $envVars[trim($key)] = trim($value);
-            }
-        }
-        
         // Get database configuration with validation
         $required = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'];
         foreach ($required as $key) {
-            if (empty($envVars[$key])) {
+            if (empty($_ENV[$key])) {
                 throw new Exception("Missing required environment variable: {$key}");
             }
         }
@@ -38,10 +55,10 @@ function db_connect() {
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         
         $conn = new mysqli(
-            $envVars['DB_HOST'],
-            $envVars['DB_USER'],
-            $envVars['DB_PASS'],
-            $envVars['DB_NAME']
+            $_ENV['DB_HOST'],
+            $_ENV['DB_USER'],
+            $_ENV['DB_PASS'],
+            $_ENV['DB_NAME']
         );
         
         // Set charset and collation

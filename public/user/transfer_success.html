@@ -133,52 +133,6 @@
         
         <div class="notification-container"></div>
         
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Parse URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                
-                // Update receipt values if provided in URL
-                document.getElementById('transaction_id').textContent = urlParams.get('transaction_id') || '97';
-                document.getElementById('transaction_date').textContent = urlParams.get('date') || '6/6/2025, 2:57:01 AM';
-                document.getElementById('transaction_amount').textContent = '₱ ' + (urlParams.get('amount') || '1,000.00');
-                document.getElementById('from_account').textContent = urlParams.get('from_account') || '544250000007';
-                document.getElementById('to_account').textContent = urlParams.get('to_account') || '544250000009';
-                
-                // Handle print functionality
-                document.addEventListener('keydown', function(e) {
-                    // Ctrl/Cmd + P
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-                        e.preventDefault();
-                        window.print();
-                    }
-                });
-                
-                // Also update the user avatar
-                const userAvatarContainer = document.getElementById('user_avatar_container');
-                if (userAvatarContainer) {
-                    // Fetch user data or use a default initial
-                    fetch('../../src/api/auth/session_check.php')
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success && data.authenticated) {
-                                const userName = data.user.first_name || 'User';
-                                const initial = userName.charAt(0).toUpperCase();
-                                userAvatarContainer.textContent = initial;
-                                
-                                // Update username if element exists
-                                const userNameElement = document.getElementById('user_name');
-                                if (userNameElement) {
-                                    userNameElement.textContent = `${data.user.first_name} ${data.user.last_name}`.trim();
-                                }
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Error fetching user data:', err);
-                            userAvatarContainer.textContent = 'U';
-                        });
-                }
-            });
-        </script>
+        <script src="./js/transfer_success.js"></script>
     </body>
 </html> 

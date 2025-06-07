@@ -92,6 +92,65 @@ if ($amount <= 0) {
     exit();
 }
 
+// Add this block at the top, after session and input setup
+if (isset($_SESSION['pending_transfer']) && isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true) {
+    try {
+        $transfer = $_SESSION['pending_transfer'];
+        $db = db_connect();
+        $db->begin_transaction();
+
+        // Check if source account still has sufficient balance
+        $stmt = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND status = 'active'");
+        $stmt->bind_param('s', $transfer['source_account_number']);
+        $stmt->execute();
+        $source = $stmt->get_result()->fetch_assoc();
+        if (!$source) throw new Exception('Source account not found or inactive');
+        if ($source['balance'] < $transfer['amount']) throw new Exception('Insufficient balance');
+
+        // Deduct from source
+        $stmt = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ? AND status = 'active'");
+        $stmt->bind_param('di', $transfer['amount'], $source['account_id']);
+        $stmt->execute();
+        if ($stmt->affected_rows !== 1) throw new Exception('Failed to update source account balance');
+
+        // Credit recipient
+        $stmt = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_number = ? AND status = 'active'");
+        $stmt->bind_param('ds', $transfer['amount'], $transfer['recipient_account_number']);
+        $stmt->execute();
+        if ($stmt->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
+
+        // Record the transaction (use correct ENUM value and columns)
+        $stmt = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at, external_bank_code, external_account_number) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW(), NULL, NULL)");
+        $description = "Transfer to account {$transfer['recipient_account_number']}";
+        $stmt->bind_param('diis', $transfer['amount'], $source['account_id'], $transfer['receiver_account_id'], $description);
+        $stmt->execute();
+        if ($stmt->affected_rows !== 1) throw new Exception('Failed to create transaction record');
+
+        $transaction_id = $db->insert_id; // Get the auto-incremented ID
+
+        $db->commit();
+        unset($_SESSION['pending_transfer']);
+        unset($_SESSION['otp_verified']);
+        $redirect_url = $transfer['redirect_url'] . (strpos($transfer['redirect_url'], '?') === false ? '?' : '&') . 'fund_transfer_success=true&transaction_id=' . $transaction_id;
+        echo json_encode([
+            'success' => true,
+            'message' => 'Transfer completed successfully',
+            'redirect_url' => $redirect_url
+        ]);
+    } catch (Exception $e) {
+        if (isset($db) && $db->connect_errno === 0) $db->rollback();
+        unset($_SESSION['pending_transfer']);
+        unset($_SESSION['otp_verified']);
+        $redirect_url = $transfer['redirect_url'] . (strpos($transfer['redirect_url'], '?') === false ? '?' : '&') . 'error_message=' . urlencode($e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'error' => $e->getMessage(),
+            'redirect_url' => $redirect_url
+        ]);
+    }
+    exit;
+}
+
 try {
     $db = db_connect();
     $userId = $_SESSION['auth']['id'];
