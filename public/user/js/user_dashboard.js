@@ -284,7 +284,7 @@ function update_balance_display(balance) {
 async function fetchRecentTransactions() {
      try {
         // Update the API endpoint path
-        const response = await fetch('/project-errawrs/src/api/user/transactions.php?limit=3');
+        const response = await fetch('../../src/api/user/transactions.php?limit=3');
         const data = await response.json();
 
         if (data.success && data.transactions.length > 0) {
@@ -420,7 +420,7 @@ function setup_profile_edit() {
 
             try {
                  // Assuming an API endpoint for updating user profile data
-                 const response = await fetch('/project-errawrs/src/api/user/profile/update.php', {
+                 const response = await fetch('../../src/api/user/profile/update.php', {
                      method: 'POST', // Or PUT
                      headers: {
                          'Content-Type': 'application/json'
@@ -491,7 +491,7 @@ function populate_profile_form() {
 // Fetch and display financial tip
 async function fetchFinancialTip() {
     try {
-        const response = await fetch('/project-errawrs/src/api/user/financial-tips.php');
+        const response = await fetch('../../src/api/user/financial-tips.php');
         const data = await response.json();
 
         if (data.success && data.tip) {

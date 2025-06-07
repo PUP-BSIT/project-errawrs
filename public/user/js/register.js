@@ -544,7 +544,7 @@ class RegistrationManager {
 			}
 
 			// Send registration data to API
-			fetch('/project-errawrs/src/api/user/register.php', {
+			fetch('../../src/api/user/register.php', {
 				method: 'POST',
 				body: formData
 			})
@@ -600,7 +600,7 @@ class RegistrationManager {
 			submitBtn.disabled = true;
 			
 			// Make actual API call to verify OTP
-			fetch('/project-errawrs/src/api/auth/verify_otp.php', {
+			fetch('../../src/api/auth/verify_otp.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -1,46 +1,133 @@
 # External Transfer API Documentation
 
-## API Endpoint
+## 1. External Transfer Request
+
+### Endpoint
 ```
-POST https://dev.stackovercash.site/api/services/soc_transfer
+POST /api/user/external_transfer.php
 ```
 
-## Request Parameters
+### Request Parameters
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| transaction_amount | number | The amount to be transferred |
-| source_account_no | number | The source(external) account number |
-| source_bank_code | string | The bank code for the source(external) account |
-| recipient_account_no | number | The recipient(internal) account number |
+| transaction_amount | number | Amount to be transferred (must be positive) |
+| source_account_no | number | Source (internal) account number |
+| recipient_bank_code | string | Bank code for recipient (e.g., 'Blinders', 'Dragon') |
+| recipient_account_no | number | Recipient (external) account number |
+| redirect_url | string | URL to redirect after transaction completion |
 
-## Request Example
+### Response (Success)
 ```json
 {
-  "transaction_amount": 50000.00,
-  "source_account_no": "123456789012",
-  "source_bank_code": "Blinders",
-  "recipient_account_no": "544250000109"
+    "success": true,
+    "message": "Please verify the transfer with OTP",
+    "data": {
+        "phone_number": "1234567890",
+        "name": "John Doe",
+        "recipient_details": {
+            "account_name": "Jane Smith",
+            "bank_name": "Blinders Bank",
+            "account_type": "Savings"
+        }
+    }
 }
 ```
 
-## Response Format
-### Success Response
+### Response (Error)
 ```json
 {
-  "success": true,
-  "transaction_id": "123",
-  "message": "External transfer received successfully"
+    "success": false,
+    "error": "Error message here"
 }
 ```
 
-### Error Response
+## 2. External Bank API Integration
+
+### Account Validation Endpoint
+```
+POST {BANK_API_URL}/validate_account
+```
+
+#### Request Parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| account_number | number | Account number to validate |
+
+#### Response (Success)
 ```json
 {
-  "success": false,
-  "error": "Error message here",
-  "message": "Failed to process external transfer"
+    "success": true,
+    "is_valid": true,
+    "account_details": {
+        "account_name": "Jane Smith",
+        "bank_name": "Blinders Bank",
+        "account_type": "Savings"
+    }
 }
 ```
+
+#### Response (Error)
+```json
+{
+    "success": false,
+    "error": "Invalid account number"
+}
+```
+
+### Transfer Processing Endpoint
+```
+POST {BANK_API_URL}/process_transfer
+```
+
+#### Request Parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| transaction_amount | number | Amount to be transferred |
+| source_account_no | number | Source account number |
+| source_bank_code | string | Source bank code (StackOverCash) |
+| recipient_account_no | number | Recipient account number |
+
+#### Response (Success)
+```json
+{
+    "success": true,
+    "transaction_id": "TRX123456789",
+    "status": "completed",
+    "timestamp": "2024-03-14T12:00:00Z"
+}
+```
+
+#### Response (Error)
+```json
+{
+    "success": false,
+    "error": "Transfer failed",
+    "error_code": "INSUFFICIENT_FUNDS"
+}
+```
+
+## Environment Variables Required
+```
+BLINDVAULT_API=https://api.blindvault.com/v1
+DRAGONVAULT_API=https://api.dragonvault.com/v1
+```
+
+## Error Codes
+- `INVALID_ACCOUNT`: Recipient account does not exist
+- `INSUFFICIENT_FUNDS`: Source account has insufficient balance
+- `INVALID_BANK_CODE`: Unsupported bank code
+- `API_ERROR`: External bank API error
+- `UNAUTHORIZED`: User not authenticated
+- `INVALID_AMOUNT`: Invalid transaction amount
+- `INVALID_REDIRECT_URL`: Invalid redirect URL format
+
+## Notes
+1. All amounts should be positive numbers
+2. Account numbers must be numeric
+3. Bank codes are case-sensitive
+4. Redirect URL must be a valid URL format
+5. API responses are always in JSON format
+6. All timestamps are in UTC
 
 ## Testing with Postman
 1. Open Postman

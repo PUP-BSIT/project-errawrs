@@ -1,7 +1,7 @@
 // Constants and Configuration
 const CONFIG = {
     API: {
-        BASE_URL: '/project-errawrs/src/api',
+        BASE_URL: '../../src/api',
         ENDPOINTS: {
             PROFILE: '/auth/session_check.php',
             UPDATE: '/user/profile/update.php',

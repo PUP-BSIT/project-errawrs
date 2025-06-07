@@ -846,10 +846,7 @@ async function handleLogout() {
         localStorage.removeItem('account'); // Assuming account data is also stored
         localStorage.removeItem('token'); // If you are using tokens
 
-        // Optional: Call backend logout API
-        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
-        // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('/project-errawrs/src/api/auth/logout.php', {
+        fetch('../../src/api/auth/logout.php', {
             method: 'POST',
         }).catch((error) =>
             console.error('Error during logout API call:', error)
