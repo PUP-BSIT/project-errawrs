@@ -67,6 +67,14 @@ body {
 .user-profile {
     text-align: center;
     margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.user-profile.loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .user-avatar {
@@ -93,6 +101,11 @@ body {
     font-weight: 600;
     color: var(--color-white);
     letter-spacing: -0.3px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.user-name.loading {
+    opacity: 0.7;
 }
 
 /* Navigation Styles */
@@ -216,6 +229,14 @@ body {
     text-align: center;
     margin-top: auto;
     margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.page-header.loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .page-header span {
@@ -236,6 +257,14 @@ body {
     gap: 50px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0 auto auto auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.account-card.loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .account-avatar {
@@ -275,6 +304,12 @@ body {
     font-size: 1.6rem;
     font-weight: 500;
     color: var(--color-primary-black);
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.value.loading {
+    color: var(--color-gray);
+    opacity: 0.7;
 }
 
 [data-field="teller_number"] {
@@ -290,6 +325,7 @@ body {
     position: relative;
     display: inline-flex;
     align-items: center;
+    transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 .status-active::before {
@@ -300,6 +336,11 @@ body {
     border-radius: 50%;
     margin-right: 8px;
     display: inline-block;
+}
+
+.status-active.loading {
+    color: var(--color-gray);
+    opacity: 0.7;
 }
 
 /* Notification Styles */
@@ -374,4 +415,22 @@ body {
 
 .notification.fade-out {
     animation: fade-out 0.3s ease forwards;
+}
+
+/* Loading animation styles */
+.loading-text {
+    position: relative;
+    color: var(--color-gray);
+}
+
+.loading-text::after {
+    content: "...";
+    position: absolute;
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
 } 
