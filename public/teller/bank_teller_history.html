@@ -5,35 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller History</title>
     <link 
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
-        rel="stylesheet">
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" 
+          rel="stylesheet">
     <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/bank_teller_history.css">
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="logo">
-                <h1>
-                    <span class="stack">Stack</span>
+                <h1> <span class="stack">Stack</span>
                     <span class="overcash">Overcash</span>
                 </h1>
             </div>
             
             <div class="user-profile">
-                <div class="user-avatar">
-                    <div class="initials"></div>
-                </div>
-                <div class="user-name"></div>
+                <a href="bank_teller_view_profile.html">
+                    <img src="../assets/images/profile_bank_teller.jpg"
+                          alt="User Avatar" class="user-avatar">
+                </a>
+                <div class="user-name">Jovani Avi</div>
             </div>
             
             <div class="nav-menu">
-                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
-                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
+                <a href="bank_teller_dashboard.html" 
+                      class="nav-item">Dashboard</a>
+                <a href="bank_teller_search_account.html"
+                      class="nav-item">Search Account</a>
                 <div class="nav-selected">History</div>
-                <a href="bank_teller_profile.html" class="nav-item">Profile</a>
             </div>
 
             <div class="nav-logout">
@@ -44,11 +45,15 @@
         </div>
 
         <div class="main-content">
+            <!-- Top Bar -->
             <div class="top-bar">
-                <div id="notification_container" class="notification-container"></div>
+                <div id="notification_container" 
+                      class="notification-container"></div>
                 <div class="top-icons">
-                    <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
-                    <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
+                    <div class="top-icon"><i class="fa-regular fa-bell">
+                    </i></div>
+                    <div class="top-icon"><i class="fa-regular fa-square-plus">
+                    </i></div>
                 </div>
             </div>
 
@@ -100,7 +105,6 @@
             </div>
         </div>
     </div>
-    <script src="./js/sidebar_nav.js"></script>
     <script src="./js/history.js"></script>
 </body>
 </html>
