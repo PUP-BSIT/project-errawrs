@@ -13,15 +13,25 @@ let lastKnownValues = {
     reopened_accounts: 0
 };
 
-// Update teller name in the UI
+// Update teller name and initials in the UI
 document.addEventListener("DOMContentLoaded", () => {
     // Update name in sidebar and welcome section
     const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
+    const initialsElement = document.querySelector(".initials");
     
     if (tellerInfo.name) {
         userNameElements.forEach(el => el.textContent = tellerInfo.name);
         nameTextElement.textContent = tellerInfo.name + "!";
+        
+        // Set initials
+        if (initialsElement) {
+            const names = tellerInfo.name.split(' ');
+            const initials = names.length > 1 
+                ? (names[0][0] + names[names.length - 1][0]).toUpperCase()
+                : names[0].substring(0, 2).toUpperCase();
+            initialsElement.textContent = initials;
+        }
     }
 
     // Fetch and update dashboard summary
