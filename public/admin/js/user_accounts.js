@@ -58,6 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 teller_number: 'ADMIN' // Use ADMIN as teller number for full access
             });
 
+            if (tellerId) {
+                params.append('teller_id', tellerId);
+            }
+
             const response = await fetch(`/project-errawrs/src/api/teller/search_account.php?${params.toString()}`, {
                 credentials: 'include'
             });
