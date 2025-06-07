@@ -151,28 +151,33 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
-    const actualPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
-    const displayPages = Math.min(totalPages, actualPages);
+    // Calculate actual number of items and pages
+    const actualTotalItems = filteredData.length;
+    const actualPages = Math.ceil(actualTotalItems / ITEMS_PER_VIEW);
 
-    if (displayPages <= 0) {
-        return; // No pages to display
+    if (actualPages <= 0) {
+        // Hide pagination if no pages
+        document.querySelector('.pagination-container').style.display = 'none';
+        return;
+    } else {
+        document.querySelector('.pagination-container').style.display = 'flex';
     }
 
     // Adjust current page if it's beyond the actual data
-    if (currentPage > displayPages) {
-        currentPage = displayPages;
+    if (currentPage > actualPages) {
+        currentPage = actualPages;
     }
 
     // Calculate the range of page numbers to show
     let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(displayPages, currentPage + 2);
+    let endPage = Math.min(actualPages, currentPage + 2);
 
     // Always show at least 5 pages if available
-    if (endPage - startPage < 4 && displayPages > 4) {
+    if (endPage - startPage < 4 && actualPages > 4) {
         if (startPage === 1) {
-            endPage = Math.min(5, displayPages);
-        } else if (endPage === displayPages) {
-            startPage = Math.max(1, displayPages - 4);
+            endPage = Math.min(5, actualPages);
+        } else if (endPage === actualPages) {
+            startPage = Math.max(1, actualPages - 4);
         }
     }
 
@@ -190,30 +195,30 @@ function updatePaginationDisplay() {
     }
 
     // Add last page button if not in range
-    if (endPage < displayPages) {
-        if (endPage < displayPages - 1) {
+    if (endPage < actualPages) {
+        if (endPage < actualPages - 1) {
             addEllipsis();
         }
-        addPageButton(displayPages);
+        addPageButton(actualPages);
     }
 
     // Update showing text with proper padding
     updateShowingText();
 
     // Enable/disable navigation buttons based on actual pages
-    updateNavigationButtons(displayPages);
+    updateNavigationButtons(actualPages);
 }
 
 // Update navigation buttons state
-function updateNavigationButtons(displayPages) {
+function updateNavigationButtons(actualPages) {
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
 
     if (prevBtn) {
-        prevBtn.disabled = currentPage === 1;
+        prevBtn.disabled = currentPage === 1 || actualPages === 0;
     }
     if (nextBtn) {
-        nextBtn.disabled = currentPage === displayPages;
+        nextBtn.disabled = currentPage === actualPages || actualPages === 0;
     }
 }
 
@@ -221,13 +226,15 @@ function updateNavigationButtons(displayPages) {
 function updateShowingText() {
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        if (totalItems === 0) {
+        const actualTotalItems = filteredData.length;
+        
+        if (actualTotalItems === 0) {
             showingText.textContent = "Showing 0 to 0 of 0 entries";
         } else {
             const startItem = ((currentPage - 1) * ITEMS_PER_VIEW) + 1;
-            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, totalItems);
-            const totalPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
-            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, actualTotalItems);
+            const actualPages = Math.ceil(actualTotalItems / ITEMS_PER_VIEW);
+            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${actualTotalItems} entries (Page ${currentPage} of ${actualPages})`;
         }
     }
 }
