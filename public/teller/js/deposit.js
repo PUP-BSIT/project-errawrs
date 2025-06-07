@@ -141,7 +141,7 @@ async function submitDeposit() {
     toggleLoading(true, amount);
     
     try {
-        const response = await fetch('/project-errawrs/src/api/teller/deposit.php', {
+        const response = await fetch('../../src/api/teller/deposit.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

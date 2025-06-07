@@ -147,7 +147,7 @@ async function submitWithdrawal() {
     toggleLoading(true, amount);
     
     try {
-        const response = await fetch('/project-errawrs/src/api/teller/withdraw.php', {
+        const response = await fetch('../../src/api/teller/withdraw.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
