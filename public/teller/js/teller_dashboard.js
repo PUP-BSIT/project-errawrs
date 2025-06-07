@@ -71,33 +71,21 @@ async function fetchDashboardSummary() {
 function updateDashboardSummary(summary) {
     const currentTime = formatTime(new Date());
 
-    // Update deposits if changed
-    if (summary.deposits.amount !== lastKnownValues.deposits) {
-        document.getElementById('total-deposits').textContent = `₱${summary.deposits.amount}`;
-        document.getElementById('deposits-updated').textContent = currentTime;
-        lastKnownValues.deposits = summary.deposits.amount;
-    }
+    // Update deposits
+    document.getElementById('total-deposits').textContent = summary[0].amount_count;
+    document.getElementById('deposits-updated').textContent = currentTime;
 
-    // Update withdrawals if changed
-    if (summary.withdrawals.amount !== lastKnownValues.withdrawals) {
-        document.getElementById('total-withdrawals').textContent = `₱${summary.withdrawals.amount}`;
-        document.getElementById('withdrawals-updated').textContent = currentTime;
-        lastKnownValues.withdrawals = summary.withdrawals.amount;
-    }
+    // Update withdrawals
+    document.getElementById('total-withdrawals').textContent = summary[1].amount_count;
+    document.getElementById('withdrawals-updated').textContent = currentTime;
 
-    // Update closed accounts if changed
-    if (summary.closed_accounts.count !== lastKnownValues.closed_accounts) {
-        document.getElementById('total-closed').textContent = `${summary.closed_accounts.count} Account${summary.closed_accounts.count !== 1 ? 's' : ''}`;
-        document.getElementById('closed-updated').textContent = currentTime;
-        lastKnownValues.closed_accounts = summary.closed_accounts.count;
-    }
+    // Update closed accounts
+    document.getElementById('total-closed').textContent = summary[2].amount_count;
+    document.getElementById('closed-updated').textContent = currentTime;
 
-    // Update reopened accounts if changed
-    if (summary.reopened_accounts.count !== lastKnownValues.reopened_accounts) {
-        document.getElementById('total-reopened').textContent = `${summary.reopened_accounts.count} Account${summary.reopened_accounts.count !== 1 ? 's' : ''}`;
-        document.getElementById('reopened-updated').textContent = currentTime;
-        lastKnownValues.reopened_accounts = summary.reopened_accounts.count;
-    }
+    // Update reopened accounts
+    document.getElementById('total-reopened').textContent = summary[3].amount_count;
+    document.getElementById('reopened-updated').textContent = currentTime;
 }
 
 // Check if user is logged in
