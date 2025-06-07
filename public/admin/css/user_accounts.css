@@ -1,0 +1,395 @@
+/* Variables */
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-error: #dc3545;
+}
+
+/* Page Content */
+.page-content {
+    padding: 2rem;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 1rem;
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid #dce1e4;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-mint);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-lime-green);
+}
+
+.btn-primary:disabled {
+    background-color: #e2e2e2;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Account Cards Container */
+.account-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+/* Account Card */
+.account-card {
+    background: var(--color-white);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Account Info Layout */
+.account-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    position: relative;
+    padding-top: 50px;
+}
+
+/* Status Indicator */
+.status-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.status-indicator.active {
+    color: var(--color-mint);
+    background-color: rgba(126, 217, 87, 0.1);
+}
+
+.status-indicator.inactive {
+    color: var(--color-error);
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.status-indicator .status-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+/* Account Field */
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.account-label {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.account-value {
+    color: var(--color-primary-black);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.account-value.balance {
+    color: var(--color-mint);
+    font-size: 28px;
+}
+
+/* Account Type Badge */
+.account-type-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.account-type-badge.savings {
+    background-color: #EEF3FF;
+    color: #2563EB;
+}
+
+.account-type-badge.credit {
+    background-color: #F3E8FF;
+    color: #9333EA;
+}
+
+/* More Options Menu */
+.more-options {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #666;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.more-options:hover {
+    background-color: #f5f5f5;
+}
+
+/* Card Actions */
+.card-actions {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1;
+    min-width: 200px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card-actions.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    width: 100%;
+    border: none;
+    background: none;
+    color: var(--color-primary-black);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card-action-btn:hover {
+    background-color: #f5f5f5;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #111827;
+}
+
+.modal-header.success {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.modal-header.warning {
+    background-color: #fff7ed;
+    color: #c2410c;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dce1e4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.1);
+}
+
+.help-text {
+    display: none;
+    color: var(--color-error);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.form-group input.invalid ~ .help-text {
+    display: block;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content-header {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        max-width: 100%;
+    }
+    
+    .account-container {
+        grid-template-columns: 1fr;
+    }
+} 
