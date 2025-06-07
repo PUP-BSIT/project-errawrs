@@ -16,7 +16,7 @@
     <div class="container">
         <div class="sidebar">
             <div class="logo">
-                <h1><span class="stack">Stack</span>
+                <h1> <span class="stack">Stack</span>
                     <span class="overcash">Overcash</span>
                 </h1>
             </div>
@@ -57,43 +57,49 @@
                 </div>
             </div>
 
-            <div class="history-table-container">
-                <div class="history-title">Transaction History</div>
-                <div class="table-header">
-                    <div class="header-row">
-                        <div class="header-cell">Date</div>
-                        <div class="header-cell">Time</div>
-                        <div class="header-cell">Type</div>
-                        <div class="header-cell">Amount</div>
-                        <div class="header-cell">Status</div>
+            <div class="history-container">
+                <h1>Transaction History</h1>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="header-row">
+                            <div class="header-cell">DATE</div>
+                            <div class="header-cell">TIME</div>
+                            <div class="header-cell">ACCOUNT NUMBER</div>
+                            <div class="header-cell">ACCOUNT NAME</div>
+                            <div class="header-cell">ACCOUNT TYPE</div>
+                            <div class="header-cell amount-header">AMOUNT</div>
+                            <div class="header-cell">DETAILS</div>
+                        </div>
+                    </div>
+
+                    <div id="table-body" class="table-body">
+                        <!-- Table rows will be populated by JavaScript -->
                     </div>
                 </div>
-                <div id="table-body" class="table-body">
-                    <!-- Table rows will be populated by JavaScript -->
-                </div>
-                
+
                 <div class="pagination-container">
                     <div class="pagination-left">
-                        <button id="prev-btn" class="pagination-btn" 
-                              onclick="goToPreviousPage()">Previous</button>
+                        <button id="prev-btn" class="pagination-btn" onclick="goToPreviousPage()">Previous</button>
                         <div id="page-numbers" class="page-numbers">
-                            <!-- Page numbers will be inserted here -->
+                            <!-- Page numbers will be populated by JavaScript -->
                         </div>
-                        <button id="next-btn" class="pagination-btn" 
-                              onclick="goToNextPage()">Next</button>
+                        <button id="next-btn" class="pagination-btn" onclick="goToNextPage()">Next</button>
                     </div>
                     
                     <div class="pagination-right">
-                        <span>Per Page</span>
-                        <select id="per-page-select" class="per-page-select" 
-                              onchange="changeItemsPerPage()">
-                            <option value="5">05</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                        </select>
-                        <span id="showing-text">Showing 1 to 05 of 15</span>
-                        <button id="go-btn" class="go-btn" 
-                              onclick="applyPaginationSettings()">Go</button>
+                        <div class="per-page-container">
+                            <select id="per-page-select" class="per-page-select" onchange="changeItemsPerPage()">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span class="per-page-label">per page</span>
+                        </div>
+                        <div class="showing-container">
+                            <span id="showing-text"></span>
+                        </div>
                     </div>
                 </div>
             </div>

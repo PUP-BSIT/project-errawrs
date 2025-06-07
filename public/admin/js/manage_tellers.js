@@ -128,7 +128,7 @@ class TellerManager {
                 <div class="teller-header">
                     <div class="teller-info">
                         <h3>${teller.first_name} ${teller.last_name}</h3>
-                        <div class="teller-number">${teller.teller_number}</div>
+                        <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
                     </div>
                     <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
                         ${teller.status}
@@ -139,20 +139,13 @@ class TellerManager {
                         <span class="detail-label">Email:</span>
                         <span class="detail-value">${teller.email}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Created:</span>
-                        <span class="detail-value">${this.formatDate(teller.created_at)}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Last Active:</span>
-                        <span class="detail-value">${this.formatDate(teller.last_active)}</span>
-                    </div>
                 </div>
                 <div class="teller-actions">
                     <button class="action-btn" onclick="tellerManager.editTeller(${teller.teller_id})" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn" onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
+                    <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
+                            onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
                             title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
                         <i class="fas fa-power-off"></i>
                     </button>
@@ -262,7 +255,7 @@ class TellerManager {
             }
         } catch (error) {
             console.error('Error loading teller details:', error);
-            this.showToast('Failed to load teller details', 'error');
+            this.showToast(error.message, 'error');
         }
     }
 
@@ -320,8 +313,14 @@ class TellerManager {
 
     async toggleTellerStatus(tellerId, currentStatus) {
         try {
-            const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-            
+            const confirmMessage = currentStatus === 'active' 
+                ? 'Are you sure you want to deactivate this teller?' 
+                : 'Are you sure you want to activate this teller?';
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
             const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
                 method: 'POST',
                 headers: {
@@ -332,14 +331,14 @@ class TellerManager {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update teller status');
+                throw new Error(`Failed to update status: ${response.status}`);
             }
 
             const data = await response.json();
             
             if (data.success) {
-                this.showToast(`Teller ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`, 'success');
-                this.loadTellers();
+                this.showToast(`Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 'success');
+                await this.loadTellers();
             } else {
                 throw new Error(data.message || 'Failed to update teller status');
             }
@@ -400,42 +399,60 @@ class TellerManager {
         if (!container) return;
 
         const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
+        toast.className = `toast toast-${type}`;
+        
         toast.innerHTML = `
-            <i class="fas ${this.getToastIcon(type)}"></i>
-            <span>${message}</span>`;
+            <i class="${this.getToastIcon(type)}"></i>
+            <span>${message}</span>
+            <button class="toast-close">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
 
         container.appendChild(toast);
 
-        // Remove toast after 5 seconds
+        // Add close button functionality
+        const closeBtn = toast.querySelector('.toast-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                toast.remove();
+            });
+        }
+
+        // Auto remove after 5 seconds
         setTimeout(() => {
-            toast.remove();
+            if (toast && toast.parentElement) {
+                toast.remove();
+            }
         }, 5000);
     }
 
     getToastIcon(type) {
         switch (type) {
             case 'success':
-                return 'fa-check-circle';
+                return 'fas fa-check-circle';
             case 'error':
-                return 'fa-exclamation-circle';
+                return 'fas fa-exclamation-circle';
             case 'warning':
-                return 'fa-exclamation-triangle';
+                return 'fas fa-exclamation-triangle';
             default:
-                return 'fa-info-circle';
+                return 'fas fa-info-circle';
         }
     }
 
     formatDate(dateString) {
-        if (!dateString) return 'Never';
+        if (!dateString) return 'N/A';
+        
         const date = new Date(dateString);
-        return date.toLocaleString('en-US', {
+        if (isNaN(date.getTime())) return 'Invalid date';
+        
+        return new Intl.DateTimeFormat('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        });
+        }).format(date);
     }
 
     changePage(page) {
@@ -446,26 +463,18 @@ class TellerManager {
     async handleLogout(e) {
         e.preventDefault();
         
-        try {
-            const response = await fetch('/project-errawrs/src/auth/logout.php', {
-                method: 'POST',
-                credentials: 'include'
-            });
+        // Clear session storage
+        sessionStorage.clear();
+        
+        // Redirect to login page
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    }
 
-            if (response.ok) {
-                window.location.href = 'login.html';
-            } else {
-                throw new Error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-            this.showToast('Failed to logout. Please try again.', 'error');
-        }
+    // Initialize the manager
+    static init() {
+        window.tellerManager = new TellerManager();
     }
 }
 
-// Initialize the teller manager when the DOM is loaded
-let tellerManager;
-document.addEventListener('DOMContentLoaded', () => {
-    tellerManager = new TellerManager();
-}); 
+// Initialize when the DOM is loaded
+document.addEventListener('DOMContentLoaded', TellerManager.init); 

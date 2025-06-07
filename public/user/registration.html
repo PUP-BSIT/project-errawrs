@@ -68,85 +68,249 @@
                     <div class="form-step active" id="step_one">
                         <div class="form-header">
                             <h2>Register for StackOvercash</h2>
-                            <p>Enter your details to create your account.</p>
+                            <p>Please fill in your details to create your account.</p>
                         </div>
 
                         <form class="registration-form" id="details_form">
-                            <div class="form-row">
+                            <!-- Personal Information Section -->
+                            <div class="form-section">
+                                <h3>Personal Information</h3>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input
+                                            type="text"
+                                            id="first_name"
+                                            placeholder="Enter your first name"
+                                            pattern="[A-Za-z -]+"
+                                            title="Please enter only letters, spaces, or hyphens"
+                                            required
+                                            autocomplete="given-name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name">Surname</label>
+                                        <input
+                                            type="text"
+                                            id="last_name"
+                                            placeholder="Enter your surname"
+                                            pattern="[A-Za-z -]+"
+                                            title="Please enter only letters, spaces, or hyphens"
+                                            required
+                                            autocomplete="family-name"/>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
+                                    <label for="date_of_birth">Date of Birth</label>
+                                    <input
+                                        type="date"
+                                        id="date_of_birth"
+                                        required
+                                        autocomplete="bday"
+                                        max="2006-12-31"/>
+                                    <div id="age_warning" class="warning-text" style="display: none;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        You must be at least 18 years old to register.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="nationality">Nationality/Citizenship</label>
                                     <input
                                         type="text"
-                                        id="first_name"
-                                        placeholder="First Name"
-                                        pattern="[A-Za-z -]+"
-                                        title="Please enter only letters, spaces, or hyphens"
-                                        required
-                                        autocomplete="given-name"/>
+                                        id="nationality"
+                                        placeholder="Enter your nationality"
+                                        required/>
                                 </div>
+
+                                <!-- Residential Address -->
                                 <div class="form-group">
+                                    <label for="street">Street Address</label>
                                     <input
                                         type="text"
-                                        id="last_name"
-                                        placeholder="Last Name"
-                                        pattern="[A-Za-z -]+"
-                                        title="Please enter only letters, spaces, or hyphens"
+                                        id="street"
+                                        placeholder="Enter your street address"
                                         required
-                                        autocomplete="family-name"/>
+                                        autocomplete="street-address"/>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input
+                                            type="text"
+                                            id="city"
+                                            placeholder="Enter your city"
+                                            required
+                                            autocomplete="address-level2"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="zip_code">ZIP Code</label>
+                                        <input
+                                            type="text"
+                                            id="zip_code"
+                                            placeholder="Enter ZIP code"
+                                            required
+                                            autocomplete="postal-code"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="country">Country</label>
+                                    <input
+                                        type="text"
+                                        id="country"
+                                        placeholder="Enter your country"
+                                        required
+                                        autocomplete="country-name"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        placeholder="Enter your email address"
+                                        required
+                                        autocomplete="email"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone_number">Phone Number</label>
+                                    <div class="phone-input-group">
+                                        <span class="phone-flag"></span>
+                                        <input
+                                            type="tel"
+                                            id="phone_number"
+                                            placeholder="+63 XXX XXX XXXX"
+                                            required
+                                            autocomplete="tel"
+                                            pattern="(\+63|0)[0-9]{10}"
+                                            title="Please enter a valid Philippine phone number"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <input
-                                    type="text"
-                                    id="username"
-                                    placeholder="Choose a Username"
-                                    required
-                                    autocomplete="username"/>
+                            <!-- Identification Documents Section -->
+                            <div class="form-section">
+                                <h3>Identification Documents</h3>
+                                
+                                <div class="form-group">
+                                    <label for="id_type">ID Type</label>
+                                    <select id="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="passport">Passport</option>
+                                        <option value="national_id">National ID</option>
+                                        <option value="drivers_license">Driver's License</option>
+                                        <option value="school_id">School ID (for students)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="id_image">Upload ID Image</label>
+                                    <div class="file-upload-container">
+                                        <input
+                                            type="file"
+                                            id="id_image"
+                                            accept="image/*"
+                                            required
+                                            class="file-input"
+                                            aria-describedby="id_image_help"/>
+                                        <label for="id_image" class="file-upload-label">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <span>Choose a file or drag it here</span>
+                                        </label>
+                                        <div id="id_image_preview" class="image-preview"></div>
+                                    </div>
+                                    <div id="id_image_help" class="help-text">
+                                        Upload a clear photo of your selected ID. Make sure all details are visible.
+                                        Accepted formats: JPG, PNG (Max size: 5MB)
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group password-group">
-                                <input
-                                    type="password"
-                                    id="password"
-                                    placeholder="Create Password"
-                                    required
-                                    autocomplete="new-password"/>
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    data-target="password"
-                                    aria-label="Toggle password visibility">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
-                            </div>
-
-                            <div class="form-group password-group">
-                                <input
-                                    type="password"
-                                    id="confirm_password"
-                                    placeholder="Confirm Password"
-                                    required
-                                    autocomplete="new-password"/>
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    data-target="confirm_password"
-                                    aria-label="Toggle password visibility">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="phone-input-group">
-                                    <span class="phone-flag"></span>
+                            <!-- Account Security Setup Section -->
+                            <div class="form-section">
+                                <h3>Account Security Setup</h3>
+                                
+                                <div class="form-group">
+                                    <label for="username">Desired Username</label>
                                     <input
-                                        type="tel"
-                                        id="phone_number"
-                                        placeholder="+63 XXX XXX XXXX"
+                                        type="text"
+                                        id="username"
+                                        placeholder="Choose a username"
                                         required
-                                        autocomplete="tel"
-                                        pattern="(\+63|0)[0-9]{10}"
-                                        title="Please enter a valid Philippine phone number"/>
+                                        autocomplete="username"/>
+                                </div>
+
+                                <div class="form-group password-group">
+                                    <label for="password">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        placeholder="Create a strong password"
+                                        required
+                                        autocomplete="new-password"/>
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        data-target="password"
+                                        aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                    <div class="password-requirements">
+                                        Must be at least 8 characters with uppercase, lowercase, number, and symbol
+                                    </div>
+                                </div>
+
+                                <div class="form-group password-group">
+                                    <label for="confirm_password">Confirm Password</label>
+                                    <input
+                                        type="password"
+                                        id="confirm_password"
+                                        placeholder="Confirm your password"
+                                        required
+                                        autocomplete="new-password"/>
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        data-target="confirm_password"
+                                        aria-label="Toggle password visibility">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Security Questions Section -->
+                            <div class="form-section">
+                                <h3>Security Questions</h3>
+                                
+                                <div class="form-group">
+                                    <label for="security_q1">What was your first school?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q1"
+                                        placeholder="Enter your answer"
+                                        required/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="security_q2">What is the name of your childhood best friend?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q2"
+                                        placeholder="Enter your answer"
+                                        required/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="security_q3">What is your favorite childhood TV show?</label>
+                                    <input
+                                        type="text"
+                                        id="security_q3"
+                                        placeholder="Enter your answer"
+                                        required/>
                                 </div>
                             </div>
 

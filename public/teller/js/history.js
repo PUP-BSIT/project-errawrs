@@ -1,8 +1,18 @@
+// Get teller info from session storage
+const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error("No teller info found in session storage");
+    window.location.href = "./bank_teller_login.html";
+}
+
 // Global variables
 let currentPage = 1;
 let itemsPerPage = 5;
-let totalItems = 15;
-let totalPages = Math.ceil(totalItems / itemsPerPage);
+let totalItems = 0;
+let totalPages = 0;
+let lastFetchTime = null;
+const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const ITEMS_PER_VIEW = 5; // Fixed number of items to display per page
 
 // Table data storage
 let tableData = [];
@@ -12,192 +22,107 @@ let selectedRows = new Set();
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
     initializeApplication();
+    // Update teller name in the UI
+    const userNameElement = document.querySelector(".user-name");
+    if (userNameElement && tellerInfo.name) {
+        userNameElement.textContent = tellerInfo.name;
+    }
 });
 
-function initializeApplication() {
+async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
-    initializeTableData();
-    filteredData = [...tableData];
+    await fetchTransactionHistory();
     updateTableDisplay();
     updatePaginationDisplay();
+    setupAutoRefresh();
 }
 
-// Initialize table data
-function initializeTableData() {
-    // Load data from localStorage
-    const savedData = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
-    
-    // If no saved data, use sample data
-    if (savedData.length === 0) {
-        tableData = [
-            {
-                id: 1,
-                date: "2025-05-02",
-                type: "Deposit",
-                amount: "₱5,000.00",
-                accountNo: "1234-5678-9012",
-                accountName: "John Michael Smith",
-                status: "Success",
-            },
-            {
-                id: 2,
-                date: "2025-05-02",
-                type: "Transfer",
-                amount: "₱12,000.00",
-                accountNo: "2345-6789-0123",
-                accountName: "Maria Elena Santos",
-                status: "Success",
-            },
-            {
-                id: 3,
-                date: "2025-05-01",
-                type: "Transfer",
-                amount: "₱3,500.00",
-                accountNo: "3456-7890-1234",
-                accountName: "Robert James Wilson",
-                status: "Success",
-            },
-            {
-                id: 4,
-                date: "2025-04-30",
-                type: "Deposit",
-                amount: "₱1,000.00",
-                accountNo: "4567-8901-2345",
-                accountName: "Sarah Jane Parker",
-                status: "Failed",
-            },
-            {
-                id: 5,
-                date: "2025-04-29",
-                type: "Transfer",
-                amount: "₱4,000.00",
-                accountNo: "5678-9012-3456",
-                accountName: "David Lee Cooper",
-                status: "Failed",
-            },
-            {
-                id: 6,
-                date: "2025-04-28",
-                type: "Withdrawal",
-                amount: "₱2,500.00",
-                accountNo: "6789-0123-4567",
-                accountName: "Emily Rose Taylor",
-                status: "Success",
-            },
-            {
-                id: 7,
-                date: "2025-04-27",
-                type: "Deposit",
-                amount: "₱8,000.00",
-                accountNo: "7890-1234-5678",
-                accountName: "William Henry Brown",
-                status: "Success",
-            },
-            {
-                id: 8,
-                date: "2025-04-26",
-                type: "Transfer",
-                amount: "₱1,500.00",
-                accountNo: "8901-2345-6789",
-                accountName: "Anna Marie Johnson",
-                status: "Success",
-            },
-            {
-                id: 9,
-                date: "2025-04-25",
-                type: "Deposit",
-                amount: "₱3,200.00",
-                accountNo: "9012-3456-7890",
-                accountName: "Christopher Lee",
-                status: "Success",
-            },
-            {
-                id: 10,
-                date: "2025-04-24",
-                type: "Transfer",
-                amount: "₱6,700.00",
-                accountNo: "0123-4567-8901",
-                accountName: "Patricia Ann Davis",
-                status: "Failed",
-            },
-            {
-                id: 11,
-                date: "2025-04-23",
-                type: "Withdrawal",
-                amount: "₱1,800.00",
-                accountNo: "1234-5678-9012",
-                accountName: "Thomas James White",
-                status: "Success",
-            },
-            {
-                id: 12,
-                date: "2025-04-22",
-                type: "Transfer",
-                amount: "₱9,500.00",
-                accountNo: "2345-6789-0123",
-                accountName: "Elizabeth Grace",
-                status: "Failed",
-            },
-            {
-                id: 13,
-                date: "2025-04-21",
-                type: "Deposit",
-                amount: "₱4,400.00",
-                accountNo: "3456-7890-1234",
-                accountName: "Michael Scott Chen",
-                status: "Success",
-            },
-            {
-                id: 14,
-                date: "2025-04-20",
-                type: "Transfer",
-                amount: "₱2,100.00",
-                accountNo: "4567-8901-2345",
-                accountName: "Jennifer Rose Kim",
-                status: "Success",
-            },
-            {
-                id: 15,
-                date: "2025-04-19",
-                type: "Deposit",
-                amount: "₱5,800.00",
-                accountNo: "5678-9012-3456",
-                accountName: "Richard Paul Clark",
-                status: "Success",
-            },
-        ];
-    } else {
-        tableData = savedData;
+// Setup auto-refresh functionality
+function setupAutoRefresh() {
+    setInterval(async () => {
+        const now = new Date().getTime();
+        if (lastFetchTime && (now - lastFetchTime) >= REFRESH_INTERVAL) {
+            await fetchTransactionHistory();
+            updateTableDisplay();
+            updatePaginationDisplay();
+        }
+    }, 60000); // Check every minute
+}
+
+// Fetch transaction history from the server
+async function fetchTransactionHistory() {
+    try {
+        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch transaction history");
+        }
+
+        if (data.success && data.transactions) {
+            tableData = data.transactions.map(item => ({
+                id: item.account_number,
+                date: new Date(item.date),
+                time: item.time,
+                account_number: item.account_number,
+                account_name: item.account_name,
+                amount: item.amount,
+                card_type: item.card_type,
+                action: item.action,
+                type: determineTransactionType(item.action, item.card_type)
+            }));
+            filteredData = [...tableData];
+            totalItems = data.pagination.total_records;
+            totalPages = data.pagination.total_pages;
+            lastFetchTime = new Date().getTime();
+        } else {
+            tableData = [];
+            filteredData = [];
+            totalItems = 0;
+            totalPages = 0;
+            showNotification("No transaction history found", "info");
+        }
+    } catch (error) {
+        console.error("Error fetching transaction history:", error);
+        showNotification(error.message || "Error fetching transaction history", "error");
     }
-
-    // Update filtered data and total items
-    filteredData = [...tableData];
-    totalItems = tableData.length;
-    totalPages = Math.ceil(totalItems / itemsPerPage);
 }
 
-// Pagination functions (called by onclick)
+// Helper function to determine transaction type for icon and styling
+function determineTransactionType(action, cardType) {
+    if (action.toLowerCase().includes('deposit')) {
+        return 'deposit';
+    } else if (action.toLowerCase().includes('withdraw')) {
+        return 'withdraw';
+    } else if (action.toLowerCase().includes('closed')) {
+        return 'close';
+    } else if (action.toLowerCase().includes('reopened')) {
+        return 'reopen';
+    } else {
+        return cardType?.toLowerCase() || 'unknown';
+    }
+}
+
+// Pagination functions
 function goToPage(pageNum) {
-    if (pageNum >= 1 && pageNum <= totalPages) {
+    if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
         currentPage = pageNum;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
 }
 
 function goToPreviousPage() {
     if (currentPage > 1) {
-        currentPage--;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage - 1);
     }
 }
 
 function goToNextPage() {
     if (currentPage < totalPages) {
-        currentPage++;
-        updatePaginationDisplay();
-        updateTableDisplay();
+        goToPage(currentPage + 1);
     }
 }
 
@@ -205,16 +130,15 @@ function changeItemsPerPage() {
     const selectElement = document.getElementById("per-page-select");
     const newItemsPerPage = parseInt(selectElement.value);
     
-    itemsPerPage = newItemsPerPage;
-    totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    
-    // Reset to page 1 if current page is now out of bounds
-    if (currentPage > totalPages) {
-        currentPage = 1;
+    if (newItemsPerPage !== itemsPerPage) {
+        itemsPerPage = newItemsPerPage;
+        currentPage = 1; // Reset to first page when changing items per page
+        
+        fetchTransactionHistory().then(() => {
+            updateTableDisplay();
+            updatePaginationDisplay();
+        });
     }
-    
-    updatePaginationDisplay();
-    updateTableDisplay();
 }
 
 function applyPaginationSettings() {
@@ -227,20 +151,32 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
+    const actualPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+    const displayPages = Math.min(totalPages, actualPages);
+
+    if (displayPages <= 0) {
+        return; // No pages to display
+    }
+
+    // Adjust current page if it's beyond the actual data
+    if (currentPage > displayPages) {
+        currentPage = displayPages;
+    }
+
     // Calculate the range of page numbers to show
     let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    let endPage = Math.min(displayPages, currentPage + 2);
 
-    // Adjust the range to show at least 5 pages if possible
-    if (endPage - startPage < 4) {
+    // Always show at least 5 pages if available
+    if (endPage - startPage < 4 && displayPages > 4) {
         if (startPage === 1) {
-            endPage = Math.min(5, totalPages);
-        } else if (endPage === totalPages) {
-            startPage = Math.max(1, totalPages - 4);
+            endPage = Math.min(5, displayPages);
+        } else if (endPage === displayPages) {
+            startPage = Math.max(1, displayPages - 4);
         }
     }
 
-    // Add first page if not in range
+    // Add first page button if not in range
     if (startPage > 1) {
         addPageButton(1);
         if (startPage > 2) {
@@ -253,23 +189,23 @@ function updatePaginationDisplay() {
         addPageButton(i);
     }
 
-    // Add last page if not in range
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
+    // Add last page button if not in range
+    if (endPage < displayPages) {
+        if (endPage < displayPages - 1) {
             addEllipsis();
         }
-        addPageButton(totalPages);
+        addPageButton(displayPages);
     }
 
-    // Update showing text
-    const startItem = (currentPage - 1) * itemsPerPage + 1;
-    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-    const showingText = document.getElementById("showing-text");
-    if (showingText) {
-        showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems}`;
-    }
+    // Update showing text with proper padding
+    updateShowingText();
 
-    // Enable/disable navigation buttons
+    // Enable/disable navigation buttons based on actual pages
+    updateNavigationButtons(displayPages);
+}
+
+// Update navigation buttons state
+function updateNavigationButtons(displayPages) {
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
 
@@ -277,7 +213,22 @@ function updatePaginationDisplay() {
         prevBtn.disabled = currentPage === 1;
     }
     if (nextBtn) {
-        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.disabled = currentPage === displayPages;
+    }
+}
+
+// Update showing text
+function updateShowingText() {
+    const showingText = document.getElementById("showing-text");
+    if (showingText) {
+        if (totalItems === 0) {
+            showingText.textContent = "Showing 0 to 0 of 0 entries";
+        } else {
+            const startItem = ((currentPage - 1) * ITEMS_PER_VIEW) + 1;
+            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, totalItems);
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
+            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+        }
     }
 }
 
@@ -300,8 +251,8 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const startIndex = (currentPage - 1) * ITEMS_PER_VIEW;
+    const endIndex = startIndex + ITEMS_PER_VIEW;
     return filteredData.slice(startIndex, endIndex);
 }
 
@@ -318,49 +269,94 @@ function getStatusIcon(status) {
 }
 
 // Create table row
-function createTableRow(transaction) {
+function createTableRow(item) {
     const row = document.createElement("div");
     row.className = "table-row";
     row.onclick = function (event) {
-        handleRowClick(event, row, transaction.id);
+        handleRowClick(event, row, item.id);
     };
-    row.ondblclick = function () {
-        showTransactionDetails(transaction);
-    };
-
-    const statusClass = `status-${transaction.status.toLowerCase()}`;
-    const statusIcon = getStatusIcon(transaction.status);
 
     const dateCell = document.createElement("div");
     dateCell.className = "table-cell date";
-    dateCell.textContent = formatDate(transaction.date);
+    dateCell.textContent = formatDate(item.date);
 
     const timeCell = document.createElement("div");
     timeCell.className = "table-cell time";
-    timeCell.textContent = formatTime(transaction.date);
+    timeCell.textContent = item.time || formatTime(item.date);
 
-    const typeCell = document.createElement("div");
-    typeCell.className = "table-cell";
-    typeCell.textContent = transaction.type;
+    const accountNumberCell = document.createElement("div");
+    accountNumberCell.className = "table-cell";
+    accountNumberCell.textContent = item.account_number;
+
+    const accountNameCell = document.createElement("div");
+    accountNameCell.className = "table-cell";
+    accountNameCell.textContent = item.account_name;
+
+    const accountTypeCell = document.createElement("div");
+    accountTypeCell.className = "table-cell";
+    accountTypeCell.textContent = item.card_type || "—";
 
     const amountCell = document.createElement("div");
     amountCell.className = "table-cell currency";
-    amountCell.textContent = transaction.amount;
+    amountCell.textContent = formatCurrency(item.amount);
 
-    const statusCell = document.createElement("div");
-    statusCell.className = statusClass;
-    statusCell.innerHTML = `
-        <div class="status-icon">${statusIcon}</div>
-        ${transaction.status}
+    const detailsCell = document.createElement("div");
+    detailsCell.className = "table-cell details-cell";
+    
+    // Set the details content based on transaction type and card type
+    const detailsContent = getTransactionDetails(item.type, item.card_type, item.action);
+    detailsCell.innerHTML = `
+        <i class="${detailsContent.icon}"></i>
+        <span class="${detailsContent.class}">${detailsContent.text}</span>
     `;
 
     row.appendChild(dateCell);
     row.appendChild(timeCell);
-    row.appendChild(typeCell);
+    row.appendChild(accountNumberCell);
+    row.appendChild(accountNameCell);
+    row.appendChild(accountTypeCell);
     row.appendChild(amountCell);
-    row.appendChild(statusCell);
+    row.appendChild(detailsCell);
 
     return row;
+}
+
+// Helper function to get transaction details
+function getTransactionDetails(type, cardType, action) {
+    // First check for specific transaction types
+    switch (type?.toLowerCase()) {
+        case 'deposit':
+            return {
+                icon: 'fas fa-plus-circle',
+                text: action || 'Deposit',
+                class: 'details-deposit'
+            };
+        case 'withdraw':
+            return {
+                icon: 'fas fa-minus-circle',
+                text: action || 'Withdrawal',
+                class: 'details-withdraw'
+            };
+        case 'close':
+            return {
+                icon: 'fas fa-times-circle',
+                text: action || 'Close Account',
+                class: 'details-close'
+            };
+        case 'reopen':
+            return {
+                icon: 'fas fa-redo-alt',
+                text: action || 'Reopen Account',
+                class: 'details-reopen'
+            };
+        default:
+            // If no specific transaction type, show card type
+            return {
+                icon: 'fas fa-credit-card',
+                text: cardType ? `${cardType} Account` : action || 'View Details',
+                class: ''
+            };
+    }
 }
 
 // Update table display
@@ -371,19 +367,29 @@ function updateTableDisplay() {
     // Clear existing rows
     tableBody.innerHTML = "";
 
-    // Create new rows
-    currentPageData.forEach(function (transaction) {
-        const row = createTableRow(transaction);
+    if (currentPageData.length === 0) {
+        // Show empty state message
+        const emptyRow = document.createElement("div");
+        emptyRow.className = "table-row empty-state";
+        emptyRow.innerHTML = `
+            <div class="empty-state-container">
+                <i class="fa-regular fa-folder-open empty-state-icon"></i>
+                <div class="empty-state-title">No transactions found</div>
+                <div class="empty-state-subtitle">Transaction history will appear here</div>
+            </div>
+        `;
+        tableBody.appendChild(emptyRow);
+        return;
+    }
+
+    // Create new rows (limited to ITEMS_PER_VIEW)
+    currentPageData.forEach(function (item) {
+        const row = createTableRow(item);
         tableBody.appendChild(row);
     });
 
-    // Update total items
-    totalItems = filteredData.length;
+    // Update total pages based on items per page selection
     totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    console.log(
-        `Loading page ${currentPage} with ${itemsPerPage} items per page`
-    );
 }
 
 // Row interaction functions
@@ -485,11 +491,21 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("en-PH", {
-        style: "currency",
-        currency: "PHP",
+    // Convert amount to a number if it's a string
+    const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
+    
+    // Check if it's a valid number
+    if (isNaN(numericAmount)) {
+        return "—";
+    }
+
+    // Format the number using Intl.NumberFormat
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP',
         minimumFractionDigits: 2,
-    }).format(amount);
+        maximumFractionDigits: 2
+    }).format(numericAmount);
 }
 
 function formatDate(dateString) {
