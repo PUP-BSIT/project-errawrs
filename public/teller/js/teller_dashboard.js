@@ -1,3 +1,6 @@
+// Configuration - API base URL
+const API_BASE_URL = '../api';
+
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
@@ -64,7 +67,7 @@ function formatTime(date) {
 // Fetch dashboard summary data
 async function fetchDashboardSummary() {
     try {
-        const response = await fetch(`../../src/api/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`);
         const data = await response.json();
 
         if (data.success) {

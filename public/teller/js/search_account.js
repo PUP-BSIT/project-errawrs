@@ -1,3 +1,6 @@
+// Configuration - API base URL
+const API_BASE_URL = '../api';
+
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
@@ -20,7 +23,7 @@ let searchHistory = [];
 // Load search history
 async function loadSearchHistory() {
     try {
-        const response = await fetch(`../../src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
         const data = await response.json();
 
         if (data.success && data.history) {
@@ -336,11 +339,7 @@ async function searchAccount() {
     showLoadingIndicator();
 
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
-                searchTerm
-            )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
-        );
+        const response = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
         const data = await response.json();
 
         // Hide loading indicator
@@ -453,9 +452,9 @@ function showTransactionForm(type) {
             <p>Current Balance: ${formatCurrency(account.balance)}</p>
         </div>
         <div class="form-group">
-            <label for="transaction_amount">Amount</label>
+            <label for="${type}_amount">Amount</label>
             <input type="number" 
-                   id="transaction_amount" 
+                   id="${type}_amount" 
                    placeholder="Enter amount" 
                    step="0.01" 
                    min="0"
@@ -468,7 +467,7 @@ function showTransactionForm(type) {
     `;
 
     transactionModal.style.display = "flex";
-    document.getElementById("transaction_amount").focus();
+    document.getElementById(`${type}_amount`).focus();
 }
 
 // Hide transaction form
@@ -479,54 +478,49 @@ function hideTransactionForm() {
 
 // Process transaction
 async function processTransaction(type) {
-    const amount = parseFloat(
-        document.getElementById("transaction_amount").value
-    );
-    const account = JSON.parse(sessionStorage.getItem("currentAccount"));
-
+    const amount = parseFloat(document.getElementById(`${type}_amount`).value);
     if (isNaN(amount) || amount <= 0) {
         showNotification("Please enter a valid amount", true);
         return;
     }
 
-    if (type === "withdraw" && amount > account.balance) {
-        showNotification("Insufficient balance", true);
+    const account = JSON.parse(sessionStorage.getItem("currentAccount"));
+    if (!account) {
+        showNotification("No account selected", true);
         return;
     }
 
+    showLoadingOverlay(`Processing ${type}...`);
+
     try {
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/${type}.php`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    account_number: account.account_number,
-                    amount: amount,
-                    teller_number: tellerInfo.teller_number,
-                }),
-            }
-        );
+        const response = await fetch(`${API_BASE_URL}/teller/${type}.php`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                account_number: account.account_number,
+                amount: amount,
+                teller_number: tellerInfo.teller_number,
+            }),
+        });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || `Failed to ${type}`);
+            throw new Error(data.error || `Failed to process ${type}`);
         }
 
-        account.balance = data.new_balance;
-        sessionStorage.setItem("currentAccount", JSON.stringify(account));
-        updateAccountDetails([account]);
-
+        hideLoadingOverlay();
         hideTransactionForm();
-        showNotification(
-            `${type.charAt(0).toUpperCase() + type.slice(1)} successful`
-        );
+        showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} successful`);
+        
+        // Update the account balance in the UI
+        await updateAccountBalance(account.account_number);
     } catch (error) {
-        console.error(`${type} error:`, error);
-        showNotification(error.message, true);
+        hideLoadingOverlay();
+        console.error(`Error processing ${type}:`, error);
+        showNotification(error.message || `Error processing ${type}`, true);
     }
 }
 
@@ -564,18 +558,14 @@ async function closeAccount() {
         return;
     }
 
-    // Check if account has balance
-    const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
-    if (balance > 0) {
-        showNotification("Account must have zero balance before closing", true);
+    if (!confirm("Are you sure you want to close this account?")) {
         return;
     }
 
-    // Show loading overlay with green spinner
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/close_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -592,30 +582,15 @@ async function closeAccount() {
             throw new Error(data.error || "Failed to close account");
         }
 
-        // Update account status in memory
-        account.status = "closed";
-        sessionStorage.setItem("currentAccount", JSON.stringify(account));
-
-        // Update search history with new status
-        const historyIndex = searchHistory.findIndex(
-            (item) => item.account_number === account.account_number
-        );
-        if (historyIndex !== -1) {
-            searchHistory[historyIndex].status = "closed";
-            localStorage.setItem(
-                `searchHistory_${tellerInfo.teller_number}`,
-                JSON.stringify(searchHistory)
-            );
-        }
-
-        // Update UI
-        updateAccountDetails([account]);
-        showNotification("Account closed successfully");
-    } catch (error) {
-        console.error("Close account error:", error);
-        showNotification(error.message, true);
-    } finally {
         hideLoadingOverlay();
+        showNotification("Account closed successfully");
+        
+        // Refresh the account details
+        await searchAccount();
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error("Error closing account:", error);
+        showNotification(error.message || "Error closing account", true);
     }
 }
 
@@ -627,11 +602,14 @@ async function reopenAccount() {
         return;
     }
 
-    // Show loading overlay with green spinner
+    if (!confirm("Are you sure you want to reopen this account?")) {
+        return;
+    }
+
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/reopen_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -648,79 +626,44 @@ async function reopenAccount() {
             throw new Error(data.error || "Failed to reopen account");
         }
 
-        // Update account status in memory
-        account.status = "active";
-        sessionStorage.setItem("currentAccount", JSON.stringify(account));
-
-        // Update search history with new status
-        const historyIndex = searchHistory.findIndex(
-            (item) => item.account_number === account.account_number
-        );
-        if (historyIndex !== -1) {
-            searchHistory[historyIndex].status = "active";
-        }
-
-        // Fetch updated account data to refresh the UI
-        const searchResponse = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
-                account.account_number
-            )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
-        );
-        const searchData = await searchResponse.json();
-
-        if (searchData.success && searchData.accounts && searchData.accounts.length > 0) {
-            // Update UI with fresh account data
-            updateAccountDetails([searchData.accounts[0]]);
-            showNotification("Account reopened successfully");
-        }
-    } catch (error) {
-        console.error("Reopen account error:", error);
-        showNotification(error.message, true);
-    } finally {
         hideLoadingOverlay();
+        showNotification("Account reopened successfully");
+        
+        // Refresh the account details
+        await searchAccount();
+    } catch (error) {
+        hideLoadingOverlay();
+        console.error("Error reopening account:", error);
+        showNotification(error.message || "Error reopening account", true);
     }
 }
 
-// Function to update account balance and refresh account card
-async function updateAccountBalance() {
+// Update account balance function
+async function updateAccountBalance(accountNumber) {
     try {
-        // Get the current account number
-        const currentAccount = JSON.parse(
-            sessionStorage.getItem("currentAccount")
-        );
-        if (!currentAccount || !currentAccount.account_number) return;
-
-        // Fetch fresh account data
-        const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
-                currentAccount.account_number
-            )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
-        );
+        const response = await fetch(`${API_BASE_URL}/teller/get_account_balance.php?account_number=${encodeURIComponent(accountNumber)}`);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to refresh account data");
+            throw new Error(data.error || "Failed to get account balance");
         }
 
-        if (data.success && data.accounts && data.accounts.length > 0) {
-            const account = data.accounts[0];
-            updateAccountDetails([account]);
-
-            // Update search history with new balance
-            const historyIndex = searchHistory.findIndex(
-                (item) => item.account_number === account.account_number
-            );
-            if (historyIndex !== -1) {
-                searchHistory[historyIndex].balance = account.balance;
-                localStorage.setItem(
-                    `searchHistory_${tellerInfo.teller_number}`,
-                    JSON.stringify(searchHistory)
-                );
+        if (data.success && data.balance !== undefined) {
+            const account = JSON.parse(sessionStorage.getItem("currentAccount"));
+            if (account && account.account_number === accountNumber) {
+                account.balance = data.balance;
+                sessionStorage.setItem("currentAccount", JSON.stringify(account));
+            }
+            
+            // Update the balance in the UI
+            const balanceElement = document.querySelector(`.account-card[data-account="${accountNumber}"] .balance`);
+            if (balanceElement) {
+                balanceElement.textContent = formatCurrency(data.balance);
             }
         }
     } catch (error) {
-        console.error("Error updating account data:", error);
-        showNotification("Error refreshing account data", true);
+        console.error("Error updating account balance:", error);
+        showNotification("Error updating account balance", true);
     }
 }
 
@@ -729,7 +672,7 @@ window.addEventListener("storage", (e) => {
     if (e.key === "currentAccount") {
         const account = JSON.parse(e.newValue);
         if (account) {
-            updateAccountBalance();
+            updateAccountBalance(account.account_number);
         }
     }
 });

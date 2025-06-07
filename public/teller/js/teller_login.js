@@ -1,30 +1,5 @@
-// Configuration - Dynamic base URL detection
-function getBaseURL() {
-    // Get the current protocol and host
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    
-    // Common local development patterns
-    const commonPaths = [
-        '/project-errawrs/src/api',
-        '/src/api',
-        '/api',
-        '/project-errawrs/api'
-    ];
-    
-    // Try to detect the correct API path
-    for (const path of commonPaths) {
-        const testUrl = `${protocol}//${host}${path}`;
-        // We'll use this as our base and handle errors gracefully
-        return testUrl;
-    }
-    
-    // Fallback to a default path
-    return `${protocol}//${host}/project-errawrs/src/api`;
-}
-
-// Get the API base URL
-const API_BASE_URL = getBaseURL();
+// Configuration - API base URL
+const API_BASE_URL = '../api'; // Using relative path to the API directory
 
 // Toggle password visibility
 function togglePassword() {

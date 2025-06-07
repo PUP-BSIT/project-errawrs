@@ -1,3 +1,6 @@
+// Configuration - API base URL
+const API_BASE_URL = '../api';
+
 // Get account info from session storage
 const account = JSON.parse(sessionStorage.getItem('currentAccount'));
 const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
@@ -141,7 +144,7 @@ async function submitDeposit() {
     toggleLoading(true, amount);
     
     try {
-        const response = await fetch('../../src/api/teller/deposit.php', {
+        const response = await fetch(`${API_BASE_URL}/teller/deposit.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

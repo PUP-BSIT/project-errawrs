@@ -1,3 +1,6 @@
+// Configuration - API base URL
+const API_BASE_URL = '../api';
+
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
@@ -52,7 +55,7 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
         const data = await response.json();
 
         if (!response.ok) {
