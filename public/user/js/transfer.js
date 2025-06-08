@@ -1,3 +1,72 @@
+// Extend the existing API object from session-manager.js
+// Add transfer-specific endpoints
+if (!API.USER) API.USER = {};
+if (!API.AUTH) API.AUTH = {};
+
+// Add or update USER endpoints
+Object.assign(API.USER, {
+    ACCOUNTS: '../../src/api/user/accounts.php',
+    INTERNAL_TRANSFER: '../../src/api/user/fund_transfer.php',
+    EXTERNAL_TRANSFER: '../../src/api/user/external_transfer.php'
+});
+
+// Add or update AUTH endpoints
+Object.assign(API.AUTH, {
+    SEND_OTP: '../../src/api/auth/send_otp.php',
+    VERIFY_OTP: '../../src/api/auth/verify_otp.php',
+    SESSION_CHECK: '../../src/api/auth/session_check.php',
+    LOGOUT: '../../src/api/auth/logout.php'
+});
+
+// Extend Routes if needed
+if (!ROUTES.TRANSFER_SUCCESS) {
+    Object.assign(ROUTES, {
+        TRANSFER_SUCCESS: './transfer_success.html',
+        TRANSFER_FAILED: './transfer_failed.html'
+    });
+}
+
+// Text Constants
+const TEXT = {
+    TRANSFER_SUCCESS: 'Transfer completed successfully!',
+    TRANSFER_FAILED: 'Transfer failed. Please try again.',
+    TRANSFER_ERROR: 'An error occurred during transfer. Please try again.',
+    INVALID_AMOUNT: 'Please enter a valid amount',
+    OTP_VERIFICATION_FAILED: 'OTP verification failed. Please try again.',
+    OTP_ERROR: 'Error verifying OTP. Please try again.',
+    LOGOUT_ERROR: 'Logout might not have been fully successful.'
+};
+
+// CSS Classes
+const CLASS = {
+    SUCCESS: 'success',
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+    SHOW: 'show',
+    INVALID: 'invalid',
+    HIDDEN: 'hidden'
+};
+
+// Element IDs
+const ELEMENT_ID = {
+    OTP_MODAL: 'otp-verification-modal',
+    OTP_INPUT: 'otp-input',
+    VERIFY_OTP_BUTTON: 'verify-otp-button',
+    CANCEL_OTP_BUTTON: 'cancel-otp-button'
+};
+
+// Account Status
+const ACCOUNT_STATUS = {
+    ACTIVE: 'active'
+};
+
+// Currency
+const CURRENCY = {
+    SYMBOL: '₱',
+    LOCALE: 'en-US'
+};
+
 // DOM Elements
 const select_bank_panel = document.getElementById('select-bank-panel');
 const account_details_panel = document.getElementById('account-details-panel');
@@ -15,7 +84,7 @@ const amount_input = document.getElementById('amount');
 const amountFormGroup = amount_input.closest('.form-group');
 const balanceWarning = document.createElement('div');
 balanceWarning.className = 'balance-warning';
-balanceWarning.innerHTML = '<i class="fas fa-exclamation-circle"></i><span></span>';
+balanceWarning.innerHTML = `<i class="fas fa-exclamation-circle"></i><span></span>`;
 amountFormGroup.appendChild(balanceWarning);
 
 // Debug logging of DOM elements
@@ -40,9 +109,7 @@ const edit_first_name_input = document.getElementById('edit_first_name');
 const edit_last_name_input = document.getElementById('edit_last_name');
 const edit_username_input = document.getElementById('edit_username');
 const edit_password_input = document.getElementById('edit_password');
-const edit_confirm_password_input = document.getElementById(
-    'edit_confirm_password'
-);
+const edit_confirm_password_input = document.getElementById('edit_confirm_password');
 const edit_phone_number_input = document.getElementById('edit_phone_number');
 
 // DOM Elements for Sidebar Profile Info (assuming they exist in transfer.html)
@@ -55,28 +122,22 @@ let user_data = {};
 
 // Function to show a notification (Assuming this is shared or implemented here)
 function showNotification(message, type) {
-    const notification_container = document.querySelector(
-        '.notification-container'
-    );
+    const notification_container = document.querySelector('.notification-container');
     if (!notification_container) return;
 
     const notification = document.createElement('div');
     notification.classList.add('notification', type);
 
-    let icon = '';
-    switch (type) {
-        case 'success':
-            icon = 'fas fa-check-circle';
-            break;
-        case 'error':
-            icon = 'fas fa-times-circle';
-            break;
-        case 'info':
-            icon = 'fas fa-info-circle';
-            break;
-        default:
-            icon = 'fas fa-bell';
-    }
+    // Icons for different notification types
+    const ICON = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-times-circle',
+        info: 'fas fa-info-circle',
+        warning: 'fas fa-exclamation-circle',
+        default: 'fas fa-bell'
+    };
+
+    let icon = ICON[type] || ICON.default;
 
     notification.innerHTML = `
         <i class="${icon}"></i>
@@ -87,15 +148,13 @@ function showNotification(message, type) {
 
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, 3000); // 3 seconds notification duration
 }
 
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(
-            '../../src/api/auth/session_check.php'
-        );
+        const response = await fetch(API.AUTH.SESSION_CHECK);
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -113,8 +172,8 @@ async function fetchUserData() {
             );
             // Redirect to login page if not authenticated
             setTimeout(() => {
-                window.location.href = './login_account_holder.html';
-            }, 2000);
+                window.location.href = ROUTES.LOGIN;
+            }, 2000); // 2 seconds delay
         }
     } catch (error) {
         showNotification('Error fetching user data', 'error');
@@ -125,9 +184,7 @@ async function fetchUserData() {
 // Fetch user accounts and populate the 'Your Account' dropdown
 async function populateAccountsDropdown() {
     try {
-        const response = await fetch(
-            '../../src/api/user/accounts.php'
-        );
+        const response = await fetch(API.USER.ACCOUNTS);
         const data = await response.json();
 
         // Debug log to see what accounts data we have
@@ -135,10 +192,10 @@ async function populateAccountsDropdown() {
 
         if (data.success && data.accounts.length > 0) {
             user_accounts = data.accounts.filter(
-                (account) => account.status === 'active'
+                (account) => account.status === ACCOUNT_STATUS.ACTIVE
             );
             your_account_select.innerHTML =
-                '<option value="">Select Account</option>';
+                `<option value="">Select Account</option>`;
             user_accounts.forEach((account) => {
                 const option = document.createElement('option');
                 option.value = account.account_number;
@@ -150,7 +207,7 @@ async function populateAccountsDropdown() {
                 
                 option.textContent = `${accountType} Account No. ${
                     account.account_number
-                } (₱ ${parseFloat(account.balance).toLocaleString('en-US', {
+                } (${CURRENCY.SYMBOL} ${parseFloat(account.balance).toLocaleString(CURRENCY.LOCALE, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                 })})`;
@@ -161,23 +218,20 @@ async function populateAccountsDropdown() {
             if (user_accounts.length > 0) {
                 next_button.disabled = false;
             } else {
-                showNotification(
-                    'No active accounts found. Please add an account first.',
-                    'info'
-                );
+                showNotification('No active accounts found. Please add an account first.', 'info');
                 next_button.disabled = true;
             }
         } else {
             user_accounts = [];
             your_account_select.innerHTML =
-                '<option value="">No active accounts available</option>';
+                `<option value="">No active accounts available</option>`;
             showNotification(data.error || 'Failed to fetch accounts', 'error');
             next_button.disabled = true;
         }
     } catch (error) {
         user_accounts = [];
         your_account_select.innerHTML =
-            '<option value="">Error loading accounts</option>';
+            `<option value="">Error loading accounts</option>`;
         showNotification('Error fetching accounts', 'error');
         console.error('Error:', error);
         next_button.disabled = true;
@@ -444,20 +498,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const bankValue = document.querySelector('input[name="bank"]:checked').value;
             const isInternal = bankValue === 'StackOvercash Bank';
             const recipientBankCode = getBankCode(bankValue);
-            const transferApi = isInternal ? '../../src/api/user/fund_transfer.php' : '../../src/api/user/external_transfer.php';
+            const transferApi = isInternal ? API.USER.INTERNAL_TRANSFER : API.USER.EXTERNAL_TRANSFER;
+            console.log('Transfer details:', {
+                bankValue,
+                isInternal,
+                recipientBankCode,
+                transferApi,
+                transferType: isInternal ? 'Internal' : 'External'
+            });
             const transferPayload = isInternal
                 ? {
                     transaction_amount: transferAmount,
                     source_account_no: your_account_select.value,
                     recipient_account_no: receiver_account_input.value,
-                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
+                    recipient_bank_code: recipientBankCode,
+                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', ROUTES.TRANSFER_SUCCESS)
                 }
                 : {
                     transaction_amount: transferAmount,
                     source_account_no: your_account_select.value,
                     recipient_bank_code: recipientBankCode,
                     recipient_account_no: receiver_account_input.value,
-                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', 'transfer_success.html')
+                    redirect_url: window.location.origin + window.location.pathname.replace('transfer.html', ROUTES.TRANSFER_SUCCESS)
                 };
             send_money_button.disabled = true;
             try {
@@ -469,20 +531,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const transferData = await transferResp.json();
                 if (!transferData.success) {
-                    showNotification(transferData.error || 'Transfer failed. Please try again.', 'error');
+                    showNotification(transferData.error || TEXT.TRANSFER_FAILED, 'error');
                     return;
                 }
                 // Step 2: Send OTP
                 let phone_number = transferData.data?.phone_number;
-                if (!phone_number && transferData.dev_otp) phone_number = user_data.phone_number; // fallback
+                if (!phone_number && user_data.phone_number) phone_number = user_data.phone_number; // fallback
                 if (!phone_number) {
                     showNotification('Could not determine phone number for OTP.', 'error');
                     return;
                 }
-                const otpResp = await fetch('../../src/api/auth/send_otp.php', {
+                const otpResp = await fetch(API.AUTH.SEND_OTP, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone_number, purpose: 'fund_transfer' })
+                    body: JSON.stringify({ 
+                        phone_number, 
+                        purpose: isInternal ? 'fund_transfer' : 'external_transfer' 
+                    })
                 });
                 const otpData = await otpResp.json();
                 if (!otpData.success) {
@@ -503,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch (error) {
                 console.error('Error during transfer:', error);
-                showNotification('An error occurred during the transfer. Please try again.', 'error');
+                showNotification(TEXT.TRANSFER_ERROR, 'error');
             } finally {
                 send_money_button.disabled = false;
             }
@@ -572,7 +637,7 @@ function validateTransferForm() {
     
     // Check if amount is entered and valid
     if (!amount_input.value || isNaN(parseFloat(amount_input.value)) || parseFloat(amount_input.value) <= 0) {
-        showNotification('Please enter a valid amount', 'error');
+        showNotification(TEXT.INVALID_AMOUNT, 'error');
         return false;
     }
     
@@ -600,13 +665,13 @@ function showTransferReceipt(data) {
     receiptModal.id = 'receipt-modal';
     
     // Format amount with 2 decimal places
-    const formattedAmount = parseFloat(data.amount).toLocaleString('en-US', {
+    const formattedAmount = parseFloat(data.amount).toLocaleString(CURRENCY.LOCALE, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
     
     // Format new balance with 2 decimal places
-    const formattedBalance = parseFloat(data.new_balance).toLocaleString('en-US', {
+    const formattedBalance = parseFloat(data.new_balance).toLocaleString(CURRENCY.LOCALE, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -637,11 +702,11 @@ function showTransferReceipt(data) {
                     </div>
                     <div class="receipt-item">
                         <span class="label">Amount:</span>
-                        <span class="value">₱ ${formattedAmount}</span>
+                        <span class="value">${CURRENCY.SYMBOL} ${formattedAmount}</span>
                     </div>
                     <div class="receipt-item">
                         <span class="label">New Balance:</span>
-                        <span class="value">₱ ${formattedBalance}</span>
+                        <span class="value">${CURRENCY.SYMBOL} ${formattedBalance}</span>
                     </div>
                 </div>
             </div>
@@ -684,7 +749,7 @@ function showOTPVerificationModal(data) {
     otpModal.id = 'otp-verification-modal';
     
     // Format amount with 2 decimal places
-    const formattedAmount = parseFloat(data.transfer_details.amount).toLocaleString('en-US', {
+    const formattedAmount = parseFloat(data.transfer_details.amount).toLocaleString(CURRENCY.LOCALE, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -701,7 +766,7 @@ function showOTPVerificationModal(data) {
                 <div class="transfer-details">
                     <div class="detail-item">
                         <span class="label">Amount:</span>
-                        <span class="value">₱ ${formattedAmount}</span>
+                        <span class="value">${CURRENCY.SYMBOL} ${formattedAmount}</span>
                     </div>
                     <div class="detail-item">
                         <span class="label">From Account:</span>
@@ -722,7 +787,7 @@ function showOTPVerificationModal(data) {
                 
                 <!-- For development only - remove in production -->
                 <div class="dev-otp">
-                    <small>Development OTP: ${data.dev_otp}</small>
+                    <small>Development OTP: ${data.dev_otp || 'N/A'}</small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -765,42 +830,47 @@ function showOTPVerificationModal(data) {
         try {
             verifyButton.disabled = true;
             verifyButton.textContent = 'Verifying...';
+            
             // Step 4: Verify OTP
-            const verifyResp = await fetch('../../src/api/auth/verify_otp.php', {
+            const verifyResp = await fetch(API.AUTH.VERIFY_OTP, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ otp, phone_number: data.phone_number })
             });
+            
             const verifyData = await verifyResp.json();
+            
             if (!verifyData.success) {
-                otpError.textContent = verifyData.error || 'Invalid OTP. Please try again.';
+                otpError.textContent = verifyData.error || TEXT.OTP_VERIFICATION_FAILED;
                 otpError.style.display = 'block';
+                verifyButton.disabled = false;
+                verifyButton.textContent = 'Verify OTP';
                 return;
             }
+            
             // Step 5: Complete transfer (call fund_transfer/external_transfer again)
             const completeResp = await fetch(data.transferApi, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data.transferPayload)
             });
+            
             const completeData = await completeResp.json();
+            
             if (completeData.success) {
                 otpModal.remove();
-                showNotification('Transfer successful!', 'success');
+                showNotification(TEXT.TRANSFER_SUCCESS, 'success');
                 if (completeData.redirect_url) {
                     window.location.href = completeData.redirect_url;
                     return;
                 }
-                // Do NOT show the floating receipt modal after success
-                // showTransferReceipt(completeData);
-                // resetTransferForm();
             } else {
-                otpError.textContent = completeData.error || 'Transfer failed after OTP.';
+                otpError.textContent = completeData.error || TEXT.TRANSFER_FAILED;
                 otpError.style.display = 'block';
             }
         } catch (error) {
             console.error('Error verifying OTP:', error);
-            otpError.textContent = 'An error occurred. Please try again.';
+            otpError.textContent = TEXT.OTP_ERROR;
             otpError.style.display = 'block';
         } finally {
             verifyButton.disabled = false;
@@ -825,25 +895,24 @@ async function handleLogout() {
         // Clear relevant items from localStorage
         localStorage.removeItem('user');
         localStorage.removeItem('account'); // Assuming account data is also stored
-        localStorage.removeItem('token'); // If you are using tokens
+        localStorage.removeItem('token'); // If using tokens
 
-        // Optional: Call backend logout API
-        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
-        // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('/project-errawrs/src/api/auth/logout.php', {
+        // Call backend logout API
+        await fetch(API.AUTH.LOGOUT, { 
             method: 'POST',
-        }).catch((error) =>
-            console.error('Error during logout API call:', error)
-        );
+            credentials: 'same-origin'
+        });
 
-        // Let the default link navigation to index.html happen
+        // Redirect to login page after successful logout
+        window.location.href = './index.html';
     } catch (error) {
         console.error('Error during logout:', error);
-        // Optionally show a notification that logout might not have been clean
-        showNotification(
-            'Logout might not have been fully successful.',
-            'warning'
-        );
+        // Show a notification that logout might not have been clean
+        showNotification(TEXT.LOGOUT_ERROR, CLASS.WARNING);
+        // Redirect anyway after a short delay
+        setTimeout(() => {
+            window.location.href = './index.html';
+        }, 1500);
     }
 }
 
@@ -851,10 +920,9 @@ async function handleLogout() {
 const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
-        // Prevent default navigation immediately if you want to wait for API call
-        // event.preventDefault();
+        // Prevent the default navigation to ensure our handleLogout function completes
+        event.preventDefault(); 
         handleLogout();
-        // If not preventing default, the browser will navigate after this function runs
     });
 }
 
@@ -862,5 +930,6 @@ if (logout_btn) {
 function getBankCode(bankLabel) {
     if (bankLabel === 'Techy Blinders Bank') return 'Blinders';
     if (bankLabel === 'Dragon Fly Bank') return 'Dragon';
+    if (bankLabel === 'StackOvercash Bank') return 'Stackovercash';
     return '';
 }

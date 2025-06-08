@@ -1,4 +1,33 @@
-// Constants
+// API Endpoints
+const API = {
+    CONTACT_SUBMIT: '../../src/api/public/contact_submit.php'
+};
+
+// Element IDs
+const ELEMENT_ID = {
+    CONTACT_FORM: 'contact_form',
+    FULL_NAME: 'full_name',
+    EMAIL_ADDRESS: 'email_address',
+    MESSAGE_SUBJECT: 'message_subject',
+    MESSAGE_CONTENT: 'message_content'
+};
+
+// CSS Classes
+const CLASS = {
+    FORM_INPUT: 'form-input',
+    FORM_GROUP: 'form-group',
+    ERROR_MESSAGE: 'error-message',
+    ERROR: 'error',
+    SUCCESS: 'success',
+    SUBMIT_BUTTON: 'submit-button',
+    NOTIFICATION: 'notification',
+    NOTIFICATION_CONTENT: 'notification-content',
+    NOTIFICATION_CLOSE: 'notification-close',
+    SHOW: 'show',
+    ANIMATE_IN: 'animate-in'
+};
+
+// Alert Types
 const ALERT_TYPES = {
     SUCCESS: 'success',
     ERROR: 'error',
@@ -6,13 +35,39 @@ const ALERT_TYPES = {
     INFO: 'info'
 };
 
-const ALERT_ICONS = {
-    success: 'fa-check-circle',
-    error: 'fa-exclamation-circle',
-    warning: 'fa-exclamation-triangle',
-    info: 'fa-info-circle'
+// Alert Icons
+const ICON = {
+    SUCCESS: 'fa-check-circle',
+    ERROR: 'fa-exclamation-circle',
+    WARNING: 'fa-exclamation-triangle',
+    INFO: 'fa-info-circle',
+    SPINNER: 'fa-spinner fa-spin',
+    PAPER_PLANE: 'fa-paper-plane',
+    TIMES: 'fa-times'
 };
 
+// Text Content
+const TEXT = {
+    FORM_VALIDATION_ERROR: 'Please fill in all fields correctly',
+    MESSAGE_SENT: 'Message sent successfully!',
+    SEND_FAILURE: 'Failed to send message. Please try again.',
+    SENDING: 'Sending...',
+    SEND_MESSAGE: 'Send Message',
+    NAME_ERROR: 'Name must be at least 2 characters long',
+    EMAIL_ERROR: 'Please enter a valid email address',
+    SUBJECT_ERROR: 'Subject must be at least 3 characters long',
+    MESSAGE_ERROR: 'Message must be at least 10 characters long'
+};
+
+// Timing (in milliseconds)
+const TIMING = {
+    NOTIFICATION_SHOW_DELAY: 100,
+    NOTIFICATION_HIDE_DELAY: 300,
+    NOTIFICATION_AUTO_HIDE: 5000,
+    FORM_SUBMIT_SIMULATION: 1500
+};
+
+// Observer Configuration
 const OBSERVER_CONFIG = {
     root: null,
     rootMargin: '0px',
@@ -22,8 +77,8 @@ const OBSERVER_CONFIG = {
 // Form Handler
 class ContactFormHandler {
     constructor() {
-        this.form = document.getElementById('contact_form');
-        this.submitButton = document.querySelector('.submit-button');
+        this.form = document.getElementById(ELEMENT_ID.CONTACT_FORM);
+        this.submitButton = document.querySelector(`.${CLASS.SUBMIT_BUTTON}`);
         this.initialize();
     }
 
@@ -35,7 +90,7 @@ class ContactFormHandler {
     }
 
     setupInputValidation() {
-        const inputs = this.form.querySelectorAll('.form-input');
+        const inputs = this.form.querySelectorAll(`.${CLASS.FORM_INPUT}`);
         inputs.forEach(input => {
             input.addEventListener('input', () => this.validateInput(input));
             input.addEventListener('blur', () => this.validateInput(input));
@@ -48,21 +103,21 @@ class ContactFormHandler {
         let errorMessage = '';
 
         switch (input.id) {
-            case 'full_name':
+            case ELEMENT_ID.FULL_NAME:
                 isValid = value.length >= 2;
-                errorMessage = 'Name must be at least 2 characters long';
+                errorMessage = TEXT.NAME_ERROR;
                 break;
-            case 'email_address':
+            case ELEMENT_ID.EMAIL_ADDRESS:
                 isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                errorMessage = 'Please enter a valid email address';
+                errorMessage = TEXT.EMAIL_ERROR;
                 break;
-            case 'message_subject':
+            case ELEMENT_ID.MESSAGE_SUBJECT:
                 isValid = value.length >= 3;
-                errorMessage = 'Subject must be at least 3 characters long';
+                errorMessage = TEXT.SUBJECT_ERROR;
                 break;
-            case 'message_content':
+            case ELEMENT_ID.MESSAGE_CONTENT:
                 isValid = value.length >= 10;
-                errorMessage = 'Message must be at least 10 characters long';
+                errorMessage = TEXT.MESSAGE_ERROR;
                 break;
         }
 
@@ -71,8 +126,8 @@ class ContactFormHandler {
     }
 
     setInputValidationState(input, isValid, errorMessage) {
-        const formGroup = input.closest('.form-group');
-        const existingError = formGroup.querySelector('.error-message');
+        const formGroup = input.closest(`.${CLASS.FORM_GROUP}`);
+        const existingError = formGroup.querySelector(`.${CLASS.ERROR_MESSAGE}`);
 
         if (existingError) {
             existingError.remove();
@@ -80,23 +135,23 @@ class ContactFormHandler {
 
         if (!isValid && input.value.length > 0) {
             const errorElement = document.createElement('div');
-            errorElement.className = 'error-message';
+            errorElement.className = CLASS.ERROR_MESSAGE;
             errorElement.textContent = errorMessage;
             formGroup.appendChild(errorElement);
-            input.classList.add('error');
-            input.classList.remove('success');
+            input.classList.add(CLASS.ERROR);
+            input.classList.remove(CLASS.SUCCESS);
         } else if (input.value.length > 0) {
-            input.classList.add('success');
-            input.classList.remove('error');
+            input.classList.add(CLASS.SUCCESS);
+            input.classList.remove(CLASS.ERROR);
         } else {
-            input.classList.remove('success', 'error');
+            input.classList.remove(CLASS.SUCCESS, CLASS.ERROR);
         }
     }
 
     async handleSubmit(e) {
         e.preventDefault();
 
-        const inputs = this.form.querySelectorAll('.form-input');
+        const inputs = this.form.querySelectorAll(`.${CLASS.FORM_INPUT}`);
         let isFormValid = true;
 
         inputs.forEach(input => {
@@ -106,7 +161,7 @@ class ContactFormHandler {
         });
 
         if (!isFormValid) {
-            this.showNotification('Please fill in all fields correctly', ALERT_TYPES.WARNING);
+            this.showNotification(TEXT.FORM_VALIDATION_ERROR, ALERT_TYPES.WARNING);
             return;
         }
 
@@ -114,27 +169,27 @@ class ContactFormHandler {
 
         try {
             const formData = {
-                name: this.form.querySelector('#full_name').value,
-                email: this.form.querySelector('#email_address').value,
-                subject: this.form.querySelector('#message_subject').value,
-                message: this.form.querySelector('#message_content').value
+                name: this.form.querySelector(`#${ELEMENT_ID.FULL_NAME}`).value,
+                email: this.form.querySelector(`#${ELEMENT_ID.EMAIL_ADDRESS}`).value,
+                subject: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_SUBJECT}`).value,
+                message: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value
             };
 
             // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise(resolve => setTimeout(resolve, TIMING.FORM_SUBMIT_SIMULATION));
             
             // Simulate successful submission
-            this.showNotification('Message sent successfully!', ALERT_TYPES.SUCCESS);
+            this.showNotification(TEXT.MESSAGE_SENT, ALERT_TYPES.SUCCESS);
             this.form.reset();
             
             // Remove success classes after form reset
             inputs.forEach(input => {
-                input.classList.remove('success');
+                input.classList.remove(CLASS.SUCCESS);
             });
 
         } catch (error) {
             console.error('Form submission error:', error);
-            this.showNotification('Failed to send message. Please try again.', ALERT_TYPES.ERROR);
+            this.showNotification(TEXT.SEND_FAILURE, ALERT_TYPES.ERROR);
         } finally {
             this.setLoadingState(false);
         }
@@ -144,27 +199,27 @@ class ContactFormHandler {
         if (this.submitButton) {
             this.submitButton.disabled = isLoading;
             this.submitButton.innerHTML = isLoading
-                ? '<i class="fas fa-spinner fa-spin"></i> Sending...'
-                : 'Send Message <i class="fas fa-paper-plane"></i>';
+                ? `<i class="fas ${ICON.SPINNER}"></i> ${TEXT.SENDING}`
+                : `${TEXT.SEND_MESSAGE} <i class="fas ${ICON.PAPER_PLANE}"></i>`;
         }
     }
 
     showNotification(message, type = ALERT_TYPES.INFO) {
         // Remove existing notification
-        const existingNotification = document.querySelector('.notification');
+        const existingNotification = document.querySelector(`.${CLASS.NOTIFICATION}`);
         if (existingNotification) {
             existingNotification.remove();
         }
 
         // Create new notification
         const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
+        notification.className = `${CLASS.NOTIFICATION} ${CLASS.NOTIFICATION}-${type}`;
         notification.innerHTML = `
-            <div class="notification-content">
-                <i class="fas ${ALERT_ICONS[type]}"></i>
+            <div class="${CLASS.NOTIFICATION_CONTENT}">
+                <i class="fas ${ICON[type]}"></i>
                 <span>${message}</span>
-                <button class="notification-close">
-                    <i class="fas fa-times"></i>
+                <button class="${CLASS.NOTIFICATION_CLOSE}">
+                    <i class="fas ${ICON.TIMES}"></i>
                 </button>
             </div>
         `;
@@ -174,25 +229,25 @@ class ContactFormHandler {
 
         // Show with animation
         setTimeout(() => {
-            notification.classList.add('show');
-        }, 100);
+            notification.classList.add(CLASS.SHOW);
+        }, TIMING.NOTIFICATION_SHOW_DELAY);
 
         // Setup close button
-        const closeBtn = notification.querySelector('.notification-close');
+        const closeBtn = notification.querySelector(`.${CLASS.NOTIFICATION_CLOSE}`);
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
+                notification.classList.remove(CLASS.SHOW);
+                setTimeout(() => notification.remove(), TIMING.NOTIFICATION_HIDE_DELAY);
             });
         }
 
         // Auto-hide after 5 seconds
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
+                notification.classList.remove(CLASS.SHOW);
+                setTimeout(() => notification.remove(), TIMING.NOTIFICATION_HIDE_DELAY);
             }
-        }, 5000);
+        }, TIMING.NOTIFICATION_AUTO_HIDE);
     }
 }
 

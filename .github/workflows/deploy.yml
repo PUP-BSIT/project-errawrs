@@ -43,8 +43,8 @@ jobs:
           # Ensure temporary paths exist
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
 
-          # Safely backup .env to a separate temporary location (assuming .env is in src/)
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/src/.env ]; then cp ${DEPLOY_PATH}/src/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from production.'; else echo 'No .env file found at production path ${DEPLOY_PATH}/src/.env to backup.'; fi"
+          # Safely backup .env to a separate temporary location
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from production.'; else echo 'No .env file found at production path ${DEPLOY_PATH}/.env to backup.'; fi"
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*" # Remove all contents
@@ -62,7 +62,7 @@ jobs:
           echo "Moved files to deployment path and set permissions."
 
           # Restore .env from the temporary backup location
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/src/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/src/.env for production.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for production.'; fi"
 
           # Clean up temporary backup path
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
@@ -85,9 +85,9 @@ jobs:
           # Ensure temporary paths exist and have correct permissions for the ubuntu user
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chown -R ${REMOTE_USER}:${REMOTE_USER} ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chmod -R 700 ${TMP_PATH} ${ENV_BACKUP_PATH}"
 
-          # Safely backup .env to a separate temporary location (assuming .env is in src/)
+          # Safely backup .env to a separate temporary location
           # Ensure the backup is done AS the ubuntu user
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/src/.env ]; then cp ${DEPLOY_PATH}/src/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from development.'; else echo 'No .env file found at development path ${DEPLOY_PATH}/src/.env to backup.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from development.'; else echo 'No .env file found at development path ${DEPLOY_PATH}/.env to backup.'; fi"
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           # Ensure the directory exists after cleanup
@@ -106,8 +106,8 @@ jobs:
           echo "Moved files to deployment path and set permissions."
 
           # Restore .env from the temporary backup location - requires sudo to move into www-data owned dir
-          # Adjust the destination path of .env if it's not directly under DEPLOY_PATH/src
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/src/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/src/.env for development.'; fi"
+          # Adjust the destination path of .env if it's not directly under DEPLOY_PATH
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for development.'; fi"
 
           # Clean up temporary paths
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
