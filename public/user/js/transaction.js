@@ -1,26 +1,119 @@
+// Extend the existing API object from session-manager.js
+// Add transaction-specific endpoints
+if (!API.USER) API.USER = {};
+
+// Add or update USER endpoints
+Object.assign(API.USER, {
+    TRANSACTIONS: '../../src/api/user/transactions.php'
+});
+
+// No need to redefine ROUTES as it's already declared in session-manager.js
+
+// Element IDs
+const ELEMENT_ID = {
+    TRANSACTION_TABLE_BODY: 'transaction-table-body',
+    PREVIOUS_PAGE_BUTTON: 'previous-page-button',
+    NEXT_PAGE_BUTTON: 'next-page-button',
+    PAGE_NUMBERS: 'page-numbers',
+    ITEMS_PER_PAGE: 'items-per-page',
+    SHOWING_INFO: 'showing-info',
+    GO_BUTTON: 'go-button',
+    USER_AVATAR_CONTAINER: 'user_avatar_container',
+    USER_NAME: 'user_name',
+    WELCOME_USER_NAME: 'welcome_user_name'
+};
+
+// CSS Classes
+const CLASS = {
+    NOTIFICATION: 'notification',
+    SUCCESS: 'success',
+    ERROR: 'error',
+    INFO: 'info',
+    POSITIVE: 'positive',
+    NEGATIVE: 'negative',
+    PAGE_NUMBER: 'page-number',
+    ACTIVE: 'active'
+};
+
+// Icons
+const ICON = {
+    SUCCESS: 'fas fa-check-circle',
+    ERROR: 'fas fa-times-circle',
+    INFO: 'fas fa-info-circle',
+    BELL: 'fas fa-bell'
+};
+
+// Text Content
+const TEXT = {
+    NO_TRANSACTIONS: 'No transactions found.',
+    SESSION_EXPIRED: 'Session expired or invalid',
+    USER_DATA_ERROR: 'Error fetching user data',
+    FETCH_ERROR: 'Failed to fetch transactions',
+    TRANSACTIONS_ERROR: 'Error fetching transactions',
+    SHOWING_ZERO: 'Showing 0 of 0',
+    NA: 'N/A',
+    UNKNOWN: 'Unknown'
+};
+
+// Currency
+const CURRENCY = {
+    SYMBOL: '₱',
+    LOCALE: 'en-US'
+};
+
+// Timing (in milliseconds)
+const TIMING = {
+    NOTIFICATION_DURATION: 3000,
+    REDIRECT_DELAY: 2000
+};
+
+// Pagination defaults
+const PAGINATION = {
+    DEFAULT_ITEMS_PER_PAGE: 10,
+    DEFAULT_PAGE: 1
+};
+
 // DOM Elements
 const transaction_table_body = document.getElementById(
-    'transaction-table-body'
+    ELEMENT_ID.TRANSACTION_TABLE_BODY
 );
-const previous_page_button = document.getElementById('previous-page-button');
-const next_page_button = document.getElementById('next-page-button');
-const page_numbers_container = document.getElementById('page-numbers');
-const items_per_page_select = document.getElementById('items-per-page');
-const showing_info_span = document.getElementById('showing-info');
-const go_button = document.getElementById('go-button');
+const previous_page_button = document.getElementById(
+    ELEMENT_ID.PREVIOUS_PAGE_BUTTON
+);
+const next_page_button = document.getElementById(
+    ELEMENT_ID.NEXT_PAGE_BUTTON
+);
+const page_numbers_container = document.getElementById(
+    ELEMENT_ID.PAGE_NUMBERS
+);
+const items_per_page_select = document.getElementById(
+    ELEMENT_ID.ITEMS_PER_PAGE
+);
+const showing_info_span = document.getElementById(
+    ELEMENT_ID.SHOWING_INFO
+);
+const go_button = document.getElementById(
+    ELEMENT_ID.GO_BUTTON
+);
 
 // DOM Elements for Profile Edit
-const user_avatar_container = document.getElementById('user_avatar_container');
+const user_avatar_container = document.getElementById(
+    ELEMENT_ID.USER_AVATAR_CONTAINER
+);
 // DOM Elements for Sidebar Profile Info (assuming they exist in transaction.html)
-const user_name_element = document.getElementById('user_name');
-const welcome_user_name_element = document.getElementById('welcome_user_name'); // Assuming this element might be on transaction page for consistency
+const user_name_element = document.getElementById(
+    ELEMENT_ID.USER_NAME
+);
+const welcome_user_name_element = document.getElementById(
+    ELEMENT_ID.WELCOME_USER_NAME
+); // Assuming this element might be on transaction page for consistency
 
 // State for Pagination
-let currentPage = 1;
+let currentPage = PAGINATION.DEFAULT_PAGE;
 let itemsPerPage = parseInt(
-    items_per_page_select ? items_per_page_select.value : 10,
+    items_per_page_select ? items_per_page_select.value : PAGINATION.DEFAULT_ITEMS_PER_PAGE,
     10
-); // Default 10 if select not found
+);
 let totalTransactions = 0;
 let totalPages = 0;
 
@@ -32,21 +125,21 @@ function showNotification(message, type) {
     if (!notification_container) return;
 
     const notification = document.createElement('div');
-    notification.classList.add('notification', type);
+    notification.classList.add(CLASS.NOTIFICATION, type);
 
     let icon = '';
     switch (type) {
-        case 'success':
-            icon = 'fas fa-check-circle';
+        case CLASS.SUCCESS:
+            icon = ICON.SUCCESS;
             break;
-        case 'error':
-            icon = 'fas fa-times-circle';
+        case CLASS.ERROR:
+            icon = ICON.ERROR;
             break;
-        case 'info':
-            icon = 'fas fa-info-circle';
+        case CLASS.INFO:
+            icon = ICON.INFO;
             break;
         default:
-            icon = 'fas fa-bell';
+            icon = ICON.BELL;
     }
 
     notification.innerHTML = `
@@ -58,15 +151,13 @@ function showNotification(message, type) {
 
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, TIMING.NOTIFICATION_DURATION);
 }
 
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(
-            '../../src/api/auth/session_check.php'
-        );
+        const response = await fetch(API.AUTH.SESSION_CHECK);
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -80,16 +171,16 @@ async function fetchUserData() {
             display_user_initial(); // Update the initial
         } else {
             showNotification(
-                data.error || 'Session expired or invalid',
-                'error'
+                data.error || TEXT.SESSION_EXPIRED,
+                CLASS.ERROR
             );
             // Redirect to login page if not authenticated
             setTimeout(() => {
-                window.location.href = './login_account_holder.html';
-            }, 2000);
+                window.location.href = ROUTES.LOGIN;
+            }, TIMING.REDIRECT_DELAY);
         }
     } catch (error) {
-        showNotification('Error fetching user data', 'error');
+        showNotification(TEXT.USER_DATA_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 }
@@ -99,7 +190,7 @@ async function fetchTransactions() {
     try {
         // Assuming API endpoint /api/user/transactions that supports pagination
         const response = await fetch(
-            `../../src/api/user/transactions.php?page=${currentPage}&limit=${itemsPerPage}`
+            `${API.USER.TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}`
         );
         const data = await response.json();
 
@@ -112,8 +203,8 @@ async function fetchTransactions() {
             renderPageNumbers(); // Render page number links
         } else {
             showNotification(
-                data.error || 'Failed to fetch transactions',
-                'error'
+                data.error || TEXT.FETCH_ERROR,
+                CLASS.ERROR
             );
             renderTransactions([]); // Clear table on error
             totalTransactions = 0;
@@ -123,7 +214,7 @@ async function fetchTransactions() {
             renderPageNumbers();
         }
     } catch (error) {
-        showNotification('Error fetching transactions', 'error');
+        showNotification(TEXT.TRANSACTIONS_ERROR, CLASS.ERROR);
         console.error('Error:', error);
         renderTransactions([]); // Clear table on error
         totalTransactions = 0;
@@ -143,7 +234,7 @@ function renderTransactions(transactions) {
     if (transactions.length === 0) {
         transaction_table_body.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; padding: 20px;">No transactions found.</td>
+                <td colspan="5" style="text-align: center; padding: 20px;">${TEXT.NO_TRANSACTIONS}</td>
             </tr>
         `;
         return;
@@ -153,19 +244,19 @@ function renderTransactions(transactions) {
         const row = document.createElement('tr');
         // Assuming transaction object has properties like date, account_number, amount, description, status
         const amount = parseFloat(transaction.amount);
-        const amountClass = amount >= 0 ? 'positive' : 'negative';
+        const amountClass = amount >= 0 ? CLASS.POSITIVE : CLASS.NEGATIVE;
 
         row.innerHTML = `
-            <td>${transaction.date || 'N/A'}</td>
-            <td>${transaction.account_number || 'N/A'}</td>
-            <td class="${amountClass}">₱ ${amount.toLocaleString('en-US', {
+            <td>${transaction.date || TEXT.NA}</td>
+            <td>${transaction.account_number || TEXT.NA}</td>
+            <td class="${amountClass}">${CURRENCY.SYMBOL} ${amount.toLocaleString(CURRENCY.LOCALE, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}</td>
-            <td>${transaction.description || 'N/A'}</td>
+            <td>${transaction.description || TEXT.NA}</td>
             <td><span class="status-${(
-                transaction.status || 'unknown'
-            ).toLowerCase()}">${transaction.status || 'Unknown'}</span></td>
+                transaction.status || TEXT.UNKNOWN.toLowerCase()
+            ).toLowerCase()}">${transaction.status || TEXT.UNKNOWN}</span></td>
         `;
         transaction_table_body.appendChild(row);
     });
@@ -179,7 +270,7 @@ function updatePaginationInfo() {
     const end = Math.min(start + itemsPerPage - 1, totalTransactions); // Correct calculation for end item
 
     if (totalTransactions === 0) {
-        showing_info_span.textContent = 'Showing 0 of 0';
+        showing_info_span.textContent = TEXT.SHOWING_ZERO;
     } else {
         showing_info_span.textContent = `Showing ${start} to ${end} of ${totalTransactions}`;
     }
@@ -214,9 +305,9 @@ function renderPageNumbers() {
 
     for (let i = startPage; i <= endPage; i++) {
         const pageLink = document.createElement('span');
-        pageLink.classList.add('page-number');
+        pageLink.classList.add(CLASS.PAGE_NUMBER);
         if (i === currentPage) {
-            pageLink.classList.add('active');
+            pageLink.classList.add(CLASS.ACTIVE);
         }
         pageLink.textContent = i;
         pageLink.dataset.page = i; // Store page number in data attribute
@@ -282,7 +373,7 @@ if (go_button) {
             } else {
                 showNotification(
                     `Invalid page number. Please enter a number between 1 and ${totalPages}.`,
-                    'error'
+                    CLASS.ERROR
                 );
             }
         });
@@ -322,21 +413,22 @@ async function handleLogout() {
         localStorage.removeItem('account'); // Assuming account data is also stored
         localStorage.removeItem('token'); // If you are using tokens
 
-        // Optional: Call backend logout API
-        fetch('../../src/api/auth/logout.php', {
+        // Call backend logout API
+        await fetch(API.AUTH.LOGOUT, { 
             method: 'POST',
-        }).catch((error) =>
-            console.error('Error during logout API call:', error)
-        );
+            credentials: 'same-origin'
+        });
 
-        // Let the default link navigation to index.html happen
+        // Redirect to login page after successful logout
+        window.location.href = './index.html';
     } catch (error) {
         console.error('Error during logout:', error);
-        // Optionally show a notification that logout might not have been clean
-        showNotification(
-            'Logout might not have been fully successful.',
-            'warning'
-        );
+        // Show a notification that logout might not have been clean
+        showNotification('Logout might not have been fully successful.', CLASS.WARNING);
+        // Redirect anyway after a short delay
+        setTimeout(() => {
+            window.location.href = './index.html';
+        }, 1500);
     }
 }
 
@@ -344,9 +436,8 @@ async function handleLogout() {
 const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
-        // Prevent default navigation immediately if you want to wait for API call
-        // event.preventDefault();
+        // Prevent the default navigation to ensure our handleLogout function completes
+        event.preventDefault(); 
         handleLogout();
-        // If not preventing default, the browser will navigate after this function runs
     });
 }

@@ -1,3 +1,35 @@
+// Extend the existing API object from session-manager.js
+// Add dashboard-specific endpoints
+if (!API.USER) API.USER = {};
+if (!API.CONTENT) API.CONTENT = {};
+
+// Add or update USER endpoints
+Object.assign(API.USER, {
+    ACCOUNTS: '../../src/api/user/accounts.php',
+    TRANSACTIONS: '../../src/api/user/transactions.php',
+    FINANCIAL_TIPS: '../../src/api/user/financial-tips.php'
+});
+
+// No need to redefine ROUTES as it's already declared in session-manager.js
+
+// Currency
+const CURRENCY = {
+    SYMBOL: '₱',
+    LOCALE: 'en-US'
+};
+
+// Timing (in milliseconds)
+const TIMING = {
+    NOTIFICATION_DURATION: 3000,
+    REDIRECT_DELAY: 2000,
+    ANIMATION_DELAY: 300
+};
+
+// Account Status
+const ACCOUNT_STATUS = {
+    ACTIVE: 'active'
+};
+
 // DOM Elements
 const nav_links = document.querySelectorAll('.nav-link');
 const logout_btn = document.getElementById('logout_btn');
@@ -10,7 +42,7 @@ const transaction_list_element = document.getElementById('transaction_list');
 const user_name_element = document.getElementById('user_name');
 const account_display_container = document.getElementById('account-display-container');
 const user_avatar_container = document.getElementById('user_avatar_container');
-const profile_edit_modal = document.getElementById('edit_profile_modal'); // Assuming the profile edit modal is in dashboard.html as well
+const profile_edit_modal = document.getElementById('edit_profile_modal');
 
 // State
 let user_data = {}; // Will be populated from API
@@ -25,14 +57,16 @@ function show_notification(message, type) {
     const notification = document.createElement('div');
     notification.classList.add('notification', type);
 
-    let icon_class = '';
-    if (type === 'success') {
-        icon_class = 'fas fa-check-circle';
-    } else if (type === 'info') {
-        icon_class = 'fas fa-info-circle';
-    } else if (type === 'error') {
-        icon_class = 'fas fa-times-circle';
-    }
+    // Icons for different notification types
+    const ICON = {
+        success: 'fas fa-check-circle',
+        error: 'fas fa-times-circle',
+        info: 'fas fa-info-circle',
+        warning: 'fas fa-exclamation-circle',
+        default: 'fas fa-bell'
+    };
+
+    let icon_class = ICON[type] || ICON.default;
 
     notification.innerHTML = `<i class="${icon_class}"></i> <span>${message}</span>`;
     notification_container.appendChild(notification);
@@ -40,7 +74,7 @@ function show_notification(message, type) {
     // Automatically remove the notification after a few seconds
     setTimeout(() => {
         notification.remove();
-    }, 3000); // Hide after 3 seconds
+    }, 3000); // 3 seconds notification duration
 }
 
 
@@ -48,7 +82,7 @@ function show_notification(message, type) {
 async function fetchUserData() {
     try {
         // Use the new session check endpoint instead of profile.php
-        const response = await fetch('../../src/api/auth/session_check.php');
+        const response = await fetch(API.AUTH.SESSION_CHECK);
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -65,8 +99,8 @@ async function fetchUserData() {
             show_notification(data.error || 'Session expired or invalid', 'error');
             // Redirect to login page if not authenticated
             setTimeout(() => {
-                window.location.href = './login_account_holder.html';
-            }, 2000);
+                window.location.href = ROUTES.LOGIN;
+            }, 2000); // 2 seconds delay
         }
     } catch (error) {
         show_notification('Error fetching user data', 'error');
@@ -78,7 +112,7 @@ async function fetchUserData() {
 // Fetch user accounts from API and display primary account balance
 async function fetchUserAccounts() {
     try {
-        const response = await fetch('../../src/api/user/accounts.php');
+        const response = await fetch(API.USER.ACCOUNTS);
         const data = await response.json();
 
         if (data.success) {
@@ -112,7 +146,7 @@ function updateAccountDisplay() {
     account_display_container.innerHTML = ''; // Clear existing content
     console.log('User accounts data:', user_accounts);
 
-    const active_accounts = user_accounts.filter(account => account.status === 'active');
+    const active_accounts = user_accounts.filter(account => account.status === ACCOUNT_STATUS.ACTIVE);
 
     if (active_accounts.length > 0) {
         // Find the account with the lowest account number (544250000007)
@@ -137,7 +171,7 @@ function updateAccountDisplay() {
         // Add toggle mask button
         const toggleMaskBtn = document.createElement('button');
         toggleMaskBtn.classList.add('account-toggle-mask');
-        toggleMaskBtn.innerHTML = `<i class="fas ${accountNumbersMasked ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
+        toggleMaskBtn.innerHTML = `<i class="${accountNumbersMasked ? 'fas fa-eye' : 'fas fa-eye-slash'}"></i>`;
         toggleMaskBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleAccountNumberMask();
@@ -148,7 +182,7 @@ function updateAccountDisplay() {
             // Add dropdown arrow
             const dropdownArrow = document.createElement('button');
             dropdownArrow.classList.add('account-dropdown-arrow');
-            dropdownArrow.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            dropdownArrow.innerHTML = `<i class="fas fa-chevron-down"></i>`;
 
             // Create dropdown container
             const dropdownContainer = document.createElement('div');
@@ -169,6 +203,9 @@ function updateAccountDisplay() {
                     accountNumberText.textContent = maskAccountNumber(account.account_number);
                     accountNumberText.setAttribute('data-account-number', account.account_number);
                     update_balance_display(parseFloat(account.balance));
+                    
+                    // Fetch transactions for the selected account
+                    fetchRecentTransactions(account.account_number);
 
                     // Rebuild dropdown with new items
                     dropdownContainer.innerHTML = '';
@@ -222,6 +259,9 @@ function updateAccountDisplay() {
 
         // Update balance display for the displayed account
         update_balance_display(parseFloat(defaultAccount.balance));
+        
+        // Fetch transactions for the default account
+        fetchRecentTransactions(defaultAccount.account_number);
 
         // Enable/Disable transfer button based on displayed account balance
         if (parseFloat(defaultAccount.balance) > 0) {
@@ -240,18 +280,18 @@ function updateAccountDisplay() {
     }
 }
 
-// Add this new function to toggle account number masking
+// Toggle account number masking
 function toggleAccountNumberMask() {
     accountNumbersMasked = !accountNumbersMasked;
     
     // Update all account number displays
-    const accountNumbers = document.querySelectorAll('.account-number-text');
+    const accountNumbers = document.querySelectorAll(`.account-number-text`);
     const options = document.querySelectorAll('#dashboard_account_select option');
-    const toggleButtons = document.querySelectorAll('.account-toggle-mask');
+    const toggleButtons = document.querySelectorAll(`.account-toggle-mask`);
     
     // Update the eye icon on all toggle buttons
     toggleButtons.forEach(btn => {
-        btn.innerHTML = `<i class="fas ${accountNumbersMasked ? 'fa-eye' : 'fa-eye-slash'}"></i>`;
+        btn.innerHTML = `<i class="${accountNumbersMasked ? 'fas fa-eye' : 'fas fa-eye-slash'}"></i>`;
     });
     
     // Update account numbers in single display
@@ -280,39 +320,92 @@ function update_balance_display(balance) {
     }
 }
 
-// Fetch recent transactions from API
-async function fetchRecentTransactions() {
-     try {
-        // Update the API endpoint path
-        const response = await fetch('/project-errawrs/src/api/user/transactions.php?limit=3');
+// Fetch recent transactions for the dashboard
+async function fetchRecentTransactions(accountNumber) {
+    try {
+        // Get the current selected account number if not provided
+        if (!accountNumber) {
+            const accountNumberElement = document.querySelector('.account-number-text');
+            if (accountNumberElement) {
+                accountNumber = accountNumberElement.getAttribute('data-account-number');
+            }
+        }
+        
+        if (!accountNumber) {
+            // No account number available, show a message
+            if (transaction_list_element) {
+                transaction_list_element.innerHTML = '<p class="no-transactions-message">Select an account to view transactions.</p>';
+            }
+            return;
+        }
+        
+        // Update the API endpoint path with account filter
+        const response = await fetch(`${API.USER.TRANSACTIONS}?account=${accountNumber}&limit=5`);
+        
+        // Check if the response is OK before trying to parse JSON
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
         const data = await response.json();
 
-        if (data.success && data.transactions.length > 0) {
+        if (data.success && data.transactions && data.transactions.length > 0) {
+            // Clear existing transactions
             if (transaction_list_element) {
-                transaction_list_element.innerHTML = ''; // Clear existing static content
-                data.transactions.forEach(transaction => {
-                     const transactionItem = document.createElement('div');
-                     transactionItem.classList.add('transaction-item');
-                     const amountClass = parseFloat(transaction.amount) >= 0 ? 'positive' : 'negative';
-                      const formattedAmount = parseFloat(transaction.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                     transactionItem.innerHTML = `
-                         <span class="transaction-date">${transaction.date}</span>
-                         <span class="transaction-amount ${amountClass}">${parseFloat(transaction.amount) >= 0 ? '+' : '-' }₱${formattedAmount}</span>
-                     `;
-                     transaction_list_element.appendChild(transactionItem);
+                transaction_list_element.innerHTML = '';
+
+                // Get the transactions for the selected account
+                const recentTransactions = data.transactions;
+                
+                // Create transaction elements
+                recentTransactions.forEach(transaction => {
+                    const transactionItem = document.createElement('div');
+                    transactionItem.classList.add('transaction-item');
+                    
+                    // Determine transaction type for styling
+                    const isDeposit = transaction.type === 'deposit' || 
+                                      parseFloat(transaction.amount) >= 0 ||
+                                      (transaction.description && transaction.description.toLowerCase().includes('deposit'));
+                    
+                    const amountClass = isDeposit ? 'deposit' : 'withdrawal';
+                    
+                    // Format the amount for display
+                    const formattedAmount = Math.abs(parseFloat(transaction.amount)).toLocaleString('en-US', { 
+                        minimumFractionDigits: 2, 
+                        maximumFractionDigits: 2 
+                    });
+                    
+                    // Format the date to be more user-friendly
+                    let formattedDate = transaction.date;
+                    try {
+                        const dateObj = new Date(transaction.date);
+                        formattedDate = dateObj.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            year: 'numeric' 
+                        });
+                    } catch (e) {
+                        console.log("Date formatting error:", e);
+                    }
+                    
+                    transactionItem.innerHTML = `
+                        <span class="transaction-date">${formattedDate}</span>
+                        <span class="transaction-amount ${amountClass}">${isDeposit ? '+' : '-' }₱${formattedAmount}</span>
+                    `;
+                    transaction_list_element.appendChild(transactionItem);
                 });
             }
         } else {
-             // Handle case with no transactions
+            // Handle case with no transactions
             if (transaction_list_element) {
-                transaction_list_element.innerHTML = '<p class="no-transactions-message">No recent transactions.</p>';
+                transaction_list_element.innerHTML = '<p class="no-transactions-message">No recent transactions for this account.</p>';
             }
         }
     } catch (error) {
-        console.error('Error fetching transactions:', error);
-         if (transaction_list_element) {
-             transaction_list_element.innerHTML = '<p class="no-transactions-message">Failed to load transactions.</p>';
-         }
+        console.log('Error fetching transactions:', error);
+        if (transaction_list_element) {
+            transaction_list_element.innerHTML = '<p class="no-transactions-message">Failed to load transactions.</p>';
+        }
     }
 }
 
@@ -339,142 +432,35 @@ function setup_smooth_animations() {
 
 // Function to setup profile edit interactions (assuming modals and elements exist in user_dashboard.html)
 function setup_profile_edit() {
-     // Assuming modals and elements for profile edit exist in user_dashboard.html
-     // This function needs to be adapted to work with fetched user_data
-     const edit_profile_icon = document.getElementById('edit_profile_icon'); // Assuming this exists
-     const save_profile_button = profile_edit_modal ? profile_edit_modal.querySelector('#save_profile_button') : null; // Assuming button inside modal
-     const exit_profile_button = profile_edit_modal ? profile_edit_modal.querySelector('#exit_profile_button') : null; // Assuming button inside modal
-
-      if (!user_avatar_container || !edit_profile_icon || !profile_edit_modal || !save_profile_button || !exit_profile_button) {
-         console.log('Profile edit elements not found on dashboard.');
-         return;
-     }
-
-     // Show pen icon on hover
-     user_avatar_container.addEventListener('mouseenter', () => {
-         edit_profile_icon.classList.remove('hidden');
-     });
-
-     // Hide pen icon when not hovering over avatar or icon
-     user_avatar_container.addEventListener('mouseleave', () => {
-         setTimeout(() => {
-             if (!edit_profile_icon.matches(':hover')) {
-                 edit_profile_icon.classList.add('hidden');
-             }
-         }, 50);
-     });
-
-     edit_profile_icon.addEventListener('mouseenter', () => {
-         edit_profile_icon.classList.remove('hidden');
-     });
-
-      edit_profile_icon.addEventListener('mouseleave', () => {
-         edit_profile_icon.classList.add('hidden');
-     });
-
-    // Show modal on pen icon click
-    edit_profile_icon.addEventListener('click', () => {
-        populate_profile_form(); // Populate the form with current user_data
-        profile_edit_modal.classList.remove('hidden');
+    const userAvatarContainer = document.getElementById('user_avatar_container');
+    const editProfileIcon = document.getElementById('edit_profile_icon');
+    const profileEditModal = document.getElementById('edit_profile_modal');
+    
+    if (!userAvatarContainer || !editProfileIcon) return; // Exit if elements don't exist
+    
+    // Show edit icon on avatar hover
+    userAvatarContainer.addEventListener('mouseenter', () => {
+        editProfileIcon.classList.remove('hidden');
     });
-
-    // Close modal on Exit button click
-    exit_profile_button.addEventListener('click', () => {
-        profile_edit_modal.classList.add('hidden');
+    
+    userAvatarContainer.addEventListener('mouseleave', () => {
+        editProfileIcon.classList.add('hidden');
     });
-
-    // Handle Save button click
-    if (save_profile_button) {
-        save_profile_button.addEventListener('click', async () => {
-             const edit_first_name_input = profile_edit_modal.querySelector('#edit_first_name');
-             const edit_last_name_input = profile_edit_modal.querySelector('#edit_last_name');
-             const edit_username_input = profile_edit_modal.querySelector('#edit_username');
-             const edit_password_input = profile_edit_modal.querySelector('#edit_password');
-             const edit_confirm_password_input = profile_edit_modal.querySelector('#edit_confirm_password');
-             const edit_phone_number_input = profile_edit_modal.querySelector('#edit_phone_number');
-
-             const updatedProfileData = {
-                 first_name: edit_first_name_input ? edit_first_name_input.value.trim() : user_data.first_name,
-                 last_name: edit_last_name_input ? edit_last_name_input.value.trim() : user_data.last_name,
-                 username: edit_username_input ? edit_username_input.value.trim() : user_data.username,
-                 // Only send password fields if they are not empty
-                 password: edit_password_input && edit_password_input.value.trim() !== '' ? edit_password_input.value : null,
-                 confirm_password: edit_confirm_password_input && edit_confirm_password_input.value.trim() !== '' ? edit_confirm_password_input.value : null,
-                 phone_number: edit_phone_number_input ? edit_phone_number_input.value.trim() : user_data.phone_number,
-             };
-
-             // Basic client-side validation for password if changed
-             if (updatedProfileData.password !== null && updatedProfileData.password !== updatedProfileData.confirm_password) {
-                  show_notification('Password and Confirm Password do not match', 'error');
-                  if (edit_password_input) edit_password_input.value = '';
-                  if (edit_confirm_password_input) edit_confirm_password_input.value = '';
-                  return;
-             }
-             if (updatedProfileData.password !== null && updatedProfileData.password.length < 8) {
-                  show_notification('Password must be at least 8 characters long', 'error');
-                   if (edit_password_input) edit_password_input.value = '';
-                   if (edit_confirm_password_input) edit_confirm_password_input.value = '';
-                   return;
-             }
-
-
-            try {
-                 // Assuming an API endpoint for updating user profile data
-                 const response = await fetch('/project-errawrs/src/api/user/profile/update.php', {
-                     method: 'POST', // Or PUT
-                     headers: {
-                         'Content-Type': 'application/json'
-                     },
-                     body: JSON.stringify(updatedProfileData)
-                 });
-
-                 const data = await response.json();
-
-                 if (data.success) {
-                     show_notification('Profile updated successfully!', 'success');
-                     // Update local user_data state with new info (excluding password)
-                     user_data.first_name = data.user.first_name; // Assuming API returns updated user data
-                     user_data.last_name = data.user.last_name;
-                     user_data.username = data.user.username;
-                     user_data.phone_number = data.user.phone_number;
-
-                      // Update displayed name and initial
-                     if (user_name_element) user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
-                     display_user_initial();
-
-                     profile_edit_modal.classList.add('hidden');
-                      // Clear password fields after successful update
-                     if (edit_password_input) edit_password_input.value = '';
-                     if (edit_confirm_password_input) edit_confirm_password_input.value = '';
-                 } else {
-                     show_notification(data.error || 'Failed to update profile', 'error');
-                 }
-             } catch (error) {
-                 show_notification('Error updating profile', 'error');
-                 console.error('Error:', error);
-             }
-        });
-    }
-
-    // Close modal when clicking outside
-    if (profile_edit_modal) {
-         profile_edit_modal.addEventListener('click', (event) => {
-             // Check if the click is directly on the modal backdrop
-             if (event.target === profile_edit_modal) {
-                 profile_edit_modal.classList.add('hidden');
-             }
-         });
-    }
+    
+    // Handle edit icon click - redirect to profile page instead of modal
+    editProfileIcon.addEventListener('click', () => {
+        window.location.href = '../user/profile.html';
+    });
 }
 
 // Function to populate the profile edit form (requires user_data to be fetched)
 function populate_profile_form() {
-     const edit_first_name_input = profile_edit_modal.querySelector('#edit_first_name');
-     const edit_last_name_input = profile_edit_modal.querySelector('#edit_last_name');
-     const edit_username_input = profile_edit_modal.querySelector('#edit_username');
-     const edit_phone_number_input = profile_edit_modal.querySelector('#edit_phone_number');
-     const edit_password_input = profile_edit_modal.querySelector('#edit_password'); // Get password fields to clear them
-     const edit_confirm_password_input = profile_edit_modal.querySelector('#edit_confirm_password'); // Get confirm password fields to clear them
+     const edit_first_name_input = profile_edit_modal.querySelector(`#edit_first_name`);
+     const edit_last_name_input = profile_edit_modal.querySelector(`#edit_last_name`);
+     const edit_username_input = profile_edit_modal.querySelector(`#edit_username`);
+     const edit_phone_number_input = profile_edit_modal.querySelector(`#edit_phone_number`);
+     const edit_password_input = profile_edit_modal.querySelector(`#edit_password`); // Get password fields to clear them
+     const edit_confirm_password_input = profile_edit_modal.querySelector(`#edit_confirm_password`); // Get confirm password fields to clear them
 
      if (!edit_first_name_input || !edit_last_name_input || !edit_username_input || !edit_phone_number_input || !user_data) return;
 
@@ -491,28 +477,42 @@ function populate_profile_form() {
 // Fetch and display financial tip
 async function fetchFinancialTip() {
     try {
-        const response = await fetch('/project-errawrs/src/api/user/financial-tips.php');
+        const response = await fetch(API.USER.FINANCIAL_TIPS);
         const data = await response.json();
 
-        if (data.success && data.tip) {
+        if (data.success) {
             const tipContainer = document.getElementById('financial_tip_container');
-            if (tipContainer) {
-                tipContainer.innerHTML = `
+            if (!tipContainer) return;
+
+            tipContainer.innerHTML = `
+                <div class="tip-content">
                     <h3 class="tip-title">${data.tip.title}</h3>
-                    <p class="tip-subtitle">${data.tip.subtitle}</p>
-                `;
-            }
+                    <p class="tip-text">${data.tip.subtitle}</p>
+                </div>
+            `;
+        } else {
+            // Handle unsuccessful response
+            console.log('Financial tip data not available:', data.error || 'Unknown error');
         }
     } catch (error) {
-        console.error('Error fetching financial tip:', error);
+        console.log('Error fetching financial tip:', error);
+        // Don't let this error block the rest of the dashboard from loading
+        const tipContainer = document.getElementById('financial_tip_container');
+        if (tipContainer) {
+            tipContainer.innerHTML = `
+                <div class="tip-content">
+                    <h3 class="tip-title">Financial Wisdom</h3>
+                    <p class="tip-text">Save a little every day for a secure future.</p>
+                </div>
+            `;
+        }
     }
 }
 
 // Initialize Dashboard
 function init_dashboard() {
     fetchUserData(); // Fetch user data first
-    fetchUserAccounts(); // Fetch accounts
-    fetchRecentTransactions(); // Fetch transactions
+    fetchUserAccounts(); // Fetch accounts (this will also fetch transactions for the selected account)
     fetchFinancialTip(); // Fetch financial tip
     setup_smooth_animations(); // Keep existing setup
     setup_profile_edit(); // Setup profile edit interactions
@@ -527,7 +527,7 @@ if (transfer_now_btn) {
         // Prevent default navigation if disabled
         if (transfer_now_btn.classList.contains('disabled')) {
             event.preventDefault();
-             show_notification('Please add an account with a balance to transfer funds.', 'info');
+             show_notification('Please add an account with a balance to transfer funds.', CLASS.INFO);
             return;
         }
         // Proceed with navigation if not disabled
@@ -559,27 +559,31 @@ async function handleLogout() {
         localStorage.removeItem('account'); // Assuming account data is also stored
         localStorage.removeItem('token'); // If you are using tokens
 
-        // Optional: Call backend logout API
-        // Assuming a logout endpoint exists at /project-errawrs/src/api/auth/logout.php
-        // Note: This fetch is fire-and-forget as we are navigating away immediately
-        fetch('../../src/api/auth/logout.php', { method: 'POST' })
-            .catch(error => console.error('Error during logout API call:', error));
+        // Call backend logout API
+        await fetch(API.AUTH.LOGOUT, { 
+            method: 'POST',
+            credentials: 'same-origin'
+        });
 
-        // Let the default link navigation to index.html happen
+        // Redirect to login page after successful logout
+        window.location.href = './index.html';
     } catch (error) {
         console.error('Error during logout:', error);
-        // Optionally show a notification that logout might not have been clean
-        show_notification('Logout might not have been fully successful.', 'warning');
+        // Show a notification that logout might not have been clean
+        show_notification('Logout might not have been fully successful', 'warning');
+        // Redirect anyway after a short delay
+        setTimeout(() => {
+            window.location.href = './index.html';
+        }, 1500);
     }
 }
 
 // Event listener for logout button
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
-        // Prevent default navigation immediately if you want to wait for API call
-        // event.preventDefault(); 
+        // Prevent the default navigation to ensure our handleLogout function completes
+        event.preventDefault(); 
         handleLogout();
-        // If not preventing default, the browser will navigate after this function runs
     });
 }
 

@@ -1,4 +1,7 @@
 <?php
+// Set timezone to Asia/Manila (Philippine Time)
+date_default_timezone_set('Asia/Manila');
+
 /**
  * Load environment variables from .env file
  */

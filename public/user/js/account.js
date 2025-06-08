@@ -1,34 +1,37 @@
+// Extend the existing API object from session-manager.js
+// Add account-specific endpoints
+if (!API.USER) API.USER = {};
+if (!API.AUTH) API.AUTH = {};
+
+// Add or update USER endpoints
+Object.assign(API.USER, {
+    ACCOUNTS: '../../src/api/user/accounts.php',
+    CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php',
+    UPDATE_PROFILE: '../../src/api/user/profile/update.php'
+});
+
+// Add or update AUTH endpoints
+Object.assign(API.AUTH, {
+    SEND_OTP: '../../src/api/auth/send_otp.php',
+    VERIFY_OTP: '../../src/api/auth/verify_otp.php'
+});
+
+// Routes
+// No need to redefine ROUTES as it's already declared in session-manager.js
+
 // DOM Elements
-const account_list_container = document.querySelector(
-    '.account-list-container'
-);
-const notification_container = document.querySelector(
-    '.notification-container'
-);
+const account_list_container = document.querySelector('.account-list-container');
+const notification_container = document.querySelector('.notification-container');
 const account_type_modal = document.getElementById('account_type_modal');
 const confirmation_modal = document.getElementById('confirmation_modal');
 const otp_modal = document.getElementById('otp_modal');
-const account_type_radios = document.querySelectorAll(
-    'input[name="account_type"]'
-);
-const proceed_account_type_button = document.getElementById(
-    'proceed_account_type_button'
-);
-const cancel_account_type_button = document.getElementById(
-    'cancel_account_type_button'
-);
-const confirm_add_account_checkbox = document.getElementById(
-    'confirm_add_account_checkbox'
-);
-const proceed_add_account_button = document.getElementById(
-    'proceed_add_account_button'
-);
-const cancel_add_account_button = document.getElementById(
-    'cancel_add_account_button'
-);
-const selected_account_type_span = document.getElementById(
-    'selected_account_type'
-);
+const account_type_radios = document.querySelectorAll('input[name="account_type"]');
+const proceed_account_type_button = document.getElementById('proceed_account_type_button');
+const cancel_account_type_button = document.getElementById('cancel_account_type_button');
+const confirm_add_account_checkbox = document.getElementById('confirm_add_account_checkbox');
+const proceed_add_account_button = document.getElementById('proceed_add_account_button');
+const cancel_add_account_button = document.getElementById('cancel_add_account_button');
+const selected_account_type_span = document.getElementById('selected_account_type');
 const otp_input = document.getElementById('otp_input');
 const verify_otp_button = document.getElementById('verify_otp_button');
 const cancel_otp_button = document.getElementById('cancel_otp_button');
@@ -43,15 +46,10 @@ const edit_first_name_input = document.getElementById('edit_first_name');
 const edit_last_name_input = document.getElementById('edit_last_name');
 const edit_username_input = document.getElementById('edit_username');
 const edit_password_input = document.getElementById('edit_password');
-const edit_confirm_password_input = document.getElementById(
-    'edit_confirm_password'
-);
+const edit_confirm_password_input = document.getElementById('edit_confirm_password');
 const edit_phone_number_input = document.getElementById('edit_phone_number');
 const user_name_element = document.getElementById('user_name');
 const welcome_user_name_element = document.getElementById('welcome_user_name');
-
-// Constants
-const MAX_ACCOUNTS = 3;
 
 // State
 let selectedAccountType = null;
@@ -62,7 +60,7 @@ let user_data = {};
 async function fetchUserData() {
     try {
         // Use session_check.php instead of profile.php
-        const response = await fetch('../../src/api/auth/session_check.php');
+        const response = await fetch(API.AUTH.SESSION_CHECK);
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -75,14 +73,38 @@ async function fetchUserData() {
             }
             display_user_initial(); // Update the initial
         } else {
-            showNotification(data.error || 'Session expired or invalid', 'error');
+            // Text constants
+            const TEXT = {
+                SESSION_EXPIRED: 'Session expired or invalid',
+                USER_DATA_ERROR: 'Error fetching user data'
+            };
+            
+            // CSS class constants
+            const CLASS = {
+                ERROR: 'error'
+            };
+            
+            // Timing constants
+            const TIMING = {
+                REDIRECT_DELAY: 2000
+            };
+            
+            showNotification(data.error || TEXT.SESSION_EXPIRED, CLASS.ERROR);
             // Redirect to login page if not authenticated
             setTimeout(() => {
-                window.location.href = './login_account_holder.html';
-            }, 2000);
+                window.location.href = ROUTES.LOGIN;
+            }, TIMING.REDIRECT_DELAY);
         }
     } catch (error) {
-        showNotification('Error fetching user data', 'error');
+        const TEXT = {
+            USER_DATA_ERROR: 'Error fetching user data'
+        };
+        
+        const CLASS = {
+            ERROR: 'error'
+        };
+        
+        showNotification(TEXT.USER_DATA_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 }
@@ -90,7 +112,7 @@ async function fetchUserData() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
-        const response = await fetch('../../src/api/user/accounts.php');
+        const response = await fetch(API.USER.ACCOUNTS);
         const data = await response.json();
 
         // Debug log to see what accounts data we have
@@ -100,10 +122,29 @@ async function fetchUserAccounts() {
             userAccounts = data.accounts;
             updateAccountDisplay();
         } else {
-            showNotification(data.error || 'Failed to fetch accounts', 'error');
+            // Text constants
+            const TEXT = {
+                FETCH_ACCOUNTS_ERROR: 'Failed to fetch accounts',
+                ACCOUNTS_ERROR: 'Error fetching accounts'
+            };
+            
+            // CSS class constants
+            const CLASS = {
+                ERROR: 'error'
+            };
+            
+            showNotification(data.error || TEXT.FETCH_ACCOUNTS_ERROR, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification('Error fetching accounts', 'error');
+        const TEXT = {
+            ACCOUNTS_ERROR: 'Error fetching accounts'
+        };
+        
+        const CLASS = {
+            ERROR: 'error'
+        };
+        
+        showNotification(TEXT.ACCOUNTS_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 }
@@ -121,15 +162,36 @@ function updateAccountDisplay() {
     });
 
     // Add "Add Account" placeholder if under limit
-    if (userAccounts.length < MAX_ACCOUNTS) {
+    // Account Limits
+    const ACCOUNT_LIMITS = {
+        MAX_ACCOUNTS: 3
+    };
+    
+    // CSS Classes
+    const CLASS = {
+        ADD_ACCOUNT_PLACEHOLDER: 'add-account-placeholder',
+        HIDDEN: 'hidden'
+    };
+    
+    // Icons
+    const ICON = {
+        PLUS: 'fas fa-plus'
+    };
+    
+    // Text
+    const TEXT = {
+        ADD_NEW_ACCOUNT: 'Add New Account'
+    };
+    
+    if (userAccounts.length < ACCOUNT_LIMITS.MAX_ACCOUNTS) {
         const addAccountPlaceholder = document.createElement('div');
-        addAccountPlaceholder.classList.add('add-account-placeholder');
+        addAccountPlaceholder.classList.add(CLASS.ADD_ACCOUNT_PLACEHOLDER);
         addAccountPlaceholder.innerHTML = `
-            <i class="fas fa-plus"></i>
-            <span>Add New Account</span>
+            <i class="${ICON.PLUS}"></i>
+            <span>${TEXT.ADD_NEW_ACCOUNT}</span>
         `;
         addAccountPlaceholder.addEventListener('click', () => {
-            account_type_modal.classList.remove('hidden');
+            account_type_modal.classList.remove(CLASS.HIDDEN);
         });
         account_list_container.appendChild(addAccountPlaceholder);
     }
@@ -140,8 +202,42 @@ function updateAccountDisplay() {
 
 // Create account item element
 function createAccountItem(account) {
+    // CSS Classes
+    const CLASS = {
+        ACCOUNT_ITEM: 'account-item',
+        ACCOUNT_INFO: 'account-info',
+        INFO_GROUP: 'info-group',
+        INFO_LABEL: 'info-label',
+        INFO_VALUE: 'info-value',
+        ACCOUNT_TYPE_BADGE: 'account-type-badge',
+        ACCOUNT_STATUS: 'account-status',
+        ACCOUNT_ACTIONS: 'account-actions',
+        THREE_DOTS_BUTTON: 'three-dots-button',
+        ACTION_MENU: 'action-menu',
+        MENU_ITEM: 'menu-item',
+        TRANSFER_BUTTON: 'transfer-button',
+        CLOSE_BUTTON: 'close-button',
+        HIDDEN: 'hidden'
+    };
+    
+    // Icons
+    const ICON = {
+        ELLIPSIS_H: 'fas fa-ellipsis-h'
+    };
+    
+    // Currency
+    const CURRENCY = {
+        SYMBOL: '₱',
+        LOCALE: 'en-US'
+    };
+    
+    // Account Status
+    const ACCOUNT_STATUS = {
+        CLOSED: 'closed'
+    };
+    
     const accountItem = document.createElement('div');
-    accountItem.classList.add('account-item');
+    accountItem.classList.add(CLASS.ACCOUNT_ITEM);
     accountItem.dataset.accountId = account.id;
 
     // Format account_type for display
@@ -150,40 +246,40 @@ function createAccountItem(account) {
         : 'Standard';
     
     accountItem.innerHTML = `
-        <div class="account-info">
-            <div class="info-group">
-                <span class="info-label">Account No.</span>
-                <span class="info-value">${account.account_number}</span>
+        <div class="${CLASS.ACCOUNT_INFO}">
+            <div class="${CLASS.INFO_GROUP}">
+                <span class="${CLASS.INFO_LABEL}">Account No.</span>
+                <span class="${CLASS.INFO_VALUE}">${account.account_number}</span>
             </div>
-            <div class="info-group">
-                <span class="info-label">Type</span>
-                <span class="account-type-badge ${account.account_type ? account.account_type.toLowerCase() : 'standard'}">${accountTypeDisplay}</span>
+            <div class="${CLASS.INFO_GROUP}">
+                <span class="${CLASS.INFO_LABEL}">Type</span>
+                <span class="${CLASS.ACCOUNT_TYPE_BADGE} ${account.account_type ? account.account_type.toLowerCase() : 'standard'}">${accountTypeDisplay}</span>
             </div>
-            <div class="info-group">
-                <span class="info-label">Balance</span>
-                <span class="info-value">₱ ${parseFloat(
+            <div class="${CLASS.INFO_GROUP}">
+                <span class="${CLASS.INFO_LABEL}">Balance</span>
+                <span class="${CLASS.INFO_VALUE}">${CURRENCY.SYMBOL} ${parseFloat(
                     account.balance
-                ).toLocaleString('en-US', {
+                ).toLocaleString(CURRENCY.LOCALE, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                 })}</span>
             </div>
-            <div class="info-group">
-                <span class="info-label">Status</span>
-                <span class="info-value account-status ${account.status.toLowerCase()}">${
+            <div class="${CLASS.INFO_GROUP}">
+                <span class="${CLASS.INFO_LABEL}">Status</span>
+                <span class="${CLASS.INFO_VALUE} ${CLASS.ACCOUNT_STATUS} ${account.status.toLowerCase()}">${
         account.status
     }</span>
             </div>
         </div>
-        <div class="account-actions">
-            <button class="three-dots-button" ${
-                account.status === 'closed' ? 'disabled' : ''
+        <div class="${CLASS.ACCOUNT_ACTIONS}">
+            <button class="${CLASS.THREE_DOTS_BUTTON}" ${
+                account.status === ACCOUNT_STATUS.CLOSED ? 'disabled' : ''
             }>
-                <i class="fas fa-ellipsis-h"></i>
+                <i class="${ICON.ELLIPSIS_H}"></i>
             </button>
-            <div class="action-menu hidden">
-                <button class="menu-item transfer-button">Transfer</button>
-                <button class="menu-item close-button">Close</button>
+            <div class="${CLASS.ACTION_MENU} ${CLASS.HIDDEN}">
+                <button class="${CLASS.MENU_ITEM} ${CLASS.TRANSFER_BUTTON}">Transfer</button>
+                <button class="${CLASS.MENU_ITEM} ${CLASS.CLOSE_BUTTON}">Close</button>
             </div>
         </div>
     `;
@@ -193,27 +289,35 @@ function createAccountItem(account) {
 
 // Attach event listeners to account items
 function attachAccountItemListeners() {
-    document.querySelectorAll('.three-dots-button').forEach((button) => {
+    // CSS Classes
+    const CLASS = {
+        THREE_DOTS_BUTTON: 'three-dots-button',
+        ACCOUNT_ACTIONS: 'account-actions',
+        ACTION_MENU: 'action-menu',
+        HIDDEN: 'hidden'
+    };
+    
+    document.querySelectorAll(`.${CLASS.THREE_DOTS_BUTTON}`).forEach((button) => {
         button.addEventListener('click', (e) => {
             const menu = e.target
-                .closest('.account-actions')
-                .querySelector('.action-menu');
-            const allMenus = document.querySelectorAll('.action-menu');
+                .closest(`.${CLASS.ACCOUNT_ACTIONS}`)
+                .querySelector(`.${CLASS.ACTION_MENU}`);
+            const allMenus = document.querySelectorAll(`.${CLASS.ACTION_MENU}`);
 
             // Close all other menus
             allMenus.forEach((m) => {
-                if (m !== menu) m.classList.add('hidden');
+                if (m !== menu) m.classList.add(CLASS.HIDDEN);
             });
 
-            menu.classList.toggle('hidden');
+            menu.classList.toggle(CLASS.HIDDEN);
         });
     });
 
     // Close menus when clicking outside
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.account-actions')) {
-            document.querySelectorAll('.action-menu').forEach((menu) => {
-                menu.classList.add('hidden');
+        if (!e.target.closest(`.${CLASS.ACCOUNT_ACTIONS}`)) {
+            document.querySelectorAll(`.${CLASS.ACTION_MENU}`).forEach((menu) => {
+                menu.classList.add(CLASS.HIDDEN);
             });
         }
     });
@@ -228,15 +332,25 @@ account_type_radios.forEach((radio) => {
 });
 
 proceed_account_type_button.addEventListener('click', () => {
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
     if (selectedAccountType) {
-        account_type_modal.classList.add('hidden');
+        account_type_modal.classList.add(CLASS.HIDDEN);
         selected_account_type_span.textContent = selectedAccountType;
-        confirmation_modal.classList.remove('hidden');
+        confirmation_modal.classList.remove(CLASS.HIDDEN);
     }
 });
 
 cancel_account_type_button.addEventListener('click', () => {
-    account_type_modal.classList.add('hidden');
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    account_type_modal.classList.add(CLASS.HIDDEN);
     selectedAccountType = null;
     account_type_radios.forEach((radio) => (radio.checked = false));
     proceed_account_type_button.disabled = true;
@@ -249,20 +363,40 @@ confirm_add_account_checkbox.addEventListener('change', () => {
 
 proceed_add_account_button.addEventListener('click', async () => {
     try {
+        // Text constants
+        const TEXT = {
+            PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
+            OTP_SENT: 'OTP sent successfully. Please verify to complete account creation.',
+            OTP_SEND_ERROR: 'Failed to send OTP',
+            OTP_ERROR: 'Error sending OTP'
+        };
+        
+        // CSS class constants
+        const CLASS = {
+            HIDDEN: 'hidden',
+            SUCCESS: 'success',
+            ERROR: 'error'
+        };
+        
+        // Local Storage Keys
+        const STORAGE_KEY = {
+            PENDING_ACCOUNT_TYPE: 'pending_account_type'
+        };
+        
         // Get the user's phone number from session data
         const phoneNumber = user_data.phone_number;
         
         if (!phoneNumber) {
-            showNotification('Phone number not found in user profile', 'error');
+            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
             return;
         }
         
         // Store selected account type in localStorage for later use
-        localStorage.setItem('pending_account_type', selectedAccountType);
+        localStorage.setItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE, selectedAccountType);
         
         // Send OTP to user's phone number
         const response = await fetch(
-            '../../src/api/auth/send_otp.php',
+            API.AUTH.SEND_OTP,
             {
                 method: 'POST',
                 headers: {
@@ -277,25 +411,40 @@ proceed_add_account_button.addEventListener('click', async () => {
         const data = await response.json();
 
         if (data.success) {
-            confirmation_modal.classList.add('hidden');
-            otp_modal.classList.remove('hidden');
-            showNotification('OTP sent successfully. Please verify to complete account creation.', 'success');
+            confirmation_modal.classList.add(CLASS.HIDDEN);
+            otp_modal.classList.remove(CLASS.HIDDEN);
+            showNotification(TEXT.OTP_SENT, CLASS.SUCCESS);
             
             // Remove auto-filling of OTP
             if (otp_input) {
                 otp_input.value = '';
             }
         } else {
-            showNotification(data.error || 'Failed to send OTP', 'error');
+            showNotification(data.error || TEXT.OTP_SEND_ERROR, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification('Error sending OTP', 'error');
+        // Text constants
+        const TEXT = {
+            OTP_ERROR: 'Error sending OTP'
+        };
+        
+        // CSS class constants
+        const CLASS = {
+            ERROR: 'error'
+        };
+        
+        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 });
 
 cancel_add_account_button.addEventListener('click', () => {
-    confirmation_modal.classList.add('hidden');
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    confirmation_modal.classList.add(CLASS.HIDDEN);
     confirm_add_account_checkbox.checked = false;
     proceed_add_account_button.disabled = true;
 });
@@ -304,8 +453,31 @@ cancel_add_account_button.addEventListener('click', () => {
 verify_otp_button.addEventListener('click', async () => {
     const otp = otp_input.value.trim();
 
+    // Text constants
+    const TEXT = {
+        ENTER_OTP: 'Please enter OTP',
+        PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
+        ACCOUNT_TYPE_NOT_FOUND: 'Account type not found. Please try again.',
+        ACCOUNT_CREATED: 'Account created successfully',
+        ACCOUNT_ERROR: 'Failed to create account',
+        INVALID_OTP: 'Invalid OTP',
+        OTP_ERROR: 'Error sending OTP'
+    };
+    
+    // CSS class constants
+    const CLASS = {
+        HIDDEN: 'hidden',
+        SUCCESS: 'success',
+        ERROR: 'error'
+    };
+    
+    // Local Storage Keys
+    const STORAGE_KEY = {
+        PENDING_ACCOUNT_TYPE: 'pending_account_type'
+    };
+
     if (!otp) {
-        showNotification('Please enter OTP', 'error');
+        showNotification(TEXT.ENTER_OTP, CLASS.ERROR);
         return;
     }
 
@@ -314,13 +486,13 @@ verify_otp_button.addEventListener('click', async () => {
         const phoneNumber = user_data.phone_number;
         
         if (!phoneNumber) {
-            showNotification('Phone number not found in user profile', 'error');
+            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
             return;
         }
         
         // First verify the OTP
         const verifyResponse = await fetch(
-            '../../src/api/auth/verify_otp.php',
+            API.AUTH.VERIFY_OTP,
             {
                 method: 'POST',
                 headers: {
@@ -337,16 +509,16 @@ verify_otp_button.addEventListener('click', async () => {
 
         if (verifyData.success) {
             // Get the account type from localStorage
-            const accountType = localStorage.getItem('pending_account_type');
+            const accountType = localStorage.getItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
             
             if (!accountType) {
-                showNotification('Account type not found. Please try again.', 'error');
+                showNotification(TEXT.ACCOUNT_TYPE_NOT_FOUND, CLASS.ERROR);
                 return;
             }
             
             // If OTP verification is successful, create the account
             const createResponse = await fetch(
-                '../../src/api/user/create_additional_account.php',
+                API.USER.CREATE_ACCOUNT,
                 {
                     method: 'POST',
                     headers: {
@@ -362,48 +534,74 @@ verify_otp_button.addEventListener('click', async () => {
             const createData = await createResponse.json();
 
             if (createData.success) {
-                otp_modal.classList.add('hidden');
-                showNotification('Account created successfully', 'success');
+                otp_modal.classList.add(CLASS.HIDDEN);
+                showNotification(TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
                 
                 // Clear the stored account type
-                localStorage.removeItem('pending_account_type');
+                localStorage.removeItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
                 
                 await fetchUserAccounts(); // Refresh account list
             } else {
-                showNotification(createData.error || 'Failed to create account', 'error');
+                showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
             }
         } else {
-            showNotification(verifyData.error || 'Invalid OTP', 'error');
+            showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification('Error verifying OTP', 'error');
+        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 });
 
 cancel_otp_button.addEventListener('click', () => {
-    otp_modal.classList.add('hidden');
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    otp_modal.classList.add(CLASS.HIDDEN);
     otp_input.value = '';
 });
 
 // Show notification
 function showNotification(message, type) {
+    // CSS Classes
+    const CLASS = {
+        NOTIFICATION: 'notification',
+        SUCCESS: 'success',
+        ERROR: 'error',
+        INFO: 'info'
+    };
+    
+    // Icons
+    const ICON = {
+        CHECK_CIRCLE: 'fas fa-check-circle',
+        TIMES_CIRCLE: 'fas fa-times-circle',
+        INFO_CIRCLE: 'fas fa-info-circle',
+        BELL: 'fas fa-bell'
+    };
+    
+    // Timing
+    const TIMING = {
+        NOTIFICATION_DURATION: 3000
+    };
+    
     const notification = document.createElement('div');
-    notification.classList.add('notification', type);
+    notification.classList.add(CLASS.NOTIFICATION, type);
 
     let icon = '';
     switch (type) {
-        case 'success':
-            icon = 'fas fa-check-circle';
+        case CLASS.SUCCESS:
+            icon = ICON.CHECK_CIRCLE;
             break;
-        case 'error':
-            icon = 'fas fa-times-circle';
+        case CLASS.ERROR:
+            icon = ICON.TIMES_CIRCLE;
             break;
-        case 'info':
-            icon = 'fas fa-info-circle';
+        case CLASS.INFO:
+            icon = ICON.INFO_CIRCLE;
             break;
         default:
-            icon = 'fas fa-bell';
+            icon = ICON.BELL;
     }
 
     notification.innerHTML = `
@@ -415,7 +613,7 @@ function showNotification(message, type) {
 
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, TIMING.NOTIFICATION_DURATION);
 }
 
 // Function to display user initial in the avatar circle
@@ -442,37 +640,42 @@ function setup_profile_edit() {
     )
         return;
 
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+
     // Show pen icon on hover
     user_avatar_container.addEventListener('mouseenter', () => {
-        edit_profile_icon.classList.remove('hidden');
+        edit_profile_icon.classList.remove(CLASS.HIDDEN);
     });
 
     // Hide pen icon when not hovering over avatar or icon
     user_avatar_container.addEventListener('mouseleave', () => {
         setTimeout(() => {
             if (!edit_profile_icon.matches(':hover')) {
-                edit_profile_icon.classList.add('hidden');
+                edit_profile_icon.classList.add(CLASS.HIDDEN);
             }
         }, 50);
     });
 
     edit_profile_icon.addEventListener('mouseenter', () => {
-        edit_profile_icon.classList.remove('hidden');
+        edit_profile_icon.classList.remove(CLASS.HIDDEN);
     });
 
     edit_profile_icon.addEventListener('mouseleave', () => {
-        edit_profile_icon.classList.add('hidden');
+        edit_profile_icon.classList.add(CLASS.HIDDEN);
     });
 
     // Show modal on pen icon click
     edit_profile_icon.addEventListener('click', () => {
         populate_profile_form();
-        edit_profile_modal.classList.remove('hidden');
+        edit_profile_modal.classList.remove(CLASS.HIDDEN);
     });
 
     // Close modal on Exit button click
     exit_profile_button.addEventListener('click', () => {
-        edit_profile_modal.classList.add('hidden');
+        edit_profile_modal.classList.add(CLASS.HIDDEN);
     });
 
     // Handle Save button click
@@ -486,9 +689,25 @@ function setup_profile_edit() {
             phone_number: edit_phone_number_input.value.trim(),
         };
         
+        // Text constants
+        const TEXT = {
+            FIRST_NAME_REQUIRED: 'First name and last name are required',
+            PASSWORD_MISMATCH: 'Passwords do not match',
+            PROFILE_UPDATED: 'Profile updated successfully!',
+            PROFILE_UPDATE_ERROR: 'Failed to update profile',
+            PROFILE_ERROR: 'Error updating profile'
+        };
+        
+        // CSS class constants
+        const CLASS = {
+            HIDDEN: 'hidden',
+            SUCCESS: 'success',
+            ERROR: 'error'
+        };
+        
         // Basic validation
         if (!updated_profile_data.first_name || !updated_profile_data.last_name) {
-            showNotification('First name and last name are required', 'error');
+            showNotification(TEXT.FIRST_NAME_REQUIRED, CLASS.ERROR);
             return;
         }
         
@@ -497,13 +716,13 @@ function setup_profile_edit() {
             delete updated_profile_data.password;
             delete updated_profile_data.confirm_password;
         } else if (updated_profile_data.password !== updated_profile_data.confirm_password) {
-            showNotification('Passwords do not match', 'error');
+            showNotification(TEXT.PASSWORD_MISMATCH, CLASS.ERROR);
             return;
         }
 
         try {
             // Send update to API
-            const response = await fetch('../../src/api/user/profile/update.php', {
+            const response = await fetch(API.USER.UPDATE_PROFILE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -526,21 +745,21 @@ function setup_profile_edit() {
                 }
                 display_user_initial();
                 
-                showNotification('Profile updated successfully!', 'success');
-                edit_profile_modal.classList.add('hidden');
+                showNotification(TEXT.PROFILE_UPDATED, CLASS.SUCCESS);
+                edit_profile_modal.classList.add(CLASS.HIDDEN);
             } else {
-                showNotification(data.error || 'Failed to update profile', 'error');
+                showNotification(data.error || TEXT.PROFILE_UPDATE_ERROR, CLASS.ERROR);
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            showNotification('Error updating profile', 'error');
+            showNotification(TEXT.PROFILE_ERROR, CLASS.ERROR);
         }
     });
 
     // Close modal when clicking outside
     edit_profile_modal.addEventListener('click', (event) => {
         if (event.target === edit_profile_modal) {
-            edit_profile_modal.classList.add('hidden');
+            edit_profile_modal.classList.add(CLASS.HIDDEN);
         }
     });
 }
@@ -571,7 +790,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchUserData();
     fetchUserAccounts();
     setup_profile_edit();
-    console.log('StackOvercash Account Page Initialized Dynamically!');
+    
+    // Text constants
+    const TEXT = {
+        INITIALIZE_MESSAGE: 'StackOvercash Account Page Initialized Dynamically!'
+    };
+    
+    console.log(TEXT.INITIALIZE_MESSAGE);
 });
 
 // Function to handle logout
@@ -582,21 +807,22 @@ async function handleLogout() {
         localStorage.removeItem('account'); // Assuming account data is also stored
         localStorage.removeItem('token'); // If you are using tokens
 
-        // Optional: Call backend logout API
-        fetch('../../src/api/auth/logout.php', {
+        // Call backend logout API
+        await fetch(API.AUTH.LOGOUT, { 
             method: 'POST',
-        }).catch((error) =>
-            console.error('Error during logout API call:', error)
-        );
+            credentials: 'same-origin'
+        });
 
-        // Let the default link navigation to index.html happen
+        // Redirect to login page after successful logout
+        window.location.href = './index.html';
     } catch (error) {
         console.error('Error during logout:', error);
-        // Optionally show a notification that logout might not have been clean
-        showNotification(
-            'Logout might not have been fully successful.',
-            'warning'
-        );
+        // Show a notification that logout might not have been clean
+        showNotification('Logout might not have been fully successful', 'warning');
+        // Redirect anyway after a short delay
+        setTimeout(() => {
+            window.location.href = './index.html';
+        }, 1500);
     }
 }
 
@@ -604,9 +830,8 @@ async function handleLogout() {
 const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
-        // Prevent default navigation immediately if you want to wait for API call
-        // event.preventDefault();
+        // Prevent the default navigation to ensure our handleLogout function completes
+        event.preventDefault(); 
         handleLogout();
-        // If not preventing default, the browser will navigate after this function runs
     });
 }
