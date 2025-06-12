@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>StackOvercash - Transactions</title>
+
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"/>
+
+        <!-- Font Awesome -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="./css/transactions.css" />
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-stack">Stack</span>
+                    <span class="logo-overcash">Overcash</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="manage_tellers.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Manage Tellers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="transactions.html" class="nav-link">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="user_account.html" class="nav-link">
+                            <i class="fas fa-user-circle"></i>
+                            <span>User Accounts</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <nav class="top-nav">
+                <div class="nav-left">
+                    <button id="sidebar_toggle" class="sidebar-toggle">
+                    </button>
+                    <h1 class="page-title">Transactions</h1>
+                </div>
+                <div class="nav-right">
+                    <div class="admin-profile">
+                        <span class="admin-name">Welcome, <span id="admin_name">Admin</span></span>
+                        <div class="profile-dropdown">
+                            <button class="profile-btn">
+                                <i class="fas fa-user-circle"></i>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="profile.html">
+                                    <i class="fas fa-user"></i>
+                                    Profile
+                                </a>
+                                <a href="settings.html">
+                                    <i class="fas fa-cog"></i>
+                                    Settings
+                                </a>
+                                <a href="#" id="logout_btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Transactions Content -->
+            <div class="transactions-content">
+                <!-- Content will go here -->
+            </div>
+        </main>
+
+        <!-- Scripts -->
+        <script src="./js/transactions.js"></script>
+    </body>
+</html>
