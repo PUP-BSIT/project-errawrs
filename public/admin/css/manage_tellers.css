@@ -56,7 +56,7 @@
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--color-mint);
+    background-color: var(--color-lime-green);
     color: var(--color-primary-black);
     border: none;
     padding: 0.75rem 1.5rem;
