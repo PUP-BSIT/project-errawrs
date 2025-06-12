@@ -56,12 +56,6 @@ class TellerManager {
             });
         }
 
-        // Password toggle
-        const passwordToggle = document.querySelector('.password-toggle');
-        if (passwordToggle) {
-            passwordToggle.addEventListener('click', () => this.togglePasswordVisibility());
-        }
-
         // Logout
         const logoutBtn = document.getElementById('logout_btn');
         if (logoutBtn) {
@@ -242,7 +236,6 @@ class TellerManager {
                     document.getElementById('first_name').value = data.teller.first_name;
                     document.getElementById('last_name').value = data.teller.last_name;
                     document.getElementById('email').value = data.teller.email;
-                    document.getElementById('password').value = '';
 
                     // Update modal title
                     document.getElementById('modal_title').textContent = 'Edit Teller';
@@ -270,8 +263,7 @@ class TellerManager {
             const formData = {
                 first_name: document.getElementById('first_name').value,
                 last_name: document.getElementById('last_name').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
+                email: document.getElementById('email').value
             };
 
             if (isEdit) {
@@ -374,23 +366,6 @@ class TellerManager {
     closeModal(modal) {
         if (modal) {
             modal.classList.remove('show');
-        }
-    }
-
-    togglePasswordVisibility() {
-        const input = document.getElementById('password');
-        const icon = document.querySelector('.password-toggle i');
-        
-        if (input && icon) {
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
         }
     }
 

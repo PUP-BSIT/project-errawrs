@@ -11,16 +11,18 @@
 
 .page-content {
     padding: 2rem;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
+    height: calc(100vh - 80px); /* Adjust for top nav height */
+    display: flex;
+    flex-direction: column;
 }
 
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 /* Search Box */
@@ -101,12 +103,15 @@
     background-color: #b91c1c;
 }
 
-/* Teller Cards */
+/* Teller Cards Container */
 .teller-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    height: calc(100vh - 250px); /* Adjust based on header and pagination height */
 }
 
 .teller-cards.loading {
@@ -378,31 +383,34 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 1.5rem;
+    flex-shrink: 0;
 }
 
 .pagination button {
     padding: 0.5rem 1rem;
-    border: 1px solid #dce1e4;
-    background: white;
-    border-radius: 5px;
+    border: 1px solid var(--color-mint);
+    background: var(--color-white);
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    color: var(--color-primary-black);
 }
 
 .pagination button:hover:not(:disabled) {
-    background-color: #f8f9fa;
-    border-color: #3498db;
+    background-color: var(--color-lime-green);
+    border-color: var(--color-lime-green);
 }
 
 .pagination button.active {
-    background-color: #3498db;
-    border-color: #3498db;
-    color: white;
+    background-color: var(--color-mint);
+    border-color: var(--color-mint);
+    color: var(--color-primary-black);
 }
 
 .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    border-color: var(--color-gray);
 }
 
 /* Toast Notifications */
