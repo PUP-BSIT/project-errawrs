@@ -1,136 +1,181 @@
 <?php
-session_start();
+  // Handle preflight OPTIONS request
+  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+      header("Access-Control-Allow-Origin: *");
+      header("Access-Control-Allow-Methods: POST, OPTIONS");
+      header("Access-Control-Allow-Headers: Content-Type, Authorization");
+      header("Access-Control-Max-Age: 3600");
+      exit();
+  }
 
-// Prevent any HTML error output
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
+  // Set the project root path
+  define('PROJECT_ROOT', realpath(__DIR__ . '/../../..'));
 
-// Set JSON header first before any output
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Content-Type: application/json");
+  // Load environment variables and dependencies
+  require_once PROJECT_ROOT . '/vendor/autoload.php';
+  
+  // Initialize environment variables
+  $dotenv = Dotenv\Dotenv::createImmutable(PROJECT_ROOT);
+  $dotenv->load();
 
-// Function to handle errors
-function sendError($message, $code = 400) {
-    error_log("Create Teller Error: " . $message);
-    http_response_code($code);
-    echo json_encode(['success' => false, 'message' => $message]);
-    exit();
-}
+  session_start();
 
-try {
-    require_once '../../config/database.php';
-} catch (Exception $e) {
-    sendError('Configuration error: ' . $e->getMessage(), 500);
-}
+  // Prevent any HTML error output
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1); // Temporarily enable display errors for debugging
 
-// Only allow POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    sendError('Method not allowed', 405);
-}
+  // Set JSON header first before any output
+  header("Access-Control-Allow-Origin: *");
+  header("Access-Control-Allow-Methods: POST");
+  header("Access-Control-Allow-Headers: Content-Type, Authorization");
+  header("Content-Type: application/json");
 
-// Verify admin is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
-    sendError('Unauthorized access', 401);
-}
+  // Function to handle errors
+  function sendError($message, $code = 400) {
+      error_log("Create Teller Error: " . $message);
+      http_response_code($code);
+      echo json_encode(['success' => false, 'message' => $message]);
+      exit();
+  }
 
-// Get and validate input data
-$input = file_get_contents("php://input");
-if (!$input) {
-    sendError('No input data received');
-}
+  try {
+      require_once PROJECT_ROOT . '/src/config/database.php';
+  } catch (Exception $e) {
+      sendError('Configuration error: ' . $e->getMessage(), 500);
+  }
 
-$data = json_decode($input, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    sendError('Invalid JSON: ' . json_last_error_msg());
-}
+  // Only allow POST requests
+  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      sendError('Method not allowed', 405);
+  }
 
-if (!isset($data['first_name']) || !isset($data['last_name']) || !isset($data['email']) || !isset($data['password'])) {
-    sendError('Missing required fields');
-}
+  // Verify admin is logged in
+  if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+      sendError('Unauthorized access', 401);
+  }
 
-// Validate email format
-if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-    sendError('Invalid email format');
-}
+  // Get and validate input data
+  $input = file_get_contents("php://input");
+  if (!$input) {
+      sendError('No input data received');
+  }
 
-try {
-    // Get database connection
-    $conn = db_connect();
+  // Log the raw input for debugging
+  error_log("Raw input: " . $input);
 
-    // Check if email already exists
-    $stmt = $conn->prepare("SELECT teller_id FROM teller WHERE email = ?");
-    if (!$stmt) {
-        throw new Exception($conn->error);
-    }
-    
-    $stmt->bind_param("s", $data['email']);
-    if (!$stmt->execute()) {
-        throw new Exception($stmt->error);
-    }
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        sendError('Email already exists');
-    }
+  $data = json_decode($input, true);
+  if (json_last_error() !== JSON_ERROR_NONE) {
+      sendError('Invalid JSON: ' . json_last_error_msg() . '. Raw input: ' . $input);
+  }
 
-    // Generate teller number
-    $stmt = $conn->prepare("SELECT MAX(CAST(SUBSTRING(teller_number, 2) AS UNSIGNED)) as max_num FROM teller WHERE teller_number LIKE 'T%'");
-    if (!$stmt) {
-        throw new Exception($conn->error);
-    }
-    
-    if (!$stmt->execute()) {
-        throw new Exception($stmt->error);
-    }
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $next_num = ($row['max_num'] ?? 0) + 1;
-    $teller_number = sprintf("T%06d", $next_num);
+  if (!isset($data['first_name']) || !isset($data['last_name']) || !isset($data['email'])) {
+      sendError('Missing required fields');
+  }
 
-    // Hash password
-    $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
+  // Validate email format
+  if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+      sendError('Invalid email format');
+  }
 
-    // Insert new teller
-    $stmt = $conn->prepare("INSERT INTO teller (teller_number, password_hash, first_name, last_name, email, status) VALUES (?, ?, ?, ?, ?, 'active')");
-    if (!$stmt) {
-        throw new Exception($conn->error);
-    }
-    
-    $stmt->bind_param("sssss", 
-        $teller_number,
-        $password_hash,
-        $data['first_name'],
-        $data['last_name'],
-        $data['email']
-    );
+  try {
+      $db = db_connect();
+      $db->begin_transaction();
 
-    if (!$stmt->execute()) {
-        throw new Exception($stmt->error);
-    }
+      // Check if email already exists
+      $stmt = $db->prepare("SELECT teller_id FROM teller WHERE email = ?");
+      if (!$stmt) {
+          throw new Exception("Database prepare failed: " . $db->error);
+      }
+      $stmt->bind_param("s", $data['email']);
+      if (!$stmt->execute()) {
+          throw new Exception("Database execute failed: " . $stmt->error);
+      }
+      $result = $stmt->get_result();
+      if ($result->num_rows > 0) {
+          sendError('Email already exists');
+      }
 
-    $teller_id = $conn->insert_id;
-    
-    // Return success response
-    http_response_code(201);
-    echo json_encode([
-        'success' => true,
-        'message' => 'Teller created successfully',
-        'teller' => [
-            'teller_id' => $teller_id,
-            'teller_number' => $teller_number,
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'status' => 'active'
-        ]
-    ]);
+      // Generate teller number
+      $stmt = $db->prepare("SELECT MAX(CAST(SUBSTRING(teller_number, 2) AS UNSIGNED)) as max_num FROM teller WHERE teller_number LIKE 'T%'");
+      if (!$stmt) {
+          throw new Exception("Database prepare failed: " . $db->error);
+      }
+      if (!$stmt->execute()) {
+          throw new Exception("Database execute failed: " . $stmt->error);
+      }
+      $result = $stmt->get_result();
+      $row = $result->fetch_assoc();
+      $next_num = ($row['max_num'] ?? 0) + 1;
+      $teller_number = sprintf("T%06d", $next_num);
 
-    // Close database connection
-    db_close($conn);
+      // Generate a temporary password hash (will be updated when teller sets their password)
+      $temp_password = bin2hex(random_bytes(8)); // Generate a random 16-character string
+      $password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
 
-} catch (Exception $e) {
-    error_log("Create Teller Exception: " . $e->getMessage());
-    sendError('Server error: ' . $e->getMessage(), 500);
-} 
+      // Insert new teller with pending status
+      $status = 'pending';
+      $stmt = $db->prepare("INSERT INTO teller (teller_number, first_name, last_name, email, status, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
+      if (!$stmt) {
+          throw new Exception("Database prepare failed: " . $db->error);
+      }
+      $stmt->bind_param("ssssss", $teller_number, $data['first_name'], $data['last_name'], $data['email'], $status, $password_hash);
+      if (!$stmt->execute()) {
+          throw new Exception("Database execute failed: " . $stmt->error);
+      }
+
+      $teller_id = $db->insert_id;
+
+      // Send verification email
+      $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+      $mail->isSMTP();
+      $mail->Host = $_ENV['GMAIL_HOST'];
+      $mail->SMTPAuth = true;
+      $mail->Username = $_ENV['GMAIL_USERNAME'];
+      $mail->Password = $_ENV['GMAIL_PASSWORD'];
+      $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+      $mail->Port = $_ENV['GMAIL_PORT'];
+      $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+      $mail->addAddress($data['email'], "{$data['first_name']} {$data['last_name']}");
+      $mail->Subject = 'Complete Your Teller Account Setup';
+      $mail->Body = "Dear {$data['first_name']} {$data['last_name']},\n\n"
+          . "An account has been created for you as a teller at StackOvercash. Here are your account details:\n\n"
+          . "Teller Number: {$teller_number}\n"
+          . "Temporary Password: {$temp_password}\n\n"
+          . "Please click the link below to set your password and complete your setup:\n"
+          . "http://localhost/project-errawrs/public/teller/set_password.html?teller_email=" . urlencode($data['email']) . "\n\n"
+          . "For security reasons, please change your password immediately after logging in.\n\n"
+          . "If you did not request this account, please ignore this email.\n\n"
+          . "Best regards,\nStackOvercash Team";
+
+      $mail->send();
+
+      $db->commit();
+      echo json_encode([
+          'success' => true,
+          'message' => 'Teller created successfully. A verification email has been sent.',
+          'teller' => [
+              'teller_id' => $teller_id,
+              'teller_number' => $teller_number,
+              'first_name' => $data['first_name'],
+              'last_name' => $data['last_name'],
+              'email' => $data['email'],
+              'status' => 'pending'
+          ]
+      ]);
+  } catch (mysqli_sql_exception $e) {
+      if (isset($db)) $db->rollback();
+      error_log("Database Error: " . $e->getMessage());
+      sendError('Database error: ' . $e->getMessage(), 500);
+  } catch (PHPMailer\PHPMailer\Exception $e) {
+      if (isset($db)) $db->rollback();
+      error_log("Email Error: " . $e->getMessage());
+      sendError('Email sending failed: ' . $e->getMessage(), 500);
+  } catch (Exception $e) {
+      if (isset($db)) $db->rollback();
+      error_log("General Error: " . $e->getMessage());
+      sendError('Server error: ' . $e->getMessage(), 500);
+  } finally {
+      if (isset($stmt)) $stmt->close();
+      if (isset($db)) db_close($db);
+  }
+  ?>
