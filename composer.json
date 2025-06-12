@@ -1,0 +1,17 @@
+{
+    "name": "daniel/project-errawrs",
+    "autoload": {
+        "psr-4": {
+            "Daniel\\ProjectErrawrs\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "victorioso-daniel-2",
+            "email": "cscb.vpaudit.daniel@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.10"
+    }
+}
