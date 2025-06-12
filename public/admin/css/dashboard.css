@@ -201,7 +201,7 @@ body {
     width: 48px;
     height: 48px;
     background-color: rgba(0, 255, 157, 0.1);
-    color: #00ff9d;
+    color: var(--color-mint);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -299,7 +299,7 @@ body {
     width: 40px;
     height: 40px;
     background-color: rgba(0, 255, 157, 0.1);
-    color: #00ff9d;
+    color: var(--color-mint);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -357,22 +357,23 @@ body {
 
 .search-box {
     position: relative;
-    width: 300px;
+    width: 500px;
 }
 
 .search-box input {
     width: 100%;
+    height: 50px;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 0.875rem;
+    font-size: 1.156rem;
     background-color: #f8fafc;
     transition: all 0.3s ease;
 }
 
 .search-box input:focus {
     outline: none;
-    border-color: #00ff9d;
+    border-color: var(--color-mint);
     background-color: #fff;
     box-shadow: 0 0 0 3px rgba(0, 255, 157, 0.1);
 }
@@ -793,6 +794,7 @@ body {
     .main-content {
         margin-left: 0;
     }
+
 
     .stats-grid {
         grid-template-columns: 1fr;
