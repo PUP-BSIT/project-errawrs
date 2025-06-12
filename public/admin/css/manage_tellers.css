@@ -1,4 +1,14 @@
 /* Page Content */
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+}
+
 .page-content {
     padding: 2rem;
     height: calc(100vh - 70px);
@@ -44,8 +54,8 @@
 
 /* Buttons */
 .btn-primary {
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -58,7 +68,7 @@
 }
 
 .btn-primary:hover {
-    background-color: #1d4ed8;
+    background-color: var(--color-lime-green);
 }
 
 .btn-secondary {
