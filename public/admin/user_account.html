@@ -94,11 +94,32 @@
                 </div>
             </nav>
 
-            <!-- User Account Content -->
-            <div class="user-account-content">
-                <!-- Content will go here -->
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Header Actions -->
+                <div class="content-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search_user" placeholder="Search users by name, or account number">
+                    </div>
+                </div>
+
+                <!-- User Cards Container -->
+                <div class="user-cards-wrapper">
+                    <div class="user-cards" id="user_cards">
+                        <!-- Cards will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be loaded dynamically -->
+                </div>
             </div>
         </main>
+
+        <!-- Toast Container -->
+        <div class="toast-container"></div>
 
         <!-- Scripts -->
         <script src="./js/user_account.js"></script>
