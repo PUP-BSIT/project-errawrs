@@ -79,9 +79,14 @@ class AdminDashboard {
             doneCreatingBtn.addEventListener('click', handleDone);
         }
 
-        const searchInput = document.getElementById('search_teller');
-        if (searchInput) {
-            searchInput.addEventListener('input', debounce(handleSearch, 300));
+        const searchTellerInput = document.getElementById('search_teller');
+        if (searchTellerInput) {
+            searchTellerInput.addEventListener('input', debounce(this.handleTellerSearch, 300));
+        }
+
+        const searchUserInput = document.getElementById('search_user');
+        if (searchUserInput) {
+            searchUserInput.addEventListener('input', debounce(this.handleUserSearch, 300));
         }
 
         // Password toggle functionality
@@ -244,6 +249,17 @@ class AdminDashboard {
             default:
                 return 'fa-info-circle';
         }
+    }
+
+    handleTellerSearch(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        loadTellers(searchTerm);
+    }
+
+    handleUserSearch(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        // TODO: Implement user search functionality
+        console.log('Searching users:', searchTerm);
     }
 }
 
@@ -444,11 +460,6 @@ function handleCreateAnother() {
 
 function handleDone() {
     hideModal(successModal);
-}
-
-function handleSearch(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    loadTellers(searchTerm);
 }
 
 function formatDate(dateString) {

@@ -96,9 +96,8 @@
 
             <!-- Dashboard Content -->
             <div class="dashboard-content">
-                <!-- Dashboard Section -->
-                <section class="content-section dashboard-section active">
-                    <!-- Statistics Cards -->
+                <!-- Statistics Section -->
+                <section class="content-section stats-section active">
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon">
@@ -130,79 +129,39 @@
                                 <p class="stat-change neutral">No change</p>
                             </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="stat-details">
-                                <h3>Pending </h3>
-                                <p class="stat-number" id="pending_issues">0</p>
-                                <p class="stat-change negative">+2 new issues</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="dashboard-section">
-                        <div class="section-header">
-                            <h2>Recent Activity</h2>
-                            <button class="btn-view-all">View All</button>
-                        </div>
-                        <div class="activity-list" id="recent_activity">
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <div class="activity-details">
-                                    <p class="activity-text">New user account created</p>
-                                    <p class="activity-time">2 minutes ago</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </div>
-                                <div class="activity-details">
-                                    <p class="activity-text">Large transaction processed</p>
-                                    <p class="activity-time">15 minutes ago</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-user-shield"></i>
-                                </div>
-                                <div class="activity-details">
-                                    <p class="activity-text">New teller account approved</p>
-                                    <p class="activity-time">1 hour ago</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </section>
 
-                <!-- Teller Management Section -->
-                <section class="content-section teller-section">
-                    <div class="section-header">
-                        <div class="section-title">Manage Tellers</div>
-                        <div class="header-actions">
+                <!-- Management Sections -->
+                <div class="management-sections">
+                    <!-- Teller Management Section -->
+                    <section class="content-section teller-section">
+                        <div class="section-header">
+                            <h2>Teller Management</h2>
                             <div class="search-box">
                                 <input type="text" id="search_teller" placeholder="Search tellers...">
                                 <i class="fas fa-search"></i>
                             </div>
-                            <button id="create_teller_btn" class="btn-create">
-                                <i class="fas fa-plus"></i>
-                                Create New Teller
-                            </button>
                         </div>
-                    </div>
+                        <div id="teller_cards" class="teller-cards">
+                            <!-- Teller cards will be loaded here dynamically -->
+                        </div>
+                    </section>
 
-                    <div id="teller_cards" class="teller-cards">
-                        <!-- Teller cards will be loaded here dynamically -->
-                    </div>
-                    <div id="teller_pagination" class="teller-pagination">
-                        <!-- Pagination will be loaded here dynamically -->
-                    </div>
-                </section>
+                    <!-- User Management Section -->
+                    <section class="content-section user-section">
+                        <div class="section-header">
+                            <h2>User Management</h2>
+                            <div class="search-box">
+                                <input type="text" id="search_user" placeholder="Search user accounts...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                        <div id="user_cards" class="user-cards">
+                            <!-- User cards will be loaded here dynamically -->
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
 
