@@ -13,11 +13,25 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
 
 try {
     $db = db_connect();
-    // Join user and account tables, get the first (or main) active account per user
-    $query = 'SELECT u.user_id, a.account_number, u.username, u.first_name, u.last_name, u.phone_number, u.created_at
-              FROM user u
-              LEFT JOIN account a ON u.user_id = a.user_id AND a.status = "active"
-              GROUP BY u.user_id';
+    // Subquery to get the first active account per user
+    $query = '
+        SELECT 
+            u.user_id, 
+            a.account_number, 
+            u.username, 
+            u.first_name, 
+            u.last_name, 
+            u.phone_number, 
+            u.created_at
+        FROM user u
+        LEFT JOIN account a 
+            ON a.account_id = (
+                SELECT account_id 
+                FROM account 
+                WHERE user_id = u.user_id AND status = "active" 
+                ORDER BY created_at ASC LIMIT 1
+            )
+    ';
     $result = $db->query($query);
     $users = [];
     while ($row = $result->fetch_assoc()) {
