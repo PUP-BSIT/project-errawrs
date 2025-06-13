@@ -1,51 +1,86 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/error.log');
+
+// Start output buffering
+ob_start();
+
+// Set headers
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Accept, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
 
-// Session timeout in seconds (5 minutes)
-define('SESSION_TIMEOUT', 300);
-
-// Check if session exists
-if (!isset($_SESSION['auth']) || !isset($_SESSION['auth']['id'])) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'authenticated' => false,
-        'error' => 'Not authenticated'
-    ]);
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
     exit();
 }
 
-// Check if session has expired based on last activity time
-if (isset($_SESSION['auth']['last_activity']) && 
-    (time() - $_SESSION['auth']['last_activity'] > SESSION_TIMEOUT)) {
-    // Session has expired
-    session_unset();
-    session_destroy();
-    http_response_code(401);
+try {
+    $sessionManager = SessionManager::getInstance();
+
+    // Log session data for debugging
+    error_log("Session check - Session data: " . print_r($_SESSION, true));
+    error_log("Session check - Cookie data: " . print_r($_COOKIE, true));
+
+    // Check if session exists and is valid
+    if (!$sessionManager->isAuthenticated()) {
+        error_log("Session check failed - Not authenticated");
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'authenticated' => false,
+            'error' => 'Not authenticated'
+        ]);
+        exit();
+    }
+
+    // Get session data
+    $sessionData = $sessionManager->getSessionData();
+
+    // Check if this is a new session (within 5 seconds of login)
+    $isNewSession = isset($sessionData['logged_in_at']) && 
+                   (time() - $sessionData['logged_in_at'] <= 5);
+
+    // Only check expiry if it's not a new session
+    if (!$isNewSession && $sessionManager->isSessionExpired()) {
+        error_log("Session check failed - Session expired");
+        $sessionManager->killSession();
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'authenticated' => false,
+            'error' => 'Session expired'
+        ]);
+        exit();
+    }
+
+    // Update last activity time
+    $sessionManager->updateActivity();
+
+    // Return session data
+    echo json_encode([
+        'success' => true,
+        'authenticated' => true,
+        'user' => $sessionData
+    ]);
+
+} catch (Exception $e) {
+    error_log("Session check error: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'authenticated' => false,
-        'error' => 'Session expired'
+        'error' => 'Internal server error'
     ]);
-    exit();
-}
-
-// Update last activity time
-$_SESSION['auth']['last_activity'] = time();
-
-// Return session data
-echo json_encode([
-    'success' => true,
-    'authenticated' => true,
-    'user' => [
-        'id' => $_SESSION['auth']['id'],
-        'username' => $_SESSION['auth']['identifier'],
-        'type' => $_SESSION['auth']['type'],
-        'first_name' => $_SESSION['auth']['first_name'] ?? '',
-        'last_name' => $_SESSION['auth']['last_name'] ?? '',
-        'phone_number' => $_SESSION['auth']['phone_number'] ?? '',
-        'last_activity' => $_SESSION['auth']['last_activity'],
-        'session_expires_in' => SESSION_TIMEOUT
-    ]
-]); 
+} finally {
+    // Flush output buffer
+    ob_end_flush();
+} 

@@ -13,6 +13,24 @@ let lastKnownValues = {
     reopened_accounts: 0
 };
 
+// Show notification function
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('notification_container');
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    container.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            container.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
 // Update teller name in the UI
 document.addEventListener("DOMContentLoaded", () => {
     // Update name in sidebar and welcome section
@@ -29,6 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Set up auto-refresh every 5 minutes
     setInterval(fetchDashboardSummary, 5 * 60 * 1000);
+
+    // Load recent registrations
+    loadRecentRegistrations();
+    
+    // Refresh registrations every 30 seconds
+    setInterval(loadRecentRegistrations, 30000);
 });
 
 // Handle logout
@@ -61,9 +85,11 @@ async function fetchDashboardSummary() {
             updateDashboardSummary(data.summary);
         } else {
             console.error("Failed to fetch dashboard summary:", data.error);
+            showNotification(data.error || "Failed to fetch dashboard summary", 'error');
         }
     } catch (error) {
         console.error("Error fetching dashboard summary:", error);
+        showNotification("Error fetching dashboard summary", 'error');
     }
 }
 
@@ -107,3 +133,105 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = './bank_teller_login.html';
     }
 });
+
+// Load recent registration requests
+async function loadRecentRegistrations() {
+    try {
+        const response = await fetch('../../src/api/teller/get_registrations.php');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.message || data.error || 'Failed to load registrations');
+        }
+
+        const registrationList = document.getElementById('recent_registrations');
+        const registrations = data.registrations.slice(0, 3); // Show only 3 most recent
+
+        if (registrations.length === 0) {
+            registrationList.innerHTML = `
+                <div class="no-data">
+                    No pending registration requests
+                </div>
+            `;
+            return;
+        }
+
+        registrationList.innerHTML = registrations.map(reg => `
+            <div class="registration-item" data-id="${reg.registration_id}">
+                <div class="registration-info">
+                    <div class="registration-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="registration-details">
+                        <div class="registration-name">${reg.first_name} ${reg.last_name}</div>
+                        <div class="registration-date">Submitted on ${formatDate(reg.created_at)}</div>
+                    </div>
+                </div>
+                <div class="registration-actions">
+                    <button class="action-btn approve" onclick="handleRegistration(${reg.registration_id}, 'approve')">
+                        <i class="fas fa-check"></i> Approve
+                    </button>
+                    <button class="action-btn deny" onclick="handleRegistration(${reg.registration_id}, 'deny')">
+                        <i class="fas fa-times"></i> Deny
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        // Update pending count in summary
+        document.getElementById('total-pending').textContent = `${data.registrations.length} Requests`;
+        document.getElementById('pending-updated').textContent = formatTime(new Date());
+
+    } catch (error) {
+        console.error('Error loading registrations:', error);
+        showNotification('Error loading registration requests: ' + error.message, 'error');
+    }
+}
+
+// Handle registration approval/denial
+async function handleRegistration(registrationId, action) {
+    try {
+        const response = await fetch('../../src/api/teller/review_registration.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                registration_id: registrationId,
+                action: action
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.message || data.error || 'Operation failed');
+        }
+
+        showNotification(`Registration ${action === 'approve' ? 'approved' : 'denied'} successfully`, 'success');
+        loadRecentRegistrations(); // Refresh the list
+
+    } catch (error) {
+        console.error('Error handling registration:', error);
+        showNotification(`Error ${action === 'approve' ? 'approving' : 'denying'} registration: ${error.message}`, 'error');
+    }
+}
+
+// Format date for display
+function formatDate(dateString) {
+    const options = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}

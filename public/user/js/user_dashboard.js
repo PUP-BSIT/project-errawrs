@@ -1,14 +1,4 @@
-// Extend the existing API object from session-manager.js
-// Add dashboard-specific endpoints
-if (!API.USER) API.USER = {};
-if (!API.CONTENT) API.CONTENT = {};
-
-// Add or update USER endpoints
-Object.assign(API.USER, {
-    ACCOUNTS: '../../src/api/user/accounts.php',
-    TRANSACTIONS: '../../src/api/user/transactions.php',
-    FINANCIAL_TIPS: '../../src/api/user/financial-tips.php'
-});
+// No need to define API object here as it's already defined in api.js
 
 // No need to redefine ROUTES as it's already declared in session-manager.js
 
@@ -49,6 +39,18 @@ let user_data = {}; // Will be populated from API
 let user_accounts = []; // Will be populated from API
 let accountNumbersMasked = true;
 
+// Initialize session manager
+const sessionManager = new SessionManager({
+    onTimeout: () => {
+        show_notification('Your session has expired. Redirecting to login...', 'warning');
+        setTimeout(() => {
+            window.location.href = ROUTES.LOGIN;
+        }, 2000);
+    },
+    onWarning: (timeLeft) => {
+        show_notification(`Your session will expire in ${Math.round(timeLeft / 60)} minutes. Please save your work.`, 'warning');
+    }
+});
 
 function show_notification(message, type) {
     const notification_container = document.querySelector('.notification-container'); 
@@ -77,12 +79,95 @@ function show_notification(message, type) {
     }, 3000); // 3 seconds notification duration
 }
 
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    init_dashboard(); // Start the dynamic initialization
+});
+
+// Initialize dashboard
+async function init_dashboard() {
+    try {
+        // First check session
+        const isAuthenticated = await checkSession();
+        if (!isAuthenticated) {
+            return;
+        }
+
+        // Fetch initial data
+        await Promise.all([
+            fetchUserData(),
+            fetchUserAccounts(),
+            fetchFinancialTip()
+        ]);
+
+        // Set up UI interactions
+        setup_smooth_animations();
+        setup_profile_edit();
+
+        // Set up logout handler
+        if (logout_btn) {
+            logout_btn.addEventListener('click', handleLogout);
+        }
+
+        // Set up periodic data refresh
+        setInterval(() => {
+            checkSession().then(isValid => {
+                if (isValid) {
+                    fetchUserAccounts();
+                    fetchRecentTransactions();
+                }
+            });
+        }, 30000); // Check every 30 seconds
+    } catch (error) {
+        console.error('Dashboard initialization error:', error);
+        show_notification('Error initializing dashboard', 'error');
+    }
+}
+
+// Check session status
+async function checkSession() {
+    try {
+        const response = await fetch(API.AUTH.SESSION_CHECK, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Session check response:', data); // Debug log
+
+        if (!data.success || !data.authenticated) {
+            show_notification('Session expired. Redirecting to login...', 'warning');
+            setTimeout(() => {
+                window.location.href = ROUTES.LOGIN;
+            }, 2000);
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.error('Session check error:', error);
+        return false;
+    }
+}
 
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        // Use the new session check endpoint instead of profile.php
-        const response = await fetch(API.AUTH.SESSION_CHECK);
+        const response = await fetch(API.AUTH.SESSION_CHECK, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -90,24 +175,19 @@ async function fetchUserData() {
             if (user_name_element) {
                 user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
             }
-             // Assuming there is a welcome_user_name_element on the dashboard
-             const welcome_user_name_element = document.getElementById('welcome_user_name');
-             if (welcome_user_name_element) welcome_user_name_element.textContent = user_data.first_name;
+            // Update welcome message
+            const welcome_user_name_element = document.getElementById('welcome_user_name');
+            if (welcome_user_name_element) {
+                welcome_user_name_element.textContent = user_data.first_name;
+            }
 
-             display_user_initial(); // Update the initial
-        } else {
-            show_notification(data.error || 'Session expired or invalid', 'error');
-            // Redirect to login page if not authenticated
-            setTimeout(() => {
-                window.location.href = ROUTES.LOGIN;
-            }, 2000); // 2 seconds delay
+            display_user_initial(); // Update the initial
         }
     } catch (error) {
-        show_notification('Error fetching user data', 'error');
-        console.error('Error:', error);
+        console.error('Error fetching user data:', error);
+        show_notification('Error loading user data', 'error');
     }
 }
-
 
 // Fetch user accounts from API and display primary account balance
 async function fetchUserAccounts() {
@@ -409,7 +489,6 @@ async function fetchRecentTransactions(accountNumber) {
     }
 }
 
-
 // Function to display user initial in the avatar circle
 function display_user_initial() {
     if (!user_avatar_container) return;
@@ -508,48 +587,6 @@ async function fetchFinancialTip() {
         }
     }
 }
-
-// Initialize Dashboard
-function init_dashboard() {
-    fetchUserData(); // Fetch user data first
-    fetchUserAccounts(); // Fetch accounts (this will also fetch transactions for the selected account)
-    fetchFinancialTip(); // Fetch financial tip
-    setup_smooth_animations(); // Keep existing setup
-    setup_profile_edit(); // Setup profile edit interactions
-
-    console.log('StackOvercash Dashboard Initialized Dynamically');
-}
-
-
-// Add click handler for transfer now button (assuming it navigates)
-if (transfer_now_btn) {
-    transfer_now_btn.addEventListener('click', (event) => {
-        // Prevent default navigation if disabled
-        if (transfer_now_btn.classList.contains('disabled')) {
-            event.preventDefault();
-             show_notification('Please add an account with a balance to transfer funds.', CLASS.INFO);
-            return;
-        }
-        // Proceed with navigation if not disabled
-        window.location.href = '../user/transfer.html';
-    });
-}
-
-
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    init_dashboard(); // Start the dynamic initialization
-});
-
-
-// Keep the format_currency_exact function if it's used elsewhere and needed globally
-// It seems update_balance_display formats directly now, so maybe not needed.
-// function format_currency_exact(amount) { ... }
-
-// Keep the create_transaction_element_exact and add_transaction_hover_effect if needed for transactions display
-// These seem to be integrated into fetchRecentTransactions and render logic now, maybe not needed globally.
-// function create_transaction_element_exact(transaction) { ... }
-// function add_transaction_hover_effect(item) { ... }
 
 // Function to handle logout
 async function handleLogout() {
