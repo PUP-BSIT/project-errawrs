@@ -182,7 +182,7 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 24px 32px;
+    padding: 24px 32px 0px 32px;
     margin-left: 250px;
     height: 100vh;
     overflow-y: auto;
@@ -353,13 +353,13 @@ body {
 /* Welcome Section */
 .welcome-section {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    margin: 0px 0px 5px 0px;
+    margin: 20px 50px 120px 70px;
 }
 
 .greeting-container {
-    text-align: center;
+    text-align: left;
 }
 
 .hello-text,
@@ -376,13 +376,10 @@ body {
     margin-top: 10px;
 }
 
+/* Search Container Styles */
 .search-container {
-    margin-left: 40px;
     width: 500px;
-}
-
-.search-container i {
-    font-size: 1.5rem;
+    margin-right: 40px;
 }
 
 .search-label {
@@ -424,6 +421,66 @@ body {
     font-size: 16px;
 }
 
+.search-results {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--box-shadow-light);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.search-results.show {
+    display: block;
+}
+
+.search-result-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: var(--color-bg-gradient-start);
+}
+
+.result-name {
+    font-weight: 600;
+    color: var(--color-primary-black);
+    margin-bottom: 5px;
+}
+
+.result-account {
+    font-size: 0.9rem;
+    color: var(--color-gray);
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: var(--color-gray);
+}
+
+.loading-results {
+    padding: 20px;
+    text-align: center;
+    color: var(--color-gray);
+}
+
+.loading-results i {
+    margin-right: 10px;
+}
+
 /* Summary Section */
 .summary-section {
     background: var(--color-white);
@@ -431,7 +488,7 @@ body {
     padding: 15px 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     width: 1000px;
-    margin: auto;
+    margin: 10px 0px 0px 120px;
     display: flex;
     flex-direction: column;
 }

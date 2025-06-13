@@ -13,6 +13,8 @@ let lastKnownValues = {
     reopened_accounts: 0
 };
 
+let searchTimeout = null;
+
 // Update teller name in the UI
 document.addEventListener("DOMContentLoaded", () => {
     // Update name in sidebar and welcome section
@@ -24,12 +26,116 @@ document.addEventListener("DOMContentLoaded", () => {
         nameTextElement.textContent = tellerInfo.name + "!";
     }
 
+    // Set up search functionality
+    setupSearch();
+
     // Fetch and update dashboard summary
     fetchDashboardSummary();
 
     // Set up auto-refresh every 5 minutes
     setInterval(fetchDashboardSummary, 5 * 60 * 1000);
 });
+
+// Set up search functionality
+function setupSearch() {
+    const searchInput = document.getElementById('quick_search');
+    const searchResults = document.getElementById('search_results');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            // Hide results if search term is empty
+            if (searchTerm.length === 0) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            // Show loading state
+            searchResults.style.display = 'block';
+            searchResults.innerHTML = `
+                <div class="loading-results">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Searching...
+                </div>`;
+
+            // Debounce search
+            searchTimeout = setTimeout(() => {
+                performSearch(searchTerm);
+            }, 300);
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Perform search
+async function performSearch(searchTerm) {
+    try {
+        const response = await fetch(`../../src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
+        const data = await response.json();
+
+        const searchResults = document.getElementById('search_results');
+
+        if (!data.success) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Error: ${data.error || 'Failed to search accounts'}
+                </div>`;
+            return;
+        }
+
+        if (data.accounts.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    No accounts found
+                </div>`;
+            return;
+        }
+
+        // Display results
+        const resultsHtml = data.accounts.map(account => `
+            <div class="search-result-item" onclick="handleAccountClick('${account.account_number}')">
+                <div class="result-name">${account.user.name}</div>
+                <div class="result-account">
+                    Account: ${account.account_number} | 
+                    Balance: ₱${account.balance} | 
+                    Status: ${account.status}
+                </div>
+            </div>
+        `).join('');
+
+        searchResults.innerHTML = resultsHtml;
+        searchResults.style.display = 'block';
+
+    } catch (error) {
+        console.error('Error searching accounts:', error);
+        const searchResults = document.getElementById('search_results');
+        searchResults.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-exclamation-circle"></i>
+                Error searching accounts
+            </div>`;
+    }
+}
+
+// Handle account click
+function handleAccountClick(accountNumber) {
+    // Redirect to account details page
+    window.location.href = `bank_teller_account_details.html?account=${accountNumber}`;
+}
 
 // Handle logout
 document.querySelector('.nav-logout a').addEventListener('click', function(e) {
