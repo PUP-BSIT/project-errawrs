@@ -191,11 +191,11 @@ function updateAccountDetails(accounts) {
                 chevron.style.transform = 'rotate(0deg)';
                 
                 if (button.classList.contains('deposit')) {
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showDepositForm();
+                    sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));
+                    window.location.href = "./bank_teller_deposit.html";
                 } else if (button.classList.contains('withdraw')) {
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showWithdrawForm();
+                    sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));
+                    window.location.href = "./bank_teller_withdraw.html";
                 } else if (button.classList.contains('close')) {
                     sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     closeAccount();

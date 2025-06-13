@@ -13,6 +13,18 @@ if (!tellerInfo) {
 
 let selectedAccount = null;
 
+// Check for stored account info
+const storedAccount = sessionStorage.getItem('selectedAccount');
+if (storedAccount) {
+    selectedAccount = JSON.parse(storedAccount);
+    // Clear the stored account to prevent it from persisting
+    sessionStorage.removeItem('selectedAccount');
+    
+    // Auto-fill the form
+    document.getElementById('account_number_input').value = selectedAccount.account_number;
+    updateDisplayedBalance();
+}
+
 // Initialize page
 function updateDisplayedBalance() {
     if (selectedAccount) {
