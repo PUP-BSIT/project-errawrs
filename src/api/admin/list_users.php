@@ -13,40 +13,42 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
 
 try {
     $db = db_connect();
-    // Subquery to get the first active account per user
+    // Get all users and all their accounts (active and closed)
     $query = '
         SELECT 
             u.user_id, 
-            a.account_number, 
             u.username, 
             u.first_name, 
             u.last_name, 
             u.phone_number, 
-            u.created_at
+            u.created_at AS user_created_at,
+            a.account_number,
+            a.balance,
+            a.status AS account_status,
+            a.account_type,
+            a.created_at AS account_created_at
         FROM user u
-        LEFT JOIN account a 
-            ON a.account_id = (
-                SELECT account_id 
-                FROM account 
-                WHERE user_id = u.user_id AND status = "active" 
-                ORDER BY created_at ASC LIMIT 1
-            )
+        LEFT JOIN account a ON u.user_id = a.user_id
+        ORDER BY u.user_id, a.account_id
     ';
     $result = $db->query($query);
-    $users = [];
+    $list = [];
     while ($row = $result->fetch_assoc()) {
-        $users[] = [
+        $list[] = [
             'user_id' => $row['user_id'],
-            'account_number' => $row['account_number'],
-            'account_number' => $row['account_number'],
             'username' => $row['username'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
             'phone_number' => $row['phone_number'],
-            'created_at' => $row['created_at'],
+            'user_created_at' => $row['user_created_at'],
+            'account_number' => $row['account_number'],
+            'balance' => $row['balance'],
+            'account_status' => $row['account_status'],
+            'account_type' => $row['account_type'],
+            'account_created_at' => $row['account_created_at']
         ];
     }
-    echo json_encode(['success' => true, 'users' => $users]);
+    echo json_encode(['success' => true, 'list' => $list]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
