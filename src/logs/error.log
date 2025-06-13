@@ -1557,3 +1557,495 @@
     [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
 )
 
+[13-Jun-2025 21:53:48 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844427
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:48 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:53:49 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:53:49 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:54:17 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844428
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:17 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:54:17 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844457
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:17 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:54:18 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844457
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:18 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:54:19 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:54:19 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:54:47 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844458
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:47 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:54:47 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844487
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:47 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:54:48 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844487
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:54:48 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:54:49 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:54:49 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844488
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844544
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844544
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:55:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:55:45 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:55:45 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844544
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844604
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844604
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:56:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:56:45 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:56:45 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844604
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844664
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844664
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:57:44 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:57:45 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:57:45 Asia/Manila] Found 1 accounts for user ID: 22
