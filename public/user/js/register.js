@@ -5,14 +5,14 @@ const FORM_VALIDATION = {
 	USERNAME_MIN_LENGTH: 3,
 	USERNAME_MAX_LENGTH: 20,
 	FIRST_NAME_MIN_LENGTH: 2,
-    LAST_NAME_MIN_LENGTH: 2
+	LAST_NAME_MIN_LENGTH: 2
 };
 
 const NOTIFICATION_TYPES = {
 	SUCCESS: "success",
 	ERROR: "error",
 	WARNING: "warning",
-    INFO: "info"
+	INFO: "info"
 };
 
 const STEPS = {
@@ -1460,7 +1460,7 @@ class RegistrationManager {
 
 		const isValid = age >= 18;
 		this.isUnder18 = !isValid;
-
+		
 		const ageWarning = document.getElementById('age_warning');
 		if (ageWarning) {
 			ageWarning.style.display = isValid ? 'none' : 'block';

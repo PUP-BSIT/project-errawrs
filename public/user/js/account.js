@@ -72,6 +72,7 @@ let state = {
 async function fetchUserData() {
     try {
         // Use session_check.php instead of profile.php
+        // Use session_check.php instead of profile.php
         const response = await fetch(API.AUTH.SESSION_CHECK);
         const data = await response.json();
 
@@ -104,6 +105,18 @@ function updateUserDisplay() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
+        const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS, {
             method: 'GET',
             credentials: 'include',
@@ -185,7 +198,48 @@ function createAccountItem(account) {
         CLOSED: 'closed'
     };
     
+    // CSS Classes
+    const CLASS = {
+        ACCOUNT_ITEM: 'account-item',
+        ACCOUNT_INFO: 'account-info',
+        INFO_GROUP: 'info-group',
+        INFO_LABEL: 'info-label',
+        INFO_VALUE: 'info-value',
+        ACCOUNT_TYPE_BADGE: 'account-type-badge',
+        ACCOUNT_STATUS: 'account-status',
+        ACCOUNT_ACTIONS: 'account-actions',
+        THREE_DOTS_BUTTON: 'three-dots-button',
+        ACTION_MENU: 'action-menu',
+        MENU_ITEM: 'menu-item',
+        TRANSFER_BUTTON: 'transfer-button',
+        CLOSE_BUTTON: 'close-button',
+        HIDDEN: 'hidden'
+    };
+    
+    // Icons
+    const ICON = {
+        ELLIPSIS_H: 'fas fa-ellipsis-h'
+    };
+    
+    // Currency
+    const CURRENCY = {
+        SYMBOL: '₱',
+        LOCALE: 'en-US'
+    };
+    
+    // Account Status
+    const ACCOUNT_STATUS = {
+        CLOSED: 'closed'
+    };
+    
     const accountItem = document.createElement('div');
+    accountItem.classList.add(CLASS.ACCOUNT_ITEM);
+    accountItem.dataset.accountId = account.id;
+
+    // Format account_type for display
+    const accountTypeDisplay = account.account_type 
+        ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) 
+        : 'Standard';
     accountItem.classList.add(CLASS.ACCOUNT_ITEM);
     accountItem.dataset.accountId = account.id;
 
@@ -225,7 +279,16 @@ function createAccountItem(account) {
                 account.status === ACCOUNT_STATUS.CLOSED ? 'disabled' : ''
             }>
                 <i class="${ICON.ELLIPSIS_H}"></i>
+        <div class="${CLASS.ACCOUNT_ACTIONS}">
+            <button class="${CLASS.THREE_DOTS_BUTTON}" ${
+                account.status === ACCOUNT_STATUS.CLOSED ? 'disabled' : ''
+            }>
+                <i class="${ICON.ELLIPSIS_H}"></i>
             </button>
+            <div class="${CLASS.ACTION_MENU} ${CLASS.HIDDEN}">
+                <button class="${CLASS.MENU_ITEM} ${CLASS.TRANSFER_BUTTON}">Transfer</button>
+                <button class="${CLASS.MENU_ITEM} ${CLASS.CLOSE_BUTTON}">Close</button>
+            </div>
             <div class="${CLASS.ACTION_MENU} ${CLASS.HIDDEN}">
                 <button class="${CLASS.MENU_ITEM} ${CLASS.TRANSFER_BUTTON}">Transfer</button>
                 <button class="${CLASS.MENU_ITEM} ${CLASS.CLOSE_BUTTON}">Close</button>
@@ -236,6 +299,281 @@ function createAccountItem(account) {
     return accountItem;
 }
 
+// Attach event listeners to account items
+function attachAccountItemListeners() {
+    // CSS Classes
+    const CLASS = {
+        THREE_DOTS_BUTTON: 'three-dots-button',
+        ACCOUNT_ACTIONS: 'account-actions',
+        ACTION_MENU: 'action-menu',
+        HIDDEN: 'hidden'
+    };
+    
+    document.querySelectorAll(`.${CLASS.THREE_DOTS_BUTTON}`).forEach((button) => {
+        button.addEventListener('click', (e) => {
+            const menu = e.target
+                .closest(`.${CLASS.ACCOUNT_ACTIONS}`)
+                .querySelector(`.${CLASS.ACTION_MENU}`);
+            const allMenus = document.querySelectorAll(`.${CLASS.ACTION_MENU}`);
+
+            // Close all other menus
+            allMenus.forEach((m) => {
+                if (m !== menu) m.classList.add(CLASS.HIDDEN);
+            });
+
+            menu.classList.toggle(CLASS.HIDDEN);
+        });
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest(`.${CLASS.ACCOUNT_ACTIONS}`)) {
+            document.querySelectorAll(`.${CLASS.ACTION_MENU}`).forEach((menu) => {
+                menu.classList.add(CLASS.HIDDEN);
+            });
+        }
+    });
+}
+
+// Account Type Selection Handlers
+account_type_radios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+        selectedAccountType = radio.value;
+        proceed_account_type_button.disabled = false;
+    });
+});
+
+proceed_account_type_button.addEventListener('click', () => {
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    if (selectedAccountType) {
+        account_type_modal.classList.add(CLASS.HIDDEN);
+        selected_account_type_span.textContent = selectedAccountType;
+        confirmation_modal.classList.remove(CLASS.HIDDEN);
+    }
+});
+
+cancel_account_type_button.addEventListener('click', () => {
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    account_type_modal.classList.add(CLASS.HIDDEN);
+    selectedAccountType = null;
+    account_type_radios.forEach((radio) => (radio.checked = false));
+    proceed_account_type_button.disabled = true;
+});
+
+// Confirmation Modal Handlers
+confirm_add_account_checkbox.addEventListener('change', () => {
+    proceed_add_account_button.disabled = !confirm_add_account_checkbox.checked;
+});
+
+proceed_add_account_button.addEventListener('click', async () => {
+    try {
+        // Text constants
+        const TEXT = {
+            PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
+            OTP_SENT: 'OTP sent successfully. Please verify to complete account creation.',
+            OTP_SEND_ERROR: 'Failed to send OTP',
+            OTP_ERROR: 'Error sending OTP'
+        };
+        
+        // CSS class constants
+        const CLASS = {
+            HIDDEN: 'hidden',
+            SUCCESS: 'success',
+            ERROR: 'error'
+        };
+        
+        // Local Storage Keys
+        const STORAGE_KEY = {
+            PENDING_ACCOUNT_TYPE: 'pending_account_type'
+        };
+        
+        // Get the user's phone number from session data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
+            return;
+        }
+        
+        // Store selected account type in localStorage for later use
+        localStorage.setItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE, selectedAccountType);
+        
+        // Send OTP to user's phone number
+        const response = await fetch(
+            API.AUTH.SEND_OTP,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone_number: phoneNumber,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+            confirmation_modal.classList.add(CLASS.HIDDEN);
+            otp_modal.classList.remove(CLASS.HIDDEN);
+            showNotification(TEXT.OTP_SENT, CLASS.SUCCESS);
+            
+            // Remove auto-filling of OTP
+            if (otp_input) {
+                otp_input.value = '';
+            }
+        } else {
+            showNotification(data.error || TEXT.OTP_SEND_ERROR, CLASS.ERROR);
+        }
+    } catch (error) {
+        // Text constants
+        const TEXT = {
+            OTP_ERROR: 'Error sending OTP'
+        };
+        
+        // CSS class constants
+        const CLASS = {
+            ERROR: 'error'
+        };
+        
+        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
+        console.error('Error:', error);
+    }
+});
+
+cancel_add_account_button.addEventListener('click', () => {
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    confirmation_modal.classList.add(CLASS.HIDDEN);
+    confirm_add_account_checkbox.checked = false;
+    proceed_add_account_button.disabled = true;
+});
+
+// OTP Verification Handlers
+verify_otp_button.addEventListener('click', async () => {
+    const otp = otp_input.value.trim();
+
+    // Text constants
+    const TEXT = {
+        ENTER_OTP: 'Please enter OTP',
+        PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
+        ACCOUNT_TYPE_NOT_FOUND: 'Account type not found. Please try again.',
+        ACCOUNT_CREATED: 'Account created successfully',
+        ACCOUNT_ERROR: 'Failed to create account',
+        INVALID_OTP: 'Invalid OTP',
+        OTP_ERROR: 'Error sending OTP'
+    };
+    
+    // CSS class constants
+    const CLASS = {
+        HIDDEN: 'hidden',
+        SUCCESS: 'success',
+        ERROR: 'error'
+    };
+    
+    // Local Storage Keys
+    const STORAGE_KEY = {
+        PENDING_ACCOUNT_TYPE: 'pending_account_type'
+    };
+
+    if (!otp) {
+        showNotification(TEXT.ENTER_OTP, CLASS.ERROR);
+        return;
+    }
+
+    try {
+        // Get the phone number from user data
+        const phoneNumber = user_data.phone_number;
+        
+        if (!phoneNumber) {
+            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
+            return;
+        }
+        
+        // First verify the OTP
+        const verifyResponse = await fetch(
+            API.AUTH.VERIFY_OTP,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    otp: otp,
+                    phone_number: phoneNumber
+                }),
+            }
+        );
+
+        const verifyData = await verifyResponse.json();
+
+        if (verifyData.success) {
+            // Get the account type from localStorage
+            const accountType = localStorage.getItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
+            
+            if (!accountType) {
+                showNotification(TEXT.ACCOUNT_TYPE_NOT_FOUND, CLASS.ERROR);
+                return;
+            }
+            
+            // If OTP verification is successful, create the account
+            const createResponse = await fetch(
+                API.USER.CREATE_ACCOUNT,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        account_type: accountType,
+                        verified: true
+                    }),
+                }
+            );
+
+            const createData = await createResponse.json();
+
+            if (createData.success) {
+                otp_modal.classList.add(CLASS.HIDDEN);
+                showNotification(TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
+                
+                // Clear the stored account type
+                localStorage.removeItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
+                
+                await fetchUserAccounts(); // Refresh account list
+            } else {
+                showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
+            }
+        } else {
+            showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
+        }
+    } catch (error) {
+        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
+        console.error('Error:', error);
+    }
+});
+
+cancel_otp_button.addEventListener('click', () => {
+    // CSS Classes
+    const CLASS = {
+        HIDDEN: 'hidden'
+    };
+    
+    otp_modal.classList.add(CLASS.HIDDEN);
+    otp_input.value = '';
+});
 // Attach event listeners to account items
 function attachAccountItemListeners() {
     // CSS Classes

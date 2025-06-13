@@ -57,7 +57,7 @@ try {
     echo json_encode([
         'success' => false,
         'authenticated' => false,
-        'error' => 'Session expired'
+        'error' => 'Internal server error'
     ]);
     exit();
 }

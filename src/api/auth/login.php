@@ -114,7 +114,65 @@ if ($loginType === 'teller') {
 if (strlen($password) < 8) {
     handleError('Password must be at least 8 characters long');
     }
-    
+
+    $data = json_decode($input, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        handleError('Invalid JSON data: ' . json_last_error_msg());
+    }
+
+    // Log received data for debugging
+    error_log("Received login data: " . print_r($data, true));
+
+    // Guard against missing required fields
+    if (!isset($data['password']) || !isset($data['login_type'])) {
+        handleError('Password and login type are required');
+    }
+
+    $loginType = strtolower(trim($data['login_type']));
+    $password = $data['password'];
+
+    // Guard against invalid login type
+    $validLoginTypes = ['admin', 'user', 'teller'];
+    if (!in_array($loginType, $validLoginTypes)) {
+        handleError('Invalid login type');
+    }
+
+    // Get identifier based on login type
+    $identifier = null;
+    if ($loginType === 'teller') {
+        if (!isset($data['teller_number'])) {
+            handleError('Teller number is required');
+        }
+        $identifier = trim($data['teller_number']);
+    } else {
+        if (!isset($data['username'])) {
+            handleError('Username is required');
+        }
+        $identifier = trim($data['username']);
+    }
+
+    // Enhanced validation
+    if (empty($identifier)) {
+        handleError($loginType === 'teller' ? 'Teller number cannot be empty' : 'Username cannot be empty');
+    }
+
+    if ($loginType === 'teller') {
+        // More flexible teller number validation
+        if (strlen($identifier) < 1 || strlen($identifier) > 50) {
+            handleError('Invalid teller number format');
+        }
+    } else {
+        // Username validation
+        if (strlen($identifier) < 3 || strlen($identifier) > 50) {
+            handleError('Username must be between 3 and 50 characters');
+        }
+    }
+
+    // Validate password length
+    if (strlen($password) < 8) {
+        handleError('Password must be at least 8 characters long');
+    }
+
     // Prepare query based on login type
     $queries = [
         'admin' => [

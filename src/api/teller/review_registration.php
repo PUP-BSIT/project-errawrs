@@ -6,13 +6,13 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
   use PHPMailer\PHPMailer\PHPMailer;
   use PHPMailer\PHPMailer\Exception;
 
-  header('Content-Type: application/json');
+header('Content-Type: application/json');
 
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      http_response_code(405);
-      echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-      exit();
-  }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    exit();
+}
 
 if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'teller') {
       http_response_code(403);
@@ -30,9 +30,9 @@ if (!isset($input['registration_id']) || !isset($input['action']) || !in_array($
 $registration_id = $input['registration_id'];
 $action = $input['action'];
 
-  try {
-      $db = db_connect();
-      $db->begin_transaction();
+try {
+    $db = db_connect();
+    $db->begin_transaction();
 
     $stmt = $db->prepare('SELECT * FROM registration_request WHERE registration_id = ?');
     $stmt->bind_param('i', $registration_id);
@@ -84,10 +84,13 @@ $action = $input['action'];
           $year = date('y');
           $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
 
-          $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status) VALUES (?, ?, 0.00, "active")');
-          $accountStmt->bind_param('is', $user_id, $accountNumber);
-          $accountStmt->execute();
-          $account_id = $db->insert_id;
+        $insertStmt = $db->prepare('
+            INSERT INTO user (
+                username, password_hash, first_name, last_name, phone_number,
+                date_of_birth, nationality, street, city, zip_code, country,
+                email, id_type, id_image
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ');
 
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
         $dotenv->load();
@@ -123,14 +126,10 @@ $action = $input['action'];
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
         $dotenv->load();
 
-      $mail = new PHPMailer(true);
-      $mail->isSMTP();
-      $mail->Host = $_ENV['GMAIL_HOST'];
-      $mail->SMTPAuth = true;
-      $mail->Username = $_ENV['GMAIL_USERNAME'];
-      $mail->Password = $_ENV['GMAIL_PASSWORD'];
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = (int)$_ENV['GMAIL_PORT'];
+        $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status) VALUES (?, ?, 0.00, "active")');
+        $accountStmt->bind_param('is', $user_id, $accountNumber);
+        $accountStmt->execute();
+        $account_id = $db->insert_id;
 
       $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
         $mail->addAddress($registration['email']);
@@ -140,7 +139,14 @@ $action = $input['action'];
             . "Please contact our support team for more information.\n\n"
             . "Thank you for your interest in our bank.";
 
-      $mail->send();
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = $_ENV['GMAIL_HOST'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['GMAIL_USERNAME'];
+        $mail->Password = $_ENV['GMAIL_PASSWORD'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
         $deleteStmt = $db->prepare('DELETE FROM registration_request WHERE registration_id = ?');
         $deleteStmt->bind_param('i', $registration_id);
