@@ -1,30 +1,30 @@
 const FORM_VALIDATION = {
-	ACCOUNT_NUMBER_MIN_LENGTH: 10,
-	SMS_CODE_LENGTH: 6,
-	PASSWORD_MIN_LENGTH: 8,
-	USERNAME_MIN_LENGTH: 3,
-	USERNAME_MAX_LENGTH: 20,
-	FIRST_NAME_MIN_LENGTH: 2,
-	LAST_NAME_MIN_LENGTH: 2,
+    ACCOUNT_NUMBER_MIN_LENGTH: 10,
+    SMS_CODE_LENGTH: 6,
+    PASSWORD_MIN_LENGTH: 8,
+    USERNAME_MIN_LENGTH: 3,
+    USERNAME_MAX_LENGTH: 20,
+    FIRST_NAME_MIN_LENGTH: 2,
+    LAST_NAME_MIN_LENGTH: 2
 };
 
 const NOTIFICATION_TYPES = {
-	SUCCESS: "success",
-	ERROR: "error",
-	WARNING: "warning",
-	INFO: "info",
+    SUCCESS: "success",
+    ERROR: "error",
+    WARNING: "warning",
+    INFO: "info"
 };
 
 const STEPS = {
-	STEP_ONE_IDENTIFICATION: 1, // Corresponds to data-step="1" (Identification Documents)
-	STEP_TWO_CONTACT_INFO: 2,   // Corresponds to data-step="2" (Contact Information)
-	STEP_THREE_PROCESSING: 3,   // Corresponds to data-step="3" (Account Under Review)
+	STEP_ONE_IDENTIFICATION: 1,
+	STEP_TWO_CONTACT_INFO: 2,
+	STEP_THREE_PROCESSING: 3
 };
 
 const CONTACT_PAGES = {
-	PAGE_ONE: 1,   // Personal Information
-	PAGE_TWO: 2,   // Contact Details
-	PAGE_THREE: 3, // Address Information
+	PAGE_ONE: 1,
+	PAGE_TWO: 2,
+	PAGE_THREE: 3
 };
 
 const TIMER_SETTINGS = {
@@ -34,19 +34,19 @@ const TIMER_SETTINGS = {
 	NOTIFICATION_HIDE_DELAY: 300,
 	API_SIMULATION_DELAY_SHORT: 1000,
 	API_SIMULATION_DELAY_MEDIUM: 1500,
-	API_SIMULATION_DELAY_LONG: 2000,
+	API_SIMULATION_DELAY_LONG: 2000
 };
 
 const INPUT_TYPES = {
 	PASSWORD: "password",
-	TEXT: "text",
+	TEXT: "text"
 };
 
 const BUTTON_STATES = {
 	CONTINUE: "CONTINUE",
 	PROCESSING: '<i class="fas fa-spinner fa-spin"></i> Processing...',
 	SEND: "Send",
-	SENDING: "Sending...",
+	SENDING: "Sending..."
 };
 
 class RegistrationManager {
@@ -57,6 +57,7 @@ class RegistrationManager {
 		this.formData = null;
 		this.idImage = null;
 		this.isUnder18 = false;
+		this.eventListeners = new Map(); // Track event listeners for cleanup
 		this.bindEvents();
 		this.restoreFormData(); // Restore data on load
 		this.updateStepIndicators(); // Update indicators on load
@@ -64,10 +65,27 @@ class RegistrationManager {
 
 	bindEvents() {
 		// Form submissions
+		this.bindFormSubmissionEvents();
+		
+		// Navigation buttons
+		this.bindNavigationEvents();
+		
+		// File upload handling
+		this.bindFileUploadEvents();
+		
+		// Form validation
+		this.setupFormValidation();
+		
+		// Clean up any existing event listeners
+		this.cleanupEventListeners();
+	}
+
+	bindFormSubmissionEvents() {
 		const identificationForm = document.getElementById("identification_form");
 		const contactInfoForm = document.getElementById("contact_info_form");
 
 		if (identificationForm) {
+			const handleIdentificationSubmit = (e) => this.handleIdentificationSubmit(e);
 			identificationForm.addEventListener("submit", (e) => {
 				this.handleIdentificationSubmit(e);
 			});
@@ -352,7 +370,7 @@ class RegistrationManager {
 
 		if (allFieldsValid) {
 			this.saveFormData();
-			this.goToStep(STEPS.STEP_TWO_CONTACT_INFO); // Corrected to go to Contact Information
+			this.goToStep(STEPS.STEP_TWO_CONTACT_INFO);
 		} else {
 			this.showNotification("Please fill in all identification details correctly.", NOTIFICATION_TYPES.ERROR);
 		}
@@ -361,7 +379,6 @@ class RegistrationManager {
 	handleContactInfoSubmit(e) {
 		e.preventDefault();
 
-		// Validate the current page first
 		if (this.currentContactPage === CONTACT_PAGES.PAGE_ONE) {
 			if (!this.validateContactPage1()) {
 				return;
@@ -376,12 +393,10 @@ class RegistrationManager {
 			return;
 		}
 
-		// If we're on the final page, validate and submit
 		if (!this.validateContactPage3()) {
 			return;
 		}
 
-		// Check age as it's a critical validation
 		const dobInput = document.getElementById('date_of_birth');
 		if (dobInput && !this.validateAge(dobInput)) {
 			this.showNotification('You must be at least 18 years old to register.', NOTIFICATION_TYPES.ERROR);
@@ -389,7 +404,6 @@ class RegistrationManager {
 			return;
 		}
 
-		// Save form data and request OTP
 		this.saveFormData();
 		this.requestOtp();
 	}
@@ -458,97 +472,88 @@ class RegistrationManager {
 
 	validateContactPage1() {
 		const inputs = {
-			firstNameInput: document.getElementById("first_name"),
-			lastNameInput: document.getElementById("last_name"),
-			dateOfBirthInput: document.getElementById("date_of_birth"),
+			firstName: document.getElementById('first_name'),
+			lastName: document.getElementById('last_name'),
+			dateOfBirth: document.getElementById('date_of_birth')
 		};
 
-		for (const [key, input] of Object.entries(inputs)) {
-			if (!input) {
-				console.error(`${key} not found in form.`);
-				this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
-				return false;
-			}
+		let isValid = true;
+
+		if (!inputs.firstName || !this.validateName(inputs.firstName, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH)) {
+			isValid = false;
+		}
+		if (!inputs.lastName || !this.validateName(inputs.lastName, FORM_VALIDATION.LAST_NAME_MIN_LENGTH)) {
+			isValid = false;
+		}
+		if (!inputs.dateOfBirth || !this.validateAge(inputs.dateOfBirth)) {
+			isValid = false;
 		}
 
-		const validations = {
-			isFirstNameValid: this.validateName(inputs.firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH),
-			isLastNameValid: this.validateName(inputs.lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH),
-			isDateOfBirthValid: inputs.dateOfBirthInput.value.trim() !== "",
-		};
-
-		const allFieldsValid = Object.values(validations).every(isValid => isValid);
-
-		if (!allFieldsValid) {
+		if (!isValid) {
 			this.showNotification("Please fill in all personal information correctly.", NOTIFICATION_TYPES.ERROR);
-			return false;
 		}
 
-		return true;
+		return isValid;
 	}
 
 	validateContactPage2() {
 		const inputs = {
-			emailInput: document.getElementById("email"),
-			phoneNumberInput: document.getElementById("phone_number"),
-			nationalityInput: document.getElementById("nationality"),
+			email: document.getElementById('email'),
+			phoneNumber: document.getElementById('phone_number'),
+			nationality: document.getElementById('nationality')
 		};
 
-		for (const [key, input] of Object.entries(inputs)) {
-			if (!input) {
-				console.error(`${key} not found in form.`);
-				this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
-				return false;
-			}
+		let isValid = true;
+
+		if (!inputs.email || !this.validateEmail(inputs.email)) {
+			isValid = false;
+		}
+		if (!inputs.phoneNumber || !this.validatePhoneNumber(inputs.phoneNumber)) {
+			isValid = false;
+		}
+		if (!inputs.nationality || inputs.nationality.value === "") {
+			this.setInputValidation(inputs.nationality, false, "Please select your nationality");
+			isValid = false;
 		}
 
-		const validations = {
-			isEmailValid: this.validateEmail(inputs.emailInput),
-			isPhoneNumberValid: this.validatePhoneNumber(inputs.phoneNumberInput),
-			isNationalityValid: inputs.nationalityInput.value.trim() !== "",
-		};
-
-		const allFieldsValid = Object.values(validations).every(isValid => isValid);
-
-		if (!allFieldsValid) {
+		if (!isValid) {
 			this.showNotification("Please fill in all contact details correctly.", NOTIFICATION_TYPES.ERROR);
-			return false;
 		}
 
-		return true;
+		return isValid;
 	}
 
 	validateContactPage3() {
 		const inputs = {
-			streetInput: document.getElementById("street"),
-			cityInput: document.getElementById("city"),
-			zipCodeInput: document.getElementById("zip_code"),
-			countryInput: document.getElementById("country"),
+			street: document.getElementById('street'),
+			city: document.getElementById('city'),
+			zipCode: document.getElementById('zip_code'),
+			country: document.getElementById('country')
 		};
 
-		for (const [key, input] of Object.entries(inputs)) {
-			if (!input) {
-				console.error(`${key} not found in form.`);
-				this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
-				return false;
-			}
+		let isValid = true;
+
+		if (!inputs.street || inputs.street.value.trim() === "") {
+			this.setInputValidation(inputs.street, false, "Please enter your street address");
+			isValid = false;
+		}
+		if (!inputs.city || inputs.city.value.trim() === "") {
+			this.setInputValidation(inputs.city, false, "Please enter your city");
+			isValid = false;
+		}
+		if (!inputs.zipCode || !this.validateZipCode(inputs.zipCode)) {
+			isValid = false;
+		}
+		if (!inputs.country || inputs.country.value === "") {
+			this.setInputValidation(inputs.country, false, "Please select your country");
+			isValid = false;
 		}
 
-		const validations = {
-			isStreetValid: inputs.streetInput.value.trim() !== "",
-			isCityValid: inputs.cityInput.value.trim() !== "",
-			isZipCodeValid: this.validateZipCode(inputs.zipCodeInput),
-			isCountryValid: inputs.countryInput.value.trim() !== "",
-		};
-
-		const allFieldsValid = Object.values(validations).every(isValid => isValid);
-
-		if (!allFieldsValid) {
+		if (!isValid) {
 			this.showNotification("Please fill in all address information correctly.", NOTIFICATION_TYPES.ERROR);
-			return false;
 		}
 
-		return true;
+		return isValid;
 	}
 
 	goToContactPage(page) {
@@ -1148,15 +1153,9 @@ class RegistrationManager {
 	}
 
 	validatePhoneNumber(input) {
-		console.log("validatePhoneNumber called.");
-		const value = input.value.trim();
 		const phoneRegex = /^(\+63|0)[0-9]{10}$/;
-		const isValid = phoneRegex.test(value);
-
-		const errorMsg =
-			"Please enter a valid Philippine phone number (e.g., +63XXXXXXXXXX or 0XXXXXXXXXX)";
-		this.setInputValidation(input, isValid, errorMsg);
-		console.log("validatePhoneNumber result:", isValid);
+		const isValid = phoneRegex.test(input.value);
+		this.setInputValidation(input, isValid, "Please enter a valid Philippine phone number");
 		return isValid;
 	}
 
@@ -1427,38 +1426,29 @@ class RegistrationManager {
 	}
 
 	validateAge(input) {
-		const dob = new Date(input.value);
+		if (!input.value) {
+			this.setInputValidation(input, false, "Please enter your date of birth");
+			return false;
+		}
+
+		const birthDate = new Date(input.value);
 		const today = new Date();
-		let age = today.getFullYear() - dob.getFullYear();
-		const monthDiff = today.getMonth() - dob.getMonth();
+		const age = today.getFullYear() - birthDate.getFullYear();
+		const monthDiff = today.getMonth() - birthDate.getMonth();
 		
-		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
 			age--;
 		}
 
 		const isValid = age >= 18;
 		this.isUnder18 = !isValid;
-
-		const warningElement = document.getElementById('age_warning');
-		if (warningElement) {
-			warningElement.style.display = isValid ? 'none' : 'flex';
+		
+		const ageWarning = document.getElementById('age_warning');
+		if (ageWarning) {
+			ageWarning.style.display = isValid ? 'none' : 'block';
 		}
 
-		input.classList.toggle('invalid', !isValid);
-
-		// Only disable the email and phone number input for contact info form, not other forms
-		const emailInput = document.getElementById('email');
-		const phoneNumberInput = document.getElementById('phone_number');
-
-		if (emailInput) {
-			emailInput.disabled = !isValid;
-			emailInput.closest('.form-group')?.classList.toggle('disabled', !isValid);
-		}
-		if (phoneNumberInput) {
-			phoneNumberInput.disabled = !isValid;
-			phoneNumberInput.closest('.form-group')?.classList.toggle('disabled', !isValid);
-		}
-
+		this.setInputValidation(input, isValid, "You must be at least 18 years old to register");
 		return isValid;
 	}
 
@@ -1511,31 +1501,21 @@ class RegistrationManager {
 	}
 
 	validateZipCode(input) {
-		const zipCodeRegex = /^[0-9]{4,10}$/;
-		const isValid = zipCodeRegex.test(input.value);
+		const zipRegex = /^[0-9]{4,10}$/;
+		const isValid = zipRegex.test(input.value);
 		this.setInputValidation(input, isValid, "Please enter a valid zip code");
 		return isValid;
 	}
 
 	validateName(input, minLength) {
-		const value = input.value.trim();
-		const lettersOnlyRegex = /^[A-Za-z\s\-]+$/;
-		const isValidLength = value.length >= minLength;
-		const isValidCharacters = lettersOnlyRegex.test(value);
-		const isValid = isValidLength && isValidCharacters;
-
-		let errorMsg = '';
-		if (!isValidLength) {
-			errorMsg = `Name must be at least ${minLength} characters`;
-		} else if (!isValidCharacters) {
-			errorMsg = 'Name can only contain letters, spaces, and hyphens';
-		}
-
-		this.setInputValidation(input, isValid, errorMsg);
+		const nameRegex = /^[A-Za-z\s\-]+$/;
+		const isValid = input.value.length >= minLength && nameRegex.test(input.value);
+		this.setInputValidation(input, isValid, `Name must be at least ${minLength} characters and contain only letters, spaces, or hyphens`);
 		return isValid;
 	}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	new RegistrationManager();
+// Initialize registration manager
+document.addEventListener('DOMContentLoaded', () => {
+	window.registrationManager = new RegistrationManager();
 });
