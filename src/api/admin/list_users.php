@@ -13,12 +13,17 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
 
 try {
     $db = db_connect();
-    $query = 'SELECT user_id, username, first_name, last_name, phone_number, created_at FROM user';
+    // Join user and account tables, get the first (or main) active account per user
+    $query = 'SELECT u.user_id, a.account_number, u.username, u.first_name, u.last_name, u.phone_number, u.created_at
+              FROM user u
+              LEFT JOIN account a ON u.user_id = a.user_id AND a.status = "active"
+              GROUP BY u.user_id';
     $result = $db->query($query);
     $users = [];
     while ($row = $result->fetch_assoc()) {
         $users[] = [
             'user_id' => $row['user_id'],
+            'account_number' => $row['account_number'],
             'username' => $row['username'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
