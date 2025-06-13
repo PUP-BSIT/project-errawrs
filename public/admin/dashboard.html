@@ -143,11 +143,16 @@
                                 <h2>Search Tellers</h2>
                                 <div class="search-box">
                                     <i class="fas fa-search"></i>
-                                    <input type="text" id="teller_search" placeholder="Search tellers by name or ID...">
+                                    <input type="text" id="teller_search" placeholder="Search tellers by name, ID or email...">
                                 </div>
                             </div>
                             <div id="teller_results" class="results-container">
-                                <!-- Teller results will be displayed here -->
+                                <!-- Loading State -->
+                                <div class="loading-state" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <p>Loading tellers...</p>
+                                </div>
+                                <!-- Results will be displayed here -->
                             </div>
                         </div>
 
@@ -161,7 +166,12 @@
                                 </div>
                             </div>
                             <div id="user_results" class="results-container">
-                                <!-- User account results will be displayed here -->
+                                <!-- Loading State -->
+                                <div class="loading-state" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <p>Loading accounts...</p>
+                                </div>
+                                <!-- Results will be displayed here -->
                             </div>
                         </div>
                     </div>
