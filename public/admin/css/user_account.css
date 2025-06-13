@@ -263,7 +263,6 @@ body {
 }
 
 .user-card {
-    height: fit-content;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -321,6 +320,7 @@ body {
     display: flex;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
+    gap: 1rem; /* Added gap between label and value */
 }
 
 .detail-label {
@@ -474,4 +474,4 @@ body {
     .user-cards {
         grid-template-columns: 1fr;
     }
-} 
+}
