@@ -76,7 +76,15 @@
                 <div class="account-info">
                     <div class="info-row">
                         <div class="info-label">Account Number:</div>
-                        <div class="info-value" id="account_number"></div>
+                        <div class="account-search">
+                            <input type="text" 
+                                   id="account_number_input" 
+                                   class="account-input" 
+                                   placeholder="Enter Account Number">
+                            <div class="search-spinner" id="search_spinner"></div>
+                            <div class="account-status" id="account_status"></div>
+                            <div id="account_suggestions" class="account-suggestions"></div>
+                        </div>
                     </div>
                     <div class="info-row">
                         <div class="info-label">Account Name:</div>
@@ -99,8 +107,7 @@
                     </div>
                 </div>
                 <div class="button-group">
-                    <button class="btn cancel" onclick="goBack()">Cancel</button>
-                    <button class="btn confirm" onclick="confirmAmount()">Confirm Deposit</button>
+                    <button class="btn confirm full-width" onclick="confirmAmount()">Confirm Deposit</button>
                 </div>
             </div>
 
