@@ -1,4 +1,4 @@
-/* Page Content */
+/* Reset and Base Styles */
 :root {
     --color-primary-black: #111111;
     --color-lime-green: #b6ff4a;
@@ -9,6 +9,177 @@
     --color-gray: #a3a3a3;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    background-color: var(--color-primary-black);
+    color: var(--color-white);
+    padding: 32px 24px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-header {
+    margin-bottom: 40px;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.10px;
+}
+
+.logo-stack {
+    color: var(--color-white);
+}
+
+.logo-overcash {
+    color: var(--color-lime-green);
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-item {
+    margin-bottom: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: -0.2px;
+    transition: all 0.3s ease;
+}
+
+.nav-link i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item.active .nav-link {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.nav-link:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+/* Top Navigation */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-name {
+    font-weight: 500;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-btn {
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-btn i {
+    font-size: 1.25rem;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #000;
+    text-decoration: none;
+    gap: 0.75rem;
+}
+
+.dropdown-content a:hover {
+    background-color: #f5f6fa;
+}
+
+/* Page Content */
 .page-content {
     padding: 2rem;
     height: calc(100vh - 80px); /* Adjust for top nav height */
@@ -553,21 +724,6 @@
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .content-header {
-        flex-direction: column;
-    }
-    
-    .search-box {
-        max-width: 100%;
-    }
-    
-    .teller-cards {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* Status Change Modal Specific Styles */
 .modal-header.warning.deactivate {
     background-color: #fee2e2;
@@ -609,4 +765,31 @@
 
 .btn-success:hover {
     background-color: var(--color-lime-green);
-} 
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dce1e4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+}
