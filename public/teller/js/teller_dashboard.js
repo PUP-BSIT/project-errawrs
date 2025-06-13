@@ -15,13 +15,17 @@ let lastKnownValues = {
 
 let searchTimeout = null;
 
-// Update teller name in the UI
+// Initialize dashboard
 document.addEventListener("DOMContentLoaded", () => {
-    // Update name in sidebar and welcome section
+    // Update name in sidebar and greeting section
     const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     
-    if (tellerInfo.name) {
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        const fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        userNameElements.forEach(el => el.textContent = fullName);
+        nameTextElement.textContent = fullName + "!";
+    } else if (tellerInfo.name) {
         userNameElements.forEach(el => el.textContent = tellerInfo.name);
         nameTextElement.textContent = tellerInfo.name + "!";
     }
@@ -107,12 +111,12 @@ async function performSearch(searchTerm) {
 
         // Display results
         const resultsHtml = data.accounts.map(account => `
-            <div class="search-result-item" onclick="handleAccountClick('${account.account_number}')">
+            <div class="search-result-item">
                 <div class="result-name">${account.user.name}</div>
                 <div class="result-account">
-                    Account: ${account.account_number} | 
-                    Balance: ₱${account.balance} | 
-                    Status: ${account.status}
+                    <div>Account: ${account.account_number}</div>
+                    <div>Balance: ₱${account.balance}</div>
+                    <div>Status: <span class="status-text ${account.status}">${account.status}</span></div>
                 </div>
             </div>
         `).join('');
@@ -129,12 +133,6 @@ async function performSearch(searchTerm) {
                 Error searching accounts
             </div>`;
     }
-}
-
-// Handle account click
-function handleAccountClick(accountNumber) {
-    // Redirect to account details page
-    window.location.href = `bank_teller_account_details.html?account=${accountNumber}`;
 }
 
 // Handle logout
