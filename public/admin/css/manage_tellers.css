@@ -19,7 +19,7 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 /* Sidebar Styles */
@@ -93,6 +93,8 @@ body {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Top Navigation */
@@ -181,19 +183,20 @@ body {
 
 /* Page Content */
 .page-content {
-    padding: 2rem;
-    flex: 1; /* Allow page-content to grow and fill available space */
+    padding: 1rem;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-height: 0px;
+    gap: 1rem;
+    height: calc(100vh - 64px); /* Account for top navigation */
+    overflow: hidden;
 }
 
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1rem;
     gap: 1rem;
     flex-shrink: 0;
 }
@@ -207,24 +210,26 @@ body {
 
 .search-box i {
     position: absolute;
-    left: 1rem;
+    left: 12px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-48%);
     color: #95a5a6;
+    font-size: 1.3rem;
 }
 
 .search-box input {
     width: 100%;
+    height: 55px;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 1px solid #dce1e4;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     transition: border-color 0.2s;
 }
 
 .search-box input:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: var(--color-mint);
 }
 
 /* Buttons */
@@ -234,9 +239,9 @@ body {
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+
     gap: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -279,17 +284,17 @@ body {
 /* Teller Cards Container */
 .teller-cards-wrapper {
     flex: 1;
-    min-height: 0; /* Important for proper flex behavior */
-    padding: 0px 25px 10px 25px;
+    min-height: 0;
+    padding: 0 1rem;
     overflow-y: auto;
+    height: calc(100vh - 180px); /* Adjusted for better fit */
 }
 
 .teller-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    height: 100%;
-    align-content: start; /* Prevents stretching when not scrollable */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    padding-bottom: 1rem;
 }
 
 .teller-cards.loading {
@@ -312,11 +317,11 @@ body {
 }
 
 .teller-card {
-    height: fit-content; /* Prevents stretching */
+    height: fit-content;
     background: white;
     border-radius: 10px;
+    padding: 1.25rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
