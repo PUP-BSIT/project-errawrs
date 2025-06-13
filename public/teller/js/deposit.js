@@ -5,7 +5,10 @@ const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
 const MAX_DEPOSIT_AMOUNT = 50000;
 
 if (!tellerInfo) {
-    window.location.href = './bank_teller_search_account.html';
+    window.location.href = './bank_teller_login.html';
+} else {
+    // Display teller name when page loads
+    document.querySelector('.user-name').textContent = tellerInfo.name;
 }
 
 let selectedAccount = null;
@@ -384,8 +387,27 @@ function finishTransaction() {
         }
     }
     
-    // Go back to the previous page
-    window.history.back();
+    // Clear the form
+    document.getElementById('account_number_input').value = '';
+    document.getElementById('deposit_amount').value = '';
+    document.getElementById('account_name').textContent = '';
+    document.getElementById('current_balance').textContent = '';
+    document.getElementById('account_status').textContent = '';
+    selectedAccount = null;
+    
+    // Hide confirmation and receipt, show amount entry
+    document.getElementById('confirmation').classList.add('hidden');
+    document.getElementById('receipt').classList.add('hidden');
+    document.getElementById('amount_entry').classList.remove('hidden');
+    
+    // Reset steps
+    updateSteps(1);
+    
+    // Clear validation states
+    const confirmButton = document.querySelector('.btn.confirm');
+    confirmButton.classList.remove('active');
+    document.querySelector('.validation-message').style.display = 'none';
+    document.getElementById('deposit_amount').style.borderColor = '';
 }
 
 // Add input validation for amount

@@ -80,6 +80,13 @@ body {
     font-weight: 600;
     color: var(--color-white);
     letter-spacing: -0.3px;
+    margin-bottom: 4px;
+}
+
+.user-role {
+    font-size: 0.9rem;
+    color: var(--color-gray);
+    font-weight: 500;
 }
 
 /* Navigation Styles */
