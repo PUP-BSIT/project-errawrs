@@ -341,10 +341,6 @@ class AdminDashboard {
                             <span class="detail-label">Email</span>
                             <span class="detail-value">${teller.email}</span>
                         </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Created</span>
-                            <span class="detail-value">${formatDate(teller.created_at)}</span>
-                        </div>
                     </div>
                 </div>
             `).join('');
