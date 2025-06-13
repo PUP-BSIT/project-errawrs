@@ -31,16 +31,25 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Update teller name in the UI
+let searchTimeout = null;
+
+// Initialize dashboard
 document.addEventListener("DOMContentLoaded", () => {
-    // Update name in sidebar and welcome section
+    // Update name in sidebar and greeting section
     const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     
-    if (tellerInfo.name) {
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        const fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        userNameElements.forEach(el => el.textContent = fullName);
+        nameTextElement.textContent = fullName + "!";
+    } else if (tellerInfo.name) {
         userNameElements.forEach(el => el.textContent = tellerInfo.name);
         nameTextElement.textContent = tellerInfo.name + "!";
     }
+
+    // Set up search functionality
+    setupSearch();
 
     // Fetch and update dashboard summary
     fetchDashboardSummary();
@@ -54,6 +63,101 @@ document.addEventListener("DOMContentLoaded", () => {
     // Refresh registrations every 30 seconds
     setInterval(loadRecentRegistrations, 30000);
 });
+
+// Set up search functionality
+function setupSearch() {
+    const searchInput = document.getElementById('quick_search');
+    const searchResults = document.getElementById('search_results');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            // Hide results if search term is empty
+            if (searchTerm.length === 0) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            // Show loading state
+            searchResults.style.display = 'block';
+            searchResults.innerHTML = `
+                <div class="loading-results">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Searching...
+                </div>`;
+
+            // Debounce search
+            searchTimeout = setTimeout(() => {
+                performSearch(searchTerm);
+            }, 300);
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+}
+
+// Perform search
+async function performSearch(searchTerm) {
+    try {
+        const response = await fetch(`../../src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
+        const data = await response.json();
+
+        const searchResults = document.getElementById('search_results');
+
+        if (!data.success) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Error: ${data.error || 'Failed to search accounts'}
+                </div>`;
+            return;
+        }
+
+        if (data.accounts.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    No accounts found
+                </div>`;
+            return;
+        }
+
+        // Display results
+        const resultsHtml = data.accounts.map(account => `
+            <div class="search-result-item">
+                <div class="result-name">${account.user.name}</div>
+                <div class="result-account">
+                    <div>Account: ${account.account_number}</div>
+                    <div>Balance: ₱${account.balance}</div>
+                    <div>Status: <span class="status-text ${account.status}">${account.status}</span></div>
+                </div>
+            </div>
+        `).join('');
+
+        searchResults.innerHTML = resultsHtml;
+        searchResults.style.display = 'block';
+
+    } catch (error) {
+        console.error('Error searching accounts:', error);
+        const searchResults = document.getElementById('search_results');
+        searchResults.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-exclamation-circle"></i>
+                Error searching accounts
+            </div>`;
+    }
+}
 
 // Handle logout
 document.querySelector('.nav-logout a').addEventListener('click', function(e) {

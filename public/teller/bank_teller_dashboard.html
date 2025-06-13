@@ -33,10 +33,14 @@
                 <div class="nav-selected">Dashboard</div>
                 <a href="bank_teller_search_account.html" 
                       class="nav-item">Search Account</a>
-                <a href="review_registrations.html" 
-                      class="nav-item">Review Registrations</a>
+                <a href="bank_teller_deposit.html" 
+                      class="nav-item">Deposit</a>
+                <a href="bank_teller_withdraw.html" 
+                      class="nav-item">Withdraw</a>
+                <a href="bank_teller_review_registration.html"
+                      class="nav-item">Review Registration</a>
                 <a href="bank_teller_history.html" 
-                      class="nav-item">History</a>
+                      class="nav-item">Transaction</a>
             </div>
             
             <div class="nav-logout">
@@ -55,69 +59,82 @@
                 </div>
             </div>
 
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Total Deposits</h3>
+                        <p class="stat-number" id="total-deposits">₱0.00</p>
+                        <p class="stat-time" id="deposits-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Total Withdrawals</h3>
+                        <p class="stat-number" id="total-withdrawals">₱0.00</p>
+                        <p class="stat-time" id="withdrawals-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-lock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Closed Accounts</h3>
+                        <p class="stat-number" id="total-closed">0 Accounts</p>
+                        <p class="stat-time" id="closed-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Re-opened Accounts</h3>
+                        <p class="stat-number" id="total-reopened">0 Accounts</p>
+                        <p class="stat-time" id="reopened-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Pending Accounts</h3>
+                        <p class="stat-number" id="total-pending">0 Accounts</p>
+                        <p class="stat-time" id="pending-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-times"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Declined Accounts</h3>
+                        <p class="stat-number" id="total-declined">0 Accounts</p>
+                        <p class="stat-time" id="declined-updated">Last update: --:-- --</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="welcome-section">
                 <div class="greeting-container">
                     <div class="hello-text">Hello</div>
                     <div class="name-text"></div>
                 </div>
-            </div>
-
-            <div class="summary-section">
-                <div class="summary-title">Summary</div>
-                <div class="summary-table">
-                    <div class="summary-header">
-                        <div class="summary-header-cell">Icon</div>
-                        <div class="summary-header-cell">Title</div>
-                        <div class="summary-header-cell">Amount/Count</div>
-                        <div class="summary-header-cell">Date</div>
+                <div class="search-container">
+                    <div class="search-label">Quick Search</div>
+                    <div class="search-input-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="quick_search" class="search-input" 
+                               placeholder="Search by name, account or phone...">
                     </div>
-                    <div class="summary-body">
-                        <div class="summary-row">
-                            <div class="summary-icon">💸</div>
-                            <div class="summary-cell">Total Deposits</div>
-                            <div class="summary-amount" id="total-deposits">₱0.00</div>
-                            <div class="summary-cell" id="deposits-updated">--:-- --</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-icon">💰</div>
-                            <div class="summary-cell">Total Withdrawals </div>
-                            <div class="summary-amount" id="total-withdrawals">₱0.00</div>
-                            <div class="summary-cell" id="withdrawals-updated">--:-- --</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-icon">🔒</div>
-                            <div class="summary-cell">Total Closed Accounts</div>
-                            <div class="summary-amount" id="total-closed">0 Accounts</div>
-                            <div class="summary-cell" id="closed-updated">--:-- --</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-icon">🔓</div>
-                            <div class="summary-cell">Total Re-opened Accounts</div>
-                            <div class="summary-amount" id="total-reopened">0 Accounts</div>
-                            <div class="summary-cell" id="reopened-updated">--:-- --</div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-icon">📝</div>
-                            <div class="summary-cell">Pending Registrations</div>
-                            <div class="summary-amount" id="total-pending">0 Requests</div>
-                            <div class="summary-cell" id="pending-updated">--:-- --</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Registration Requests Section -->
-            <div class="registration-section">
-                <div class="section-header">
-                    <h2>Recent Registration Requests</h2>
-                    <a href="review_registrations.html" class="btn-view-all">View All</a>
-                </div>
-                <div id="recent_registrations" class="registration-list">
-                    <!-- Recent registrations will be loaded here -->
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        Loading recent registrations...
-                    </div>
+                    <div id="search_results" class="search-results"></div>
                 </div>
             </div>
         </div>
