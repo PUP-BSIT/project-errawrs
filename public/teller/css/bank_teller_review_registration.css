@@ -264,19 +264,7 @@ body {
     box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
 }
 
-.date-input {
-    padding: 10px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.3s ease;
-}
 
-.date-input:focus {
-    border-color: var(--color-mint);
-    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
-}
 
 /* Applications Grid */
 .applications-grid {

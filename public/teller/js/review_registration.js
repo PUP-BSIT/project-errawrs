@@ -1,7 +1,5 @@
 // DOM Elements
 const statusFilter = document.getElementById('status_filter');
-const dateFrom = document.getElementById('date_from');
-const dateTo = document.getElementById('date_to');
 const applicationsGrid = document.querySelector('.applications-grid');
 const modal = document.getElementById('application_modal');
 const closeModalBtn = document.querySelector('.close-modal');
@@ -16,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     statusFilter.addEventListener('change', filterApplications);
-    dateFrom.addEventListener('change', filterApplications);
-    dateTo.addEventListener('change', filterApplications);
     closeModalBtn.addEventListener('click', closeModal);
     approveBtn.addEventListener('click', () => handleApplicationDecision('approve'));
     rejectBtn.addEventListener('click', () => handleApplicationDecision('reject'));
@@ -33,8 +29,6 @@ function loadApplications(filters = {}) {
 function filterApplicationsData(applications, filters) {
     return applications.filter(app => {
         if (filters.status && filters.status !== 'all' && app.status !== filters.status) return false;
-        if (filters.dateFrom && new Date(app.dateSubmitted) < new Date(filters.dateFrom)) return false;
-        if (filters.dateTo && new Date(app.dateSubmitted) > new Date(filters.dateTo)) return false;
         return true;
     });
 }
@@ -74,9 +68,7 @@ function renderApplications(applications) {
 
 function filterApplications() {
     const filters = {
-        status: statusFilter.value,
-        dateFrom: dateFrom.value,
-        dateTo: dateTo.value
+        status: statusFilter.value
     };
     loadApplications(filters);
 }
