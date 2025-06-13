@@ -10,135 +10,172 @@
     <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/bank_teller_transaction.css">
+    <link rel="stylesheet" href="./css/bank_teller_withdraw.css">
 </head>
 <body>
     <div class="container">
-        <!-- Transaction Steps -->
-        <div class="transaction-steps">
-            <div class="step active" id="step1">
-                <div class="step-number">1</div>
-                <div class="step-label">Enter Amount</div>
+        <div class="sidebar">
+            <div class="logo">
+                <h1><span class="stack">Stack</span>
+                    <span class="overcash">Overcash</span>
+                </h1>
             </div>
-            <div class="step" id="step2">
-                <div class="step-number">2</div>
-                <div class="step-label">Confirm Details</div>
+            
+            <div class="user-profile">
+                <a href="bank_teller_view_profile.html">
+                    <img src="../assets/images/profile_bank_teller.jpg" alt="User Avatar" class="user-avatar">
+                </a>
+                <div class="user-name"></div>
             </div>
-            <div class="step" id="step3">
-                <div class="step-number">3</div>
-                <div class="step-label">Receipt</div>
+            
+            <div class="nav-menu">
+                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
+                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
+                <a href="bank_teller_deposit.html" class="nav-item">Deposit</a>
+                <div class="nav-selected">Withdraw</div>
+                <a href="bank_teller_history.html" class="nav-item">Transaction</a>
             </div>
-        </div>
-
-        <!-- Step 1: Amount Entry -->
-        <div class="transaction-card" id="amount_entry">
-            <h1>Withdraw Transaction</h1>
-            <div class="account-info">
-                <div class="info-row">
-                    <div class="info-label">Account Number:</div>
-                    <div class="info-value" id="account_number"></div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Account Name:</div>
-                    <div class="info-value" id="account_name"></div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Current Balance:</div>
-                    <div class="info-value" id="current_balance"></div>
-                </div>
-            </div>
-            <div class="amount-section">
-                <label for="withdraw_amount">Enter Withdrawal Amount</label>
-                <div class="amount-input">
-                    <span class="currency">₱</span>
-                    <input type="number" 
-                           id="withdraw_amount" 
-                           placeholder="0.00" 
-                           step="0.01" 
-                           min="0">
-                </div>
-            </div>
-            <div class="button-group">
-                <button class="btn cancel" onclick="goBack()">Cancel</button>
-                <button class="btn confirm" onclick="confirmAmount()">Confirm Withdrawal</button>
+            
+            <div class="nav-logout">
+                <a href="./bank_teller_login.html">
+                    Log out <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
             </div>
         </div>
 
-        <!-- Step 2: Confirmation -->
-        <div class="transaction-card hidden" id="confirmation">
-            <h1>Confirm Withdrawal</h1>
-            <div class="confirmation-details">
-                <div class="detail-row">
-                    <div class="detail-label">Account Number:</div>
-                    <div class="detail-value" id="confirm_account_number"></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Account Name:</div>
-                    <div class="detail-value" id="confirm_account_name"></div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Current Balance:</div>
-                    <div class="detail-value" id="confirm_current_balance"></div>
-                </div>
-                <div class="detail-row highlight amount">
-                    <div class="detail-label">Withdrawal Amount:</div>
-                    <div class="detail-value" id="confirm_amount"></div>
-                </div>
-                <div class="detail-row highlight balance">
-                    <div class="detail-label">New Balance:</div>
-                    <div class="detail-value" id="new_balance"></div>
+        <div class="main-content">
+            <div class="top-bar">
+                <div id="notification_container" class="notification-container"></div>
+                <div class="top-icons">
+                    <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
+                    <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
                 </div>
             </div>
-            <div class="button-group">
-                <button class="btn cancel" onclick="backToAmount()">Back</button>
-                <button class="btn confirm" onclick="submitWithdrawal()">Submit</button>
-            </div>
-        </div>
 
-        <!-- Step 3: Receipt -->
-        <div class="transaction-card hidden" id="receipt">
-            <div class="receipt-header">
-                <i class="fas fa-check-circle success-icon"></i>
-                <h1>Withdrawal Successful</h1>
-            </div>
-            <div class="receipt-details">
-                <div class="receipt-row">
-                    <div class="receipt-label">Transaction ID:</div>
-                    <div class="receipt-value" id="transaction_id"></div>
+            <!-- Transaction Steps -->
+            <div class="transaction-steps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Enter Amount</div>
                 </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Account Number:</div>
-                    <div class="receipt-value" id="receipt_account_number"></div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Confirm Details</div>
                 </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Account Name:</div>
-                    <div class="receipt-value" id="receipt_account_name"></div>
-                </div>
-                <div class="receipt-row amount highlight">
-                    <div class="receipt-label">Withdrawal Amount:</div>
-                    <div class="receipt-value" id="receipt_amount"></div>
-                </div>
-                <div class="receipt-row balance highlight">
-                    <div class="receipt-label">New Balance:</div>
-                    <div class="receipt-value" id="receipt_new_balance"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Date & Time:</div>
-                    <div class="receipt-value" id="transaction_date"></div>
-                </div>
-                <div class="receipt-row">
-                    <div class="receipt-label">Teller:</div>
-                    <div class="receipt-value" id="teller_number"></div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Receipt</div>
                 </div>
             </div>
-            <div class="button-group">
-                <button class="btn done" onclick="finishTransaction()">Done</button>
+
+            <!-- Step 1: Amount Entry -->
+            <div class="transaction-card" id="amount_entry">
+                <h1>Withdraw Transaction</h1>
+                <div class="account-info">
+                    <div class="info-row">
+                        <div class="info-label">Account Number:</div>
+                        <div class="info-value" id="account_number"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Account Name:</div>
+                        <div class="info-value" id="account_name"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Current Balance:</div>
+                        <div class="info-value" id="current_balance"></div>
+                    </div>
+                </div>
+                <div class="amount-section">
+                    <label for="withdraw_amount">Enter Withdrawal Amount</label>
+                    <div class="amount-input">
+                        <span class="currency">₱</span>
+                        <input type="number" 
+                               id="withdraw_amount" 
+                               placeholder="0.00" 
+                               step="0.01" 
+                               min="0">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn cancel" onclick="goBack()">Cancel</button>
+                    <button class="btn confirm" onclick="confirmAmount()">Confirm Withdrawal</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Confirmation -->
+            <div class="transaction-card hidden" id="confirmation">
+                <h1>Confirm Withdrawal</h1>
+                <div class="confirmation-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Account Number:</div>
+                        <div class="detail-value" id="confirm_account_number"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Account Name:</div>
+                        <div class="detail-value" id="confirm_account_name"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Current Balance:</div>
+                        <div class="detail-value" id="confirm_current_balance"></div>
+                    </div>
+                    <div class="detail-row highlight amount">
+                        <div class="detail-label">Withdrawal Amount:</div>
+                        <div class="detail-value" id="confirm_amount"></div>
+                    </div>
+                    <div class="detail-row highlight balance">
+                        <div class="detail-label">New Balance:</div>
+                        <div class="detail-value" id="new_balance"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn cancel" onclick="backToAmount()">Back</button>
+                    <button class="btn confirm" onclick="submitWithdrawal()">Submit</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Receipt -->
+            <div class="transaction-card hidden" id="receipt">
+                <div class="receipt-header">
+                    <i class="fas fa-check-circle success-icon"></i>
+                    <h1>Withdrawal Successful</h1>
+                </div>
+                <div class="receipt-details">
+                    <div class="receipt-row">
+                        <div class="receipt-label">Transaction ID:</div>
+                        <div class="receipt-value" id="transaction_id"></div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Account Number:</div>
+                        <div class="receipt-value" id="receipt_account_number"></div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Account Name:</div>
+                        <div class="receipt-value" id="receipt_account_name"></div>
+                    </div>
+                    <div class="receipt-row amount highlight">
+                        <div class="receipt-label">Withdrawal Amount:</div>
+                        <div class="receipt-value" id="receipt_amount"></div>
+                    </div>
+                    <div class="receipt-row balance highlight">
+                        <div class="receipt-label">New Balance:</div>
+                        <div class="receipt-value" id="receipt_new_balance"></div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Date & Time:</div>
+                        <div class="receipt-value" id="transaction_date"></div>
+                    </div>
+                    <div class="receipt-row">
+                        <div class="receipt-label">Teller:</div>
+                        <div class="receipt-value" id="teller_number"></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn done" onclick="finishTransaction()">Done</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="notification_container" class="notification-container"></div>
-    
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loading_overlay">
         <div class="loading-box">
