@@ -240,78 +240,54 @@ body {
     color: var(--color-white);
 }
 
-/* Notification Container */
+/* Notifications */
 .notification-container {
     position: fixed;
-    top: 85px;
-    right: 32px;
+    top: 20px;
+    right: 20px;
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 .notification {
+    background: white;
     padding: 15px 25px;
+    margin-bottom: 10px;
     border-radius: 8px;
-    color: var(--color-white);
-    font-size: 1.1rem;
-    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    animation: slide-in 0.3s ease forwards;
-    cursor: pointer;
-    min-width: 300px;
-    max-width: 400px;
-}
-
-.notification.error {
-    background-color: #ef4444;
+    animation: slideIn 0.3s ease-out;
+    transition: opacity 0.3s ease-out;
 }
 
 .notification.success {
-    background-color: var(--color-mint);
+    background: var(--color-mint);
     color: var(--color-primary-black);
 }
 
-.notification.warning {
-    background-color: #f59e0b;
+.notification.error {
+    background: #ff4444;
+    color: white;
 }
 
 .notification.info {
-    background-color: #70a1ff;
-}
-
-.notification i {
-    font-size: 1.2rem;
-}
-
-@keyframes slide-in {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fade-out {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
+    background: #2196F3;
+    color: white;
 }
 
 .notification.fade-out {
-    animation: fade-out 0.3s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 /* Notice Section */
@@ -637,6 +613,146 @@ body {
     font-weight: 500;
     color: var(--color-primary-black);
     font-size: 1.1rem;
+}
+
+/* Registration Section */
+.registration-section {
+    background: var(--color-white);
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    letter-spacing: -0.3px;
+}
+
+.btn-view-all {
+    padding: 8px 16px;
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-view-all:hover {
+    background: var(--color-lime-green);
+    transform: translateY(-2px);
+}
+
+.registration-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.registration-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--color-bg-gradient-start);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.registration-item:hover {
+    transform: translateX(5px);
+    background: var(--color-bg-gradient-end);
+}
+
+.registration-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.registration-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-mint);
+    font-size: 1.2rem;
+}
+
+.registration-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.registration-date {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.registration-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-btn.approve {
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.action-btn.approve:hover {
+    background: var(--color-lime-green);
+}
+
+.action-btn.deny {
+    background: var(--color-error);
+    color: var(--color-white);
+}
+
+.action-btn.deny:hover {
+    background: #c82333;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-text-muted);
+}
+
+.loading i {
+    margin-right: 10px;
+    color: var(--color-mint);
 }
 
 /* Greeting Container Styles */

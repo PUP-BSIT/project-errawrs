@@ -6,8 +6,8 @@
  * It can be used both by explicit logout requests and session expiration handling.
  */
 
-// Start session if not already started
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+$sessionManager = SessionManager::getInstance();
 
 // Set JSON response headers
 header('Content-Type: application/json');
@@ -15,29 +15,8 @@ header('Cache-Control: no-store, no-cache, must-revalidate');
 header('Pragma: no-cache');
 
 // Log the logout request
-error_log('Logout request received. User: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
-
-// Function to clean up session and cookies
-function cleanupSession() {
-    // Clear all session variables
-    $_SESSION = array();
-    
-    // Delete the session cookie
-    if (ini_get('session.use_cookies')) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params['path'],
-            $params['domain'],
-            $params['secure'],
-            $params['httponly']
-        );
-    }
-    
-    // Destroy the session
-    session_destroy();
+if ($sessionManager->isAuthenticated()) {
+    error_log('Logout request received. User: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
 }
 
 // Handle different request types
@@ -46,7 +25,7 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 switch ($requestMethod) {
     case 'POST':
         // Clean up session
-        cleanupSession();
+        $sessionManager->killSession();
         
         // Return success response
         echo json_encode([
@@ -62,7 +41,7 @@ switch ($requestMethod) {
         $message = $expired ? 'Session expired' : 'Logout successful';
         
         // Clean up session
-        cleanupSession();
+        $sessionManager->killSession();
         
         // Return response
         echo json_encode([

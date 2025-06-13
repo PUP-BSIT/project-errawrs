@@ -1,18 +1,7 @@
-// API Endpoints
-const API = {
-    AUTH: {
-        SESSION_CHECK: '../../src/api/auth/session_check.php',
-        LOGOUT: '../../src/api/auth/logout.php',
-        KILL_SESSION: '../../src/api/auth/kill_session.php'
-    },
-    USER: {},
-    CONTENT: {}
-};
-
-// Routes
-const ROUTES = {
-    LOGIN: './login_account_holder.html'
-};
+// Extend existing ROUTES object
+if (!ROUTES.LOGIN) {
+    ROUTES.LOGIN = './login_account_holder.html';
+}
 
 /**
  * Session Manager
@@ -23,7 +12,7 @@ class SessionManager {
         // Default Settings
         const DEFAULT_SETTINGS = {
             CHECK_INTERVAL: 30000,        // Check session every 30 seconds
-            WARNING_THRESHOLD: 60,        // Show warning when 60 seconds left
+            WARNING_THRESHOLD: 60,        // Show warning when 1 minute left
             INACTIVITY_THRESHOLD: 300     // 5 minutes
         };
         
@@ -31,7 +20,7 @@ class SessionManager {
         this.options = {
             checkInterval: DEFAULT_SETTINGS.CHECK_INTERVAL,
             warningThreshold: DEFAULT_SETTINGS.WARNING_THRESHOLD,
-            sessionEndpoint: API.AUTH.SESSION_CHECK,
+            sessionEndpoint: `${BASE_PATH.API}/auth/session_check.php`,
             loginPage: ROUTES.LOGIN,
             onTimeout: null, // Custom callback for timeout
             onWarning: null, // Custom callback for warning
@@ -86,6 +75,10 @@ class SessionManager {
             
             // Add page visibility and navigation listeners
             this.setupNavigationTracking();
+        }).catch(error => {
+            console.error('Session check failed:', error);
+            // Don't redirect on initial error, give it another chance
+            this.timer = setInterval(this.checkSession, this.options.checkInterval);
         });
     }
 
@@ -199,28 +192,9 @@ class SessionManager {
      */
     async checkSession(isInitialCheck = false) {
         try {
-            // Default Settings
-            const DEFAULT_SETTINGS = {
-                INACTIVITY_THRESHOLD: 300
-            };
-            
-            // Text Content
-            const TEXT = {
-                SESSION_VALID: 'Session valid, expires in {expiresIn} seconds',
-                SESSION_ERROR: 'Error checking session:'
-            };
-            
-            // Calculate inactivity time in seconds
-            const inactivityTime = Math.floor((Date.now() - this.lastActivity) / 1000);
-            
-            // If user has been inactive for too long, don't bother checking session
-            if (inactivityTime >= DEFAULT_SETTINGS.INACTIVITY_THRESHOLD) {
-                this.handleTimeout();
-                return false;
-            }
-            
-            // Call session check endpoint
             const response = await fetch(this.options.sessionEndpoint, {
+                method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
                     'Pragma': 'no-cache',
@@ -233,19 +207,7 @@ class SessionManager {
             
             if (data.success && data.authenticated) {
                 this.sessionData = data;
-                this.isAuthenticated = true;
-                
-                // Calculate time until session expires
-                const expiresIn = data.user.session_expires_in - 
-                    (Math.floor(Date.now() / 1000) - data.user.last_activity);
-                
-                this.log(TEXT.SESSION_VALID.replace('{expiresIn}', expiresIn));
-                
-                // Show warning if session is about to expire
-                if (expiresIn <= this.options.warningThreshold && !this.warningShown) {
-                    this.showWarning(expiresIn);
-                }
-                
+                this.lastActivity = Date.now();
                 return true;
             } else {
                 // Session expired or invalid
@@ -254,22 +216,12 @@ class SessionManager {
                 return false;
             }
         } catch (error) {
-            // Text Content
-            const TEXT = {
-                SESSION_ERROR: 'Error checking session:'
-            };
-            
-            this.log(TEXT.SESSION_ERROR, error);
-            
-            // Handle network errors by assuming session is still valid
-            // to prevent unnecessary logouts during temporary network issues
-            if (isInitialCheck) {
-                // On initial check, try to verify with localStorage data
-                const hasStoredUser = !!localStorage.getItem('user');
-                return hasStoredUser;
+            console.error('Session check error:', error);
+            if (!isInitialCheck) {
+                // Only handle timeout for non-initial checks
+                this.handleTimeout();
             }
-            
-            return this.isAuthenticated;
+            return false;
         }
     }
 
@@ -475,7 +427,7 @@ class SessionManager {
     }
 
     /**
-     * Redirect to login page with cache prevention
+     * Redirect to login page
      */
     redirectToLogin() {
         // Create a unique URL to prevent browser caching
