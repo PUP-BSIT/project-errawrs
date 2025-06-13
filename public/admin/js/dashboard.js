@@ -258,8 +258,7 @@ class AdminDashboard {
 
     handleUserSearch(e) {
         const searchTerm = e.target.value.toLowerCase();
-        // TODO: Implement user search functionality
-        console.log('Searching users:', searchTerm);
+        loadUsers(searchTerm);
     }
 }
 
@@ -557,4 +556,77 @@ function updatePagination(total, currentPage, limit) {
         </button>`;
     
     paginationContainer.innerHTML = paginationHtml;
+}
+
+// User Account Management
+async function loadUsers(searchTerm = '') {
+    try {
+        const params = new URLSearchParams();
+        if (searchTerm) {
+            params.append('search', searchTerm);
+        }
+        
+        const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?${params.toString()}`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch users: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const container = document.getElementById('user_results');
+        
+        if (!data.success) {
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load users. Please try again.</p>
+                </div>`;
+            return;
+        }
+
+        if (data.users.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No users found</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        data.users.forEach(user => {
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            card.innerHTML = `
+                <div class="user-header">
+                    <span class="user-name">${user.first_name} ${user.last_name}</span>
+                    <span class="account-number">${user.account_number || 'No Account'}</span>
+                </div>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Username</span>
+                        <span class="detail-value">${user.username}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">${user.phone_number || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(user.created_at)}</span>
+                    </div>
+                </div>`;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading users:', error);
+        const container = document.getElementById('user_results');
+        container.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>An error occurred while loading users. Please try again.</p>
+            </div>`;
+    }
 } 
