@@ -1405,3 +1405,155 @@
 
 [14-Jun-2025 03:52:49 Asia/Manila] Fetching accounts for user ID: 22
 [14-Jun-2025 03:52:49 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:53:17 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844368
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:17 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:53:17 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844397
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:17 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:53:19 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844397
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:19 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[14-Jun-2025 03:53:20 Asia/Manila] Fetching accounts for user ID: 22
+[14-Jun-2025 03:53:20 Asia/Manila] Found 1 accounts for user ID: 22
+[13-Jun-2025 21:53:47 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844399
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:47 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
+[13-Jun-2025 21:53:47 Europe/Berlin] Session check - Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 22
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1749844122
+            [last_activity] => 1749844427
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => +639307662035
+            [email] => 
+            [account] => Array
+                (
+                    [account_id] => 37
+                    [account_number] => 544250000001
+                    [balance] => 0.00
+                )
+
+        )
+
+)
+
+[13-Jun-2025 21:53:47 Europe/Berlin] Session check - Cookie data: Array
+(
+    [PHPSESSID] => jvofctaiasjuhqfcsiqjb2nu5f
+    [STACKOVERCASH_SESSID] => bs0v4b4ebnfj029tm3nigvqvlv
+)
+
