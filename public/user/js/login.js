@@ -80,47 +80,22 @@ async function handleLogin(e) {
     showLoadingState();
 
     try {
-        // First check if we can connect to the login endpoint
-        const testResponse = await fetch(API.AUTH.LOGIN, {
-            method: 'OPTIONS',
-            headers: {
-                'Accept': 'application/json'
+        const response = await fetch(
+            API_LOGIN,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    login_type: 'user',
+                }),
             }
-        });
+        );
 
-        if (!testResponse.ok) {
-            throw new Error('Could not connect to login service');
-        }
-
-        // Proceed with login
-        const response = await fetch(API.AUTH.LOGIN, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
-                login_type: 'user'
-            }),
-            credentials: 'include'
-        });
-
-        let data;
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-            data = await response.json();
-        } else {
-            // If response is not JSON, get the text and log it
-            const text = await response.text();
-            console.error('Received non-JSON response:', text);
-            throw new Error('Invalid response format from server');
-        }
-
-        if (!response.ok) {
-            throw new Error(data.error || TEXT.LOGIN_ERROR);
-        }
+        const data = await response.json();
 
         if (data.success) {
             showNotification(TEXT.LOGIN_SUCCESS, NOTIFICATION_TYPE.SUCCESS);
@@ -232,19 +207,58 @@ function togglePasswordVisibility(toggleBtn) {
 }
 
 function showNotification(message, type = 'info') {
-    const container = document.querySelector('.notification-container');
-    if (!container) return;
+    // Notification Types
+    const NOTIFICATION_TYPE = {
+        SUCCESS: 'success',
+        ERROR: 'error',
+        INFO: 'info'
+    };
+    
+    // Icons
+    const ICON = {
+        SUCCESS: 'fa-check-circle',
+        ERROR: 'fa-exclamation-circle',
+        INFO: 'fa-info-circle',
+        CLOSE: 'fas fa-times'
+    };
+    
+    // Timing
+    const TIMING = {
+        NOTIFICATION_HIDE: 5000
+    };
+    
+    // Selectors
+    const SELECTOR = {
+        NOTIFICATION: '.notification'
+    };
 
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    
-    container.appendChild(notification);
-    
-    // Trigger animation
-    setTimeout(() => notification.classList.add('show'), 10);
-    
-    // Remove after 3 seconds
+    // Create notification container if it doesn't exist
+    let container = document.querySelector(SELECTOR.NOTIFICATION);
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'notification';
+        document.body.appendChild(container);
+    }
+
+    // Create notification content
+    container.className = `notification notification-${type}`;
+    container.innerHTML = `
+        <div class="notification-content">
+            <i class="fas ${
+                type === NOTIFICATION_TYPE.SUCCESS
+                    ? ICON.SUCCESS
+                    : type === NOTIFICATION_TYPE.ERROR
+                    ? ICON.ERROR
+                    : ICON.INFO
+            }"></i>
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="${ICON.CLOSE}"></i>
+            </button>
+        </div>
+    `;
+
+    // Auto-hide after some time
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);

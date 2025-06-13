@@ -196,25 +196,23 @@ class SessionManager {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                credentials: 'same-origin'
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            
             const data = await response.json();
-            this.isAuthenticated = data.authenticated;
-
+            
             if (data.success && data.authenticated) {
                 this.sessionData = data;
                 this.lastActivity = Date.now();
                 return true;
             } else {
-                if (!isInitialCheck) {
-                    this.handleTimeout();
-                }
+                // Session expired or invalid
+                this.isAuthenticated = false;
+                this.handleTimeout();
                 return false;
             }
         } catch (error) {
@@ -362,30 +360,52 @@ class SessionManager {
      * Handle session timeout
      */
     async handleTimeout() {
-        try {
-            // Clear any stored credentials
-            this.clearStoredCredentials();
-            
-            // Attempt to logout gracefully
-            await fetch(API.AUTH.LOGOUT, {
-                method: 'POST',
-                credentials: 'include'
-            });
-        } catch (error) {
-            console.error('Error during logout:', error);
-        } finally {
-            // Clean up timers and event listeners
-            this.destroy();
-            
-            // Show a user-friendly message before redirect
-            if (typeof showNotification === 'function') {
-                showNotification('Your session has expired. Please log in again.', 'info');
+        // Clear all timers
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        
+        if (this.warningTimer) {
+            clearTimeout(this.warningTimer);
+            this.warningTimer = null;
+        }
+        
+        // Clear localStorage
+        this.clearStoredCredentials();
+        
+        // If custom timeout handler provided, use it
+        if (typeof this.options.onTimeout === 'function') {
+            this.options.onTimeout();
+        } else {
+            // Call the session killer endpoint
+            try {
+                // First try the dedicated session killer
+                await fetch(API.AUTH.KILL_SESSION, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                });
+            } catch (error) {
+                this.log('Error during session kill:', error);
+                
+                // Fallback to regular logout if session kill fails
+                try {
+                    await fetch(API.AUTH.LOGOUT, {
+                        method: 'POST',
+                        credentials: 'same-origin'
+                    });
+                } catch (logoutError) {
+                    this.log('Error during logout fallback:', logoutError);
+                }
             }
             
-            // Redirect after a short delay to allow message to be seen
-            setTimeout(() => {
-                window.location.href = this.options.loginPage;
-            }, 2000);
+            // Redirect to login page
+            this.redirectToLogin();
         }
     }
 
@@ -410,20 +430,14 @@ class SessionManager {
      * Redirect to login page
      */
     redirectToLogin() {
-        // Clear any stored credentials first
-        this.clearStoredCredentials();
+        // Create a unique URL to prevent browser caching
+        const cacheBuster = new Date().getTime();
+        const redirectUrl = `${this.options.loginPage}?expired=true&t=${cacheBuster}`;
         
-        // Only add expired parameter if session was previously authenticated
-        const params = this.isAuthenticated ? 
-            `?expired=true&t=${Date.now()}` : '';
-            
-        // Clean up before redirect
-        this.destroy();
-        
-        // Redirect with a small delay to allow cleanup
-        setTimeout(() => {
-            window.location.href = this.options.loginPage + params;
-        }, 100);
+        // Replace current history entry to prevent back navigation
+        if (window.location.href !== redirectUrl) {
+            window.location.replace(redirectUrl);
+        }
     }
 
     /**

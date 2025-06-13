@@ -33,14 +33,14 @@ try {
     // Check if session exists and is valid
     if (!$sessionManager->isAuthenticated()) {
         error_log("Session check failed - Not authenticated");
-        http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'authenticated' => false,
-            'error' => 'Not authenticated'
-        ]);
-        exit();
-    }
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'authenticated' => false,
+        'error' => 'Not authenticated'
+    ]);
+    exit();
+}
 
     // Get session data
     $sessionData = $sessionManager->getSessionData();
@@ -53,22 +53,22 @@ try {
     if (!$isNewSession && $sessionManager->isSessionExpired()) {
         error_log("Session check failed - Session expired");
         $sessionManager->killSession();
-        http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'authenticated' => false,
-            'error' => 'Session expired'
-        ]);
-        exit();
-    }
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'authenticated' => false,
+        'error' => 'Internal server error'
+    ]);
+    exit();
+}
 
-    // Update last activity time
+// Update last activity time
     $sessionManager->updateActivity();
 
-    // Return session data
-    echo json_encode([
-        'success' => true,
-        'authenticated' => true,
+// Return session data
+echo json_encode([
+    'success' => true,
+    'authenticated' => true,
         'user' => $sessionData
     ]);
 
