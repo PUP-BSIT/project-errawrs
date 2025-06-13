@@ -20,6 +20,7 @@ body {
     background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
     display: flex;
     min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 /* Sidebar Styles */
@@ -29,6 +30,7 @@ body {
     color: var(--color-white);
     padding: 32px 24px;
     transition: all 0.3s ease;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
 }
 
 .sidebar-header {
@@ -93,6 +95,8 @@ body {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Top Navigation */
@@ -101,6 +105,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 1rem;
 }
 
 .nav-left {
@@ -181,11 +187,11 @@ body {
 
 /* Page Content */
 .page-content {
-    padding: 2rem;
-    height: calc(100vh - 80px);
+    flex: 1; /* Allow page-content to grow and fill available space */
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    min-height: 0; /* Prevent overflow issues */
 }
 
 .content-header {
@@ -231,13 +237,13 @@ body {
 .user-cards-wrapper {
     flex: 1;
     min-height: 0;
-    padding: 0px 25px 10px 25px;
+    padding: 0 25px 10px 25px;
     overflow-y: auto;
 }
 
 .user-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly reduced min width */
     gap: 1.5rem;
     height: 100%;
     align-content: start;
@@ -320,7 +326,7 @@ body {
     display: flex;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-    gap: 1rem; /* Added gap between label and value */
+    gap: 1rem;
 }
 
 .detail-label {
@@ -443,35 +449,5 @@ body {
     to {
         transform: translateX(0);
         opacity: 1;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        left: -260px;
-        height: 100vh;
-        z-index: 1000;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-
-    .content-header {
-        flex-direction: column;
-    }
-    
-    .search-box {
-        max-width: 100%;
-    }
-    
-    .user-cards {
-        grid-template-columns: 1fr;
     }
 }

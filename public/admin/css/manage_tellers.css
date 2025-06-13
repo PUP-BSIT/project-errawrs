@@ -182,10 +182,11 @@ body {
 /* Page Content */
 .page-content {
     padding: 2rem;
-    height: calc(100vh - 80px); /* Adjust for top nav height */
+    flex: 1; /* Allow page-content to grow and fill available space */
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    min-height: 0px;
 }
 
 .content-header {
