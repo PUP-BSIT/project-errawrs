@@ -277,15 +277,8 @@ class TellerManager {
                     document.getElementById('last_name').value = data.teller.last_name;
                     document.getElementById('email').value = data.teller.email;
 
-                    // Update modal title and button
-                    const title = document.getElementById('modal_title');
-                    const saveBtn = document.getElementById('save_btn');
-                    if (title) {
-                        title.textContent = 'Edit Teller';
-                    }
-                    if (saveBtn) {
-                        saveBtn.textContent = 'Save Changes';
-                    }
+                    // Update modal title
+                    document.getElementById('modal_title').textContent = 'Edit Teller';
 
                     // Show modal
                     modal.classList.add('show');
@@ -308,29 +301,55 @@ class TellerManager {
             const isEdit = !!tellerId;
 
             const formData = {
-                first_name: document.getElementById('first_name').value,
-                last_name: document.getElementById('last_name').value,
-                email: document.getElementById('email').value
+                first_name: document.getElementById('first_name').value.trim(),
+                last_name: document.getElementById('last_name').value.trim(),
+                email: document.getElementById('email').value.trim()
             };
+
+            // Basic validation
+            if (!formData.first_name || !formData.last_name || !formData.email) {
+                this.showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                this.showToast('Please enter a valid email address', 'error');
+                return;
+            }
 
             if (isEdit) {
                 formData.teller_id = tellerId;
             }
 
+            // Log the request data for debugging
+            console.log('Request data:', {
+                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
+                method: isEdit ? 'PUT' : 'POST',
+                body: formData
+            });
+
             const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 credentials: 'include',
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) {
-                throw new Error(`Failed to ${isEdit ? 'update' : 'create'} teller`);
-            }
+            let data;
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
 
-            const data = await response.json();
+            try {
+                data = JSON.parse(responseText);
+                console.log('Parsed response:', data);
+            } catch (e) {
+                throw new Error(`Failed to parse response: ${responseText}`);
+            }
             
             if (data.success) {
                 // Close teller modal
@@ -589,4 +608,4 @@ class TellerManager {
 }
 
 // Initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', TellerManager.init); 
+document.addEventListener('DOMContentLoaded', TellerManager.init);
