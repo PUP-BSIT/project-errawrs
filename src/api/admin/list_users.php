@@ -38,6 +38,7 @@ try {
         $users[] = [
             'user_id' => $row['user_id'],
             'account_number' => $row['account_number'],
+            'account_number' => $row['account_number'],
             'username' => $row['username'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
