@@ -632,7 +632,7 @@ class RegistrationManager {
 			otpModal.style.display = "flex";
 			// Trigger reflow to ensure the transition works
 			otpModal.offsetHeight;
-			otpModal.classList.add("active");
+				otpModal.classList.add("active");
 
 			// Start countdown for resend button
 			this.startResendCountdown();

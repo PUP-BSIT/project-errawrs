@@ -1,22 +1,8 @@
-// Constants
-const API = {
-    USER: {
-        ACCOUNTS: '../../src/api/user/accounts.php',
-        CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php',
-        UPDATE_PROFILE: '../../src/api/user/profile/update.php'
-    },
-    AUTH: {
-        SEND_OTP: '../../src/api/auth/send_otp.php',
-        VERIFY_OTP: '../../src/api/auth/verify_otp.php',
-        SESSION_CHECK: '../../src/api/auth/session_check.php',
-        LOGOUT: '../../src/api/auth/logout.php'
-    }
-};
-
-const ROUTES = {
-    LOGIN: './login_account_holder.html',
-    DASHBOARD: './dashboard.html'
-};
+// Add account-specific endpoints
+Object.assign(API_ENDPOINTS.USER, {
+    CREATE_ACCOUNT: `${BASE_PATH.API}/user/create_additional_account.php`,
+    UPDATE_PROFILE: `${BASE_PATH.API}/user/profile/update.php`
+});
 
 const TEXT = {
     SESSION_EXPIRED: 'Session expired or invalid',
@@ -105,7 +91,18 @@ let state = {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(API.AUTH.SESSION_CHECK);
+        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -137,7 +134,18 @@ function updateUserDisplay() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
-        const response = await fetch(API.USER.ACCOUNTS);
+        const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success) {
@@ -179,31 +187,65 @@ function createAccountItem(account) {
     // Format account number with spaces
     const formattedAccountNumber = account.account_number.replace(/(\d{4})/g, '$1 ').trim();
     
+    // Determine account status class
+    const statusClass = account.status?.toLowerCase() === 'active' ? 'active' : 'closed';
+    
+    // Determine account type class
+    const accountTypeClass = account.account_type?.toLowerCase() || 'standard';
+    
     accountItem.innerHTML = `
         <div class="account-info">
-            <div class="account-type">${account.account_type || 'Savings'}</div>
-            <div class="account-number">${formattedAccountNumber}</div>
-            <div class="account-balance">₱ ${parseFloat(account.balance).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            })}</div>
+            <div class="info-group">
+                <span class="info-label">Account Number</span>
+                <span class="info-value">${formattedAccountNumber}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Type</span>
+                <span class="account-type-badge ${accountTypeClass}">
+                    ${account.account_type || 'Standard'}
+                </span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Balance</span>
+                <span class="info-value">₱ ${parseFloat(account.balance).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Status</span>
+                <span class="account-status ${statusClass}">
+                    ${account.status || 'Active'}
+                </span>
+            </div>
         </div>
         <div class="account-actions">
-            <button class="btn-view-transactions" data-account="${account.account_number}">
-                View Transactions
+            <button class="three-dots-button" aria-label="Account actions">
+                <i class="fas fa-ellipsis-v"></i>
             </button>
-            <button class="btn-transfer" data-account="${account.account_number}">
-                Transfer
-            </button>
-        </div>
-    `;
+            <div class="action-menu hidden">
+                <button class="menu-item transfer-button" data-account="${account.account_number}">
+                    Transfer Money
+                </button>
+                <button class="menu-item close-button" data-account="${account.account_number}">
+                    Close Account
+                </button>
+            </div>
+        </div>`;
 
-    // Add event listeners
-    const viewTransactionsBtn = accountItem.querySelector('.btn-view-transactions');
-    const transferBtn = accountItem.querySelector('.btn-transfer');
+    // Add event listeners for the three dots menu
+    const threeDots = accountItem.querySelector('.three-dots-button');
+    const actionMenu = accountItem.querySelector('.action-menu');
+    
+    threeDots.addEventListener('click', (e) => {
+        e.stopPropagation();
+        actionMenu.classList.toggle('hidden');
+    });
 
-    viewTransactionsBtn.addEventListener('click', () => handleViewTransactions(account));
-    transferBtn.addEventListener('click', () => handleTransfer(account));
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+        actionMenu.classList.add('hidden');
+    });
 
     return accountItem;
 }
@@ -211,15 +253,19 @@ function createAccountItem(account) {
 // Create add account placeholder
 function createAddAccountPlaceholder() {
     const placeholder = document.createElement('div');
-    placeholder.className = CLASS.ADD_ACCOUNT_PLACEHOLDER;
+    placeholder.className = 'add-account-placeholder';
+    
     placeholder.innerHTML = `
-        <div class="add-account-content">
-            <i class="fas fa-plus-circle"></i>
-            <span>Add New Account</span>
-        </div>
+        <i class="fas fa-plus-circle"></i>
+        <span>Add New Account</span>
     `;
     
-    placeholder.addEventListener('click', handleAddAccount);
+    placeholder.addEventListener('click', () => {
+        if (DOM.modals.accountType) {
+            DOM.modals.accountType.classList.remove(CLASS.HIDDEN);
+        }
+    });
+    
     return placeholder;
 }
 

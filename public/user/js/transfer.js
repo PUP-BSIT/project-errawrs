@@ -1,30 +1,14 @@
-// Extend the existing API object from session-manager.js
-// Add transfer-specific endpoints
-if (!API.USER) API.USER = {};
-if (!API.AUTH) API.AUTH = {};
-
-// Add or update USER endpoints
-Object.assign(API.USER, {
-    ACCOUNTS: '../../src/api/user/accounts.php',
-    INTERNAL_TRANSFER: '../../src/api/user/fund_transfer.php',
-    EXTERNAL_TRANSFER: '../../src/api/user/external_transfer.php'
+// Add transfer-specific routes
+Object.assign(ROUTES, {
+    TRANSFER_SUCCESS: `${BASE_PATH.ROUTES.USER}/transfer_success.html`,
+    TRANSFER_FAILED: `${BASE_PATH.ROUTES.USER}/transfer_failed.html`
 });
 
-// Add or update AUTH endpoints
-Object.assign(API.AUTH, {
-    SEND_OTP: '../../src/api/auth/send_otp.php',
-    VERIFY_OTP: '../../src/api/auth/verify_otp.php',
-    SESSION_CHECK: '../../src/api/auth/session_check.php',
-    LOGOUT: '../../src/api/auth/logout.php'
+// Add transfer-specific routes
+Object.assign(ROUTES, {
+    TRANSFER_SUCCESS: `${BASE_PATH.ROUTES.USER}/transfer_success.html`,
+    TRANSFER_FAILED: `${BASE_PATH.ROUTES.USER}/transfer_failed.html`
 });
-
-// Extend Routes if needed
-if (!ROUTES.TRANSFER_SUCCESS) {
-    Object.assign(ROUTES, {
-        TRANSFER_SUCCESS: './transfer_success.html',
-        TRANSFER_FAILED: './transfer_failed.html'
-    });
-}
 
 // Text Constants
 const TEXT = {
@@ -34,7 +18,9 @@ const TEXT = {
     INVALID_AMOUNT: 'Please enter a valid amount',
     OTP_VERIFICATION_FAILED: 'OTP verification failed. Please try again.',
     OTP_ERROR: 'Error verifying OTP. Please try again.',
-    LOGOUT_ERROR: 'Logout might not have been fully successful.'
+    LOGOUT_ERROR: 'Logout might not have been fully successful.',
+    SESSION_EXPIRED: 'Session expired. Please log in again.',
+    USER_DATA_ERROR: 'Error fetching user data. Please try again later.'
 };
 
 // CSS Classes
@@ -118,7 +104,12 @@ const welcome_user_name_element = document.getElementById('welcome_user_name');
 
 // State
 let user_accounts = [];
-let user_data = {};
+let user_data = null;
+
+// Constants
+const DOM = {
+    // ... existing DOM constants ...
+};
 
 // Function to show a notification (Assuming this is shared or implemented here)
 function showNotification(message, type) {
@@ -154,7 +145,18 @@ function showNotification(message, type) {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(API.AUTH.SESSION_CHECK);
+        const response = await fetch(API.AUTH.SESSION_CHECK, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success && data.authenticated) {
@@ -167,16 +169,16 @@ async function fetchUserData() {
             display_user_initial();
         } else {
             showNotification(
-                data.error || 'Session expired or invalid',
-                'error'
+                data.error || TEXT.SESSION_EXPIRED,
+                CLASS.ERROR
             );
             // Redirect to login page if not authenticated
             setTimeout(() => {
                 window.location.href = ROUTES.LOGIN;
-            }, 2000); // 2 seconds delay
+            }, TIMING.REDIRECT_DELAY);
         }
     } catch (error) {
-        showNotification('Error fetching user data', 'error');
+        showNotification(TEXT.USER_DATA_ERROR, CLASS.ERROR);
         console.error('Error:', error);
     }
 }
@@ -184,16 +186,25 @@ async function fetchUserData() {
 // Fetch user accounts and populate the 'Your Account' dropdown
 async function populateAccountsDropdown() {
     try {
-        const response = await fetch(API.USER.ACCOUNTS);
+        const response = await fetch(API.USER.ACCOUNTS, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         // Debug log to see what accounts data we have
         console.log('User accounts data:', data.accounts);
 
         if (data.success && data.accounts.length > 0) {
-            user_accounts = data.accounts.filter(
-                (account) => account.status === ACCOUNT_STATUS.ACTIVE
-            );
+            user_accounts = data.accounts;
             your_account_select.innerHTML =
                 `<option value="">Select Account</option>`;
             user_accounts.forEach((account) => {
@@ -229,12 +240,8 @@ async function populateAccountsDropdown() {
             next_button.disabled = true;
         }
     } catch (error) {
-        user_accounts = [];
-        your_account_select.innerHTML =
-            `<option value="">Error loading accounts</option>`;
-        showNotification('Error fetching accounts', 'error');
-        console.error('Error:', error);
-        next_button.disabled = true;
+        console.error('Error fetching accounts:', error);
+        showNotification('Error loading accounts. Please try again.', CLASS.ERROR);
     }
 }
 
@@ -527,8 +534,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const transferResp = await fetch(transferApi, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(transferPayload)
                 });
+
+                if (!transferResp.ok) {
+                    throw new Error(`HTTP error! status: ${transferResp.status}`);
+                }
+
                 const transferData = await transferResp.json();
                 if (!transferData.success) {
                     showNotification(transferData.error || TEXT.TRANSFER_FAILED, 'error');
@@ -544,11 +557,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const otpResp = await fetch(API.AUTH.SEND_OTP, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ 
                         phone_number, 
                         purpose: isInternal ? 'fund_transfer' : 'external_transfer' 
                     })
                 });
+
+                if (!otpResp.ok) {
+                    throw new Error(`HTTP error! status: ${otpResp.status}`);
+                }
+
                 const otpData = await otpResp.json();
                 if (!otpData.success) {
                     showNotification(otpData.error || 'Failed to send OTP.', 'error');
@@ -835,8 +854,13 @@ function showOTPVerificationModal(data) {
             const verifyResp = await fetch(API.AUTH.VERIFY_OTP, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ otp, phone_number: data.phone_number })
             });
+
+            if (!verifyResp.ok) {
+                throw new Error(`HTTP error! status: ${verifyResp.status}`);
+            }
             
             const verifyData = await verifyResp.json();
             
@@ -852,8 +876,13 @@ function showOTPVerificationModal(data) {
             const completeResp = await fetch(data.transferApi, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(data.transferPayload)
             });
+
+            if (!completeResp.ok) {
+                throw new Error(`HTTP error! status: ${completeResp.status}`);
+            }
             
             const completeData = await completeResp.json();
             
@@ -898,10 +927,17 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If using tokens
 
         // Call backend logout API
-        await fetch(API.AUTH.LOGOUT, { 
+        const response = await fetch(API.AUTH.LOGOUT, { 
             method: 'POST',
-            credentials: 'same-origin'
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         // Redirect to login page after successful logout
         window.location.href = './index.html';

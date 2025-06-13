@@ -1,8 +1,4 @@
-// API Endpoints
-const API_LOGIN = '../../src/api/auth/login.php';
-
-// Routes
-const ROUTE_DASHBOARD = './user_dashboard.html';
+// API Endpoints and Routes are now imported from config.js
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -84,39 +80,77 @@ async function handleLogin(e) {
     showLoadingState();
 
     try {
-        const response = await fetch(
-            API_LOGIN,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    login_type: 'user',
-                }),
+        // First check if we can connect to the login endpoint
+        const testResponse = await fetch(API.AUTH.LOGIN, {
+            method: 'OPTIONS',
+            headers: {
+                'Accept': 'application/json'
             }
-        );
+        });
 
-        const data = await response.json();
+        if (!testResponse.ok) {
+            throw new Error('Could not connect to login service');
+        }
+
+        // Proceed with login
+        const response = await fetch(API.AUTH.LOGIN, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+                login_type: 'user'
+            }),
+            credentials: 'include'
+        });
+
+        let data;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            // If response is not JSON, get the text and log it
+            const text = await response.text();
+            console.error('Received non-JSON response:', text);
+            throw new Error('Invalid response format from server');
+        }
+
+        if (!response.ok) {
+            throw new Error(data.error || TEXT.LOGIN_ERROR);
+        }
 
         if (data.success) {
             showNotification(TEXT.LOGIN_SUCCESS, NOTIFICATION_TYPE.SUCCESS);
-            // Store user data and account info
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('account', JSON.stringify(data.account));
+            
+            // Store user data in sessionStorage
+            const userInfo = {
+                id: data.user.id,
+                username: data.user.username,
+                name: `${data.user.first_name} ${data.user.last_name}`,
+                phone_number: data.user.phone_number,
+                type: 'user'
+            };
+            
+            if (data.user.account) {
+                userInfo.account = data.user.account;
+            }
+            
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+            
             // Redirect after a short delay
             setTimeout(() => {
-                window.location.href = ROUTE_DASHBOARD;
+                window.location.href = ROUTES.DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
-            showNotification(data.error || TEXT.LOGIN_ERROR, NOTIFICATION_TYPE.ERROR);
-            hideLoadingState();
+            throw new Error(data.error || TEXT.LOGIN_ERROR);
         }
     } catch (error) {
         console.error('Login error:', error);
-        showNotification(TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+        showNotification(error.message || TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+    } finally {
         hideLoadingState();
     }
 }
@@ -198,66 +232,21 @@ function togglePasswordVisibility(toggleBtn) {
 }
 
 function showNotification(message, type = 'info') {
-    // Notification Types
-    const NOTIFICATION_TYPE = {
-        SUCCESS: 'success',
-        ERROR: 'error',
-        INFO: 'info'
-    };
-    
-    // Icons
-    const ICON = {
-        SUCCESS: 'fa-check-circle',
-        ERROR: 'fa-exclamation-circle',
-        INFO: 'fa-info-circle',
-        CLOSE: 'fas fa-times'
-    };
-    
-    // Timing
-    const TIMING = {
-        NOTIFICATION_HIDE: 5000
-    };
-    
-    // Selectors
-    const SELECTOR = {
-        NOTIFICATION: '.notification'
-    };
+    const container = document.querySelector('.notification-container');
+    if (!container) return;
 
-    // Create notification container if it doesn't exist
-    let container = document.querySelector(SELECTOR.NOTIFICATION);
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'notification';
-        document.body.appendChild(container);
-    }
-
-    // Create notification content
-    container.className = `notification notification-${type}`;
-    container.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${
-                type === NOTIFICATION_TYPE.SUCCESS
-                    ? ICON.SUCCESS
-                    : type === NOTIFICATION_TYPE.ERROR
-                    ? ICON.ERROR
-                    : ICON.INFO
-            }"></i>
-            <span>${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
-                <i class="${ICON.CLOSE}"></i>
-            </button>
-        </div>
-    `;
-
-    // Auto-hide after some time
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    container.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Remove after 3 seconds
     setTimeout(() => {
-        if (container.parentElement) {
-            container.classList.add('hide');
-            setTimeout(() => {
-                if (container.parentElement) {
-                    container.remove();
-                }
-            }, 300); // Animation duration
-        }
-    }, TIMING.NOTIFICATION_HIDE);
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }

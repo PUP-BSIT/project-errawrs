@@ -13,9 +13,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <link rel="stylesheet" href="./css/user_dashboard.css" />
-        <!-- Keep some base styles -->
         <link rel="stylesheet" href="./css/account.css" />
-        <!-- New account specific styles -->
     </head>
     <body class="authenticated-page">
         <div class="dashboard-container">
@@ -41,40 +39,32 @@
                 <nav class="sidebar-nav">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a
-                                href="./user_dashboard.html"
-                                class="nav-link"
-                                data-page="dashboard">
+                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard">
+                                <i class="fas fa-home"></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="./transfer.html"
-                                class="nav-link"
-                                data-page="transfer">
+                            <a href="./transfer.html" class="nav-link" data-page="transfer">
+                                <i class="fas fa-exchange-alt"></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="./transaction.html"
-                                class="nav-link"
-                                data-page="transaction">
+                            <a href="./transaction.html" class="nav-link" data-page="transaction">
+                                <i class="fas fa-history"></i>
                                 Transaction
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <!-- Active class for Account -->
-                            <a
-                                href="./account.html"
-                                class="nav-link"
-                                data-page="account">
+                            <a href="./account.html" class="nav-link" data-page="account">
+                                <i class="fas fa-wallet"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="./profile.html" class="nav-link" data-page="profile">
+                                <i class="fas fa-user"></i>
                                 Profile
                             </a>
                         </li>
@@ -84,6 +74,7 @@
                     <button class="logout-btn" id="logout_btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Log out
+                    </button>
                 </div>
             </div>
 
@@ -91,9 +82,7 @@
                 <!-- Header -->
                 <header class="main-header">
                     <div class="header-actions">
-                        <button
-                            class="icon-btn notification-btn"
-                            id="notification_btn">
+                        <button class="icon-btn notification-btn" id="notification_btn">
                             <i class="fas fa-bell"></i>
                         </button>
                         <button class="icon-btn add-btn" id="add_btn">
@@ -107,13 +96,14 @@
 
                 <!-- Account Content -->
                 <div class="account-content">
-                    <h2>View Account</h2>
+                    <h2>View Accounts</h2>
                     <div class="account-list-container">
                         <!-- Account items will be dynamically populated -->
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="notification-container"></div>
         
         <!-- Account Type Selection Modal -->
@@ -139,12 +129,14 @@
                         </label>
                     </div>
                 </div>
-                <button id="proceed_account_type_button" class="btn primary-btn" disabled>
-                    Continue
-                </button>
-                <button id="cancel_account_type_button" class="btn secondary-btn">
-                    Cancel
-                </button>
+                <div class="modal-actions">
+                    <button id="proceed_account_type_button" class="btn primary-btn" disabled>
+                        Continue
+                    </button>
+                    <button id="cancel_account_type_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -161,17 +153,14 @@
                     <span class="checkmark"></span>
                     I understand and agree.
                 </label>
-                <button
-                    id="proceed_add_account_button"
-                    class="btn primary-btn"
-                    disabled>
-                    Proceed
-                </button>
-                <button
-                    id="cancel_add_account_button"
-                    class="btn secondary-btn">
-                    Cancel
-                </button>
+                <div class="modal-actions">
+                    <button id="proceed_add_account_button" class="btn primary-btn" disabled>
+                        Proceed
+                    </button>
+                    <button id="cancel_add_account_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -183,38 +172,29 @@
                     An OTP has been sent to your registered phone number. Please
                     enter it below.
                 </p>
-                <input
-                    type="text"
-                    id="otp_input"
-                    placeholder="Enter OTP"
-                    class="form-input"/>
-                <button id="verify_otp_button" class="btn primary-btn">
-                    Verify
-                </button>
-                <button id="cancel_otp_button" class="btn secondary-btn">
-                    Cancel
-                </button>
+                <input type="text" id="otp_input" placeholder="Enter OTP" class="form-input"/>
+                <div class="modal-actions">
+                    <button id="verify_otp_button" class="btn primary-btn">
+                        Verify
+                    </button>
+                    <button id="cancel_otp_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Processing Notification Modal -->
+        <!-- Processing Modal -->
         <div id="processing_modal" class="modal hidden">
             <div class="modal-content">
-                <h3>Account Request Submitted</h3>
                 <div class="processing-icon">
-                    <i class="fas fa-hourglass-half"></i>
+                    <i class="fas fa-spinner fa-pulse"></i>
                 </div>
-                <p>
-                    Your account addition request has been submitted and is pending approval from our teller.
-                    Please check your registered email for approval status notification.
-                </p>
+                <h3>Processing Your Request</h3>
+                <p>Please wait while we process your request. This may take a moment.</p>
                 <p class="important-note">
-                    <strong>Important:</strong> Your new account will only appear in your account panel 
-                    after teller verification and approval. This process may take 1-2 business days.
+                    <strong>Important:</strong> Please do not close this window or refresh the page.
                 </p>
-                <button id="close_processing_button" class="btn primary-btn">
-                    OK
-                </button>
             </div>
         </div>
 
@@ -250,6 +230,9 @@
             </div>
         </div>
 
+        <!-- Scripts -->
+        <script src="./js/config.js"></script>
+        <script src="./js/api.js"></script>
         <script src="./js/session-manager.js"></script>
         <script src="./js/account.js"></script>
     </body>
