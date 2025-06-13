@@ -25,6 +25,7 @@ const notification_container = document.querySelector('.notification-container')
 const account_type_modal = document.getElementById('account_type_modal');
 const confirmation_modal = document.getElementById('confirmation_modal');
 const otp_modal = document.getElementById('otp_modal');
+const processing_modal = document.getElementById('processing_modal');
 const account_type_radios = document.querySelectorAll('input[name="account_type"]');
 const proceed_account_type_button = document.getElementById('proceed_account_type_button');
 const cancel_account_type_button = document.getElementById('cancel_account_type_button');
@@ -35,6 +36,7 @@ const selected_account_type_span = document.getElementById('selected_account_typ
 const otp_input = document.getElementById('otp_input');
 const verify_otp_button = document.getElementById('verify_otp_button');
 const cancel_otp_button = document.getElementById('cancel_otp_button');
+const close_processing_button = document.getElementById('close_processing_button');
 
 // DOM Elements for Profile Edit
 const user_avatar_container = document.getElementById('user_avatar_container');
@@ -458,8 +460,8 @@ verify_otp_button.addEventListener('click', async () => {
         ENTER_OTP: 'Please enter OTP',
         PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
         ACCOUNT_TYPE_NOT_FOUND: 'Account type not found. Please try again.',
-        ACCOUNT_CREATED: 'Account created successfully',
-        ACCOUNT_ERROR: 'Failed to create account',
+        ACCOUNT_REQUEST_SUBMITTED: 'Account request submitted for teller approval',
+        ACCOUNT_ERROR: 'Failed to submit account request',
         INVALID_OTP: 'Invalid OTP',
         OTP_ERROR: 'Error sending OTP'
     };
@@ -516,7 +518,8 @@ verify_otp_button.addEventListener('click', async () => {
                 return;
             }
             
-            // If OTP verification is successful, create the account
+            // If OTP verification is successful, submit the account request
+            // Note: This doesn't create the account immediately, just submits a request
             const createResponse = await fetch(
                 API.USER.CREATE_ACCOUNT,
                 {
@@ -526,7 +529,8 @@ verify_otp_button.addEventListener('click', async () => {
                     },
                     body: JSON.stringify({
                         account_type: accountType,
-                        verified: true
+                        verified: true,
+                        status: 'pending' // Mark the account as pending approval
                     }),
                 }
             );
@@ -535,12 +539,18 @@ verify_otp_button.addEventListener('click', async () => {
 
             if (createData.success) {
                 otp_modal.classList.add(CLASS.HIDDEN);
-                showNotification(TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
+                
+                // Show the processing notification
+                processing_modal.classList.remove(CLASS.HIDDEN);
+                
+                showNotification(TEXT.ACCOUNT_REQUEST_SUBMITTED, CLASS.SUCCESS);
                 
                 // Clear the stored account type
                 localStorage.removeItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
                 
-                await fetchUserAccounts(); // Refresh account list
+                // No need to refresh account list since the account isn't created yet
+                // The account will only appear after teller approval
+                // await fetchUserAccounts();
             } else {
                 showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
             }
@@ -833,5 +843,17 @@ if (logout_btn) {
         // Prevent the default navigation to ensure our handleLogout function completes
         event.preventDefault(); 
         handleLogout();
+    });
+}
+
+// Add event listener for the close processing button
+if (close_processing_button) {
+    close_processing_button.addEventListener('click', () => {
+        // CSS Classes
+        const CLASS = {
+            HIDDEN: 'hidden'
+        };
+        
+        processing_modal.classList.add(CLASS.HIDDEN);
     });
 }
