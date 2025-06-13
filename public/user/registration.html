@@ -123,8 +123,106 @@
                                     </button>
                                 </div>
                             </form>
+                    <div class="registration-content">
+                        <!-- Step 1: Identification Documents -->
+                        <div class="form-step active" id="step_one_identification">
+                            <div class="form-header">
+                                <h2>Identification Documents</h2>
+                                <p>Please provide your identification details.</p>
+                            </div>
+
+                            <form class="registration-form" id="identification_form">
+                                <div class="form-section">
+                                    <h3>Identification Documents</h3>
+                                    
+                                                                    <div class="form-group">
+                                    <label for="id_type">ID Type</label>
+                                    <select id="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="passport">Passport</option>
+                                        <option value="national_id">National ID</option>
+                                        <option value="drivers_license">Driver's License</option>
+                                        <option value="school_id">School ID (for students)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="id_image">Upload ID Image</label>
+                                    <div class="file-upload-container" id="file_upload_container">
+                                        <input type="file" id="id_image" name="id_image" accept="image/jpeg,image/jpg,image/png" class="file-input" required>
+                                        <div class="upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag and drop your ID image here or click to browse</p>
+                                            <span class="file-types">Accepted formats: JPG, JPEG, PNG (Max 5MB)</span>
+                                        </div>
+                                        <div class="preview-container" style="display: none;">
+                                            <div class="preview-content">
+                                                <img id="image_preview" src="" alt="ID Preview">
+                                                <div class="preview-details">
+                                                    <div class="preview-actions">
+                                                        <button type="button" class="btn btn-secondary btn-view">
+                                                            <i class="fas fa-eye"></i> View
+                                                        </button>
+                                                        <button type="button" class="btn btn-secondary btn-replace">
+                                                            <i class="fas fa-sync-alt"></i> Replace
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-remove">
+                                                            <i class="fas fa-trash"></i> Remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-continue">
+                                        Next <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
 
+                        <!-- Step 2: Contact Information -->
+                        <div class="form-step" id="step_two_contact" style="display: none;">
+                            <div class="form-header">
+                                <h2>Contact Information</h2>
+                                <p>Please provide your contact details.</p>
+                            </div>
+
+                            <form class="registration-form" id="contact_info_form">
+                                <!-- Page 1: Personal Information -->
+                                <div class="form-page active" id="contact_page_1">
+                                    <div class="form-section">
+                                        <h3>Personal Information</h3>
+                                        
+                                        <div class="form-group">
+                                            <label for="first_name">First Name</label>
+                                            <input
+                                                type="text"
+                                                id="first_name"
+                                                placeholder="Enter your first name"
+                                                pattern="[A-Za-z\s\-]+"
+                                                title="Please enter only letters, spaces, or hyphens"
+                                                required
+                                                autocomplete="given-name"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="last_name">Surname</label>
+                                            <input
+                                                type="text"
+                                                id="last_name"
+                                                placeholder="Enter your surname"
+                                                pattern="[A-Za-z\s\-]+"
+                                                title="Please enter only letters, spaces, or hyphens"
+                                                required
+                                                autocomplete="family-name"/>
+                                        </div>
                         <!-- Step 2: Contact Information -->
                         <div class="form-step" id="step_two_contact" style="display: none;">
                             <div class="form-header">
@@ -175,7 +273,28 @@
                                                 You must be at least 18 years old to register.
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="date_of_birth">Date of Birth</label>
+                                            <input
+                                                type="date"
+                                                id="date_of_birth"
+                                                required
+                                                autocomplete="bday"
+                                                max="2006-12-31"/>
+                                            <div id="age_warning" class="warning-text" style="display: none;">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                You must be at least 18 years old to register.
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-back" id="back_to_identification">
+                                            Back
+                                        </button>
+                                        <button type="button" class="btn btn-continue" id="to_contact_page_2">
+                                            Next <i class="fas fa-arrow-right"></i>
+                                        </button>
 
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-back" id="back_to_identification">
@@ -187,6 +306,20 @@
                                     </div>
                                 </div>
 
+                                <!-- Page 2: Contact Details -->
+                                <div class="form-page" id="contact_page_2" style="display: none;">
+                                    <div class="form-section">
+                                        <h3>Contact Details</h3>
+                                        
+                                        <div class="form-group">
+                                            <label for="email">Email Address</label>
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                placeholder="Enter your email address"
+                                                required
+                                                autocomplete="email"/>
+                                        </div>
                                 <!-- Page 2: Contact Details -->
                                 <div class="form-page" id="contact_page_2" style="display: none;">
                                     <div class="form-section">
@@ -229,6 +362,33 @@
                                                 <option value="other">Other</option>
                                             </select>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="phone_number">Phone Number</label>
+                                            <div class="phone-input-group">
+                                                <span class="phone-flag"></span>
+                                            <input
+                                                    type="tel"
+                                                    id="phone_number"
+                                                    placeholder="+63 XXX XXX XXXX"
+                                                    required
+                                                    autocomplete="tel"
+                                                    pattern="(\+63|0)[0-9]{10}"
+                                                    title="Please enter a valid Philippine phone number"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="nationality">Nationality</label>
+                                            <select id="nationality" required>
+                                                <option value="">Select Nationality</option>
+                                                <option value="filipino">Filipino</option>
+                                                <option value="american">American</option>
+                                                <option value="canadian">Canadian</option>
+                                                <option value="british">British</option>
+                                                <option value="australian">Australian</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <div class="form-actions">
@@ -241,6 +401,40 @@
                                     </div>
                                 </div>
 
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-back" id="back_to_contact_page_1">
+                                            Back
+                                        </button>
+                                        <button type="button" class="btn btn-continue" id="to_contact_page_3">
+                                            Next <i class="fas fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Page 3: Address Information -->
+                                <div class="form-page" id="contact_page_3" style="display: none;">
+                                    <div class="form-section">
+                                        <h3>Address Information</h3>
+
+                                        <div class="form-group">
+                                            <label for="street">Street Address</label>
+                                            <input
+                                                type="text"
+                                                id="street"
+                                                placeholder="Enter your street address"
+                                                required
+                                                autocomplete="address-line1"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="city">City</label>
+                                            <input
+                                                type="text"
+                                                id="city"
+                                                placeholder="Enter your city"
+                                                required
+                                                autocomplete="address-level2"/>
+                                        </div>
                                 <!-- Page 3: Address Information -->
                                 <div class="form-page" id="contact_page_3" style="display: none;">
                                     <div class="form-section">
@@ -277,6 +471,17 @@
                                                 required
                                                 autocomplete="postal-code"/>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="zip_code">Zip Code</label>
+                                            <input
+                                                type="text"
+                                                id="zip_code"
+                                                placeholder="Enter your zip code"
+                                                pattern="[0-9]{4,10}"
+                                                title="Please enter a valid zip code"
+                                                required
+                                                autocomplete="postal-code"/>
+                                        </div>
 
                                         <div class="form-group">
                                             <label for="country">Country</label>
@@ -291,7 +496,44 @@
                                             </select>
                                         </div>
                                     </div>
+                                        <div class="form-group">
+                                            <label for="country">Country</label>
+                                            <select id="country" required>
+                                                <option value="">Select Country</option>
+                                                <option value="philippines">Philippines</option>
+                                                <option value="united_states">United States</option>
+                                                <option value="canada">Canada</option>
+                                                <option value="united_kingdom">United Kingdom</option>
+                                                <option value="australia">Australia</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-back" id="back_to_contact_page_2">
+                                            Back
+                                        </button>
+                                        <button type="submit" class="btn btn-continue">
+                                            Submit <i class="fas fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Pagination Indicator -->
+                                <div class="form-pagination">
+                                    <div class="pagination-dot active" data-page="1"></div>
+                                    <div class="pagination-dot" data-page="2"></div>
+                                    <div class="pagination-dot" data-page="3"></div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 3: Account Under Review -->
+                        <div class="form-step" id="step_three_processing" style="display: none;">
+                            <div class="form-header">
+                                <h2>Account Under Review</h2>
+                                <p>Your registration is almost complete!</p>
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-back" id="back_to_contact_page_2">
                                             Back
@@ -332,9 +574,85 @@
                                         Go to Home Page
                                     </a>
                                 </div>
+                            <div class="processing-container">
+                                <div class="processing-icon">
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
+                                <p class="processing-message">
+                                    Your account is currently under review for approval.
+                                    This process may take 1-2 business days.
+                                    Please check your registered email for updates on your account status.
+                                </p>
+                                <div class="form-actions">
+                                    <a href="./index.html" class="btn btn-secondary">
+                                        Go to Home Page
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- OTP Verification Modal -->
+        <div id="otp_modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Verify Your Phone</h3>
+                    <button type="button" class="modal-close" id="close_otp_modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>We've sent a verification code to your phone number.</p>
+                    <form id="otp_verification_form">
+                        <div class="form-group sms-group">
+                            <input
+                                type="text"
+                                id="otp_code"
+                                placeholder="Enter 6-digit OTP"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                required
+                                autocomplete="one-time-code"/>
+                        </div>
+                        <div class="resend-link">
+                            <span>Didn't receive the code?</span>
+                            <a href="#" id="resend_otp">Resend code in 60s</a>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-continue" id="verify_otp_btn">
+                                Verify
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Default Password Notice Modal -->
+        <div id="default_password_modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Important Security Notice</h3>
+                    <button type="button" class="modal-close" id="close_password_modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="notice-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <p class="notice-message">
+                        For security reasons, you must update your default password and set a username 
+                        before you can continue using the system. This is required to protect your account.
+                    </p>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-continue" id="acknowledge_password_notice">
+                            I Understand
+                        </button>
                 </div>
             </div>
         </main>
