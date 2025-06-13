@@ -16,7 +16,8 @@
     <div class="container">
         <div class="sidebar">
             <div class="logo">
-                <h1><span class="stack">Stack</span>
+                <h1>
+                    <span class="stack">Stack</span>
                     <span class="overcash">Overcash</span>
                 </h1>
             </div>
@@ -25,7 +26,9 @@
                 <a href="bank_teller_view_profile.html">
                     <img src="../assets/images/profile_bank_teller.jpg" alt="User Avatar" class="user-avatar">
                 </a>
-                <div class="user-name"></div>
+                <div class="user-name">
+                    <!-- Teller name will be inserted here by JavaScript -->
+                </div>
             </div>
             
             <div class="nav-menu">
@@ -45,12 +48,13 @@
 
         <div class="main-content">
             <div class="top-bar">
-                <div id="notification_container" class="notification-container"></div>
                 <div class="top-icons">
                     <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
                     <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
                 </div>
             </div>
+
+            <div id="notification_container" class="notification-container"></div>
 
             <!-- Transaction Steps -->
             <div class="transaction-steps">
@@ -74,7 +78,15 @@
                 <div class="account-info">
                     <div class="info-row">
                         <div class="info-label">Account Number:</div>
-                        <div class="info-value" id="account_number"></div>
+                        <div class="account-search">
+                            <input type="text" 
+                                   id="account_number_input" 
+                                   class="account-input" 
+                                   placeholder="Enter Account Number">
+                            <div class="search-spinner" id="search_spinner"></div>
+                            <div class="account-status" id="account_status"></div>
+                            <div id="account_suggestions" class="account-suggestions"></div>
+                        </div>
                     </div>
                     <div class="info-row">
                         <div class="info-label">Account Name:</div>
@@ -97,8 +109,7 @@
                     </div>
                 </div>
                 <div class="button-group">
-                    <button class="btn cancel" onclick="goBack()">Cancel</button>
-                    <button class="btn confirm" onclick="confirmAmount()">Confirm Withdrawal</button>
+                    <button class="btn confirm full-width" onclick="confirmAmount()">Confirm Withdrawal</button>
                 </div>
             </div>
 

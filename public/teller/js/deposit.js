@@ -223,7 +223,7 @@ function toggleLoading(show, amount = 0) {
 function showNotification(message, isError = false) {
     const container = document.getElementById('notification_container');
     const notification = document.createElement('div');
-    notification.className = `notification ${isError ? 'error' : ''}`;
+    notification.className = `notification ${isError ? 'error' : 'success'}`;
     notification.textContent = message;
     container.appendChild(notification);
 

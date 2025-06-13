@@ -31,6 +31,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 250px;
+    min-width: 250px;
     background-color: var(--color-primary-black);
     color: var(--color-white);
     display: flex;
@@ -213,37 +214,42 @@ body {
 .transaction-steps {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     padding: 0 40px;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    gap: 40px;
+    position: relative;
 }
 
 .step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     position: relative;
     flex: 1;
+    z-index: 2;
 }
 
 .step:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 50%;
-    width: 100%;
+    top: 14px;
+    left: calc(50% + 15px);
+    width: calc(100% + 15px);
     height: 2px;
     background-color: var(--color-gray);
     z-index: 1;
 }
 
 .step.active:not(:last-child)::after {
-    background-color: var(--color-red);
+    background-color: var(--color-mint);
 }
 
 .step-number {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-color: var(--color-gray);
     color: var(--color-white);
@@ -251,13 +257,14 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 14px;
     position: relative;
     z-index: 2;
+    box-shadow: 0 0 0 4px var(--color-white);
 }
 
 .step.active .step-number {
-    background-color: var(--color-red);
+    background-color: var(--color-mint);
 }
 
 .step.active .step-label {
@@ -268,7 +275,11 @@ body {
 .step-label {
     color: var(--color-gray);
     font-weight: 500;
-    font-size: 16px;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
 }
 
 /* Transaction Card */
@@ -278,7 +289,7 @@ body {
     padding: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -302,20 +313,18 @@ body {
     margin-bottom: 30px;
 }
 
+/* Info Row Alignment */
 .info-row {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
-.info-row:last-child {
-    margin-bottom: 0;
-}
-
 .info-label {
+    min-width: 160px;
     color: var(--color-primary-black);
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .info-value {
@@ -331,50 +340,60 @@ body {
 
 .amount-section label {
     display: block;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--color-primary-black);
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .amount-input {
     position: relative;
     width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .currency {
     position: absolute;
     left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
+    font-size: 20px;
     color: var(--color-primary-black);
     font-weight: 500;
     z-index: 1;
-    pointer-events: none;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 input[type="number"] {
     width: 100%;
-    padding: 20px 20px 20px 45px;
-    font-size: 24px;
+    padding: 15px 20px 15px 45px;
+    font-size: 20px;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     outline: none;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
-input[type="number"]:focus {
-    border-color: var(--color-red);
-    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+/* Remove spinner arrows for number input */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]:focus:not([aria-invalid="true"]) {
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
 }
 
 /* Buttons */
 .button-group {
     display: flex;
     gap: 15px;
-    justify-content: flex-end;
-    margin-top: 15px;
+    margin-top: 30px;
 }
 
 .btn {
@@ -385,6 +404,7 @@ input[type="number"]:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 120px;
 }
 
 .btn.cancel {
@@ -397,20 +417,60 @@ input[type="number"]:focus {
 }
 
 .btn.confirm {
-    background-color: var(--color-red);
+    background-color: var(--color-gray);
     color: var(--color-white);
+    padding: 18px 30px;
+    font-size: 18px;
+    border-radius: 12px;
+    opacity: 0.7;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+}
+
+/* Confirmation section specific styles */
+#confirmation .button-group {
+    justify-content: flex-end;
+}
+
+#confirmation .btn.confirm {
+    background-color: var(--color-mint);
+    opacity: 1;
+    cursor: pointer;
+}
+
+#confirmation .btn.confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.2);
+}
+
+#confirmation .btn.confirm:disabled {
+    background-color: var(--color-gray);
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn.confirm.active {
+    background-color: var(--color-mint);
+    opacity: 1;
+    cursor: pointer;
+}
+
+.btn.confirm.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.2);
 }
 
 .btn.done {
-    background-color: var(--color-red);
+    background-color: var(--color-mint);
     color: var(--color-white);
     width: 150px;
     margin: 0 auto;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.btn.full-width {
+    width: 100%;
 }
 
 /* Confirmation Details */
@@ -465,7 +525,7 @@ input[type="number"]:focus {
 
 .success-icon {
     font-size: 48px;
-    color: var(--color-red);
+    color: var(--color-mint);
     margin-bottom: 10px;
 }
 
@@ -522,7 +582,7 @@ input[type="number"]:focus {
 .receipt-row.balance .receipt-value,
 .detail-row.amount .detail-value,
 .detail-row.balance .detail-value {
-    color: var(--color-red);
+    color: var(--color-mint);
     font-weight: 700;
     font-size: 18px;
 }
@@ -531,43 +591,34 @@ input[type="number"]:focus {
 .notification-container {
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 20px;
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
 }
 
 .notification {
-    background-color: var(--color-mint);
-    color: var(--color-white);
     padding: 15px 25px;
-    border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    animation: slideDown 0.3s ease-out;
-    pointer-events: auto;
-    min-width: 300px;
-    text-align: center;
-    justify-content: center;
+    border-radius: 8px;
+    color: var(--color-white);
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+    background-color: var(--color-mint);
 }
 
 .notification.error {
     background-color: var(--color-red);
 }
 
-@keyframes slideDown {
+@keyframes slideIn {
     from {
-        transform: translateY(-100%);
+        transform: translateX(100%);
         opacity: 0;
     }
     to {
-        transform: translateY(0);
+        transform: translateX(0);
         opacity: 1;
     }
 }
@@ -579,6 +630,8 @@ input[type="number"]:focus {
     margin-top: 8px;
     display: none;
     padding-left: 45px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 /* Loading Overlay */
@@ -619,7 +672,7 @@ input[type="number"]:focus {
     width: 50px;
     height: 50px;
     border: 5px solid var(--color-bg-gradient-start);
-    border-top: 5px solid var(--color-red);
+    border-top: 5px solid var(--color-mint);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -632,7 +685,7 @@ input[type="number"]:focus {
 }
 
 .processing-amount {
-    color: var(--color-red);
+    color: var(--color-mint);
     font-weight: 700;
     font-size: 20px;
     margin-top: 5px;
@@ -643,8 +696,122 @@ input[type="number"]:focus {
     100% { transform: rotate(360deg); }
 }
 
-/* Disabled button styles */
-.btn.confirm:disabled {
-    opacity: 0.5;
+/* Account Search */
+.account-search {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.account-input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.account-input:focus {
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.2);
+}
+
+.account-status {
+    margin-left: 15px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.account-status.closed {
+    background-color: rgba(255, 71, 87, 0.1);
+    color: var(--color-red);
+}
+
+.search-spinner {
+    position: absolute;
+    right: 15px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--color-mint);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+.search-spinner.active {
+    display: block;
+}
+
+.account-suggestions {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.account-suggestions.active {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suggestion-item:hover {
+    background: var(--color-bg-gradient-start);
+}
+
+.suggestion-item.closed {
+    opacity: 0.7;
     cursor: not-allowed;
+}
+
+.suggestion-item .account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestion-item .account-number {
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.suggestion-item .account-name {
+    font-size: 14px;
+    color: var(--color-gray);
+}
+
+.suggestion-item .status-badge {
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.suggestion-item .status-badge.closed {
+    background-color: rgba(255, 71, 87, 0.1);
+    color: var(--color-red);
 } 
