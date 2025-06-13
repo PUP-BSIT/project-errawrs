@@ -203,17 +203,17 @@ class SessionManager {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            
             const data = await response.json();
             this.isAuthenticated = data.authenticated;
-
+            
             if (data.success && data.authenticated) {
                 this.sessionData = data;
                 this.lastActivity = Date.now();
                 return true;
             } else {
                 if (!isInitialCheck) {
-                    this.handleTimeout();
+                this.handleTimeout();
                 }
                 return false;
             }
@@ -364,14 +364,14 @@ class SessionManager {
     async handleTimeout() {
         try {
             // Clear any stored credentials
-            this.clearStoredCredentials();
-            
+        this.clearStoredCredentials();
+        
             // Attempt to logout gracefully
             await fetch(API.AUTH.LOGOUT, {
                 method: 'POST',
                 credentials: 'include'
-            });
-        } catch (error) {
+                });
+            } catch (error) {
             console.error('Error during logout:', error);
         } finally {
             // Clean up timers and event listeners
@@ -416,7 +416,7 @@ class SessionManager {
         // Only add expired parameter if session was previously authenticated
         const params = this.isAuthenticated ? 
             `?expired=true&t=${Date.now()}` : '';
-            
+        
         // Clean up before redirect
         this.destroy();
         

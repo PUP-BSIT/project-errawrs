@@ -1,17 +1,17 @@
 const FORM_VALIDATION = {
-    ACCOUNT_NUMBER_MIN_LENGTH: 10,
-    SMS_CODE_LENGTH: 6,
-    PASSWORD_MIN_LENGTH: 8,
-    USERNAME_MIN_LENGTH: 3,
-    USERNAME_MAX_LENGTH: 20,
-    FIRST_NAME_MIN_LENGTH: 2,
+	ACCOUNT_NUMBER_MIN_LENGTH: 10,
+	SMS_CODE_LENGTH: 6,
+	PASSWORD_MIN_LENGTH: 8,
+	USERNAME_MIN_LENGTH: 3,
+	USERNAME_MAX_LENGTH: 20,
+	FIRST_NAME_MIN_LENGTH: 2,
     LAST_NAME_MIN_LENGTH: 2
 };
 
 const NOTIFICATION_TYPES = {
-    SUCCESS: "success",
-    ERROR: "error",
-    WARNING: "warning",
+	SUCCESS: "success",
+	ERROR: "error",
+	WARNING: "warning",
     INFO: "info"
 };
 
@@ -64,20 +64,41 @@ class RegistrationManager {
 	}
 
 	bindEvents() {
+		// Clean up any existing event listeners
+		this.cleanupEventListeners();
+		
 		// Form submissions
 		this.bindFormSubmissionEvents();
 		
-		// Navigation buttons
-		this.bindNavigationEvents();
-		
-		// File upload handling
-		this.bindFileUploadEvents();
-		
 		// Form validation
 		this.setupFormValidation();
+	}
+
+	cleanupEventListeners() {
+		// Remove all existing event listeners
+		if (this.eventListeners) {
+			this.eventListeners.forEach((listeners, element) => {
+				listeners.forEach(({type, handler}) => {
+					if (element && typeof element.removeEventListener === 'function') {
+						element.removeEventListener(type, handler);
+					}
+				});
+			});
+			this.eventListeners.clear();
+		}
+	}
+
+	addEventListenerWithCleanup(element, type, handler) {
+		if (!element || !type || !handler) return;
 		
-		// Clean up any existing event listeners
-		this.cleanupEventListeners();
+		// Add the event listener
+		element.addEventListener(type, handler);
+		
+		// Store it for cleanup
+		if (!this.eventListeners.has(element)) {
+			this.eventListeners.set(element, []);
+		}
+		this.eventListeners.get(element).push({type, handler});
 	}
 
 	bindFormSubmissionEvents() {
@@ -86,28 +107,25 @@ class RegistrationManager {
 
 		if (identificationForm) {
 			const handleIdentificationSubmit = (e) => this.handleIdentificationSubmit(e);
-			identificationForm.addEventListener("submit", (e) => {
-				this.handleIdentificationSubmit(e);
-			});
+			this.addEventListenerWithCleanup(identificationForm, "submit", handleIdentificationSubmit);
 			identificationForm.querySelectorAll('input, select').forEach(input => {
-				input.addEventListener('input', () => this.saveFormData());
+				this.addEventListenerWithCleanup(input, 'input', () => this.saveFormData());
 			});
 		}
 
 		if (contactInfoForm) {
-			contactInfoForm.addEventListener("submit", (e) => {
+			this.addEventListenerWithCleanup(contactInfoForm, "submit", (e) => {
 				this.handleContactInfoSubmit(e);
 			});
 			contactInfoForm.querySelectorAll('input, select').forEach(input => {
-				input.addEventListener('input', () => this.saveFormData());
+				this.addEventListenerWithCleanup(input, 'input', () => this.saveFormData());
 			});
 		}
 
 		// Back button handlers
 		const backToIdentificationBtn = document.getElementById("back_to_identification");
-
 		if (backToIdentificationBtn) {
-			backToIdentificationBtn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(backToIdentificationBtn, "click", () => {
 				this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
 			});
 		}
@@ -119,32 +137,32 @@ class RegistrationManager {
 		const backToContactPage2Btn = document.getElementById("back_to_contact_page_2");
 
 		if (toContactPage2Btn) {
-			toContactPage2Btn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(toContactPage2Btn, "click", () => {
 				this.validateContactPage1() && this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
 			});
 		}
 
 		if (backToContactPage1Btn) {
-			backToContactPage1Btn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(backToContactPage1Btn, "click", () => {
 				this.goToContactPage(CONTACT_PAGES.PAGE_ONE);
 			});
 		}
 
 		if (toContactPage3Btn) {
-			toContactPage3Btn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(toContactPage3Btn, "click", () => {
 				this.validateContactPage2() && this.goToContactPage(CONTACT_PAGES.PAGE_THREE);
 			});
 		}
 
 		if (backToContactPage2Btn) {
-			backToContactPage2Btn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(backToContactPage2Btn, "click", () => {
 				this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
 			});
 		}
 
 		// Pagination dots click handlers
 		document.querySelectorAll('.pagination-dot').forEach(dot => {
-			dot.addEventListener('click', (e) => {
+			this.addEventListenerWithCleanup(dot, 'click', (e) => {
 				const pageNumber = parseInt(dot.dataset.page);
 				if (!isNaN(pageNumber)) {
 					this.handlePaginationDotClick(pageNumber);
@@ -154,7 +172,7 @@ class RegistrationManager {
 
 		// Step indicator click handlers (for navigation)
 		document.querySelectorAll('.step').forEach(stepElement => {
-			stepElement.addEventListener('click', (e) => {
+			this.addEventListenerWithCleanup(stepElement, 'click', (e) => {
 				const stepNumber = parseInt(stepElement.dataset.step);
 				if (!isNaN(stepNumber)) {
 					this.goToStep(stepNumber);
@@ -165,7 +183,7 @@ class RegistrationManager {
 		// Date of birth validation
 		const dobInput = document.getElementById('date_of_birth');
 		if (dobInput) {
-			dobInput.addEventListener('change', (e) => {
+			this.addEventListenerWithCleanup(dobInput, 'change', (e) => {
 				this.validateAge(e.target);
 				this.saveFormData();
 			});
@@ -180,20 +198,20 @@ class RegistrationManager {
 		const resendOtpBtn = document.getElementById("resend_otp");
 
 		if (closeOtpModalBtn) {
-			closeOtpModalBtn.addEventListener("click", () => {
+			this.addEventListenerWithCleanup(closeOtpModalBtn, "click", () => {
 				this.hideOtpModal();
 			});
 		}
 
 		if (otpVerificationForm) {
-			otpVerificationForm.addEventListener("submit", (e) => {
+			this.addEventListenerWithCleanup(otpVerificationForm, "submit", (e) => {
 				e.preventDefault();
 				this.verifyOtp();
 			});
 		}
 
 		if (resendOtpBtn) {
-			resendOtpBtn.addEventListener("click", (e) => {
+			this.addEventListenerWithCleanup(resendOtpBtn, "click", (e) => {
 				e.preventDefault();
 				this.resendOtp();
 			});
@@ -203,25 +221,23 @@ class RegistrationManager {
 		const fileInput = document.getElementById('id_image');
 		const uploadContainer = document.querySelector('.file-upload-container');
 		const removeFileBtn = document.getElementById('remove_file');
-		const previewContainer = document.querySelector('.preview-container');
-		const imagePreview = document.getElementById('image_preview');
 
 		if (fileInput && uploadContainer) {
-			fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+			this.addEventListenerWithCleanup(fileInput, 'change', (e) => this.handleFileSelect(e));
 
-			uploadContainer.addEventListener('dragover', (e) => {
+			this.addEventListenerWithCleanup(uploadContainer, 'dragover', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
 				uploadContainer.classList.add('drag-over');
 			});
 
-			uploadContainer.addEventListener('dragleave', (e) => {
+			this.addEventListenerWithCleanup(uploadContainer, 'dragleave', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
 				uploadContainer.classList.remove('drag-over');
 			});
 
-			uploadContainer.addEventListener('drop', (e) => {
+			this.addEventListenerWithCleanup(uploadContainer, 'drop', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
 				uploadContainer.classList.remove('drag-over');
@@ -234,9 +250,11 @@ class RegistrationManager {
 			});
 
 			if (removeFileBtn) {
-				removeFileBtn.addEventListener('click', () => {
+				this.addEventListenerWithCleanup(removeFileBtn, 'click', () => {
 					this.idImage = null;
 					fileInput.value = '';
+					const previewContainer = document.querySelector('.preview-container');
+					const imagePreview = document.getElementById('image_preview');
 					if (previewContainer) previewContainer.style.display = 'none';
 					if (imagePreview) imagePreview.src = '';
 				});
@@ -251,14 +269,14 @@ class RegistrationManager {
 		// Real-time validation for email and phone number
 		const emailInput = document.getElementById("email");
 		if (emailInput) {
-			emailInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(emailInput, "input", (e) => {
 				this.validateEmail(e.target);
 			});
 		}
 
 		const phoneNumberInput = document.getElementById("phone_number");
 		if (phoneNumberInput) {
-			phoneNumberInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(phoneNumberInput, "input", (e) => {
 				this.validatePhoneNumber(e.target);
 			});
 		}
@@ -266,49 +284,49 @@ class RegistrationManager {
 		// Real-time validation for personal details and address fields
 		const firstNameInput = document.getElementById("first_name");
 		if (firstNameInput) {
-			firstNameInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(firstNameInput, "input", (e) => {
 				this.validateName(e.target, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
 			});
 		}
 
 		const lastNameInput = document.getElementById("last_name");
 		if (lastNameInput) {
-			lastNameInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(lastNameInput, "input", (e) => {
 				this.validateName(e.target, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
 			});
 		}
 
 		const nationalityInput = document.getElementById("nationality");
 		if (nationalityInput) {
-			nationalityInput.addEventListener("change", (e) => {
+			this.addEventListenerWithCleanup(nationalityInput, "change", (e) => {
 				this.setInputValidation(e.target, e.target.value !== "", "Please select your nationality");
 			});
 		}
 
 		const streetInput = document.getElementById("street");
 		if (streetInput) {
-			streetInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(streetInput, "input", (e) => {
 				this.setInputValidation(e.target, e.target.value.trim() !== "", "Please enter your street address");
 			});
 		}
 
 		const cityInput = document.getElementById("city");
 		if (cityInput) {
-			cityInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(cityInput, "input", (e) => {
 				this.setInputValidation(e.target, e.target.value.trim() !== "", "Please enter your city");
 			});
 		}
 
 		const zipCodeInput = document.getElementById("zip_code");
 		if (zipCodeInput) {
-			zipCodeInput.addEventListener("input", (e) => {
+			this.addEventListenerWithCleanup(zipCodeInput, "input", (e) => {
 				this.validateZipCode(e.target);
 			});
 		}
 
 		const countryInput = document.getElementById("country");
 		if (countryInput) {
-			countryInput.addEventListener("change", (e) => {
+			this.addEventListenerWithCleanup(countryInput, "change", (e) => {
 				this.setInputValidation(e.target, e.target.value !== "", "Please select your country");
 			});
 		}
@@ -1442,7 +1460,7 @@ class RegistrationManager {
 
 		const isValid = age >= 18;
 		this.isUnder18 = !isValid;
-		
+
 		const ageWarning = document.getElementById('age_warning');
 		if (ageWarning) {
 			ageWarning.style.display = isValid ? 'none' : 'block';

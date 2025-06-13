@@ -94,16 +94,16 @@ async function handleLogin(e) {
 
         // Proceed with login
         const response = await fetch(API.AUTH.LOGIN, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
                 login_type: 'user'
-            }),
+                }),
             credentials: 'include'
         });
 
@@ -243,7 +243,7 @@ function showNotification(message, type = 'info') {
     
     // Trigger animation
     setTimeout(() => notification.classList.add('show'), 10);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         notification.classList.remove('show');

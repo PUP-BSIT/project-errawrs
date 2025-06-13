@@ -5,14 +5,14 @@ if (!API.AUTH) API.AUTH = {};
 
 // Add or update USER endpoints
 Object.assign(API.USER, {
-    ACCOUNTS: '../../src/api/user/accounts.php',
-    CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php',
-    UPDATE_PROFILE: '../../src/api/user/profile/update.php'
+        ACCOUNTS: '../../src/api/user/accounts.php',
+        CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php',
+        UPDATE_PROFILE: '../../src/api/user/profile/update.php'
 });
 
 // Add or update AUTH endpoints
 Object.assign(API.AUTH, {
-    SEND_OTP: '../../src/api/auth/send_otp.php',
+        SEND_OTP: '../../src/api/auth/send_otp.php',
     VERIFY_OTP: '../../src/api/auth/verify_otp.php'
 });
 
@@ -209,7 +209,7 @@ function createAccountItem(account) {
                 <span class="${CLASS.INFO_VALUE}">${CURRENCY.SYMBOL} ${parseFloat(
                     account.balance
                 ).toLocaleString(CURRENCY.LOCALE, {
-                    minimumFractionDigits: 2,
+                minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                 })}</span>
             </div>
