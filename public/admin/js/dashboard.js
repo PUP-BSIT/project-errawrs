@@ -1,6 +1,7 @@
 class AdminDashboard {
     constructor() {
         this.init();
+        this.searchTimeout = null;
     }
 
     init() {
@@ -79,9 +80,51 @@ class AdminDashboard {
             doneCreatingBtn.addEventListener('click', handleDone);
         }
 
-        const searchInput = document.getElementById('search_teller');
-        if (searchInput) {
-            searchInput.addEventListener('input', debounce(handleSearch, 300));
+        // Search event listeners with debounce
+        const tellerSearch = document.getElementById('teller_search');
+        if (tellerSearch) {
+            tellerSearch.addEventListener('input', (e) => {
+                clearTimeout(this.searchTimeout);
+                const searchTerm = e.target.value.trim();
+                
+                if (searchTerm.length === 0) {
+                    document.getElementById('teller_results').innerHTML = '';
+                    return;
+                }
+
+                // Show loading state
+                const tellerResults = document.getElementById('teller_results');
+                tellerResults.innerHTML = '';
+                const loadingState = tellerResults.querySelector('.loading-state');
+                if (loadingState) loadingState.style.display = 'block';
+
+                this.searchTimeout = setTimeout(() => {
+                    this.handleTellerSearch(searchTerm);
+                }, 300);
+            });
+        }
+
+        const userSearch = document.getElementById('user_search');
+        if (userSearch) {
+            userSearch.addEventListener('input', (e) => {
+                clearTimeout(this.searchTimeout);
+                const searchTerm = e.target.value.trim();
+                
+                if (searchTerm.length === 0) {
+                    document.getElementById('user_results').innerHTML = '';
+                    return;
+                }
+
+                // Show loading state
+                const userResults = document.getElementById('user_results');
+                userResults.innerHTML = '';
+                const loadingState = userResults.querySelector('.loading-state');
+                if (loadingState) loadingState.style.display = 'block';
+
+                this.searchTimeout = setTimeout(() => {
+                    this.handleUserSearch(searchTerm);
+                }, 300);
+            });
         }
 
         // Password toggle functionality
@@ -243,6 +286,150 @@ class AdminDashboard {
                 return 'fa-exclamation-triangle';
             default:
                 return 'fa-info-circle';
+        }
+    }
+
+    async handleTellerSearch(searchTerm) {
+        try {
+            const tellerResults = document.getElementById('teller_results');
+            
+            // Show loading state
+            tellerResults.innerHTML = `
+                <div class="loading-state">
+                    <p>Searching tellers...</p>
+                </div>`;
+            
+            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?search=${encodeURIComponent(searchTerm)}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch tellers');
+            
+            const data = await response.json();
+
+            if (!data.success) {
+                tellerResults.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load tellers</p>
+                    </div>`;
+                return;
+            }
+
+            if (data.tellers.length === 0) {
+                tellerResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No tellers found</p>
+                    </div>`;
+                return;
+            }
+
+            const cardsHtml = data.tellers.map(teller => `
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-info">
+                            <h3 class="user-name">${teller.first_name} ${teller.last_name}</h3>
+                            <span class="account-number">${teller.teller_number}</span>
+                        </div>
+                        <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${teller.status}
+                        </span>
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">${teller.email}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            tellerResults.innerHTML = cardsHtml;
+
+        } catch (error) {
+            console.error('Error searching tellers:', error);
+            tellerResults.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>An error occurred while searching</p>
+                </div>`;
+        }
+    }
+
+    async handleUserSearch(searchTerm) {
+        try {
+            const userResults = document.getElementById('user_results');
+            
+            // Show loading state
+            userResults.innerHTML = `
+                <div class="loading-state">
+                    <p>Searching accounts...</p>
+                </div>`;
+            
+            const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?search=${encodeURIComponent(searchTerm)}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch users');
+            
+            const data = await response.json();
+
+            if (!data.success) {
+                userResults.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load users</p>
+                    </div>`;
+                return;
+            }
+
+            if (data.users.length === 0) {
+                userResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No users found</p>
+                    </div>`;
+                return;
+            }
+
+            const cardsHtml = data.users.map(user => `
+                <div class="user-card">
+                    <div class="user-header">
+                        <div class="user-info">
+                            <h3 class="user-name">${user.first_name} ${user.last_name}</h3>
+                            <span class="account-number">${user.account_number || 'No Account'}</span>
+                        </div>
+                        <span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${user.status || 'active'}
+                        </span>
+                    </div>
+                    <div class="user-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Username</span>
+                            <span class="detail-value">${user.username}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">${user.phone_number || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Created</span>
+                            <span class="detail-value">${formatDate(user.created_at)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            userResults.innerHTML = cardsHtml;
+
+        } catch (error) {
+            console.error('Error searching users:', error);
+            userResults.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>An error occurred while searching</p>
+                </div>`;
         }
     }
 }
@@ -446,11 +633,6 @@ function handleDone() {
     hideModal(successModal);
 }
 
-function handleSearch(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    loadTellers(searchTerm);
-}
-
 function formatDate(dateString) {
     if (!dateString) return 'Never';
     const date = new Date(dateString);
@@ -546,4 +728,82 @@ function updatePagination(total, currentPage, limit) {
         </button>`;
     
     paginationContainer.innerHTML = paginationHtml;
-} 
+}
+
+// User Account Management
+async function loadUsers(searchTerm = '') {
+    try {
+        const params = new URLSearchParams();
+        if (searchTerm) {
+            params.append('search', searchTerm);
+        }
+        
+        const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?${params.toString()}`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch users: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const container = document.getElementById('user_results');
+        
+        if (!data.success) {
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load users. Please try again.</p>
+                </div>`;
+            return;
+        }
+
+        if (data.users.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No users found</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        data.users.forEach(user => {
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            card.innerHTML = `
+                <div class="user-header">
+                    <div class="user-info">
+                        <h3 class="user-name">${user.first_name} ${user.last_name}</h3>
+                        <span class="account-number">${user.account_number || 'No Account'}</span>
+                    </div>
+                    <span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-inactive'}">
+                        ${user.status || 'active'}
+                    </span>
+                </div>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Username</span>
+                        <span class="detail-value">${user.username}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">${user.phone_number || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(user.created_at)}</span>
+                    </div>
+                </div>`;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading users:', error);
+        const container = document.getElementById('user_results');
+        container.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>An error occurred while loading users. Please try again.</p>
+            </div>`;
+    }
+}

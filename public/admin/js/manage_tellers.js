@@ -56,16 +56,37 @@ class TellerManager {
             });
         }
 
-        // Password toggle
-        const passwordToggle = document.querySelector('.password-toggle');
-        if (passwordToggle) {
-            passwordToggle.addEventListener('click', () => this.togglePasswordVisibility());
-        }
-
         // Logout
         const logoutBtn = document.getElementById('logout_btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => this.handleLogout(e));
+        }
+
+        // Reset password modal buttons
+        const resetPasswordModal = document.getElementById('reset_password_modal');
+        const cancelResetBtn = document.getElementById('cancel_reset_btn');
+        const confirmResetBtn = document.getElementById('confirm_reset_btn');
+        
+        if (cancelResetBtn) {
+            cancelResetBtn.addEventListener('click', () => this.closeModal(resetPasswordModal));
+        }
+        
+        // Close modal when clicking close button
+        const closeResetBtn = resetPasswordModal?.querySelector('.close-btn');
+        if (closeResetBtn) {
+            closeResetBtn.addEventListener('click', () => this.closeModal(resetPasswordModal));
+        }
+
+        // Status change modal buttons
+        const statusModal = document.getElementById('status_change_modal');
+        const cancelStatusBtn = document.getElementById('cancel_status_btn');
+        const closeStatusBtn = statusModal?.querySelector('.close-btn');
+        
+        if (cancelStatusBtn) {
+            cancelStatusBtn.addEventListener('click', () => this.closeModal(statusModal));
+        }
+        if (closeStatusBtn) {
+            closeStatusBtn.addEventListener('click', () => this.closeModal(statusModal));
         }
     }
 
@@ -144,6 +165,9 @@ class TellerManager {
                     <button class="action-btn" onclick="tellerManager.editTeller(${teller.teller_id})" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
+                    <button class="action-btn" onclick="tellerManager.resetPassword(${teller.teller_id})" title="Reset Password">
+                        <i class="fas fa-key"></i>
+                    </button>
                     <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
                             onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
                             title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
@@ -210,10 +234,20 @@ class TellerManager {
             form.reset();
         }
 
-        // Update modal title
+        // Clear hidden teller ID
+        const tellerIdInput = document.getElementById('teller_id');
+        if (tellerIdInput) {
+            tellerIdInput.value = '';
+        }
+
+        // Update modal title and button
         const title = document.getElementById('modal_title');
+        const saveBtn = document.getElementById('save_btn');
         if (title) {
             title.textContent = 'Create New Teller';
+        }
+        if (saveBtn) {
+            saveBtn.textContent = 'Create Teller';
         }
 
         // Show modal
@@ -242,7 +276,6 @@ class TellerManager {
                     document.getElementById('first_name').value = data.teller.first_name;
                     document.getElementById('last_name').value = data.teller.last_name;
                     document.getElementById('email').value = data.teller.email;
-                    document.getElementById('password').value = '';
 
                     // Update modal title
                     document.getElementById('modal_title').textContent = 'Edit Teller';
@@ -268,30 +301,55 @@ class TellerManager {
             const isEdit = !!tellerId;
 
             const formData = {
-                first_name: document.getElementById('first_name').value,
-                last_name: document.getElementById('last_name').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
+                first_name: document.getElementById('first_name').value.trim(),
+                last_name: document.getElementById('last_name').value.trim(),
+                email: document.getElementById('email').value.trim()
             };
+
+            // Basic validation
+            if (!formData.first_name || !formData.last_name || !formData.email) {
+                this.showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                this.showToast('Please enter a valid email address', 'error');
+                return;
+            }
 
             if (isEdit) {
                 formData.teller_id = tellerId;
             }
 
+            // Log the request data for debugging
+            console.log('Request data:', {
+                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
+                method: isEdit ? 'PUT' : 'POST',
+                body: formData
+            });
+
             const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 credentials: 'include',
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) {
-                throw new Error(`Failed to ${isEdit ? 'update' : 'create'} teller`);
-            }
+            let data;
+            const responseText = await response.text();
+            console.log('Raw response:', responseText);
 
-            const data = await response.json();
+            try {
+                data = JSON.parse(responseText);
+                console.log('Parsed response:', data);
+            } catch (e) {
+                throw new Error(`Failed to parse response: ${responseText}`);
+            }
             
             if (data.success) {
                 // Close teller modal
@@ -299,6 +357,11 @@ class TellerManager {
 
                 // Show success message
                 this.showSuccessModal(data.teller, isEdit);
+
+                // Show email notification message if new teller
+                if (!isEdit) {
+                    this.showToast('A password setup link has been sent to the teller\'s email address', 'success');
+                }
 
                 // Refresh teller list
                 this.loadTellers();
@@ -311,41 +374,123 @@ class TellerManager {
         }
     }
 
-    async toggleTellerStatus(tellerId, currentStatus) {
-        try {
-            const confirmMessage = currentStatus === 'active' 
-                ? 'Are you sure you want to deactivate this teller?' 
-                : 'Are you sure you want to activate this teller?';
+    async resetPassword(tellerId) {
+        const modal = document.getElementById('reset_password_modal');
+        if (!modal) return;
 
-            if (!confirm(confirmMessage)) {
-                return;
-            }
+        // Show the confirmation modal
+        modal.classList.add('show');
 
-            const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({ teller_id: tellerId })
-            });
+        // Set up the confirm button click handler
+        const confirmBtn = document.getElementById('confirm_reset_btn');
+        if (confirmBtn) {
+            const handleConfirm = async () => {
+                try {
+                    // Close the modal first
+                    this.closeModal(modal);
 
-            if (!response.ok) {
-                throw new Error(`Failed to update status: ${response.status}`);
-            }
+                    const response = await fetch('/project-errawrs/src/api/admin/reset_teller_password.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({ teller_id: tellerId })
+                    });
 
-            const data = await response.json();
-            
-            if (data.success) {
-                this.showToast(`Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 'success');
-                await this.loadTellers();
-            } else {
-                throw new Error(data.message || 'Failed to update teller status');
-            }
-        } catch (error) {
-            console.error('Error toggling teller status:', error);
-            this.showToast(error.message, 'error');
+                    if (!response.ok) {
+                        throw new Error('Failed to reset password');
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.showToast('Password has been reset and sent to the teller\'s email address', 'success');
+                    } else {
+                        throw new Error(data.message || 'Failed to reset password');
+                    }
+                } catch (error) {
+                    console.error('Error resetting password:', error);
+                    this.showToast(error.message, 'error');
+                }
+
+                // Remove the event listener after handling
+                confirmBtn.removeEventListener('click', handleConfirm);
+            };
+
+            // Add the event listener
+            confirmBtn.addEventListener('click', handleConfirm);
         }
+    }
+
+    async toggleTellerStatus(tellerId, currentStatus) {
+        const modal = document.getElementById('status_change_modal');
+        const modalTitle = document.getElementById('status_modal_title');
+        const modalMessage = document.getElementById('status_modal_message');
+        const confirmBtn = document.getElementById('confirm_status_btn');
+        const warningIcon = modal?.querySelector('.warning-icon');
+        const modalHeader = modal?.querySelector('.modal-header');
+
+        if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
+
+        const isActivating = currentStatus === 'inactive';
+        
+        // Update modal content
+        modalTitle.textContent = isActivating ? 'Activate Teller' : 'Deactivate Teller';
+        modalMessage.textContent = isActivating 
+            ? 'Are you sure you want to activate this teller\'s account?' 
+            : 'Are you sure you want to deactivate this teller\'s account?';
+        confirmBtn.textContent = isActivating ? 'Activate Account' : 'Deactivate Account';
+        confirmBtn.className = isActivating ? 'btn-success' : 'btn-danger';
+        
+        // Update icons and colors
+        warningIcon.className = `warning-icon ${isActivating ? 'activate' : 'deactivate'}`;
+        modalHeader.className = `modal-header warning ${isActivating ? 'activate' : 'deactivate'}`;
+
+        // Show the modal
+        modal.classList.add('show');
+
+        // Set up the confirm button click handler
+        const handleConfirm = async () => {
+            try {
+                // Close the modal first
+                this.closeModal(modal);
+
+                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ teller_id: tellerId })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to update status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    this.showToast(
+                        `Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 
+                        'success'
+                    );
+                    await this.loadTellers();
+                } else {
+                    throw new Error(data.message || 'Failed to update teller status');
+                }
+            } catch (error) {
+                console.error('Error toggling teller status:', error);
+                this.showToast(error.message, 'error');
+            }
+
+            // Remove the event listener after handling
+            confirmBtn.removeEventListener('click', handleConfirm);
+        };
+
+        // Add the event listener
+        confirmBtn.addEventListener('click', handleConfirm);
     }
 
     showSuccessModal(teller, isEdit) {
@@ -353,8 +498,11 @@ class TellerManager {
         if (!modal) return;
 
         // Update success message
-        document.getElementById('success_message').textContent = 
-            isEdit ? 'Teller updated successfully!' : 'Teller created successfully!';
+        const message = isEdit 
+            ? 'Teller information updated successfully!'
+            : 'Teller account created successfully! A password setup link has been sent to their email.';
+        
+        document.getElementById('success_message').textContent = message;
 
         // Update teller details
         document.getElementById('success_teller_number').textContent = teller.teller_number;
@@ -374,23 +522,6 @@ class TellerManager {
     closeModal(modal) {
         if (modal) {
             modal.classList.remove('show');
-        }
-    }
-
-    togglePasswordVisibility() {
-        const input = document.getElementById('password');
-        const icon = document.querySelector('.password-toggle i');
-        
-        if (input && icon) {
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
         }
     }
 
@@ -477,4 +608,4 @@ class TellerManager {
 }
 
 // Initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', TellerManager.init); 
+document.addEventListener('DOMContentLoaded', TellerManager.init);
