@@ -1,3 +1,17 @@
+// Get teller info from session storage
+const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
+if (!tellerInfo) {
+    window.location.href = './bank_teller_login.html';
+} else {
+    // Display teller name when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const userNameElement = document.querySelector('.user-name');
+        if (userNameElement) {
+            userNameElement.textContent = tellerInfo.name;
+        }
+    });
+}
+
 // DOM Elements
 const statusFilter = document.getElementById('status_filter');
 const applicationsGrid = document.querySelector('.applications-grid');
