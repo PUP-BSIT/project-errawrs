@@ -184,17 +184,17 @@ class RegistrationManager {
 		// File upload handling
 		const fileInput = document.getElementById('id_image');
 		const uploadContainer = document.querySelector('.file-upload-container');
+		const removeFileBtn = document.getElementById('remove_file');
+		const previewContainer = document.querySelector('.preview-container');
+		const imagePreview = document.getElementById('image_preview');
 
 		if (fileInput && uploadContainer) {
 			fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
 
-			// Drag and drop events
 			uploadContainer.addEventListener('dragover', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
-				if (!this.idImage) {
-					uploadContainer.classList.add('drag-over');
-				}
+				uploadContainer.classList.add('drag-over');
 			});
 
 			uploadContainer.addEventListener('dragleave', (e) => {
@@ -208,15 +208,25 @@ class RegistrationManager {
 				e.stopPropagation();
 				uploadContainer.classList.remove('drag-over');
 				
-				if (!this.idImage) {
-					const files = e.dataTransfer.files;
-					if (files.length) {
-						fileInput.files = files;
-						this.handleFileSelect({ target: fileInput });
-					}
+				const files = e.dataTransfer.files;
+				if (files.length) {
+					fileInput.files = files;
+					this.handleFileSelect({ target: fileInput });
 				}
 			});
+
+			if (removeFileBtn) {
+				removeFileBtn.addEventListener('click', () => {
+					this.idImage = null;
+					fileInput.value = '';
+					if (previewContainer) previewContainer.style.display = 'none';
+					if (imagePreview) imagePreview.src = '';
+				});
+			}
 		}
+
+		// Real-time form validation
+		this.setupFormValidation();
 	}
 
 	setupFormValidation() {
@@ -401,7 +411,7 @@ class RegistrationManager {
 		};
 
 		// Make API call to request OTP
-		fetch('/project-errawrs/src/api/user/request_otp.php', {
+		fetch('/project-errawrs/src/api/auth/send_otp.php', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -620,9 +630,9 @@ class RegistrationManager {
 		const otpModal = document.getElementById("otp_modal");
 		if (otpModal) {
 			otpModal.style.display = "flex";
-			setTimeout(() => {
-				otpModal.classList.add("active");
-			}, 10);
+			// Trigger reflow to ensure the transition works
+			otpModal.offsetHeight;
+			otpModal.classList.add("active");
 
 			// Start countdown for resend button
 			this.startResendCountdown();
@@ -630,8 +640,23 @@ class RegistrationManager {
 			// Focus on OTP input
 			const otpInput = document.getElementById("otp_code");
 			if (otpInput) {
+				otpInput.value = '';
 				otpInput.focus();
 			}
+
+			// Close modal on outside click
+			otpModal.addEventListener('click', (e) => {
+				if (e.target === otpModal) {
+					this.hideOtpModal();
+				}
+			});
+
+			// Handle escape key
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape') {
+					this.hideOtpModal();
+				}
+			});
 		}
 	}
 
@@ -639,8 +664,14 @@ class RegistrationManager {
 		const otpModal = document.getElementById("otp_modal");
 		if (otpModal) {
 			otpModal.classList.remove("active");
+			// Wait for the fade out animation to complete
 			setTimeout(() => {
 				otpModal.style.display = "none";
+				// Reset OTP input
+				const otpInput = document.getElementById("otp_code");
+				if (otpInput) {
+					otpInput.value = '';
+				}
 			}, 300);
 		}
 	}
@@ -697,7 +728,7 @@ class RegistrationManager {
 		};
 
 		// Make API call to verify OTP
-		fetch('/project-errawrs/src/api/user/verify_otp.php', {
+		fetch('/project-errawrs/src/api/auth/verify_otp.php', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -783,7 +814,7 @@ class RegistrationManager {
 		};
 
 		// Make API call to request new OTP
-		fetch('/project-errawrs/src/api/user/request_otp.php', {
+		fetch('/project-errawrs/src/api/auth/send_otp.php', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -857,8 +888,8 @@ class RegistrationManager {
 			formData.append('id_image', blob, this.idImage.name);
 		}
 
-		// Use the correct API endpoint
-		fetch('/project-errawrs/src/api/user/register.php', {
+		// Use the submit_registration.php endpoint
+		fetch('/project-errawrs/src/api/user/submit_registration.php', {
 			method: 'POST',
 			body: formData
 		})
@@ -1247,76 +1278,90 @@ class RegistrationManager {
 		return isValid;
 	}
 
-	handleFileSelect(event) {
-		const file = event.target.files[0];
+	handleFileSelect(e) {
+		const file = e.target.files[0];
 		const container = document.querySelector('.file-upload-container');
-		const preview = document.getElementById('id_image_preview');
-		const fileNameDisplay = preview.querySelector('.file-name-display');
-		const viewBtn = preview.querySelector('.btn-view-image');
-		const removeBtn = preview.querySelector('.remove-image');
+		const previewContainer = document.querySelector('.preview-container');
+		const imagePreview = document.getElementById('image_preview');
 		const maxSize = 5 * 1024 * 1024; // 5MB
 
+		// Clear existing preview if no file selected
 		if (!file) {
 			this.clearFilePreview();
 			return;
 		}
 
-		if (this.idImage) {
-			this.showNotification('Please remove the current image before uploading a new one.', NOTIFICATION_TYPES.WARNING);
-			event.target.value = '';
-			return;
-		}
-
-		if (!file.type.startsWith('image/')) {
-			this.showNotification('Please select an image file (JPG, PNG, etc.).', NOTIFICATION_TYPES.ERROR);
+		// Validate file type
+		const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+		if (!allowedTypes.includes(file.type)) {
+			this.showNotification('Please select a valid image file (JPG, JPEG, or PNG).', NOTIFICATION_TYPES.ERROR);
 			this.clearFilePreview();
 			return;
 		}
 
+		// Validate file size
 		if (file.size > maxSize) {
-			this.showNotification('File size must be less than 5MB. Please choose a smaller file.', NOTIFICATION_TYPES.ERROR);
+			this.showNotification('File size must be less than 5MB.', NOTIFICATION_TYPES.ERROR);
 			this.clearFilePreview();
 			return;
 		}
 
+		// Show loading state
 		container.classList.add('loading');
-		if (fileNameDisplay) fileNameDisplay.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing image...`;
-		if (viewBtn) viewBtn.style.display = 'none';
-		if (removeBtn) removeBtn.style.display = 'none';
-		preview.style.display = 'block';
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			const img = new Image();
-			img.onload = () => {
-				this.idImage = {
-					data: e.target.result,
-					type: file.type,
-					name: file.name,
-					width: img.width,
-					height: img.height
-				};
-
-				if (fileNameDisplay) fileNameDisplay.innerHTML = `<i class="fas fa-file-image"></i> ${file.name}`;
-				if (viewBtn) {
-					viewBtn.style.display = 'flex';
-					viewBtn.onclick = () => this.showImageModal(this.idImage.data, this.idImage.name);
-				}
-				if (removeBtn) {
-					removeBtn.style.display = 'flex';
-					removeBtn.onclick = () => this.clearFilePreview();
-				}
-				preview.style.display = 'block';
-
-				container.classList.remove('loading');
-				container.classList.add('has-file');
-
-				const fileInput = document.getElementById('id_image');
-				if (fileInput) {
-					fileInput.disabled = true;
-				}
+			// Store file data
+			this.idImage = {
+				data: e.target.result,
+				type: file.type,
+				name: file.name
 			};
-			img.src = e.target.result;
+
+			// Update preview
+			imagePreview.src = e.target.result;
+
+			// Update UI
+			container.classList.remove('loading');
+			container.classList.add('has-file');
+			previewContainer.style.display = 'block';
+
+			// Setup preview actions
+			const viewBtn = previewContainer.querySelector('.btn-view');
+			const replaceBtn = previewContainer.querySelector('.btn-replace');
+			const removeBtn = previewContainer.querySelector('.btn-remove');
+
+			if (viewBtn) {
+				viewBtn.onclick = () => this.showImagePreview(this.idImage.data);
+			}
+
+			if (replaceBtn) {
+				replaceBtn.onclick = () => {
+					const fileInput = document.getElementById('id_image');
+					if (fileInput) {
+						// Store current file data
+						const currentImage = this.idImage;
+						
+						// Add change event listener to handle cancellation
+						const handleChange = () => {
+							if (!fileInput.files.length) {
+								// If no file selected (cancelled), restore previous image
+								this.idImage = currentImage;
+								imagePreview.src = currentImage.data;
+							}
+							// Remove the event listener after it's triggered
+							fileInput.removeEventListener('change', handleChange);
+						};
+						
+						fileInput.addEventListener('change', handleChange);
+						fileInput.click();
+					}
+				};
+			}
+
+			if (removeBtn) {
+				removeBtn.onclick = () => this.clearFilePreview();
+			}
 		};
 
 		reader.onerror = () => {
@@ -1330,29 +1375,55 @@ class RegistrationManager {
 
 	clearFilePreview() {
 		const fileInput = document.getElementById('id_image');
-		const preview = document.getElementById('id_image_preview');
 		const container = document.querySelector('.file-upload-container');
-		const fileNameDisplay = preview.querySelector('.file-name-display');
-		const viewBtn = preview.querySelector('.btn-view-image');
-		const removeBtn = preview.querySelector('.remove-image');
+		const previewContainer = document.querySelector('.preview-container');
+		const imagePreview = document.getElementById('image_preview');
 
+		// Reset file input
 		if (fileInput) {
 			fileInput.value = '';
-			fileInput.disabled = false;
 		}
-		if (preview) {
-			preview.style.display = 'none';
-		}
-		if (fileNameDisplay) fileNameDisplay.innerHTML = `<i class="fas fa-file-image"></i> No file selected`;
-		if (viewBtn) viewBtn.style.display = 'none';
-		if (removeBtn) removeBtn.style.display = 'none';
 
+		// Clear preview
+		if (imagePreview) {
+			imagePreview.src = '';
+		}
+
+		// Reset container state
 		if (container) {
-			container.classList.remove('has-file', 'loading', 'error');
+			container.classList.remove('has-file', 'loading');
+		}
+		if (previewContainer) {
+			previewContainer.style.display = 'none';
 		}
 
+		// Clear stored file data
 		this.idImage = null;
-		this.hideImageModal();
+	}
+
+	showImagePreview(src) {
+		const modal = document.getElementById('image_preview_modal');
+		const modalImage = document.getElementById('modal_image');
+		
+		if (modal && modalImage) {
+			modalImage.src = src;
+			modal.classList.add('active');
+
+			// Close modal when clicking the close button
+			const closeBtn = modal.querySelector('.image-preview-close');
+			if (closeBtn) {
+				closeBtn.onclick = () => {
+					modal.classList.remove('active');
+				};
+			}
+
+			// Close modal when clicking outside
+			modal.onclick = (e) => {
+				if (e.target === modal) {
+					modal.classList.remove('active');
+				}
+			};
+		}
 	}
 
 	validateAge(input) {

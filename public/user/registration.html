@@ -73,50 +73,48 @@
                                 <div class="form-section">
                                     <h3>Identification Documents</h3>
                                     
-                                    <div class="form-group">
-                                        <label for="id_type">ID Type</label>
-                                        <select id="id_type" required>
-                                            <option value="">Select ID Type</option>
-                                            <option value="passport">Passport</option>
-                                            <option value="national_id">National ID</option>
-                                            <option value="drivers_license">Driver's License</option>
-                                            <option value="school_id">School ID (for students)</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="id_image">Upload ID Image</label>
-                                        <div class="file-upload-container">
-                                            <input
-                                                type="file"
-                                                id="id_image"
-                                                accept="image/*"
-                                                required
-                                                class="file-input"
-                                                aria-describedby="id_image_help"/>
-                                            <label for="id_image" class="file-upload-label">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>Choose a file or drag it here</span>
-                                            </label>
-                                            <div id="id_image_preview" class="image-preview" style="display: none;">
-                                                <div class="preview-info-compact">
-                                                    <span class="file-name-display"><i class="fas fa-file-image"></i> No file selected</span>
+                                                                    <div class="form-group">
+                                    <label for="id_type">ID Type</label>
+                                    <select id="id_type" required>
+                                        <option value="">Select ID Type</option>
+                                        <option value="passport">Passport</option>
+                                        <option value="national_id">National ID</option>
+                                        <option value="drivers_license">Driver's License</option>
+                                        <option value="school_id">School ID (for students)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="id_image">Upload ID Image</label>
+                                    <div class="file-upload-container" id="file_upload_container">
+                                        <input type="file" id="id_image" name="id_image" accept="image/jpeg,image/jpg,image/png" class="file-input" required>
+                                        <div class="upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag and drop your ID image here or click to browse</p>
+                                            <span class="file-types">Accepted formats: JPG, JPEG, PNG (Max 5MB)</span>
+                                        </div>
+                                        <div class="preview-container" style="display: none;">
+                                            <div class="preview-content">
+                                                <img id="image_preview" src="" alt="ID Preview">
+                                                <div class="preview-details">
                                                     <div class="preview-actions">
-                                                        <button type="button" class="btn-view-image" aria-label="View image">
-                                                            View <i class="fas fa-eye"></i>
+                                                        <button type="button" class="btn btn-secondary btn-view">
+                                                            <i class="fas fa-eye"></i> View
                                                         </button>
-                                                        <button type="button" class="remove-image" aria-label="Remove image">
-                                                            <i class="fas fa-times"></i>
+                                                        <button type="button" class="btn btn-secondary btn-replace">
+                                                            <i class="fas fa-sync-alt"></i> Replace
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-remove">
+                                                            <i class="fas fa-trash"></i> Remove
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="id_image_help" class="help-text">
-                                            Upload a clear photo of your selected ID. Make sure all details are visible.
-                                            Accepted formats: JPG, PNG (Max size: 5MB)
-                                        </div>
                                     </div>
+                                </div>
+
+
                                 </div>
 
                                 <div class="form-actions">
@@ -400,6 +398,16 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Image Preview Modal -->
+        <div id="image_preview_modal" class="image-preview-modal">
+            <div class="image-preview-content">
+                <button class="image-preview-close">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img id="modal_image" src="" alt="Full size preview">
             </div>
         </div>
 
