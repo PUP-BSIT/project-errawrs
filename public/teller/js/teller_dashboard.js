@@ -10,7 +10,9 @@ let lastKnownValues = {
     deposits: '0.00',
     withdrawals: '0.00',
     closed_accounts: 0,
-    reopened_accounts: 0
+    reopened_accounts: 0,
+    pending_accounts: 0,
+    declined_accounts: 0
 };
 
 // Show notification function
@@ -201,33 +203,58 @@ async function fetchDashboardSummary() {
 function updateDashboardSummary(summary) {
     const currentTime = formatTime(new Date());
 
-    // Update deposits if changed
-    if (summary.deposits.amount !== lastKnownValues.deposits) {
-        document.getElementById('total-deposits').textContent = `₱${summary.deposits.amount}`;
-        document.getElementById('deposits-updated').textContent = currentTime;
-        lastKnownValues.deposits = summary.deposits.amount;
-    }
+    summary.forEach(item => {
+        let elementIdPrefix = '';
+        let lastKnownValueKey = '';
+        let parseValue = (value) => value; // Default parser, for deposits/withdrawals (string)
 
-    // Update withdrawals if changed
-    if (summary.withdrawals.amount !== lastKnownValues.withdrawals) {
-        document.getElementById('total-withdrawals').textContent = `₱${summary.withdrawals.amount}`;
-        document.getElementById('withdrawals-updated').textContent = currentTime;
-        lastKnownValues.withdrawals = summary.withdrawals.amount;
-    }
+        switch (item.title) {
+            case 'Total Deposits Today':
+                elementIdPrefix = 'deposits';
+                lastKnownValueKey = 'deposits';
+                break;
+            case 'Total Withdrawals Today':
+                elementIdPrefix = 'withdrawals';
+                lastKnownValueKey = 'withdrawals';
+                break;
+            case 'Total Closed Accounts':
+                elementIdPrefix = 'closed';
+                lastKnownValueKey = 'closed_accounts';
+                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
+                break;
+            case 'Total Re-opened Accounts':
+                elementIdPrefix = 'reopened';
+                lastKnownValueKey = 'reopened_accounts';
+                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
+                break;
+            case 'Total Pending Accounts':
+                elementIdPrefix = 'pending';
+                lastKnownValueKey = 'pending_accounts';
+                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
+                break;
+            case 'Total Declined Accounts':
+                elementIdPrefix = 'declined';
+                lastKnownValueKey = 'declined_accounts';
+                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
+                break;
+            default:
+                console.warn('Unknown dashboard item title:', item.title);
+                return;
+        }
 
-    // Update closed accounts if changed
-    if (summary.closed_accounts.count !== lastKnownValues.closed_accounts) {
-        document.getElementById('total-closed').textContent = `${summary.closed_accounts.count} Account${summary.closed_accounts.count !== 1 ? 's' : ''}`;
-        document.getElementById('closed-updated').textContent = currentTime;
-        lastKnownValues.closed_accounts = summary.closed_accounts.count;
-    }
+        const numberElement = document.getElementById(`total-${elementIdPrefix}`);
+        const updatedElement = document.getElementById(`${elementIdPrefix}-updated`);
 
-    // Update reopened accounts if changed
-    if (summary.reopened_accounts.count !== lastKnownValues.reopened_accounts) {
-        document.getElementById('total-reopened').textContent = `${summary.reopened_accounts.count} Account${summary.reopened_accounts.count !== 1 ? 's' : ''}`;
-        document.getElementById('reopened-updated').textContent = currentTime;
-        lastKnownValues.reopened_accounts = summary.reopened_accounts.count;
-    }
+        if (numberElement && updatedElement) {
+            const currentParsedValue = parseValue(item.amount_count);
+
+            if (lastKnownValues[lastKnownValueKey] !== currentParsedValue) {
+                numberElement.textContent = item.amount_count; // Always display the original string from PHP
+                updatedElement.textContent = `Last update: ${currentTime}`;
+                lastKnownValues[lastKnownValueKey] = currentParsedValue;
+            }
+        }
+    });
 }
 
 // Check if user is logged in
