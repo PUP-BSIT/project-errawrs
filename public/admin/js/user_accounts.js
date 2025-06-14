@@ -42,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.message || 'Failed to fetch users');
             }
 
-            allUsers = data.users;
+            allUsers = data.list;
             filteredUsers = [...allUsers];
             renderUsers();
             renderPagination();
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Joined:</span>
-                        <span class="detail-value">${new Date(user.created_at).toLocaleDateString()}</span>
+                        <span class="detail-value">${new Date(user.user_created_at).toLocaleDateString()}</span>
                     </div>
                 </div>
             `;

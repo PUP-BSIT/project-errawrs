@@ -18,17 +18,24 @@
   $dotenv = Dotenv\Dotenv::createImmutable(PROJECT_ROOT);
   $dotenv->load();
 
-  session_start();
-
-  // Prevent any HTML error output
+  // Enable error reporting and logging
   error_reporting(E_ALL);
-  ini_set('display_errors', 1); // Temporarily enable display errors for debugging
+  ini_set('display_errors', 0); // Disable display errors in production
+  ini_set('log_errors', 1);
+  ini_set('error_log', PROJECT_ROOT . '/logs/error.log');
+
+  // Include SessionManager
+  require_once PROJECT_ROOT . '/src/config/SessionManager.php';
+  
+  // Initialize SessionManager to start or resume the session
+  $sessionManager = SessionManager::getInstance();
 
   // Set JSON header first before any output
   header("Access-Control-Allow-Origin: *");
   header("Access-Control-Allow-Methods: POST");
   header("Access-Control-Allow-Headers: Content-Type, Authorization");
   header("Content-Type: application/json");
+  header("Access-Control-Allow-Credentials: true");
 
   // Function to handle errors
   function sendError($message, $code = 400) {
@@ -38,20 +45,23 @@
       exit();
   }
 
-  try {
-      require_once PROJECT_ROOT . '/src/config/database.php';
-  } catch (Exception $e) {
-      sendError('Configuration error: ' . $e->getMessage(), 500);
-  }
-
   // Only allow POST requests
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       sendError('Method not allowed', 405);
   }
 
-  // Verify admin is logged in
-  if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+  // Verify admin is logged in using SessionManager
+  if (!$sessionManager->isAuthorizedAdmin()) {
       sendError('Unauthorized access', 401);
+  }
+
+  // Update activity to prolong session
+  $sessionManager->updateActivity();
+
+  try {
+      require_once PROJECT_ROOT . '/src/config/database.php';
+  } catch (Exception $e) {
+      sendError('Configuration error: ' . $e->getMessage(), 500);
   }
 
   // Get and validate input data

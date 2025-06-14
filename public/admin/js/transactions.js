@@ -45,7 +45,9 @@ async function loadTransactions() {
         const data = await response.json();
         
         if (!data.success) {
-            throw new Error(data.message || 'Failed to load transactions');
+            // Pass the detailed error message from the backend
+            showError(data.message || 'Failed to load transactions', data.debug_info);
+            throw new Error(data.message || 'Failed to load transactions'); // Re-throw to go to catch block
         }
 
         totalPages = data.total_pages;
@@ -54,7 +56,8 @@ async function loadTransactions() {
 
     } catch (error) {
         console.error('Error loading transactions:', error);
-        showError('Failed to load transactions. Please try again later.');
+        // Display a generic error if no specific message was passed from backend
+        showError(error.message || 'Failed to load transactions. Please try again later.');
     }
 }
 
@@ -213,11 +216,20 @@ function formatDate(dateString) {
     });
 }
 
-function showError(message) {
+function showError(message, debugInfo = null) {
+    // Remove existing error message
+    const existingErrorDiv = document.querySelector('.error-message');
+    if (existingErrorDiv) {
+        existingErrorDiv.remove();
+    }
+
     // Create error message element
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
+    errorDiv.innerHTML = `
+        <p>${message}</p>
+        ${debugInfo ? `<pre style="white-space: pre-wrap; word-break: break-all; font-size: 0.8em; color: #a94442;">${debugInfo}</pre>` : ''}
+    `;
     
     // Insert at the top of the transactions content
     transactionContent.insertBefore(errorDiv, transactionContent.firstChild);

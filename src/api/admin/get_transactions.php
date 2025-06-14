@@ -1,6 +1,20 @@
 <?php
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Disable display errors in production
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/error.log');
+
+// Ensure no output before headers
+ob_start();
+ob_clean(); // Clear any accidental output immediately after starting buffer
+
 require_once __DIR__ . '/../../config/database.php';
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Initialize SessionManager to start or resume the session
+$sessionManager = SessionManager::getInstance();
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');
@@ -13,12 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['admin_id'])) {
+// Check if user is logged in and is an admin using SessionManager
+if (!$sessionManager->isAuthorizedAdmin()) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
+    ob_end_flush(); // Flush buffer before exit
     exit();
 }
+
+// Update activity to prolong session
+$sessionManager->updateActivity();
 
 try {
     $conn = db_connect();
@@ -66,10 +84,24 @@ try {
                   " . $where_clause;
     
     $count_stmt = $conn->prepare($count_sql);
-    if (!empty($sql_params)) {
-        $count_stmt->bind_param($sql_types, ...$sql_params);
+    if (!$count_stmt) {
+        throw new Exception("Failed to prepare count query: " . $conn->error);
     }
-    $count_stmt->execute();
+
+    if (!empty($sql_params)) {
+        $bind_names_count = [];
+        $bind_names_count[] = $sql_types; 
+        foreach ($sql_params as $key => $value) {
+            $bind_names_count[] = &$sql_params[$key];
+        }
+        if (!call_user_func_array([$count_stmt, 'bind_param'], $bind_names_count)) {
+            throw new Exception("Failed to bind parameters for count query: " . $count_stmt->error);
+        }
+    }
+
+    if (!$count_stmt->execute()) {
+        throw new Exception("Failed to execute count query: " . $count_stmt->error);
+    }
     $total_count_result = $count_stmt->get_result()->fetch_assoc();
     $total_transactions = $total_count_result['total_count'];
     $count_stmt->close();
@@ -111,11 +143,21 @@ try {
     $sql_params[] = $limit;
     $sql_params[] = $offset;
 
+    // Dynamically bind parameters
     if (!empty($sql_params)) {
-        $stmt->bind_param($sql_types, ...$sql_params);
+        // Use a temporary array for bind_param to pass by reference correctly
+        $bind_names = [];
+        $bind_names[] = $sql_types; // First element is the types string
+        foreach ($sql_params as $key => $value) {
+            $bind_names[] = &$sql_params[$key]; // Pass by reference
+        }
+        call_user_func_array([$stmt, 'bind_param'], $bind_names);
     }
     
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to execute statement: ' . $stmt->error);
+    }
+    
     $result = $stmt->get_result();
     $transactions = [];
     while ($row = $result->fetch_assoc()) {
@@ -131,13 +173,16 @@ try {
         'limit' => (int)$limit,
         'total_pages' => ceil($total_transactions / $limit)
     ]);
+    ob_end_flush(); // Flush buffer for successful response
 
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Error: ' . $e->getMessage()
+        'message' => 'Server error: ' . $e->getMessage(),
+        'debug_info' => $e->getTraceAsString() // Add debug info for detailed errors
     ]);
+    ob_end_flush(); // Flush buffer for error response
 } finally {
     if (isset($conn)) {
         $conn->close();
