@@ -1,8 +1,4 @@
-// API Endpoints
-const API_LOGIN = '../../src/api/auth/login.php';
-
-// Routes
-const ROUTE_DASHBOARD = './user_dashboard.html';
+// API Endpoints and Routes are now imported from config.js
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -103,20 +99,33 @@ async function handleLogin(e) {
 
         if (data.success) {
             showNotification(TEXT.LOGIN_SUCCESS, NOTIFICATION_TYPE.SUCCESS);
-            // Store user data and account info
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('account', JSON.stringify(data.account));
+            
+            // Store user data in sessionStorage
+            const userInfo = {
+                id: data.user.id,
+                username: data.user.username,
+                name: `${data.user.first_name} ${data.user.last_name}`,
+                phone_number: data.user.phone_number,
+                type: 'user'
+            };
+            
+            if (data.user.account) {
+                userInfo.account = data.user.account;
+            }
+            
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+            
             // Redirect after a short delay
             setTimeout(() => {
-                window.location.href = ROUTE_DASHBOARD;
+                window.location.href = ROUTES.DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
-            showNotification(data.error || TEXT.LOGIN_ERROR, NOTIFICATION_TYPE.ERROR);
-            hideLoadingState();
+            throw new Error(data.error || TEXT.LOGIN_ERROR);
         }
     } catch (error) {
         console.error('Login error:', error);
-        showNotification(TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+        showNotification(error.message || TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+    } finally {
         hideLoadingState();
     }
 }
@@ -251,13 +260,7 @@ function showNotification(message, type = 'info') {
 
     // Auto-hide after some time
     setTimeout(() => {
-        if (container.parentElement) {
-            container.classList.add('hide');
-            setTimeout(() => {
-                if (container.parentElement) {
-                    container.remove();
-                }
-            }, 300); // Animation duration
-        }
-    }, TIMING.NOTIFICATION_HIDE);
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
