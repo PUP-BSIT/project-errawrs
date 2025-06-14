@@ -2049,3 +2049,5 @@
 
 [14-Jun-2025 03:57:45 Asia/Manila] Fetching accounts for user ID: 22
 [14-Jun-2025 03:57:45 Asia/Manila] Found 1 accounts for user ID: 22
+[14-Jun-2025 11:48:25 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[14-Jun-2025 11:48:49 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
