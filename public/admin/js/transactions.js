@@ -7,10 +7,7 @@ let totalPages = 1;
 const transactionContent = document.querySelector('.transactions-content');
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
-<<<<<<< HEAD
 const statusSelect = document.querySelector('.status-select');
-=======
->>>>>>> 7c1f73dcb16643b6dc409fa7899858f1aa865a3c
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
@@ -28,21 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
         }
     });
-<<<<<<< HEAD
-
-    statusSelect.addEventListener('change', () => {
-        currentPage = 1;
-        loadTransactions();
-    });
-=======
->>>>>>> 7c1f73dcb16643b6dc409fa7899858f1aa865a3c
 });
 
 // Load transactions from the API
 async function loadTransactions() {
     try {
         const searchQuery = searchInput.value.trim();
-<<<<<<< HEAD
         const statusFilter = statusSelect.value;
         
         const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`, {
@@ -52,26 +40,6 @@ async function loadTransactions() {
         const data = await response.json();
         
         if (!data.success) {
-=======
-        
-        console.log('Fetching transactions with params:', {
-            page: currentPage,
-            limit: itemsPerPage,
-            searchQuery
-        });
-
-        const response = await fetch(`/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}`, {
-            credentials: 'include'
-        });
-
-        console.log('API Response status:', response.status);
-        const data = await response.json();
-        console.log('API Response data:', data);
-        
-        if (!data.success) {
-            console.error('API Error:', data);
-            showError(data.message || 'Failed to load transactions', data.debug_info);
->>>>>>> 7c1f73dcb16643b6dc409fa7899858f1aa865a3c
             throw new Error(data.message || 'Failed to load transactions');
         }
 
@@ -81,11 +49,7 @@ async function loadTransactions() {
 
     } catch (error) {
         console.error('Error loading transactions:', error);
-<<<<<<< HEAD
         showError('Failed to load transactions. Please try again later.');
-=======
-        showError(error.message || 'Failed to load transactions. Please try again later.');
->>>>>>> 7c1f73dcb16643b6dc409fa7899858f1aa865a3c
     }
 }
 
@@ -244,13 +208,6 @@ function formatDate(dateString) {
     });
 }
 
-<<<<<<< HEAD
-function showError(message) {
-    // Create error message element
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
-=======
 function showError(message, debugInfo = null) {
     // Remove existing error message
     const existingErrorDiv = document.querySelector('.error-message');
@@ -265,7 +222,6 @@ function showError(message, debugInfo = null) {
         <p>${message}</p>
         ${debugInfo ? `<pre style="white-space: pre-wrap; word-break: break-all; font-size: 0.8em; color: #a94442;">${debugInfo}</pre>` : ''}
     `;
->>>>>>> 7c1f73dcb16643b6dc409fa7899858f1aa865a3c
     
     // Insert at the top of the transactions content
     transactionContent.insertBefore(errorDiv, transactionContent.firstChild);
