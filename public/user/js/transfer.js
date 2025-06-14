@@ -863,6 +863,10 @@ function showOTPVerificationModal(data) {
                 if (completeData.redirect_url) {
                     window.location.href = completeData.redirect_url;
                     return;
+                } else {
+                    // If no redirect URL is provided, redirect to dashboard with success parameter
+                    window.location.href = '../user/user_dashboard.html?transaction_success=true';
+                    return;
                 }
             } else {
                 otpError.textContent = completeData.error || TEXT.TRANSFER_FAILED;

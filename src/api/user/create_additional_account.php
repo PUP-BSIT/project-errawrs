@@ -3,6 +3,10 @@ session_start();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
+// Debug session info
+error_log("Session ID in create_additional_account: " . session_id());
+error_log("Full SESSION data: " . print_r($_SESSION, true));
+
 // Check if user is logged in
 if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     http_response_code(401);
@@ -14,6 +18,9 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
 $input = json_decode(file_get_contents('php://input'), true);
 $account_type = isset($input['account_type']) ? $input['account_type'] : null;
 $verified = isset($input['verified']) ? $input['verified'] : false;
+
+// Debug input
+error_log("Create account input: " . print_r($input, true));
 
 // Validate account_type
 if (!$account_type) {
@@ -36,8 +43,9 @@ if ($verified !== true) {
     exit();
 }
 
-// Check if OTP exists and has been verified
-if (!isset($_SESSION['otp'])) {
+// Check if OTP has been verified
+if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
+    error_log("OTP verification check failed: " . (isset($_SESSION['otp_verified']) ? "Set but not true" : "Not set"));
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'No verified OTP found. Please complete verification first']);
     exit();
@@ -99,8 +107,8 @@ try {
     // Commit transaction
     $db->commit();
     
-    // Clear OTP session data
-    unset($_SESSION['otp']);
+    // Clear OTP verification flag
+    unset($_SESSION['otp_verified']);
     
     // Return success response with new account details
     echo json_encode([
@@ -121,6 +129,7 @@ try {
     if (isset($db)) {
         $db->rollback();
     }
+    error_log("Create account error: " . $e->getMessage());
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 } 

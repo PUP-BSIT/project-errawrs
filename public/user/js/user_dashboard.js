@@ -22,7 +22,8 @@ const CURRENCY = {
 const TIMING = {
     NOTIFICATION_DURATION: 3000,
     REDIRECT_DELAY: 2000,
-    ANIMATION_DELAY: 300
+    ANIMATION_DELAY: 300,
+    REFRESH_INTERVAL: 30000 // Add refresh interval (30 seconds)
 };
 
 // Account Status
@@ -48,6 +49,7 @@ const profile_edit_modal = document.getElementById('edit_profile_modal');
 let user_data = {}; // Will be populated from API
 let user_accounts = []; // Will be populated from API
 let accountNumbersMasked = true;
+let refreshTimer = null; // Timer for auto-refresh
 
 
 function show_notification(message, type) {
@@ -512,14 +514,80 @@ async function fetchFinancialTip() {
 // Initialize Dashboard
 function init_dashboard() {
     fetchUserData(); // Fetch user data first
-    fetchUserAccounts(); // Fetch accounts (this will also fetch transactions for the selected account)
+    
+    // Check for recent transaction in localStorage
+    const lastTransaction = localStorage.getItem('last_transaction');
+    if (lastTransaction) {
+        try {
+            const transactionData = JSON.parse(lastTransaction);
+            const transactionTime = transactionData.timestamp;
+            const currentTime = Date.now();
+            
+            // If the transaction was in the last 5 minutes, show notification
+            if (currentTime - transactionTime < 5 * 60 * 1000) {
+                show_notification('Balance updated after recent transaction', 'success');
+                // Force immediate refresh of account data
+                fetchUserAccounts();
+                // Remove the transaction data to prevent duplicate notifications
+                localStorage.removeItem('last_transaction');
+            }
+        } catch (e) {
+            console.error('Error parsing last transaction:', e);
+            localStorage.removeItem('last_transaction');
+        }
+    } else {
+        // Normal fetch if no recent transaction
+        fetchUserAccounts(); // Fetch accounts (this will also fetch transactions for the selected account)
+    }
+    
     fetchFinancialTip(); // Fetch financial tip
     setup_smooth_animations(); // Keep existing setup
     setup_profile_edit(); // Setup profile edit interactions
+    
+    // Check URL parameters for transaction success
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('fund_transfer_success') || urlParams.has('transaction_success')) {
+        show_notification('Transaction completed successfully', 'success');
+        // Clean URL without refreshing page
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    // Setup auto-refresh for account data
+    setupAutoRefresh();
 
     console.log('StackOvercash Dashboard Initialized Dynamically');
 }
 
+// Setup auto-refresh for account data
+function setupAutoRefresh() {
+    // Clear any existing timer
+    if (refreshTimer) {
+        clearInterval(refreshTimer);
+    }
+    
+    // Set up periodic refresh
+    refreshTimer = setInterval(() => {
+        console.log('Auto-refreshing account data');
+        fetchUserAccounts(); // This will update balance and transactions
+    }, TIMING.REFRESH_INTERVAL);
+    
+    // Also refresh when the page becomes visible again
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            console.log('Page became visible, refreshing data');
+            fetchUserAccounts();
+        }
+    });
+    
+    // Refresh when returning from other pages
+    window.addEventListener('pageshow', (event) => {
+        // If the page is loaded from cache (back/forward navigation)
+        if (event.persisted) {
+            console.log('Page loaded from cache, refreshing data');
+            fetchUserAccounts();
+        }
+    });
+}
 
 // Add click handler for transfer now button (assuming it navigates)
 if (transfer_now_btn) {
