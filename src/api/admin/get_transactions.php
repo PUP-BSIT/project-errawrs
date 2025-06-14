@@ -17,7 +17,7 @@ require_once __DIR__ . '/../../config/SessionManager.php';
 $sessionManager = SessionManager::getInstance();
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Credentials: true');
@@ -48,18 +48,10 @@ try {
 
     // Search and filter parameters
     $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : '';
-    $status_filter = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : ''; // 'all', 'success', 'pending', 'failed'
 
     $sql_conditions = [];
     $sql_params = [];
     $sql_types = '';
-
-    // Add status filter
-    if ($status_filter && $status_filter !== 'all') {
-        $sql_conditions[] = "t.status = ?";
-        $sql_params[] = $status_filter;
-        $sql_types .= 's';
-    }
 
     // Add search query
     if (!empty($search_query)) {

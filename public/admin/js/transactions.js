@@ -7,7 +7,6 @@ let totalPages = 1;
 const transactionContent = document.querySelector('.transactions-content');
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
-const statusSelect = document.querySelector('.status-select');
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
@@ -25,29 +24,31 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
         }
     });
-
-    statusSelect.addEventListener('change', () => {
-        currentPage = 1;
-        loadTransactions();
-    });
 });
 
 // Load transactions from the API
 async function loadTransactions() {
     try {
         const searchQuery = searchInput.value.trim();
-        const statusFilter = statusSelect.value;
         
-        const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`, {
+        console.log('Fetching transactions with params:', {
+            page: currentPage,
+            limit: itemsPerPage,
+            searchQuery
+        });
+
+        const response = await fetch(`/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}`, {
             credentials: 'include'
         });
 
+        console.log('API Response status:', response.status);
         const data = await response.json();
+        console.log('API Response data:', data);
         
         if (!data.success) {
-            // Pass the detailed error message from the backend
+            console.error('API Error:', data);
             showError(data.message || 'Failed to load transactions', data.debug_info);
-            throw new Error(data.message || 'Failed to load transactions'); // Re-throw to go to catch block
+            throw new Error(data.message || 'Failed to load transactions');
         }
 
         totalPages = data.total_pages;
@@ -56,7 +57,6 @@ async function loadTransactions() {
 
     } catch (error) {
         console.error('Error loading transactions:', error);
-        // Display a generic error if no specific message was passed from backend
         showError(error.message || 'Failed to load transactions. Please try again later.');
     }
 }
