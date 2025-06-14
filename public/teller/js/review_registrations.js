@@ -16,7 +16,7 @@ class RegistrationReview {
 
     async loadRegistrations() {
         try {
-            const response = await fetch('/project-errawrs/src/api/teller/get_registrations.php');
+            const response = await fetch('/project-errawrs/src/api/teller/review_registrations.php');
             if (!response.ok) throw new Error('Failed to fetch registrations');
             
             const data = await response.json();
