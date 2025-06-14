@@ -2049,3 +2049,35 @@
 
 [14-Jun-2025 03:57:45 Asia/Manila] Fetching accounts for user ID: 22
 [14-Jun-2025 03:57:45 Asia/Manila] Found 1 accounts for user ID: 22
+[14-Jun-2025 11:19:52 Asia/Manila] Received login data: Array
+(
+    [username] => Admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jun-2025 11:19:52 Asia/Manila] Received login data: Array
+(
+    [username] => Admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jun-2025 11:23:18 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[14-Jun-2025 11:24:28 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[14-Jun-2025 11:25:47 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[14-Jun-2025 11:26:34 Asia/Manila] Database Connection Error: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[14-Jun-2025 11:27:00 Asia/Manila] Received login data: Array
+(
+    [username] => Admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jun-2025 11:27:00 Asia/Manila] Received login data: Array
+(
+    [username] => Admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
