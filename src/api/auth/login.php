@@ -246,38 +246,33 @@ if (strlen($password) < 8) {
     // Remove sensitive data
     unset($user['password_hash']);
     
-    // Initialize session manager and create session
+    // Initialize session manager
     $sessionManager = SessionManager::getInstance();
-    
-    // Create new session (this will handle cleanup of old session internally)
+
+    // Create new session (this will handle cleanup of old session internally and set $_SESSION['auth'])
     $sessionManager->createSession($user, $loginType);
     
-    if ($loginType === 'user' && !empty($additionalData['account'])) {
-        $_SESSION['auth']['account'] = [
-            'account_id' => $additionalData['account']['account_id'],
-            'account_number' => $additionalData['account']['account_number'],
-            'balance' => $additionalData['account']['balance']
-        ];
+    // Store user-specific data in session as well (these are for specific info objects beyond 'auth')
+    if ($loginType === 'admin') {
+        $_SESSION['adminInfo'] = $user;
+    } elseif ($loginType === 'teller') {
+        $_SESSION['tellerInfo'] = $user;
+    } elseif ($loginType === 'user') {
+        $_SESSION['userInfo'] = array_merge($user, $additionalData);
     }
-    
-    // Update last activity time
+
+    // Update last activity time (important for session timeout logic)
     $sessionManager->updateActivity();
-    
-    // Prepare response
-    $response = [
+
+    // Prepare success response
+    http_response_code(200);
+    echo json_encode([
         'success' => true,
         'message' => 'Login successful',
-        'type' => $loginType,
-        'user' => $user
-    ];
-    
-    if (!empty($additionalData)) {
-        $response = array_merge($response, $additionalData);
-    }
-    
-    // Set proper success status and return response
-    http_response_code(200);
-    echo json_encode($response);
+        'user' => $user, // Return user data (without hash)
+        'login_type' => $loginType,
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
 
 } catch (Exception $e) {
     error_log("Login Exception: " . $e->getMessage());

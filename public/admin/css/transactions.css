@@ -232,20 +232,42 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 32px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    color: var(--color-gray);
+}
+
+.transaction-users {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--color-gray);
 }
 
 .transaction-item {
+    background-color: #fcfcfc;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    transition: transform 0.2s ease;
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
 }
 
 .transaction-item:hover {
-    transform: translateX(8px);
+    transform: translateY(-2px);
 }
 
 .transaction-icon {
@@ -289,8 +311,26 @@ body {
 }
 
 .transaction-status {
-    color: var(--color-mint);
-    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-success {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.status-pending {
+    background-color: #ffd700;
+    color: var(--color-primary-black);
+}
+
+.status-failed {
+    background-color: #ff4d4d;
+    color: var(--color-white);
 }
 
 /* Pagination */
@@ -323,7 +363,19 @@ body {
 }
 
 .pagination-dots {
+    padding: 8px;
     color: var(--color-gray);
+}
+
+/* Error Message Styles */
+.error-message {
+    background-color: #ffe6e6;
+    color: #ff4d4d;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-weight: 500;
 }
 
 /* Responsive Design */
