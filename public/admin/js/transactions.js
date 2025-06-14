@@ -7,7 +7,6 @@ let totalPages = 1;
 const transactionContent = document.querySelector('.transactions-content');
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
-const statusSelect = document.querySelector('.status-select');
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
@@ -25,26 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
         }
     });
-
-    statusSelect.addEventListener('change', () => {
-        currentPage = 1;
-        loadTransactions();
-    });
 });
 
 // Load transactions from the API
 async function loadTransactions() {
     try {
         const searchQuery = searchInput.value.trim();
-        const statusFilter = statusSelect.value;
         
-        const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`, {
+        console.log('Fetching transactions with params:', {
+            page: currentPage,
+            limit: itemsPerPage,
+            searchQuery
+        });
+
+        const response = await fetch(`/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}`, {
             credentials: 'include'
         });
 
+        console.log('API Response status:', response.status);
         const data = await response.json();
+        console.log('API Response data:', data);
         
         if (!data.success) {
+            console.error('API Error:', data);
+            showError(data.message || 'Failed to load transactions', data.debug_info);
             throw new Error(data.message || 'Failed to load transactions');
         }
 
@@ -54,7 +57,7 @@ async function loadTransactions() {
 
     } catch (error) {
         console.error('Error loading transactions:', error);
-        showError('Failed to load transactions. Please try again later.');
+        showError(error.message || 'Failed to load transactions. Please try again later.');
     }
 }
 
@@ -213,11 +216,20 @@ function formatDate(dateString) {
     });
 }
 
-function showError(message) {
+function showError(message, debugInfo = null) {
+    // Remove existing error message
+    const existingErrorDiv = document.querySelector('.error-message');
+    if (existingErrorDiv) {
+        existingErrorDiv.remove();
+    }
+
     // Create error message element
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
+    errorDiv.innerHTML = `
+        <p>${message}</p>
+        ${debugInfo ? `<pre style="white-space: pre-wrap; word-break: break-all; font-size: 0.8em; color: #a94442;">${debugInfo}</pre>` : ''}
+    `;
     
     // Insert at the top of the transactions content
     transactionContent.insertBefore(errorDiv, transactionContent.firstChild);
