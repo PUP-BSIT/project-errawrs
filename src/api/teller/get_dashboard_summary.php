@@ -80,6 +80,28 @@ try {
     $reopened_result = mysqli_stmt_get_result($reopened_stmt);
     $total_reopened = mysqli_fetch_assoc($reopened_result)['total'];
 
+    // Get total pending accounts today
+    $pending_query = "SELECT COUNT(*) as total 
+                     FROM account 
+                     WHERE DATE(created_at) = ? 
+                     AND status = 'pending'";
+    $pending_stmt = mysqli_prepare($conn, $pending_query);
+    mysqli_stmt_bind_param($pending_stmt, 's', $current_date);
+    mysqli_stmt_execute($pending_stmt);
+    $pending_result = mysqli_stmt_get_result($pending_stmt);
+    $total_pending = mysqli_fetch_assoc($pending_result)['total'];
+
+    // Get total declined accounts today
+    $declined_query = "SELECT COUNT(*) as total 
+                      FROM account 
+                      WHERE DATE(created_at) = ? 
+                      AND status = 'declined'";
+    $declined_stmt = mysqli_prepare($conn, $declined_query);
+    mysqli_stmt_bind_param($declined_stmt, 's', $current_date);
+    mysqli_stmt_execute($declined_stmt);
+    $declined_result = mysqli_stmt_get_result($declined_stmt);
+    $total_declined = mysqli_fetch_assoc($declined_result)['total'];
+
     // Current date in YYYY-MM-DD format
     $last_updated = date('Y-m-d');
 
@@ -110,6 +132,18 @@ try {
                 'title' => 'Total Re-opened Accounts',
                 'amount_count' => $total_reopened . ' Accounts',
                 'date' => $last_updated
+            ],
+            [
+                'icon' => '🕒',
+                'title' => 'Total Pending Accounts',
+                'amount_count' => $total_pending . ' Accounts',
+                'date' => $last_updated
+            ],
+            [
+                'icon' => '❌',
+                'title' => 'Total Declined Accounts',
+                'amount_count' => $total_declined . ' Accounts',
+                'date' => $last_updated
             ]
         ]
     ];
@@ -129,5 +163,7 @@ try {
     if (isset($withdrawals_stmt)) mysqli_stmt_close($withdrawals_stmt);
     if (isset($closed_stmt)) mysqli_stmt_close($closed_stmt);
     if (isset($reopened_stmt)) mysqli_stmt_close($reopened_stmt);
+    if (isset($pending_stmt)) mysqli_stmt_close($pending_stmt);
+    if (isset($declined_stmt)) mysqli_stmt_close($declined_stmt);
     if (isset($conn)) mysqli_close($conn);
 } 
