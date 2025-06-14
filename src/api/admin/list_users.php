@@ -1,15 +1,23 @@
 <?php
-session_start();
+
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Initialize SessionManager to start or resume the session
+$sessionManager = SessionManager::getInstance();
+
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../config/database.php';
-
-// Check if admin is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+// Check if admin is logged in using SessionManager
+if (!$sessionManager->isAuthorizedAdmin()) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit();
 }
+
+// Update activity to prolong session
+$sessionManager->updateActivity();
+
+require_once __DIR__ . '/../../config/database.php';
 
 try {
     $db = db_connect();

@@ -1,23 +1,27 @@
 <?php
-session_start();
 
 // Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-error_log("List Tellers: Starting execution");
+ini_set('error_log', __DIR__ . '/../../logs/error.log');
+
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Initialize SessionManager to start or resume the session
+$sessionManager = SessionManager::getInstance();
 
 // Debug headers
 header('X-Debug-Session-Status: ' . (session_status() === PHP_SESSION_ACTIVE ? 'Active' : 'Inactive'));
 header('X-Debug-Session-ID: ' . session_id());
-header('X-Debug-Auth: ' . (isset($_SESSION['auth']) ? 'Present' : 'Missing'));
-header('X-Debug-Auth-Type: ' . ($_SESSION['auth']['type'] ?? 'None'));
+header('X-Debug-Auth: ' . ($sessionManager->isAuthenticated() ? 'Present' : 'Missing'));
+header('X-Debug-Auth-Type: ' . ($sessionManager->isAuthenticated() ? ($sessionManager->getSessionData()['type'] ?? 'None') : 'None'));
 
 // Set JSON header first before any output
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Credentials: true');
 
 // Function to handle errors
@@ -36,18 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Debug session data
 error_log("Session data: " . print_r($_SESSION, true));
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['auth'])) {
-    sendError('No auth session found', 401);
+// Check if user is logged in and is an admin using SessionManager
+if (!$sessionManager->isAuthorizedAdmin()) {
+    sendError('Unauthorized access', 401);
 }
 
-if (!isset($_SESSION['auth']['type'])) {
-    sendError('No auth type found in session', 401);
-}
-
-if ($_SESSION['auth']['type'] !== 'admin') {
-    sendError('User is not an admin. Type: ' . $_SESSION['auth']['type'], 401);
-}
+// Update activity to prolong session
+$sessionManager->updateActivity();
 
 try {
     error_log("List Tellers: Loading database configuration");
