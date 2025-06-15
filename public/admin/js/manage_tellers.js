@@ -1,7 +1,7 @@
 class TellerManager {
     constructor() {
         this.currentPage = 1;
-        this.pageSize = 3;
+        this.pageSize = 6;
         this.totalTellers = 0;
         this.searchTerm = '';
         this.searchTimeout = null;

@@ -29,6 +29,9 @@ body {
     color: var(--color-white);
     padding: 32px 24px;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .sidebar-header {
@@ -88,6 +91,50 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.sidebar-nav {
+    flex: 1;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-info i {
+    font-size: 1.5rem;
+    color: var(--color-lime-green);
+}
+
+.admin-name {
+    font-size: 0.9rem;
+    color: var(--color-white);
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ff6b6b !important;
+    transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+    background-color: rgba(255, 107, 107, 0.1) !important;
+}
+
+.logout-link i {
+    color: #ff6b6b;
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
@@ -95,116 +142,44 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
-/* Top Navigation */
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.sidebar-toggle {
-    background: none;
-    border: none;
-    color: #000;
-    font-size: 1.25rem;
-    cursor: pointer;
-}
-
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.admin-profile {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.admin-name {
-    font-weight: 500;
-}
-
-.profile-dropdown {
-    position: relative;
-}
-
-.profile-btn {
-    background: none;
-    border: none;
-    color: #000;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.profile-btn i {
-    font-size: 1.25rem;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    z-index: 1000;
-}
-
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    color: #000;
-    text-decoration: none;
-    gap: 0.75rem;
-}
-
-.dropdown-content a:hover {
-    background-color: #f5f6fa;
-}
-
-/* Page Content */
-.page-content {
-    padding: 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    height: calc(100vh - 64px); /* Account for top navigation */
-    overflow: hidden;
-}
-
+/* Content Header */
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
-    gap: 1rem;
-    flex-shrink: 0;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
 }
 
-/* Search Box */
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Remove old top nav styles */
+.top-nav,
+.nav-left,
+.nav-right,
+.admin-profile,
+.profile-dropdown,
+.dropdown-content {
+    display: none;
+}
+
+/* Update search box styles */
 .search-box {
     position: relative;
-    max-width: 400px;
-    width: 100%;
+    width: 400px;
 }
 
 .search-box i {
@@ -281,19 +256,17 @@ body {
 }
 
 /* Teller Cards Container */
-.teller-cards-wrapper {
-    min-height: 0;
-}
-
 .teller-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 1.5rem;
     padding: 1rem;
-    min-height: calc(100vh - 180px);
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    min-height: 0;
+    flex: 1;
 }
 
 .teller-cards.loading {
@@ -556,14 +529,17 @@ body {
 
 /* Pagination */
 .pagination {
-    margin-top: auto;
-    padding: 1.5rem;
-    flex-shrink: 0;
+    margin-top: 1rem;
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .pagination-btn {
