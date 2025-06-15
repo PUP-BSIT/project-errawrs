@@ -54,32 +54,6 @@ class AdminDashboard {
             });
         }
 
-        // Event Listeners for teller management
-        const createTellerBtn = document.getElementById('create_teller_btn');
-        if (createTellerBtn) {
-            createTellerBtn.addEventListener('click', () => showModal(createTellerModal));
-        }
-
-        const cancelCreateBtn = document.getElementById('cancel_create');
-        if (cancelCreateBtn) {
-            cancelCreateBtn.addEventListener('click', () => hideModal(createTellerModal));
-        }
-
-        const closeBtn = document.querySelector('.close-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => hideModal(createTellerModal));
-        }
-
-        const createAnotherBtn = document.getElementById('create_another');
-        if (createAnotherBtn) {
-            createAnotherBtn.addEventListener('click', handleCreateAnother);
-        }
-
-        const doneCreatingBtn = document.getElementById('done_creating');
-        if (doneCreatingBtn) {
-            doneCreatingBtn.addEventListener('click', handleDone);
-        }
-
         // Search event listeners with debounce
         const tellerSearch = document.getElementById('teller_search');
         if (tellerSearch) {
@@ -195,38 +169,60 @@ class AdminDashboard {
 
     async loadDashboardStats() {
         try {
+            console.log('Loading dashboard stats...');
             const response = await fetch('/project-errawrs/src/api/admin/dashboard_stats.php', {
                 method: 'GET',
                 credentials: 'include'
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch dashboard stats');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
+            console.log('Dashboard stats response:', data);
+
             if (data.success) {
                 this.updateDashboardStats(data.stats);
             } else {
                 console.error('Failed to load dashboard stats:', data.message);
+                this.showNotification('Failed to load dashboard stats', 'error');
             }
         } catch (error) {
             console.error('Error loading dashboard stats:', error);
+            this.showNotification('Error loading dashboard stats', 'error');
         }
     }
 
     updateDashboardStats(stats) {
+        console.log('Updating dashboard stats:', stats);
+        
         // Update statistics
         const elements = {
             total_users: document.getElementById('total_users'),
             total_transactions: document.getElementById('total_transactions'),
             active_tellers: document.getElementById('active_tellers'),
-            pending_issues: document.getElementById('pending_issues')
+            pending_tellers: document.getElementById('pending_tellers')
         };
 
         for (const [key, element] of Object.entries(elements)) {
             if (element && stats[key] !== undefined) {
+                console.log(`Updating ${key}:`, stats[key]);
                 element.textContent = this.formatNumber(stats[key]);
+                
+                // Update the change indicator based on the stat type
+                const changeElement = element.parentElement.querySelector('.stat-change');
+                if (changeElement) {
+                    if (key === 'total_users' || key === 'total_transactions') {
+                        changeElement.textContent = '+5% from last month';
+                        changeElement.className = 'stat-change positive';
+                    } else {
+                        changeElement.textContent = 'No change';
+                        changeElement.className = 'stat-change neutral';
+                    }
+                }
+            } else {
+                console.warn(`Element not found or stat not available for ${key}`);
             }
         }
     }
@@ -458,62 +454,6 @@ function hideAllSections() {
         section.classList.remove('active');
     });
 }
-
-// Form submission
-createTellerForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Validate passwords match
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirm_password').value;
-    
-    if (password !== confirmPassword) {
-        alert('Passwords do not match!');
-        return;
-    }
-
-    const formData = {
-        first_name: document.getElementById('first_name').value,
-        last_name: document.getElementById('last_name').value,
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        password: password
-    };
-
-    try {
-        const response = await fetch('/project-errawrs/src/api/admin/create_teller.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData),
-            credentials: 'include'
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            // Update success modal with teller details
-            document.getElementById('created_teller_id').textContent = data.teller.teller_number;
-            document.getElementById('created_teller_name').textContent = `${data.teller.first_name} ${data.teller.last_name}`;
-            
-            // Hide create modal and show success modal
-            hideModal(createTellerModal);
-            showModal(successModal);
-            
-            // Refresh tellers list
-            loadTellers();
-            
-            // Reset form
-            createTellerForm.reset();
-        } else {
-            alert(data.message || 'Failed to create teller');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while creating the teller');
-    }
-});
 
 // Functions
 async function loadTellers(searchTerm = '', page = 1) {
