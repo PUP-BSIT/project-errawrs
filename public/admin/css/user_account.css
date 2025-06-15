@@ -133,7 +133,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px;
+    padding: 25px 20px;
     gap: 1rem;
     flex-shrink: 0;
 }
@@ -171,6 +171,8 @@ body {
 /* User Cards Container */
 .user-cards-wrapper {
     padding: 0 25px 0 25px;
+    display: flex;
+    justify-content: center;
 }
 
 .user-cards {
@@ -179,7 +181,9 @@ body {
     gap: 1.5rem;
     height: 100%;
     align-content: start;
-    justify-content: center; /* Center the grid horizontally */
+    width: fit-content; /* Allow container to fit content */
+    min-width: 380px; /* Minimum width for single card */
+    max-width: calc(380px * 3 + 1.5rem * 2); /* Maximum width for three cards with gaps */
 }
 
 .user-cards.loading {
@@ -202,7 +206,7 @@ body {
 }
 
 .user-card {
-    width: 380px; /* Fixed width */
+    width: 380px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
