@@ -29,6 +29,9 @@ body {
     color: var(--color-white);
     padding: 32px 24px;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .sidebar-header {
@@ -49,11 +52,18 @@ body {
     color: var(--color-lime-green);
 }
 
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .nav-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    height: 100%;
 }
 
 .nav-item {
@@ -93,90 +103,6 @@ body {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
-}
-
-/* Top Navigation */
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.sidebar-toggle {
-    background: none;
-    border: none;
-    color: #000;
-    font-size: 1.25rem;
-    cursor: pointer;
-}
-
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.admin-profile {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.admin-name {
-    font-weight: 500;
-}
-
-.profile-dropdown {
-    position: relative;
-}
-
-.profile-btn {
-    background: none;
-    border: none;
-    color: #000;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.profile-btn i {
-    font-size: 1.25rem;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    z-index: 1000;
-}
-
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    color: #000;
-    text-decoration: none;
-    gap: 0.75rem;
-}
-
-.dropdown-content a:hover {
-    background-color: #f5f6fa;
 }
 
 /* Transaction Content Styles */
@@ -376,6 +302,19 @@ body {
     margin-bottom: 16px;
     text-align: center;
     font-weight: 500;
+}
+
+/* Add logout item styles */
+.logout-item {
+    margin-top: auto;
+}
+
+.logout-item .nav-link {
+    color: #ff4d4d;
+}
+
+.logout-item .nav-link:hover {
+    background-color: rgba(255, 77, 77, 0.1);
 }
 
 /* Responsive Design */
