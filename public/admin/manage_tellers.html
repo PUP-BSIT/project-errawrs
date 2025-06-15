@@ -52,48 +52,35 @@
                 </li>
             </ul>
         </nav>
+
+        <!-- Logout Section -->
+        <div class="sidebar-footer">
+            <a href="#" id="logout_btn" class="nav-link logout-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Top Navigation Bar -->
-        <nav class="top-nav">
-            <div class="nav-left">
-                <button id="sidebar_toggle" class="sidebar-toggle">
-                </button>
-                <h1 class="page-title">Manage Tellers</h1>
-            </div>
-            <div class="nav-right">
-                <div class="admin-profile">
-                    <span class="admin-name">Welcome, <span id="admin_name">Admin</span></span>
-                    <div class="profile-dropdown">
-                        <button class="profile-btn">
-                            <i class="fas fa-user-circle"></i>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" id="logout_btn">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
         <!-- Page Content -->
         <div class="page-content">
             <!-- Header Actions -->
             <div class="content-header">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="search_teller" placeholder="Search tellers by name, number, or email">
+                <div class="teller-stats">
+                    <h1 class="stats-title">Total Tellers: <span id="total_tellers_count">0</span></h1>
                 </div>
-                <button id="create_teller_btn" class="btn-primary">
-                    <i class="fas fa-plus"></i>
-                    Create New Teller
-                </button>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search_teller" placeholder="Search tellers by name, number, or email">
+                    </div>
+                    <button id="create_teller_btn" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Create New Teller
+                    </button>
+                </div>
             </div>
 
             <!-- Teller Cards Container -->

@@ -8,9 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const userCardsContainer = document.getElementById('user_cards');
     const paginationContainer = document.getElementById('pagination');
     const searchInput = document.getElementById('search_user');
-    const sidebarToggle = document.getElementById('sidebar_toggle');
-    const sidebar = document.querySelector('.sidebar');
     const logoutBtn = document.getElementById('logout_btn');
+    const pageTitle = document.querySelector('.page-title');
 
     // Initialize
     fetchUsers();
@@ -20,11 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Search functionality
         searchInput.addEventListener('input', handleSearch);
         
-        // Sidebar toggle
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
         // Logout
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -53,9 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             allUsers = data.list;
+            // Sort users: inactive first, then by creation date
+            allUsers.sort((a, b) => {
+                if (a.status !== b.status) {
+                    return a.status === 'inactive' ? -1 : 1;
+                }
+                return new Date(b.user_created_at) - new Date(a.user_created_at);
+            });
+            
             filteredUsers = [...allUsers];
             renderUsers();
             renderPagination();
+            updatePageTitle();
             showToast('Users loaded successfully', 'success');
 
         } catch (error) {
@@ -64,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             userCardsContainer.classList.remove('loading');
         }
+    }
+
+    function updatePageTitle() {
+        pageTitle.innerHTML = `Total Users: <span>${allUsers.length}</span>`;
     }
 
     function renderUsers() {
@@ -92,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3>${user.first_name} ${user.last_name}</h3>
                         <div class="account-number">Account #${user.user_id}</div>
                     </div>
-                    <span class="status-badge status-active">Active</span>
+                    <span class="status-badge status-${user.status || 'active'}">${user.status || 'active'}</span>
                 </div>
                 <div class="user-details">
                     <div class="detail-row">
@@ -174,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = 1;
         renderUsers();
         renderPagination();
+        updatePageTitle(); // Update title when filtering
     }
 
     function renderNoResults() {

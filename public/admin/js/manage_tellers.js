@@ -1,7 +1,7 @@
 class TellerManager {
     constructor() {
         this.currentPage = 1;
-        this.pageSize = 10;
+        this.pageSize = 6;
         this.totalTellers = 0;
         this.searchTerm = '';
         this.searchTimeout = null;
@@ -115,6 +115,11 @@ class TellerManager {
             
             if (data.success) {
                 this.totalTellers = data.total || 0;
+                // Update total tellers count display
+                const totalCountElement = document.getElementById('total_tellers_count');
+                if (totalCountElement) {
+                    totalCountElement.textContent = this.totalTellers.toLocaleString();
+                }
                 this.displayTellers(data.tellers || []);
                 this.updatePagination();
             } else {
@@ -144,14 +149,27 @@ class TellerManager {
             return;
         }
 
-        container.innerHTML = tellers.map(teller => `
+        // Sort tellers: pending first, then by status (active/inactive)
+        const sortedTellers = [...tellers].sort((a, b) => {
+            // If a is pending and b is not, a comes first
+            if (a.status === 'pending' && b.status !== 'pending') return -1;
+            // If b is pending and a is not, b comes first
+            if (b.status === 'pending' && a.status !== 'pending') return 1;
+            // If both are pending or both are not pending, sort by status
+            if (a.status === b.status) return 0;
+            // Active comes before inactive
+            return a.status === 'active' ? -1 : 1;
+        });
+
+        container.innerHTML = sortedTellers.map(teller => `
             <div class="teller-card">
                 <div class="teller-header">
                     <div class="teller-info">
                         <h3>${teller.first_name} ${teller.last_name}</h3>
                         <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
                     </div>
-                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 
+                        teller.status === 'pending' ? 'status-pending' : 'status-inactive'}">
                         ${teller.status}
                     </span>
                 </div>
@@ -168,11 +186,19 @@ class TellerManager {
                     <button class="action-btn" onclick="tellerManager.resetPassword(${teller.teller_id})" title="Reset Password">
                         <i class="fas fa-key"></i>
                     </button>
-                    <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
-                            onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
-                            title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
-                        <i class="fas fa-power-off"></i>
-                    </button>
+                    ${teller.status !== 'pending' ? `
+                        <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
+                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
+                                title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    ` : `
+                        <button class="action-btn success" 
+                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, 'pending')" 
+                                title="Activate">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    `}
                 </div>
             </div>
         `).join('');
@@ -188,25 +214,45 @@ class TellerManager {
         
         // Previous button
         html += `
-            <button ${this.currentPage <= 1 ? 'disabled' : ''} 
+            <button class="pagination-btn" ${this.currentPage <= 1 ? 'disabled' : ''} 
                     onclick="tellerManager.changePage(${this.currentPage - 1})">
+                <i class="fas fa-chevron-left"></i>
                 Previous
             </button>`;
 
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
+        // Page numbers with ellipsis
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="tellerManager.changePage(1)">1</button>`;
+            if (startPage > 2) {
+                html += `<span class="pagination-ellipsis">...</span>`;
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
             html += `
-                <button class="${i === this.currentPage ? 'active' : ''}"
+                <button class="pagination-btn ${i === this.currentPage ? 'active' : ''}"
                         onclick="tellerManager.changePage(${i})">
                     ${i}
                 </button>`;
         }
 
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                html += `<span class="pagination-ellipsis">...</span>`;
+            }
+            html += `<button onclick="tellerManager.changePage(${totalPages})">${totalPages}</button>`;
+        }
+
         // Next button
         html += `
-            <button ${this.currentPage >= totalPages ? 'disabled' : ''} 
+            <button class="pagination-btn" ${this.currentPage >= totalPages ? 'disabled' : ''} 
                     onclick="tellerManager.changePage(${this.currentPage + 1})">
                 Next
+                <i class="fas fa-chevron-right"></i>
             </button>`;
 
         container.innerHTML = html;
@@ -433,7 +479,7 @@ class TellerManager {
 
         if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
 
-        const isActivating = currentStatus === 'inactive';
+        const isActivating = currentStatus === 'inactive' || currentStatus === 'pending';
         
         // Update modal content
         modalTitle.textContent = isActivating ? 'Activate Teller' : 'Deactivate Teller';
