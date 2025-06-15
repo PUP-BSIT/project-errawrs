@@ -7,7 +7,7 @@
     --color-white: #ffffff;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
-    --color-red: #ff6b6b;
+    --color-red: #ff4d4d;
 }
 
 * {
@@ -99,16 +99,17 @@ body {
 .logout-link {
     display: flex;
     align-items: center;
-    color: #ff6b6b;
+    color: var(--color-red);
     transition: all 0.3s ease;
 }
 
 .logout-link:hover {
     background-color: rgba(255, 107, 107, 0.1);
+    color: var(--color-red);
 }
 
 .logout-link i {
-    color: #ff6b6b;
+    color: var(--color-red);
 }
 
 /* Main Content Styles */
