@@ -1,15 +1,21 @@
 <?php
-session_start();
 
 // Prevent any HTML error output
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
 // Set JSON header first before any output
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Origin: http://localhost");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
+
+// Require SessionManager before any session-related operations
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Get the session manager instance
+$sessionManager = SessionManager::getInstance();
 
 // Function to handle errors
 function sendError($message, $code = 400) {
@@ -30,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     sendError('Method not allowed', 405);
 }
 
-// Verify admin is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+// Verify admin is logged in using SessionManager
+if (!$sessionManager->isAuthorizedAdmin()) {
     sendError('Unauthorized access', 401);
 }
 
