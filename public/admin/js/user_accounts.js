@@ -11,6 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logout_btn');
     const pageTitle = document.querySelector('.page-title');
 
+    // Log elements for debugging
+    console.log('userCardsContainer:', userCardsContainer);
+    console.log('paginationContainer:', paginationContainer);
+    console.log('searchInput:', searchInput);
+    console.log('logoutBtn:', logoutBtn);
+    console.log('pageTitle:', pageTitle);
+
+    // Ensure critical elements exist before proceeding
+    if (!userCardsContainer || !paginationContainer || !searchInput || !logoutBtn || !pageTitle) {
+        console.error('Critical DOM elements not found. Stopping script.');
+        return;
+    }
+
     // Initialize
     fetchUsers();
     setupEventListeners();
@@ -70,10 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePageTitle() {
-        pageTitle.innerHTML = `Total Users: <span>${allUsers.length}</span>`;
+        const totalUsersCountElement = document.getElementById('total_users_count');
+        if (totalUsersCountElement) {
+            totalUsersCountElement.textContent = allUsers.length;
+        }
     }
 
     function renderUsers() {
+        if (!userCardsContainer) {
+            console.error('userCardsContainer is null in renderUsers. Cannot render users.');
+            return;
+        }
         userCardsContainer.innerHTML = '';
         
         if (filteredUsers.length === 0) {
@@ -120,6 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
+            console.log('Attempting to append card. Current userCardsContainer:', userCardsContainer);
+            console.log('Card element:', card);
+            console.log('Card innerHTML:', card.innerHTML);
             userCardsContainer.appendChild(card);
         });
     }
@@ -211,12 +234,21 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="toast-close"><i class="fas fa-times"></i></button>
         `;
 
-        toastContainer.appendChild(toast);
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            // Fallback: append to body if toast container is not found
+            document.body.appendChild(toast);
+            console.warn('Toast container not found, appending toast to body.');
+        }
 
         // Auto-remove after 3 seconds
         setTimeout(() => toast.remove(), 3000);
 
         // Manual close
-        toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
+        const closeButton = toast.querySelector('.toast-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => toast.remove());
+        }
     }
 });
