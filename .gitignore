@@ -11,5 +11,16 @@ techblinders_api.md
 ./src/api/services/README.md
 stackovercash_api_doc.md
 
-src/logs/error.log
+# Logs
+/src/logs/*
+*.log
+error.log
+error_log
+debug.log
+
+# Temporary files
+/tmp/*
+!tmp/.gitkeep
+
+# Dependencies
 /vendor/
