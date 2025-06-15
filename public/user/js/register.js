@@ -6,6 +6,8 @@ const FORM_VALIDATION = {
 	USERNAME_MAX_LENGTH: 20,
 	FIRST_NAME_MIN_LENGTH: 2,
 	LAST_NAME_MIN_LENGTH: 2,
+	MIN_AGE: 18,
+	MAX_AGE: 100,
 };
 
 const NOTIFICATION_TYPES = {
@@ -17,7 +19,7 @@ const NOTIFICATION_TYPES = {
 
 const STEPS = {
 	STEP_ONE_IDENTIFICATION: 1,
-	STEP_TWO_CONTACT_INFO: 2,
+	STEP_TWO_CONTACT: 2,
 	STEP_THREE_PROCESSING: 3,
 };
 
@@ -35,6 +37,7 @@ const TIMER_SETTINGS = {
 	API_SIMULATION_DELAY_SHORT: 1000,
 	API_SIMULATION_DELAY_MEDIUM: 1500,
 	API_SIMULATION_DELAY_LONG: 2000,
+	REDIRECT_DELAY: 2000,
 };
 
 const INPUT_TYPES = {
@@ -57,374 +60,18 @@ class RegistrationManager {
 		this.formData = null;
 		this.idImage = null;
 		this.isUnder18 = false;
-		this.eventListeners = new Map(); // Track event listeners for cleanup
-		this.bindEvents();
-		this.restoreFormData(); // Restore data on load
-		this.updateStepIndicators(); // Update indicators on load
-	}
 
-	bindEvents() {
-		// Clean up any existing event listeners
-		this.cleanupEventListeners();
+		// Initialize forms
+		this.initializeIdentificationForm();
+		this.initializeContactForm();
+		this.initializeOtpForm();
 
-		// Form submissions
-		const identificationForm = document.getElementById(
-			"identification_form"
-		);
-		const contactInfoForm = document.getElementById("contact_info_form");
+		// Initialize back buttons
+		this.initializeBackButtons();
 
-		if (identificationForm) {
-			identificationForm.addEventListener("submit", (e) => {
-				this.handleIdentificationSubmit(e);
-			});
-			identificationForm
-				.querySelectorAll("input, select")
-				.forEach((input) => {
-					this.addEventListenerWithCleanup(input, "input", () =>
-						this.saveFormData()
-					);
-				});
-		}
-
-		if (contactInfoForm) {
-			this.addEventListenerWithCleanup(
-				contactInfoForm,
-				"submit",
-				(e) => {
-					this.handleContactInfoSubmit(e);
-				}
-			);
-			contactInfoForm
-				.querySelectorAll("input, select")
-				.forEach((input) => {
-					this.addEventListenerWithCleanup(input, "input", () =>
-						this.saveFormData()
-					);
-				});
-		}
-
-		// Back button handlers
-		const backToIdentificationBtn = document.getElementById(
-			"back_to_identification"
-		);
-		if (backToIdentificationBtn) {
-			this.addEventListenerWithCleanup(
-				backToIdentificationBtn,
-				"click",
-				() => {
-					this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
-				}
-			);
-		}
-
-		// Contact form pagination buttons
-		const toContactPage2Btn = document.getElementById("to_contact_page_2");
-		const backToContactPage1Btn = document.getElementById(
-			"back_to_contact_page_1"
-		);
-		const toContactPage3Btn = document.getElementById("to_contact_page_3");
-		const backToContactPage2Btn = document.getElementById(
-			"back_to_contact_page_2"
-		);
-
-		if (toContactPage2Btn) {
-			this.addEventListenerWithCleanup(
-				toContactPage2Btn,
-				"click",
-				() => {
-					this.validateContactPage1() &&
-						this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
-				}
-			);
-		}
-
-		if (backToContactPage1Btn) {
-			this.addEventListenerWithCleanup(
-				backToContactPage1Btn,
-				"click",
-				() => {
-					this.goToContactPage(CONTACT_PAGES.PAGE_ONE);
-				}
-			);
-		}
-
-		if (toContactPage3Btn) {
-			this.addEventListenerWithCleanup(
-				toContactPage3Btn,
-				"click",
-				() => {
-					this.validateContactPage2() &&
-						this.goToContactPage(CONTACT_PAGES.PAGE_THREE);
-				}
-			);
-		}
-
-		if (backToContactPage2Btn) {
-			this.addEventListenerWithCleanup(
-				backToContactPage2Btn,
-				"click",
-				() => {
-					this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
-				}
-			);
-		}
-
-		// Pagination dots click handlers
-		document.querySelectorAll(".pagination-dot").forEach((dot) => {
-			this.addEventListenerWithCleanup(dot, "click", (e) => {
-				const pageNumber = parseInt(dot.dataset.page);
-				if (!isNaN(pageNumber)) {
-					this.handlePaginationDotClick(pageNumber);
-				}
-			});
-		});
-
-		// Step indicator click handlers (for navigation)
-		document.querySelectorAll(".step").forEach((stepElement) => {
-			this.addEventListenerWithCleanup(stepElement, "click", (e) => {
-				const stepNumber = parseInt(stepElement.dataset.step);
-				if (!isNaN(stepNumber)) {
-					this.goToStep(stepNumber);
-				}
-			});
-		});
-
-		// Date of birth validation
-		const dobInput = document.getElementById("date_of_birth");
-		if (dobInput) {
-			this.addEventListenerWithCleanup(dobInput, "change", (e) => {
-				this.validateAge(e.target);
-				this.saveFormData();
-			});
-			const today = new Date();
-			const maxDate = new Date(
-				today.getFullYear() - 18,
-				today.getMonth(),
-				today.getDate()
-			);
-			dobInput.max = maxDate.toISOString().split("T")[0];
-		}
-
-		// OTP Modal handlers
-		const closeOtpModalBtn = document.getElementById("close_otp_modal");
-		const otpVerificationForm = document.getElementById(
-			"otp_verification_form"
-		);
-		const resendOtpBtn = document.getElementById("resend_otp");
-
-		if (closeOtpModalBtn) {
-			this.addEventListenerWithCleanup(closeOtpModalBtn, "click", () => {
-				this.hideOtpModal();
-			});
-		}
-
-		if (otpVerificationForm) {
-			this.addEventListenerWithCleanup(
-				otpVerificationForm,
-				"submit",
-				(e) => {
-					e.preventDefault();
-					this.verifyOtp();
-				}
-			);
-		}
-
-		if (resendOtpBtn) {
-			this.addEventListenerWithCleanup(resendOtpBtn, "click", (e) => {
-				e.preventDefault();
-				this.resendOtp();
-			});
-		}
-
-		// File upload handling
-		const fileInput = document.getElementById("id_image");
-		const uploadContainer = document.querySelector(
-			".file-upload-container"
-		);
-		const removeFileBtn = document.getElementById("remove_file");
-
-		if (fileInput && uploadContainer) {
-			this.addEventListenerWithCleanup(fileInput, "change", (e) =>
-				this.handleFileSelect(e)
-			);
-
-			this.addEventListenerWithCleanup(
-				uploadContainer,
-				"dragover",
-				(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					uploadContainer.classList.add("drag-over");
-				}
-			);
-
-			this.addEventListenerWithCleanup(
-				uploadContainer,
-				"dragleave",
-				(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					uploadContainer.classList.remove("drag-over");
-				}
-			);
-
-			this.addEventListenerWithCleanup(uploadContainer, "drop", (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				uploadContainer.classList.remove("drag-over");
-
-				const files = e.dataTransfer.files;
-				if (files.length) {
-					fileInput.files = files;
-					this.handleFileSelect({ target: fileInput });
-				}
-			});
-
-			if (removeFileBtn) {
-				this.addEventListenerWithCleanup(
-					removeFileBtn,
-					"click",
-					() => {
-						this.idImage = null;
-						fileInput.value = "";
-						const previewContainer = document.querySelector(
-							".preview-container"
-						);
-						const imagePreview =
-							document.getElementById("image_preview");
-						if (previewContainer)
-							previewContainer.style.display = "none";
-						if (imagePreview) imagePreview.src = "";
-					}
-				);
-			}
-		}
-
-		// Real-time form validation
-		this.setupFormValidation();
-	}
-
-	setupFormValidation() {
-		// Real-time validation for email and phone number
-		const emailInput = document.getElementById("email");
-		if (emailInput) {
-			this.addEventListenerWithCleanup(emailInput, "input", (e) => {
-				this.validateEmail(e.target);
-			});
-		}
-
-		const phoneNumberInput = document.getElementById("phone_number");
-		if (phoneNumberInput) {
-			this.addEventListenerWithCleanup(
-				phoneNumberInput,
-				"input",
-				(e) => {
-					this.validatePhoneNumber(e.target);
-				}
-			);
-		}
-
-		// Real-time validation for personal details and address fields
-		const firstNameInput = document.getElementById("first_name");
-		if (firstNameInput) {
-			this.addEventListenerWithCleanup(firstNameInput, "input", (e) => {
-				this.validateName(
-					e.target,
-					FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
-				);
-			});
-		}
-
-		const lastNameInput = document.getElementById("last_name");
-		if (lastNameInput) {
-			this.addEventListenerWithCleanup(lastNameInput, "input", (e) => {
-				this.validateName(
-					e.target,
-					FORM_VALIDATION.LAST_NAME_MIN_LENGTH
-				);
-			});
-		}
-
-		const nationalityInput = document.getElementById("nationality");
-		if (nationalityInput) {
-			this.addEventListenerWithCleanup(
-				nationalityInput,
-				"change",
-				(e) => {
-					this.setInputValidation(
-						e.target,
-						e.target.value !== "",
-						"Please select your nationality"
-					);
-				}
-			);
-		}
-
-		const streetInput = document.getElementById("street");
-		if (streetInput) {
-			this.addEventListenerWithCleanup(streetInput, "input", (e) => {
-				this.setInputValidation(
-					e.target,
-					e.target.value.trim() !== "",
-					"Please enter your street address"
-				);
-			});
-		}
-
-		const cityInput = document.getElementById("city");
-		if (cityInput) {
-			this.addEventListenerWithCleanup(cityInput, "input", (e) => {
-				this.setInputValidation(
-					e.target,
-					e.target.value.trim() !== "",
-					"Please enter your city"
-				);
-			});
-		}
-
-		const zipCodeInput = document.getElementById("zip_code");
-		if (zipCodeInput) {
-			this.addEventListenerWithCleanup(zipCodeInput, "input", (e) => {
-				this.validateZipCode(e.target);
-			});
-		}
-
-		const countryInput = document.getElementById("country");
-		if (countryInput) {
-			this.addEventListenerWithCleanup(countryInput, "change", (e) => {
-				this.setInputValidation(
-					e.target,
-					e.target.value !== "",
-					"Please select your country"
-				);
-			});
-		}
-	}
-
-	setInputValidation(input, isValid, errorMessage) {
-		const formGroup = input.closest(".form-group");
-
-		if (!formGroup) return;
-
-		formGroup.classList.remove("error", "success");
-
-		const existingError = formGroup.querySelector(".error-message");
-		if (existingError) {
-			existingError.remove();
-		}
-
-		if (input.value.length > 0) {
-			if (isValid) {
-				formGroup.classList.add("success");
-			} else {
-				formGroup.classList.add("error");
-
-				const errorDiv = document.createElement("div");
-				errorDiv.className = "error-message";
-				errorDiv.textContent = errorMessage;
-				formGroup.appendChild(errorDiv);
-			}
-		}
+		// Load saved form data and update UI
+		this.loadFormData();
+		this.updateStepIndicators();
 	}
 
 	handleIdentificationSubmit(e) {
@@ -465,7 +112,7 @@ class RegistrationManager {
 
 		if (allFieldsValid) {
 			this.saveFormData();
-			this.goToStep(STEPS.STEP_TWO_CONTACT_INFO);
+			this.goToStep(STEPS.STEP_TWO_CONTACT);
 		} else {
 			this.showNotification(
 				"Please fill in all identification details correctly.",
@@ -495,38 +142,30 @@ class RegistrationManager {
 			return;
 		}
 
-		const dobInput = document.getElementById("date_of_birth");
-		if (dobInput && !this.validateAge(dobInput)) {
-			this.showNotification(
-				"You must be at least 18 years old to register.",
-				NOTIFICATION_TYPES.ERROR
-			);
-			this.goToContactPage(CONTACT_PAGES.PAGE_ONE);
-			return;
-		}
-
+		// Save form data
 		this.saveFormData();
-		this.requestOtp();
-	}
 
-	requestOtp() {
 		// Show loading state
 		const submitBtn = document.querySelector(
 			'#contact_info_form button[type="submit"]'
 		);
 		if (submitBtn) {
-			submitBtn.innerHTML =
-				'<i class="fas fa-spinner fa-spin"></i> Sending OTP...';
 			submitBtn.disabled = true;
+			submitBtn.innerHTML = BUTTON_STATES.PROCESSING;
 		}
 
+		// Request OTP
+		this.requestOtp();
+	}
+
+	requestOtp() {
 		// Get the phone number from the form
-		const phoneNumber =
-			document.getElementById("phone_number")?.value || "";
+		const phoneNumber = document.getElementById("phone_number")?.value || "";
 
 		// Create the request data
 		const requestData = {
 			phone_number: phoneNumber,
+			purpose: 'registration'
 		};
 
 		// Make API call to request OTP
@@ -539,48 +178,42 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+					});
 				}
 				return response.json();
 			})
 			.then((data) => {
 				// Reset submit button
+				const submitBtn = document.querySelector('#contact_info_form button[type="submit"]');
 				if (submitBtn) {
-					submitBtn.innerHTML =
-						'Submit <i class="fas fa-arrow-right"></i>';
+					submitBtn.innerHTML = 'Submit <i class="fas fa-arrow-right"></i>';
 					submitBtn.disabled = false;
 				}
 
 				if (data.success) {
+					this.showNotification(data.message, NOTIFICATION_TYPES.SUCCESS);
 					this.showOtpModal();
 				} else {
 					this.showNotification(
-						data.error ||
-							"Failed to send verification code. Please try again.",
+						data.error || "Failed to send verification code. Please try again.",
 						NOTIFICATION_TYPES.ERROR
 					);
 				}
 			})
 			.catch((error) => {
-				console.error("Error requesting OTP:", error);
-
-				// FALLBACK: If API is not available, just show the OTP modal anyway
-				// This is for development/demo purposes only
+				// Reset submit button
+				const submitBtn = document.querySelector('#contact_info_form button[type="submit"]');
 				if (submitBtn) {
-					submitBtn.innerHTML =
-						'Submit <i class="fas fa-arrow-right"></i>';
+					submitBtn.innerHTML = 'Submit <i class="fas fa-arrow-right"></i>';
 					submitBtn.disabled = false;
 				}
 
-				// Store a mock OTP in localStorage for demo purposes
-				localStorage.setItem("mockOtp", "123456");
-
-				// Show notification and OTP modal
 				this.showNotification(
-					"Using demo mode for OTP verification. Use code: 123456",
-					NOTIFICATION_TYPES.INFO
+					error.message || "An error occurred. Please try again.",
+					NOTIFICATION_TYPES.ERROR
 				);
-				this.showOtpModal();
 			});
 	}
 
@@ -593,25 +226,33 @@ class RegistrationManager {
 
 		let isValid = true;
 
-		if (
-			!inputs.firstName ||
-			!this.validateName(
-				inputs.firstName,
-				FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
-			)
-		) {
+		// Check if all inputs exist
+		for (const [key, input] of Object.entries(inputs)) {
+			if (!input) {
+				console.error(`${key} input not found`);
+				isValid = false;
+			}
+		}
+
+		if (!isValid) {
+			this.showNotification("An error occurred. Please try again.", NOTIFICATION_TYPES.ERROR);
+			return false;
+		}
+
+		// Validate first name
+		if (!this.validateName(inputs.firstName, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH)) {
+			this.setInputValidation(inputs.firstName, false, "Please enter a valid first name");
 			isValid = false;
 		}
-		if (
-			!inputs.lastName ||
-			!this.validateName(
-				inputs.lastName,
-				FORM_VALIDATION.LAST_NAME_MIN_LENGTH
-			)
-		) {
+
+		// Validate last name
+		if (!this.validateName(inputs.lastName, FORM_VALIDATION.LAST_NAME_MIN_LENGTH)) {
+			this.setInputValidation(inputs.lastName, false, "Please enter a valid last name");
 			isValid = false;
 		}
-		if (!inputs.dateOfBirth || !this.validateAge(inputs.dateOfBirth)) {
+
+		// Validate date of birth
+		if (!this.validateAge(inputs.dateOfBirth)) {
 			isValid = false;
 		}
 
@@ -635,12 +276,11 @@ class RegistrationManager {
 		let isValid = true;
 
 		if (!inputs.email || !this.validateEmail(inputs.email)) {
+			this.setInputValidation(inputs.email, false, "Please enter a valid email address");
 			isValid = false;
 		}
-		if (
-			!inputs.phoneNumber ||
-			!this.validatePhoneNumber(inputs.phoneNumber)
-		) {
+		if (!inputs.phoneNumber || !this.validatePhoneNumber(inputs.phoneNumber)) {
+			this.setInputValidation(inputs.phoneNumber, false, "Please enter a valid phone number");
 			isValid = false;
 		}
 		if (!inputs.nationality || inputs.nationality.value === "") {
@@ -689,6 +329,7 @@ class RegistrationManager {
 			isValid = false;
 		}
 		if (!inputs.zipCode || !this.validateZipCode(inputs.zipCode)) {
+			this.setInputValidation(inputs.zipCode, false, "Please enter a valid zip code");
 			isValid = false;
 		}
 		if (!inputs.country || inputs.country.value === "") {
@@ -740,39 +381,35 @@ class RegistrationManager {
 
 		// Apply slide out animation to current page
 		if (currentPageElement) {
-			currentPageElement.classList.add(
-				direction === "right" ? "slide-left" : "slide-right"
-			);
-
-			setTimeout(() => {
-				currentPageElement.classList.remove(
-					"active",
-					"slide-left",
-					"slide-right"
-				);
+			currentPageElement.classList.add(direction === "right" ? "slide-left" : "slide-right");
+			currentPageElement.addEventListener("transitionend", () => {
+				currentPageElement.classList.remove("active", "slide-left", "slide-right");
 				currentPageElement.style.display = "none";
+			}, { once: true });
 
-				// Apply slide in animation to new page
-				newPageElement.classList.add(
-					direction === "right" ? "slide-in-right" : "slide-in-left"
-				);
-				newPageElement.style.display = "block";
+			// Show and animate new page
+			newPageElement.style.display = "block";
+			newPageElement.classList.add(direction === "right" ? "slide-in-right" : "slide-in-left");
 
-				setTimeout(() => {
-					newPageElement.classList.add("active");
-					newPageElement.classList.remove(
-						"slide-in-right",
-						"slide-in-left"
-					);
-				}, 10);
-			}, 300);
+			// Force reflow
+			newPageElement.offsetHeight;
+
+			// Add active class to trigger animation
+			newPageElement.classList.add("active");
+			
+			// Remove animation classes after transition
+			newPageElement.addEventListener("transitionend", () => {
+				newPageElement.classList.remove("slide-in-right", "slide-in-left");
+			}, { once: true });
 		} else {
+			// If no current page, just show the new page
 			newPageElement.style.display = "block";
 			newPageElement.classList.add("active");
 		}
 
 		this.currentContactPage = page;
 		this.updatePaginationDots();
+		this.saveFormData();
 	}
 
 	updatePaginationDots() {
@@ -805,54 +442,99 @@ class RegistrationManager {
 		this.goToContactPage(pageNumber);
 	}
 
-	showOtpModal() {
-		const otpModal = document.getElementById("otp_modal");
-		if (otpModal) {
-			otpModal.style.display = "flex";
-			// Trigger reflow to ensure the transition works
-			otpModal.offsetHeight;
-			otpModal.classList.add("active");
+	initializeOtpForm() {
+		const otpForm = document.getElementById("otp_verification_form");
+		if (!otpForm) return;
 
-			// Start countdown for resend button
-			this.startResendCountdown();
+		otpForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			this.verifyOtp();
+		});
 
-			// Focus on OTP input
-			const otpInput = document.getElementById("otp_code");
-			if (otpInput) {
-				otpInput.value = "";
-				otpInput.focus();
-			}
-
-			// Close modal on outside click
-			otpModal.addEventListener("click", (e) => {
-				if (e.target === otpModal) {
-					this.hideOtpModal();
-				}
+		// Add input validation for OTP code
+		const otpInput = document.getElementById("otp_code");
+		if (otpInput) {
+			otpInput.addEventListener("input", (e) => {
+				e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
 			});
+		}
 
-			// Handle escape key
-			document.addEventListener("keydown", (e) => {
-				if (e.key === "Escape") {
-					this.hideOtpModal();
+		// Handle resend OTP
+		const resendBtn = document.getElementById("resend_otp");
+		if (resendBtn) {
+			resendBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (resendBtn.style.pointerEvents !== "none") {
+					this.handleContactInfoSubmit(e);
 				}
 			});
 		}
 	}
 
+	showOtpModal() {
+		const otpModal = document.getElementById("otp_modal");
+		const otpInput = document.getElementById("otp_code");
+		
+		if (!otpModal || !otpInput) {
+			console.error("OTP modal elements not found");
+			return;
+		}
+
+		// Reset OTP input
+		otpInput.value = "";
+
+		// Show modal with animation
+		otpModal.style.display = "flex";
+		requestAnimationFrame(() => {
+			otpModal.classList.add("active");
+		});
+
+		// Focus on OTP input
+		otpInput.focus();
+
+		// Start countdown for resend button
+		this.startResendCountdown();
+
+		// Setup close handlers
+		const closeBtn = document.getElementById("close_otp_modal");
+		if (closeBtn) {
+			closeBtn.onclick = (e) => {
+				e.preventDefault();
+				this.hideOtpModal();
+			};
+		}
+
+		// Close on outside click
+		otpModal.onclick = (e) => {
+			if (e.target === otpModal) {
+				this.hideOtpModal();
+			}
+		};
+
+		// Close on escape key
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape") {
+				this.hideOtpModal();
+			}
+		}, { once: true });
+	}
+
 	hideOtpModal() {
 		const otpModal = document.getElementById("otp_modal");
-		if (otpModal) {
-			otpModal.classList.remove("active");
-			// Wait for the fade out animation to complete
-			setTimeout(() => {
-				otpModal.style.display = "none";
-				// Reset OTP input
-				const otpInput = document.getElementById("otp_code");
-				if (otpInput) {
-					otpInput.value = "";
-				}
-			}, 300);
-		}
+		if (!otpModal) return;
+
+		// Remove active class to trigger fade out animation
+		otpModal.classList.remove("active");
+
+		// Hide modal after animation
+		setTimeout(() => {
+			otpModal.style.display = "none";
+			// Reset OTP input
+			const otpInput = document.getElementById("otp_code");
+			if (otpInput) {
+				otpInput.value = "";
+			}
+		}, 300);
 	}
 
 	startResendCountdown() {
@@ -866,20 +548,23 @@ class RegistrationManager {
 
 		const countdownInterval = setInterval(() => {
 			countdown--;
-			resendBtn.textContent = `Resend code in ${countdown}s`;
-
 			if (countdown <= 0) {
 				clearInterval(countdownInterval);
 				resendBtn.textContent = "Resend code";
 				resendBtn.style.pointerEvents = "auto";
 				resendBtn.style.opacity = "1";
+			} else {
+				resendBtn.textContent = `Resend code in ${countdown}s`;
 			}
 		}, 1000);
 	}
 
 	verifyOtp() {
 		const otpInput = document.getElementById("otp_code");
-		if (!otpInput || !otpInput.value) {
+		const verifyBtn = document.getElementById("verify_otp");
+		const otp = otpInput?.value || "";
+
+		if (!otp) {
 			this.showNotification(
 				"Please enter the verification code.",
 				NOTIFICATION_TYPES.ERROR
@@ -887,28 +572,13 @@ class RegistrationManager {
 			return;
 		}
 
-		const otp = otpInput.value.trim();
-		if (otp.length !== FORM_VALIDATION.SMS_CODE_LENGTH) {
-			this.showNotification(
-				"Please enter a valid 6-digit code.",
-				NOTIFICATION_TYPES.ERROR
-			);
-			return;
-		}
-
-		// Show loading state
-		const verifyBtn = document.querySelector(
-			"#otp_verification_form button[type='submit']"
-		);
 		if (verifyBtn) {
-			verifyBtn.innerHTML =
-				'<i class="fas fa-spinner fa-spin"></i> Verifying...';
+			verifyBtn.innerHTML = BUTTON_STATES.PROCESSING;
 			verifyBtn.disabled = true;
 		}
 
 		// Get the phone number from the form
-		const phoneNumber =
-			document.getElementById("phone_number")?.value || "";
+		const phoneNumber = document.getElementById("phone_number")?.value || "";
 
 		// Create the request data
 		const requestData = {
@@ -926,7 +596,9 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+					});
 				}
 				return response.json();
 			})
@@ -946,8 +618,7 @@ class RegistrationManager {
 				} else {
 					// Show error message
 					this.showNotification(
-						data.error ||
-							"Invalid verification code. Please try again.",
+						data.error || "Invalid verification code. Please try again.",
 						NOTIFICATION_TYPES.ERROR
 					);
 					if (verifyBtn) {
@@ -957,37 +628,13 @@ class RegistrationManager {
 				}
 			})
 			.catch((error) => {
-				console.error("Error verifying OTP:", error);
-
-				// FALLBACK: If API is not available, check against the mock OTP
-				// This is for development/demo purposes only
-				const mockOtp = localStorage.getItem("mockOtp");
-
-				if (mockOtp && otp === mockOtp) {
-					// Success case
-					this.hideOtpModal();
-
-					// Reset OTP form
-					if (otpInput) otpInput.value = "";
-					if (verifyBtn) {
-						verifyBtn.innerHTML = "Verify";
-						verifyBtn.disabled = false;
-					}
-
-					// Clear mock OTP
-					localStorage.removeItem("mockOtp");
-
-					// Submit registration data
-					this.submitRegistrationData();
-				} else {
-					this.showNotification(
-						"Invalid verification code. Please try again.",
-						NOTIFICATION_TYPES.ERROR
-					);
-					if (verifyBtn) {
-						verifyBtn.innerHTML = "Verify";
-						verifyBtn.disabled = false;
-					}
+				this.showNotification(
+					error.message || "An error occurred. Please try again.",
+					NOTIFICATION_TYPES.ERROR
+				);
+				if (verifyBtn) {
+					verifyBtn.innerHTML = "Verify";
+					verifyBtn.disabled = false;
 				}
 			});
 	}
@@ -1002,12 +649,12 @@ class RegistrationManager {
 		}
 
 		// Get the phone number from the form
-		const phoneNumber =
-			document.getElementById("phone_number")?.value || "";
+		const phoneNumber = document.getElementById("phone_number")?.value || "";
 
 		// Create the request data
 		const requestData = {
 			phone_number: phoneNumber,
+			purpose: 'registration'
 		};
 
 		// Make API call to request new OTP
@@ -1020,7 +667,9 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+					});
 				}
 				return response.json();
 			})
@@ -1028,13 +677,12 @@ class RegistrationManager {
 				if (data.success) {
 					this.showNotification(
 						"A new verification code has been sent to your phone.",
-						NOTIFICATION_TYPES.INFO
+						NOTIFICATION_TYPES.SUCCESS
 					);
 					this.startResendCountdown();
 				} else {
 					this.showNotification(
-						data.error ||
-							"Failed to send verification code. Please try again.",
+						data.error || "Failed to send verification code. Please try again.",
 						NOTIFICATION_TYPES.ERROR
 					);
 					if (resendBtn) {
@@ -1046,16 +694,15 @@ class RegistrationManager {
 			})
 			.catch((error) => {
 				console.error("Error requesting OTP:", error);
-
-				// FALLBACK: If API is not available, generate a new mock OTP
-				// This is for development/demo purposes only
-				localStorage.setItem("mockOtp", "123456");
-
 				this.showNotification(
-					"Using demo mode for OTP verification. Use code: 123456",
-					NOTIFICATION_TYPES.INFO
+					error.message || "Failed to send verification code. Please try again.",
+					NOTIFICATION_TYPES.ERROR
 				);
-				this.startResendCountdown();
+				if (resendBtn) {
+					resendBtn.textContent = "Resend code";
+					resendBtn.style.pointerEvents = "auto";
+					resendBtn.style.opacity = "1";
+				}
 			});
 	}
 
@@ -1075,8 +722,7 @@ class RegistrationManager {
 			phone_number: document.getElementById("phone_number")?.value || "",
 			first_name: document.getElementById("first_name")?.value || "",
 			last_name: document.getElementById("last_name")?.value || "",
-			date_of_birth:
-				document.getElementById("date_of_birth")?.value || "",
+			date_of_birth: document.getElementById("date_of_birth")?.value || "",
 			nationality: document.getElementById("nationality")?.value || "",
 			street: document.getElementById("street")?.value || "",
 			city: document.getElementById("city")?.value || "",
@@ -1108,7 +754,9 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+					});
 				}
 				return response.json();
 			})
@@ -1117,7 +765,7 @@ class RegistrationManager {
 				if (data.success) {
 					this.goToStep(STEPS.STEP_THREE_PROCESSING);
 					this.showNotification(
-						"Registration successful! Your account is under review.",
+						"Registration successful! Please check your email for further instructions.",
 						NOTIFICATION_TYPES.SUCCESS
 					);
 				} else {
@@ -1131,156 +779,75 @@ class RegistrationManager {
 			.catch((error) => {
 				this.hideLoadingState("contact_info_form");
 				console.error("Error:", error);
-
-				// FALLBACK: If API is not available, proceed to the next step anyway
-				// This is for development/demo purposes only
-				this.goToStep(STEPS.STEP_THREE_PROCESSING);
 				this.showNotification(
-					"Demo mode: Registration submitted successfully!",
-					NOTIFICATION_TYPES.SUCCESS
+					error.message || "Registration failed. Please try again.",
+					NOTIFICATION_TYPES.ERROR
 				);
 			});
 	}
 
 	goToStep(step) {
-		console.log("goToStep called with step:", step);
-		const isValidStep =
-			step >= STEPS.STEP_ONE_IDENTIFICATION && step <= this.maxStep;
-		if (!isValidStep) return;
-
-		if (step > this.currentStep + 1) {
-			this.showNotification(
-				"Please complete the current step before proceeding.",
-				NOTIFICATION_TYPES.WARNING
-			);
+		console.log("Going to step:", step);
+		
+		if (step < STEPS.STEP_ONE_IDENTIFICATION || step > STEPS.STEP_THREE_PROCESSING) {
+			console.error("Invalid step:", step);
 			return;
 		}
 
-		const currentStepElement = document.querySelector(".form-step.active");
-		let newStepElement;
+		try {
+			// Save current form data
+			this.saveFormData();
+			console.log("Form data saved");
 
-		switch (step) {
-			case STEPS.STEP_ONE_IDENTIFICATION:
-				newStepElement = document.getElementById(
-					"step_one_identification"
-				);
-				break;
-			case STEPS.STEP_TWO_CONTACT_INFO:
-				newStepElement = document.getElementById("step_two_contact");
-				break;
-			case STEPS.STEP_THREE_PROCESSING:
-				newStepElement = document.getElementById(
-					"step_three_processing"
-				);
-				break;
-			default:
-				newStepElement = document.getElementById(
-					"step_one_identification"
-				);
-				break;
-		}
+			// Hide all steps
+			document.querySelectorAll(".form-step").forEach((el) => {
+				el.classList.remove("active");
+			});
 
-		if (!newStepElement) {
-			console.error(`Target step element not found for step: ${step}`);
-			return;
-		}
+			// Show target step
+			let targetStep;
+			switch (step) {
+				case STEPS.STEP_ONE_IDENTIFICATION:
+					targetStep = document.getElementById("step_one_identification");
+					this.currentContactPage = CONTACT_PAGES.PAGE_ONE;
+					break;
+				case STEPS.STEP_TWO_CONTACT:
+					targetStep = document.getElementById("step_two_contact");
+					break;
+				case STEPS.STEP_THREE_PROCESSING:
+					targetStep = document.getElementById("step_three_processing");
+					break;
+			}
 
-		if (step < this.currentStep) {
-			this.restoreFormData();
-		}
-
-		if (currentStepElement) {
-			currentStepElement.style.opacity = "0";
-			currentStepElement.style.transform = "translateY(20px)";
-
-			setTimeout(() => {
-				currentStepElement.classList.remove("active");
-				currentStepElement.style.display = "none";
-
-				newStepElement.style.display = "block";
-				newStepElement.offsetHeight; // Trigger reflow
-				newStepElement.classList.add("active");
-				newStepElement.style.opacity = "1";
-				newStepElement.style.transform = "translateY(0)";
-
-				if (step === STEPS.STEP_ONE_IDENTIFICATION) {
-					// No specific action needed for identification step on load
+			if (targetStep) {
+				targetStep.classList.add("active");
+				this.currentStep = step;
+				this.updateStepIndicators();
+				if (step === STEPS.STEP_TWO_CONTACT) {
+					this.updatePaginationDots();
 				}
-			}, 300);
-		} else {
-			newStepElement.style.display = "block";
-			newStepElement.classList.add("active");
-			this.restoreFormData();
-		}
-
-		this.currentStep = step;
-		this.updateStepIndicators();
-	}
-
-	showNewStep(step) {
-		let stepId;
-		switch (step) {
-			case STEPS.STEP_ONE_IDENTIFICATION:
-				stepId = "step_one_identification";
-				break;
-			case STEPS.STEP_TWO_CONTACT_INFO:
-				stepId = "step_two_contact";
-				break;
-			case STEPS.STEP_THREE_PROCESSING:
-				stepId = "step_three_processing";
-				break;
-			default:
-				stepId = "step_one_identification";
-				break;
-		}
-
-		const newStepElement = document.getElementById(stepId);
-
-		if (newStepElement) {
-			newStepElement.style.display = "block";
-			newStepElement.offsetHeight;
-			newStepElement.classList.add("active");
-			newStepElement.style.opacity = "1";
-			newStepElement.style.transform = "translateY(0)";
-		} else {
-			console.error(`Step element with id ${stepId} not found`);
-		}
-	}
-
-	getStepName(step) {
-		switch (step) {
-			case STEPS.STEP_ONE_IDENTIFICATION:
-				return "one_identification";
-			case STEPS.STEP_TWO_CONTACT_INFO:
-				return "two_contact";
-			case STEPS.STEP_THREE_PROCESSING:
-				return "three_processing";
-			default:
-				return "one_identification";
+				console.log("Navigation complete to step:", step);
+			} else {
+				throw new Error("Target step element not found");
+			}
+		} catch (error) {
+			console.error("Error during step navigation:", error);
+			this.showNotification("An error occurred during navigation. Please try again.", NOTIFICATION_TYPES.ERROR);
 		}
 	}
 
 	updateStepIndicators() {
 		const steps = document.querySelectorAll(".step");
 		steps.forEach((step, index) => {
-			const stepNumber = index + 1;
-			step.classList.remove("active", "complete");
-
-			if (stepNumber === this.currentStep) {
+			const stepNum = index + 1;
+			if (stepNum < this.currentStep) {
+				step.classList.add("completed");
+				step.classList.remove("active");
+			} else if (stepNum === this.currentStep) {
 				step.classList.add("active");
-			} else if (stepNumber < this.currentStep) {
-				step.classList.add("complete");
+				step.classList.remove("completed");
 			} else {
-				step.classList.remove("active", "complete");
-			}
-		});
-
-		const stepLines = document.querySelectorAll(".step-line");
-		stepLines.forEach((line, index) => {
-			if (index + 1 < this.currentStep && index + 1 < this.maxStep) {
-				line.classList.add("complete");
-			} else {
-				line.classList.remove("complete");
+				step.classList.remove("completed", "active");
 			}
 		});
 	}
@@ -1320,63 +887,46 @@ class RegistrationManager {
 	}
 
 	showNotification(message, type = NOTIFICATION_TYPES.INFO) {
-		const existingNotification = document.querySelector(".notification");
-		if (existingNotification) {
-			existingNotification.remove();
-		}
-
+		// Create notification element
 		const notification = document.createElement("div");
-		notification.className = `notification notification-${type}`;
-		notification.innerHTML = `
-            <div class="notification-content">
-                <i class="fas ${this.getNotificationIcon(type)}"></i>
-                <span>${message}</span>
-                <button class="notification-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>`;
-
-		document.body.appendChild(notification);
-
-		setTimeout(() => {
-			notification.classList.add("show");
-		}, TIMER_SETTINGS.NOTIFICATION_SHOW_DELAY);
-
-		setTimeout(() => {
-			this.hideNotification(notification);
-		}, TIMER_SETTINGS.NOTIFICATION_AUTO_HIDE);
-
-		const closeBtn = notification.querySelector(".notification-close");
-		if (closeBtn) {
-			closeBtn.addEventListener("click", () => {
-				this.hideNotification(notification);
-			});
-		}
-	}
-
-	getNotificationIcon(type) {
+		notification.className = `notification ${type}`;
+		
+		// Add icon based on type
+		let icon;
 		switch (type) {
 			case NOTIFICATION_TYPES.SUCCESS:
-				return "fa-check-circle";
+				icon = "fa-check-circle";
+				break;
 			case NOTIFICATION_TYPES.ERROR:
-				return "fa-exclamation-circle";
+				icon = "fa-times-circle";
+				break;
 			case NOTIFICATION_TYPES.WARNING:
-				return "fa-exclamation-triangle";
-			case NOTIFICATION_TYPES.INFO:
+				icon = "fa-exclamation-triangle";
+				break;
 			default:
-				return "fa-info-circle";
+				icon = "fa-info-circle";
 		}
-	}
+		
+		notification.innerHTML = `
+			<i class="fas ${icon}"></i>
+			<span>${message}</span>
+		`;
 
-	hideNotification(notification) {
-		if (!notification) return;
+		// Add to document
+		document.body.appendChild(notification);
 
-		notification.classList.remove("show");
+		// Trigger animation
+		requestAnimationFrame(() => {
+			notification.classList.add("show");
+		});
+
+		// Remove after delay
 		setTimeout(() => {
-			if (notification.parentNode) {
-				notification.parentNode.removeChild(notification);
-			}
-		}, TIMER_SETTINGS.NOTIFICATION_HIDE_DELAY);
+			notification.classList.remove("show");
+			setTimeout(() => {
+				notification.remove();
+			}, 300); // Match animation duration
+		}, 3000);
 	}
 
 	validatePhoneNumber(input) {
@@ -1414,114 +964,88 @@ class RegistrationManager {
 	}
 
 	saveFormData() {
-		this.formData = this.collectFormData();
+		try {
+			const formData = {
+				// Identification step
+				id_type: document.getElementById("id_type")?.value || "",
+				id_image: this.idImage,
+
+				// Contact info step
+				first_name: document.getElementById("first_name")?.value || "",
+				last_name: document.getElementById("last_name")?.value || "",
+				date_of_birth: document.getElementById("date_of_birth")?.value || "",
+				email: document.getElementById("email")?.value || "",
+				phone_number: document.getElementById("phone_number")?.value || "",
+				nationality: document.getElementById("nationality")?.value || "",
+				street: document.getElementById("street")?.value || "",
+				city: document.getElementById("city")?.value || "",
+				zip_code: document.getElementById("zip_code")?.value || "",
+				country: document.getElementById("country")?.value || "",
+
+				// Current state
+				currentStep: this.currentStep,
+				currentContactPage: this.currentContactPage
+			};
+
+			// Save to sessionStorage
+			sessionStorage.setItem("registrationFormData", JSON.stringify(formData));
+			console.log("Form data saved successfully");
+		} catch (error) {
+			console.error("Error saving form data:", error);
+			throw error; // Re-throw to handle in calling function
+		}
 	}
 
-	restoreFormData() {
-		if (!this.formData) {
-			console.log("No form data to restore");
-			return;
-		}
+	loadFormData() {
+		const savedData = sessionStorage.getItem("registrationFormData");
+		if (!savedData) return;
 
-		console.log("Restoring form data:", this.formData);
+		try {
+			const formData = JSON.parse(savedData);
 
-		const fields = [
-			"id_type",
-			"email",
-			"phone_number",
-			"first_name",
-			"last_name",
-			"date_of_birth",
-			"nationality",
-			"street",
-			"city",
-			"zip_code",
-			"country",
-		];
+			// Restore form values
+			const fields = [
+				"id_type", "first_name", "last_name", "date_of_birth",
+				"email", "phone_number", "nationality", "street",
+				"city", "zip_code", "country"
+			];
 
-		fields.forEach((field) => {
-			const input = document.getElementById(field);
-			if (input && this.formData[field] !== undefined) {
-				input.value = this.formData[field];
-
-				if (field === "email") {
-					this.validateEmail(input);
-				} else if (field === "phone_number") {
-					this.validatePhoneNumber(input);
-				} else if (field === "zip_code") {
-					this.validateZipCode(input);
-				} else if (field === "first_name" || field === "last_name") {
-					this.validateName(
-						input,
-						field === "first_name"
-							? FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
-							: FORM_VALIDATION.LAST_NAME_MIN_LENGTH
-					);
-				} else if (field === "date_of_birth") {
-					this.validateAge(input);
-				} else if (
-					field === "nationality" ||
-					field === "street" ||
-					field === "city" ||
-					field === "country"
-				) {
-					// For select and text inputs that are only checked for being non-empty
-					this.setInputValidation(
-						input,
-						input.value.trim() !== "",
-						`Please enter your ${field.replace("_", " ")}`
-					);
+			fields.forEach(field => {
+				const input = document.getElementById(field);
+				if (input && formData[field]) {
+					input.value = formData[field];
 				}
-			} else if (input) {
-				input.value = "";
-				this.setInputValidation(input, true, "");
-			}
-		});
+			});
 
-		// If we're on the contact info step, show the correct page
-		if (this.currentStep === STEPS.STEP_TWO_CONTACT_INFO) {
-			this.goToContactPage(this.currentContactPage);
-		}
+			// Restore ID image if exists
+			if (formData.id_image) {
+				this.idImage = formData.id_image;
+				const container = document.getElementById("file_upload_container");
+				const previewInfo = container?.querySelector(".preview-info-compact");
+				const fileNameDisplay = previewInfo?.querySelector(".file-name-display");
 
-		if (this.formData.id_image) {
-			this.idImage = this.formData.id_image;
-			const preview = document.getElementById("id_image_preview");
-			const fileNameDisplay = preview.querySelector(
-				".file-name-display"
-			);
-			const viewBtn = preview.querySelector(".btn-view-image");
-			const removeBtn = preview.querySelector(".remove-image");
-			if (preview) {
-				preview.style.display = "block";
-				if (fileNameDisplay)
-					fileNameDisplay.innerHTML = `<i class="fas fa-file-image"></i> ${this.idImage.name}`;
-				if (viewBtn) {
-					viewBtn.style.display = "flex";
-					viewBtn.onclick = () =>
-						this.showImageModal(
-							this.idImage.data,
-							this.idImage.name
-						);
-				}
-				if (removeBtn) {
-					removeBtn.style.display = "flex";
-					removeBtn.onclick = () => this.clearFilePreview();
-				}
-
-				const container = document.querySelector(
-					".file-upload-container"
-				);
-				if (container) {
+				if (container && previewInfo && fileNameDisplay) {
+					fileNameDisplay.textContent = formData.id_image.name;
+					previewInfo.style.display = "flex";
 					container.classList.add("has-file");
 				}
+			}
 
-				const fileInput = document.getElementById("id_image");
-				if (fileInput) {
-					fileInput.disabled = true;
+			// Restore current step and page
+			if (formData.currentStep) {
+				this.currentStep = formData.currentStep;
+				this.goToStep(formData.currentStep);
+			}
+
+			if (formData.currentContactPage) {
+				this.currentContactPage = formData.currentContactPage;
+				if (this.currentStep === STEPS.STEP_TWO_CONTACT) {
+					this.goToContactPage(formData.currentContactPage);
 				}
 			}
-		} else {
-			this.clearFilePreview();
+		} catch (error) {
+			console.error("Error loading form data:", error);
+			sessionStorage.removeItem("registrationFormData");
 		}
 	}
 
@@ -1539,10 +1063,9 @@ class RegistrationManager {
 	handleFileSelect(e) {
 		const file = e.target.files[0];
 		const container = document.querySelector(".file-upload-container");
-		const previewContainer = document.querySelector(".preview-container");
-		const imagePreview = document.getElementById("image_preview");
-		const maxSize = 5 * 1024 * 1024; // 5MB
-
+		const previewInfoCompact = container?.querySelector(".preview-info-compact");
+		const fileNameDisplay = previewInfoCompact?.querySelector(".file-name-display");
+		
 		// Clear existing preview if no file selected
 		if (!file) {
 			this.clearFilePreview();
@@ -1561,6 +1084,7 @@ class RegistrationManager {
 		}
 
 		// Validate file size
+		const maxSize = 5 * 1024 * 1024; // 5MB
 		if (file.size > maxSize) {
 			this.showNotification(
 				"File size must be less than 5MB.",
@@ -1571,7 +1095,9 @@ class RegistrationManager {
 		}
 
 		// Show loading state
-		container.classList.add("loading");
+		if (container) {
+			container.classList.add("loading");
+		}
 
 		const reader = new FileReader();
 		reader.onload = (e) => {
@@ -1582,49 +1108,26 @@ class RegistrationManager {
 				name: file.name,
 			};
 
-			// Update preview
-			imagePreview.src = e.target.result;
-
 			// Update UI
-			container.classList.remove("loading");
-			container.classList.add("has-file");
-			previewContainer.style.display = "block";
-
-			// Setup preview actions
-			const viewBtn = previewContainer.querySelector(".btn-view");
-			const replaceBtn = previewContainer.querySelector(".btn-replace");
-			const removeBtn = previewContainer.querySelector(".btn-remove");
-
-			if (viewBtn) {
-				viewBtn.onclick = () =>
-					this.showImagePreview(this.idImage.data);
+			if (container) {
+				container.classList.remove("loading");
+				container.classList.add("has-file");
+			}
+			
+			if (previewInfoCompact) {
+				previewInfoCompact.style.display = "flex";
+			}
+			
+			if (fileNameDisplay) {
+				fileNameDisplay.innerHTML = `<i class="fas fa-file-image"></i> ${file.name}`;
 			}
 
-			if (replaceBtn) {
-				replaceBtn.onclick = () => {
-					const fileInput = document.getElementById("id_image");
-					if (fileInput) {
-						// Store current file data
-						const currentImage = this.idImage;
+			// Setup preview actions
+			const viewBtn = previewInfoCompact?.querySelector(".btn-view-image");
+			const removeBtn = previewInfoCompact?.querySelector(".remove-image");
 
-						// Add change event listener to handle cancellation
-						const handleChange = () => {
-							if (!fileInput.files.length) {
-								// If no file selected (cancelled), restore previous image
-								this.idImage = currentImage;
-								imagePreview.src = currentImage.data;
-							}
-							// Remove the event listener after it's triggered
-							fileInput.removeEventListener(
-								"change",
-								handleChange
-							);
-						};
-
-						fileInput.addEventListener("change", handleChange);
-						fileInput.click();
-					}
-				};
+			if (viewBtn) {
+				viewBtn.onclick = () => this.showImagePreview(this.idImage.data, this.idImage.name);
 			}
 
 			if (removeBtn) {
@@ -1637,7 +1140,9 @@ class RegistrationManager {
 				"Error reading file. Please try again.",
 				NOTIFICATION_TYPES.ERROR
 			);
-			container.classList.remove("loading");
+			if (container) {
+				container.classList.remove("loading");
+			}
 			this.clearFilePreview();
 		};
 
@@ -1672,31 +1177,6 @@ class RegistrationManager {
 		this.idImage = null;
 	}
 
-	showImagePreview(src) {
-		const modal = document.getElementById("image_preview_modal");
-		const modalImage = document.getElementById("modal_image");
-
-		if (modal && modalImage) {
-			modalImage.src = src;
-			modal.classList.add("active");
-
-			// Close modal when clicking the close button
-			const closeBtn = modal.querySelector(".image-preview-close");
-			if (closeBtn) {
-				closeBtn.onclick = () => {
-					modal.classList.remove("active");
-				};
-			}
-
-			// Close modal when clicking outside
-			modal.onclick = (e) => {
-				if (e.target === modal) {
-					modal.classList.remove("active");
-				}
-			};
-		}
-	}
-
 	validateAge(input) {
 		if (!input.value) {
 			this.setInputValidation(
@@ -1709,7 +1189,7 @@ class RegistrationManager {
 
 		const birthDate = new Date(input.value);
 		const today = new Date();
-		const age = today.getFullYear() - birthDate.getFullYear();
+		let age = today.getFullYear() - birthDate.getFullYear();
 		const monthDiff = today.getMonth() - birthDate.getMonth();
 
 		if (
@@ -1719,7 +1199,7 @@ class RegistrationManager {
 			age--;
 		}
 
-		const isValid = age >= 18;
+		const isValid = age >= FORM_VALIDATION.MIN_AGE && age <= FORM_VALIDATION.MAX_AGE;
 		this.isUnder18 = !isValid;
 
 		const warningElement = document.getElementById("age_warning");
@@ -1730,59 +1210,42 @@ class RegistrationManager {
 		this.setInputValidation(
 			input,
 			isValid,
-			"You must be at least 18 years old to register"
+			"You must be between 18 and 100 years old to register"
 		);
 		return isValid;
 	}
 
-	showImageModal(imageUrl, filename) {
-		let modal = document.getElementById("image_viewer_modal");
-		if (!modal) {
-			modal = document.createElement("div");
-			modal.id = "image_viewer_modal";
-			modal.className = "image-modal-overlay";
-			modal.innerHTML = `
-				<div class="image-modal-content">
-					<a href="#" class="modal-close-btn">&times;</a>
-					<div class="modal-filename"></div>
-					<img src="" alt="Preview"/>
-				</div>
-			`;
-			document.body.appendChild(modal);
+	showImagePreview(src, filename = '') {
+		const modal = document.getElementById('image_preview_modal');
+		const modalImg = modal.querySelector('img');
+		const modalFilename = modal.querySelector('.modal-filename');
+		const closeBtn = document.getElementById('close_image_preview');
 
-			modal
-				.querySelector(".modal-close-btn")
-				.addEventListener("click", (e) => {
-					e.preventDefault();
-					this.hideImageModal();
-				});
+		modalImg.src = src;
+		modalFilename.textContent = filename;
+		modal.classList.add('active');
 
-			modal.addEventListener("click", (e) => {
-				if (e.target === modal) {
-					this.hideImageModal();
-				}
-			});
-		}
+		// Close modal when clicking the close button
+		closeBtn.onclick = () => this.hideImagePreview();
 
-		const modalImage = modal.querySelector("img");
-		const modalFilename = modal.querySelector(".modal-filename");
+		// Close modal when clicking outside
+		modal.onclick = (e) => {
+			if (e.target === modal) {
+				this.hideImagePreview();
+			}
+		};
 
-		if (modalImage) modalImage.src = imageUrl;
-		if (modalFilename) modalFilename.textContent = filename;
-
-		modal.classList.add("active");
+		// Close modal with Escape key
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && modal.classList.contains('active')) {
+				this.hideImagePreview();
+			}
+		});
 	}
 
-	hideImageModal() {
-		const modal = document.getElementById("image_viewer_modal");
-		if (modal) {
-			const modalContent = modal.querySelector(".image-modal-content");
-			modalContent.classList.add("hide");
-			setTimeout(() => {
-				modal.classList.remove("active");
-				modalContent.classList.remove("hide");
-			}, 300);
-		}
+	hideImagePreview() {
+		const modal = document.getElementById('image_preview_modal');
+		modal.classList.remove('active');
 	}
 
 	validateZipCode(input) {
@@ -1806,6 +1269,296 @@ class RegistrationManager {
 			`Name must be at least ${minLength} characters and contain only letters, spaces, or hyphens`
 		);
 		return isValid;
+	}
+
+	initializeIdentificationForm() {
+		const form = document.getElementById("identification_form");
+		if (!form) {
+			console.error("Identification form not found");
+			return;
+		}
+
+		// Initialize file upload
+		this.initializeFileUpload();
+
+		// Get the continue button
+		const continueBtn = form.querySelector('button[type="submit"]');
+		if (!continueBtn) {
+			console.error("Continue button not found");
+			return;
+		}
+
+		// Handle form submission
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			console.log("Form submitted");
+
+			// Disable the button and show loading state
+			continueBtn.disabled = true;
+			continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+			// Get form elements
+			const idType = document.getElementById("id_type");
+
+			// Basic validation
+			if (!idType || !idType.value) {
+				this.showNotification("Please select an ID type.", NOTIFICATION_TYPES.ERROR);
+				continueBtn.disabled = false;
+				continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				return;
+			}
+
+			if (!this.idImage) {
+				this.showNotification("Please upload your ID image.", NOTIFICATION_TYPES.ERROR);
+				continueBtn.disabled = false;
+				continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				return;
+			}
+
+			// Use setTimeout to ensure UI updates before navigation
+			setTimeout(() => {
+				try {
+					// Save form data
+					this.saveFormData();
+					console.log("Form data saved");
+
+					// Navigate to next step
+					document.querySelectorAll(".form-step").forEach(step => {
+						step.classList.remove("active");
+					});
+
+					const nextStep = document.getElementById("step_two_contact");
+					if (nextStep) {
+						nextStep.classList.add("active");
+						this.currentStep = STEPS.STEP_TWO_CONTACT;
+						this.updateStepIndicators();
+						console.log("Navigation complete");
+					} else {
+						throw new Error("Next step element not found");
+					}
+				} catch (error) {
+					console.error("Error during form submission:", error);
+					this.showNotification("An error occurred. Please try again.", NOTIFICATION_TYPES.ERROR);
+				} finally {
+					// Reset button state
+					continueBtn.disabled = false;
+					continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				}
+			}, 100);
+		});
+	}
+
+	initializeContactForm() {
+		const form = document.getElementById("contact_info_form");
+		if (!form) return;
+
+		// Initialize page navigation buttons
+		const toPage2Btn = document.getElementById("to_contact_page_2");
+		if (toPage2Btn) {
+			toPage2Btn.addEventListener("click", () => {
+				if (this.validateContactPage1()) {
+					this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
+				}
+			});
+		}
+
+		const toPage3Btn = document.getElementById("to_contact_page_3");
+		if (toPage3Btn) {
+			toPage3Btn.addEventListener("click", () => {
+				if (this.validateContactPage2()) {
+					this.goToContactPage(CONTACT_PAGES.PAGE_THREE);
+				}
+			});
+		}
+
+		// Initialize back buttons
+		const backToIdentificationBtn = document.getElementById("back_to_identification");
+		if (backToIdentificationBtn) {
+			backToIdentificationBtn.addEventListener("click", () => {
+				this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
+			});
+		}
+
+		const backToPage1Btn = document.getElementById("back_to_contact_page_1");
+		if (backToPage1Btn) {
+			backToPage1Btn.addEventListener("click", () => {
+				this.goToContactPage(CONTACT_PAGES.PAGE_ONE);
+			});
+		}
+
+		const backToPage2Btn = document.getElementById("back_to_contact_page_2");
+		if (backToPage2Btn) {
+			backToPage2Btn.addEventListener("click", () => {
+				this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
+			});
+		}
+
+		// Initialize pagination dots
+		const paginationDots = document.querySelectorAll(".pagination-dot");
+		paginationDots.forEach((dot) => {
+			dot.addEventListener("click", () => {
+				const page = parseInt(dot.dataset.page);
+				if (!isNaN(page)) {
+					this.handlePaginationDotClick(page);
+				}
+			});
+		});
+
+		// Handle form submission
+		form.addEventListener("submit", (e) => this.handleContactInfoSubmit(e));
+	}
+
+	initializeFileUpload() {
+		const fileInput = document.getElementById("id_image");
+		const container = document.getElementById("file_upload_container");
+		const previewInfo = container?.querySelector(".preview-info-compact");
+		const fileNameDisplay = previewInfo?.querySelector(".file-name-display");
+		const viewBtn = previewInfo?.querySelector(".btn-view-image");
+		const removeBtn = previewInfo?.querySelector(".remove-image");
+
+		if (!fileInput || !container || !previewInfo || !fileNameDisplay) {
+			console.error("File upload elements not found");
+			return;
+		}
+
+		const handleFileSelect = (file) => {
+			if (!file.type.match("image.*")) {
+				this.showNotification("Please upload an image file.", NOTIFICATION_TYPES.ERROR);
+				return;
+			}
+
+			// Show loading state
+			container.classList.add("loading");
+			if (fileNameDisplay) fileNameDisplay.textContent = "Processing...";
+
+			const reader = new FileReader();
+			
+			reader.onload = (e) => {
+				try {
+					this.idImage = {
+						data: e.target.result,
+						name: file.name,
+						type: file.type
+					};
+
+					// Update UI
+					fileNameDisplay.textContent = file.name;
+					previewInfo.style.display = "flex";
+					container.classList.add("has-file");
+				} catch (error) {
+					console.error("Error processing file:", error);
+					this.showNotification("Error processing file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				} finally {
+					container.classList.remove("loading");
+				}
+			};
+
+			reader.onerror = (error) => {
+				console.error("Error reading file:", error);
+				this.showNotification("Error reading file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				container.classList.remove("loading");
+			};
+
+			try {
+				reader.readAsDataURL(file);
+			} catch (error) {
+				console.error("Error starting file read:", error);
+				this.showNotification("Error reading file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				container.classList.remove("loading");
+			}
+		};
+
+		// Handle drag and drop
+		container.addEventListener("dragover", (e) => {
+			e.preventDefault();
+			container.classList.add("dragover");
+		});
+
+		container.addEventListener("dragleave", () => {
+			container.classList.remove("dragover");
+		});
+
+		container.addEventListener("drop", (e) => {
+			e.preventDefault();
+			container.classList.remove("dragover");
+			
+			const files = e.dataTransfer.files;
+			if (files.length > 0) {
+				fileInput.files = files;
+				handleFileSelect(files[0]);
+			}
+		});
+
+		// Handle file selection
+		fileInput.addEventListener("change", (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				handleFileSelect(file);
+			}
+		});
+
+		// Handle file preview
+		if (viewBtn) {
+			viewBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (this.idImage) {
+					this.showImagePreview(this.idImage.data, this.idImage.name);
+				}
+			});
+		}
+
+		// Handle file removal
+		if (removeBtn) {
+			removeBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.idImage = null;
+				fileInput.value = "";
+				previewInfo.style.display = "none";
+				container.classList.remove("has-file");
+			});
+		}
+	}
+
+	initializeBackButtons() {
+		const backToIdentificationBtn = document.getElementById("back_to_identification");
+		if (backToIdentificationBtn) {
+			backToIdentificationBtn.addEventListener("click", () => {
+				this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
+			});
+		}
+	}
+
+	setInputValidation(input, isValid, errorMessage = "") {
+		if (!input) return;
+
+		const feedbackElement = input.nextElementSibling;
+		if (feedbackElement && feedbackElement.classList.contains("invalid-feedback")) {
+			feedbackElement.textContent = errorMessage;
+		}
+
+		input.classList.toggle("is-invalid", !isValid);
+		input.classList.toggle("is-valid", isValid);
+
+		// Show error message if not valid
+		if (!isValid) {
+			// Remove existing error message if any
+			const existingError = input.parentElement.querySelector(".error-message");
+			if (existingError) {
+				existingError.remove();
+			}
+
+			// Create and add new error message
+			const errorDiv = document.createElement("div");
+			errorDiv.className = "error-message";
+			errorDiv.textContent = errorMessage;
+			input.parentElement.appendChild(errorDiv);
+		} else {
+			// Remove error message if valid
+			const errorDiv = input.parentElement.querySelector(".error-message");
+			if (errorDiv) {
+				errorDiv.remove();
+			}
+		}
 	}
 }
 

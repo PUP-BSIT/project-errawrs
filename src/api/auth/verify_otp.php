@@ -1,86 +1,118 @@
 <?php
-  require_once __DIR__ . '/../../../vendor/autoload.php';
-  require_once __DIR__ . '/../../config/database.php';
-  require_once __DIR__ . '/../../config/SessionManager.php';
+// Prevent PHP from displaying errors directly
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 
-  $sessionManager = SessionManager::getInstance();
-  header('Content-Type: application/json');
+// Set session save path to XAMPP temp directory
+$sessionPath = __DIR__ . '/../../../tmp';
+if (!is_dir($sessionPath)) {
+    mkdir($sessionPath, 0777, true);
+}
+session_save_path($sessionPath);
 
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      http_response_code(405);
-      echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-      exit();
-  }
+// Set session cookie parameters before starting session
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',  // Leave empty for localhost
+    'secure' => false,  // Set to true in production
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
 
-  $input = json_decode(file_get_contents('php://input'), true);
-  if (!isset($input['otp']) || !isset($input['phone_number'])) {
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'OTP and phone number are required']);
-      exit();
-  }
+session_start();
 
-  $otp = $input['otp'];
-  $phone_number = $input['phone_number'];
+// Debug session info
+error_log("Session ID: " . session_id());
+error_log("Session Name: " . session_name());
+error_log("Session Save Path: " . session_save_path());
 
-  // Debug log the input and session
-  error_log("Verify OTP Input: " . print_r($input, true));
-  error_log("Session Data: " . print_r($_SESSION, true));
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
 
-  if (!preg_match('/^\d{6}$/', $otp)) {
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'Invalid OTP format']);
-      exit();
-  }
+// Set JSON content type
+header('Content-Type: application/json');
 
-  // Normalize phone number to match send_otp.php format
-  $phone = preg_replace('/[^0-9+]/', '', $phone_number);
-  if (preg_match('/^\+?639\d{9}$/', $phone)) {
-      $phone = '0' . substr($phone, -10);
-  }
+$sessionManager = SessionManager::getInstance();
 
-  error_log("Original phone: " . $phone_number . ", Normalized phone: " . $phone);
+try {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+        exit();
+    }
 
-  if (!isset($_SESSION['otp']) || !is_array($_SESSION['otp'])) {
-      error_log("No OTP session found");
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'No OTP request found. Please request a new OTP']);
-      exit();
-  }
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!$input || !isset($input['otp']) || empty($input['otp'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'OTP is required']);
+        exit();
+    }
 
-  $storedOTP = $_SESSION['otp'];
-  error_log("Comparing phones - Input (normalized): " . $phone . ", Stored: " . $storedOTP['phone_number']);
+    if (!isset($_SESSION['otp'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'No OTP session found. Please request a new OTP.']);
+        exit();
+    }
 
-  if ($storedOTP['phone_number'] !== $phone) {
-      error_log("Phone number mismatch - Input: " . $phone . ", Stored: " . $storedOTP['phone_number']);
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'Phone number does not match OTP request']);
-      exit();
-  }
+    // Get OTP data from session
+    $sessionOtp = $_SESSION['otp'];
+    $attempts = $sessionOtp['attempts'] ?? 0;
+    $maxAttempts = 3;
 
-  if (time() - $storedOTP['created_at'] > 600) {
-      unset($_SESSION['otp']);
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'OTP has expired. Please request a new OTP']);
-      exit();
-  }
+    // Check if too many attempts
+    if ($attempts >= $maxAttempts) {
+        unset($_SESSION['otp']);
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Too many attempts. Please request a new OTP.']);
+        exit();
+    }
 
-  if ($storedOTP['attempts'] >= 3) {
-      unset($_SESSION['otp']);
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'Too many failed attempts. Please request a new OTP']);
-      exit();
-  }
+    // Check if OTP has expired (5 minutes)
+    $expiryTime = 300; // 5 minutes
+    if (time() - $sessionOtp['created_at'] > $expiryTime) {
+        unset($_SESSION['otp']);
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'OTP has expired. Please request a new one.']);
+        exit();
+    }
 
-  if ($otp !== $storedOTP['code']) {
-      $_SESSION['otp']['attempts']++;
-      $remainingAttempts = 3 - $_SESSION['otp']['attempts'];
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => "Invalid OTP. $remainingAttempts attempts remaining"]);
-      exit();
-  }
+    // Verify OTP
+    if ($input['otp'] !== $sessionOtp['code']) {
+        // Increment attempts
+        $_SESSION['otp']['attempts'] = $attempts + 1;
+        $remainingAttempts = $maxAttempts - ($attempts + 1);
 
-  $_SESSION['otp_verified'] = true;
-  unset($_SESSION['otp']);
+        http_response_code(400);
+        echo json_encode([
+            'success' => false, 
+            'error' => "Invalid OTP. {$remainingAttempts} attempts remaining."
+        ]);
+        exit();
+    }
 
-  echo json_encode(['success' => true, 'message' => 'Phone number verified successfully.']);
-  ?>
+    // OTP is valid - clear it from session
+    $verifiedPhone = $sessionOtp['phone_number'];
+    unset($_SESSION['otp']);
+
+    // Set verification success in session
+    $_SESSION['otp_verified'] = true;
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'OTP verified successfully',
+        'phone_number' => $verifiedPhone
+    ]);
+
+} catch (Exception $e) {
+    error_log("Verify OTP Error: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'An error occurred while verifying OTP.',
+        'debug_message' => $e->getMessage()
+    ]);
+}
+?>
