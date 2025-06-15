@@ -6315,3 +6315,1797 @@
               LIMIT ? OFFSET ?
 [15-Jun-2025 18:19:20 Asia/Manila] List Tellers: Found 6 tellers
 [15-Jun-2025 18:19:20 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:33:38 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983605
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:33:38 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:33:38 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:33:39 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:33:39 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:34:48 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983631
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:34:48 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:34:48 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:34:49 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:34:50 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:34:50 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:34:52 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983691
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:34:52 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:34:52 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:34:52 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:34:52 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:34:52 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:34:52 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:34:53 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:34:53 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:34:53 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:34:53 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:35:02 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983695
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:35:02 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:35:02 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:35:03 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:35:12 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983707
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:35:12 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:35:12 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:35:13 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:35:13 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:35:15 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983713
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:35:15 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:35:15 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:35:15 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:35:15 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:35:15 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:35:15 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:35:16 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:35:16 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:35:16 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:35:16 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:36:28 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983783
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:36:28 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:36:28 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:36:29 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:36:29 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:36:30 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983789
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:36:30 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:36:30 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:36:30 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:36:30 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:36:30 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:36:30 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:36:31 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:36:31 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:36:31 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:36:31 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:36:39 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983793
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:36:39 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:36:39 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:36:40 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:36:40 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:37:05 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983807
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:37:05 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:37:05 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:37:06 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:37:11 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983827
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:37:11 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:37:11 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:37:12 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:38:23 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983876
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:38:23 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:38:23 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:38:24 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:38:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:40:01 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749983998
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:40:01 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:40:01 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:40:02 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:40:03 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:40:03 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:41:13 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984003
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:41:13 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:41:13 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:41:14 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:41:28 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984087
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:41:28 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:41:28 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:41:29 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:42:04 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984106
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:42:04 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:42:04 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:42:05 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:42:06 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:42:06 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:42:09 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984126
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:42:09 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:42:09 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:42:10 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:42:20 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984132
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:42:20 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:42:20 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:42:20 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:42:20 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:42:20 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:42:20 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:42:21 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:42:21 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:42:21 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:42:21 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:42:25 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984142
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:42:25 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:42:25 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:42:25 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:42:25 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:42:25 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:42:25 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:42:26 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:42:26 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:42:26 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:42:26 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:42:58 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984173
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:42:58 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:42:58 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:42:59 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:00 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:00 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:43:23 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984193
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:43:23 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:43:23 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:43:52 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984230
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:43:52 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:43:52 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:53 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:53 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:43:54 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984233
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:43:54 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:43:54 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:55 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:43:56 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984235
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:43:56 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:43:56 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:57 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:43:58 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984237
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:43:58 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:43:58 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:43:59 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:44:19 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984257
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:44:19 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:44:19 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:44:20 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:44:21 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984260
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:44:21 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984261
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:44:21 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:44:21 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:44:22 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:44:22 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:44:23 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:44:24 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:44:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:44:24 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984264
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:44:24 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:44:24 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:44:25 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:44:26 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:44:26 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:44:58 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984297
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:44:58 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:44:58 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:44:59 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:00 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:00 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:03 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984302
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:03 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:03 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:03 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:03 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:03 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:03 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:04 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:04 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:04 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:04 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:05 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984304
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:05 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:05 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:05 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:05 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:05 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:05 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:06 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:06 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:06 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:06 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:12 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984311
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:12 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:12 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:13 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:14 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984313
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:14 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:14 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:15 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:21 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984320
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:21 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:21 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:22 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:23 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984322
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:23 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:23 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:25 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984324
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:25 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:25 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:26 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:44 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984343
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:44 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:44 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:45 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:46 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984345
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:46 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:46 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:47 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:48 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:48 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:48 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984348
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:48 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:48 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:49 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:50 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:50 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:51 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984350
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:51 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:51 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:52 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:52 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:45:53 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984352
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:45:53 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:45:53 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:45:53 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:45:53 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:45:53 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:45:53 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:45:54 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:45:54 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:45:54 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:45:54 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:46:13 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984371
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:46:13 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:46:13 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:46:14 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:46:15 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:46:15 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:46:28 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984378
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:46:28 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:46:28 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:46:29 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:48:16 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984490
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:48:16 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:48:16 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:48:17 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
+[15-Jun-2025 12:48:26 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 2
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1749977643
+            [last_activity] => 1749984505
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => admin@stackovercash.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 2
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => admin@stackovercash.com
+        )
+
+)
+
+[15-Jun-2025 12:48:26 Europe/Berlin] List Tellers: Loading database configuration
+[15-Jun-2025 18:48:26 Asia/Manila] List Tellers: Connecting to database
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Database connection successful
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 6, Offset: 0
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Search term: 
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Total count - 29
+[15-Jun-2025 18:48:27 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[15-Jun-2025 18:48:28 Asia/Manila] List Tellers: Found 6 tellers
+[15-Jun-2025 18:48:28 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"}],"total":"29","page":1,"limit":6}
