@@ -356,6 +356,12 @@ body {
     color: #c62828;
 }
 
+.status-pending {
+    background-color: #fff3e0;
+    font-weight: 700;
+    color: #ef6c00;
+}
+
 .teller-details {
     flex: 1;
     margin: 1rem 0;
@@ -409,12 +415,20 @@ body {
     background-color: #f8f9fa;
 }
 
+.action-btn.warning {
+    color: #dc2626;
+}
+
 .action-btn.warning:hover {
     background-color: #ffebee;
 }
 
 .action-btn.warning:hover i {
     color: #dc2626;
+}
+
+.action-btn.success {
+    color: var(--color-mint);
 }
 
 .action-btn.success:hover {

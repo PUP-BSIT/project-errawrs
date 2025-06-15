@@ -149,14 +149,27 @@ class TellerManager {
             return;
         }
 
-        container.innerHTML = tellers.map(teller => `
+        // Sort tellers: pending first, then by status (active/inactive)
+        const sortedTellers = [...tellers].sort((a, b) => {
+            // If a is pending and b is not, a comes first
+            if (a.status === 'pending' && b.status !== 'pending') return -1;
+            // If b is pending and a is not, b comes first
+            if (b.status === 'pending' && a.status !== 'pending') return 1;
+            // If both are pending or both are not pending, sort by status
+            if (a.status === b.status) return 0;
+            // Active comes before inactive
+            return a.status === 'active' ? -1 : 1;
+        });
+
+        container.innerHTML = sortedTellers.map(teller => `
             <div class="teller-card">
                 <div class="teller-header">
                     <div class="teller-info">
                         <h3>${teller.first_name} ${teller.last_name}</h3>
                         <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
                     </div>
-                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 
+                        teller.status === 'pending' ? 'status-pending' : 'status-inactive'}">
                         ${teller.status}
                     </span>
                 </div>
@@ -173,11 +186,19 @@ class TellerManager {
                     <button class="action-btn" onclick="tellerManager.resetPassword(${teller.teller_id})" title="Reset Password">
                         <i class="fas fa-key"></i>
                     </button>
-                    <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
-                            onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
-                            title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
-                        <i class="fas fa-power-off"></i>
-                    </button>
+                    ${teller.status !== 'pending' ? `
+                        <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
+                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
+                                title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    ` : `
+                        <button class="action-btn success" 
+                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, 'pending')" 
+                                title="Activate">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                    `}
                 </div>
             </div>
         `).join('');
@@ -458,7 +479,7 @@ class TellerManager {
 
         if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
 
-        const isActivating = currentStatus === 'inactive';
+        const isActivating = currentStatus === 'inactive' || currentStatus === 'pending';
         
         // Update modal content
         modalTitle.textContent = isActivating ? 'Activate Teller' : 'Deactivate Teller';
