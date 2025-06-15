@@ -1,5 +1,13 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+$session = SessionManager::getInstance();
+if (!$session->isAuthenticated() || $_SESSION['auth']['type'] !== 'teller') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+    exit();
+}
+$session->updateActivity();
+
 require_once __DIR__ . '/../../config/database.php';
 
 header('Content-Type: application/json');
@@ -11,19 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit();
 }
 
-// Check if teller is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'teller') {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-    exit();
-}
-
 try {
     $db = db_connect();
     
     // Get all pending registrations
     $stmt = $db->prepare('
-        SELECT * FROM registration_request 
+        SELECT registration_id, first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, status, created_at, updated_at
+        FROM registration_request
+        WHERE status = "pending"
         ORDER BY created_at DESC
     ');
     $stmt->execute();
@@ -31,8 +34,6 @@ try {
     
     $registrations = [];
     while ($row = $result->fetch_assoc()) {
-        // Don't send sensitive data like ID images
-        unset($row['id_image']);
         $registrations[] = $row;
     }
 
