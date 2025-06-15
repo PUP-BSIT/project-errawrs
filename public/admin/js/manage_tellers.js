@@ -115,6 +115,11 @@ class TellerManager {
             
             if (data.success) {
                 this.totalTellers = data.total || 0;
+                // Update total tellers count display
+                const totalCountElement = document.getElementById('total_tellers_count');
+                if (totalCountElement) {
+                    totalCountElement.textContent = this.totalTellers.toLocaleString();
+                }
                 this.displayTellers(data.tellers || []);
                 this.updatePagination();
             } else {
