@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const userCardsContainer = document.getElementById('user_cards');
     const paginationContainer = document.getElementById('pagination');
     const searchInput = document.getElementById('search_user');
-    const sidebarToggle = document.getElementById('sidebar_toggle');
-    const sidebar = document.querySelector('.sidebar');
     const logoutBtn = document.getElementById('logout_btn');
 
     // Initialize
@@ -20,11 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Search functionality
         searchInput.addEventListener('input', handleSearch);
         
-        // Sidebar toggle
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
         // Logout
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
