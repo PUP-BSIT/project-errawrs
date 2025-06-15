@@ -2346,6 +2346,7 @@
               LIMIT ? OFFSET ?
 [14-Jun-2025 13:56:07 Asia/Manila] List Tellers: Found 10 tellers
 [14-Jun-2025 13:56:07 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":29,"teller_number":"T000027","first_name":"Stack","last_name":"Overcash","email":"StackOvercash@gmail.com","status":"active"},{"teller_id":28,"teller_number":"T000026","first_name":"StackOver","last_name":"Cash","email":"StakOverCash@gmail.com","status":"active"},{"teller_id":27,"teller_number":"T000025","first_name":"Gener","last_name":"Andaya","email":"GenerAndaya@gmail.com","status":"active"},{"teller_id":26,"teller_number":"T000024","first_name":"bantex","last_name":"texban","email":"bantex@gmail.com","status":"active"}],"total":"29","page":1,"limit":10}
+
 [14-Jun-2025 14:31:01 Asia/Manila] PHP Warning:  mysqli::__construct(): php_network_getaddresses: getaddrinfo for ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com failed: No such host is known.  in C:\project-errawrs\src\config\database.php on line 60
 [14-Jun-2025 14:31:01 Asia/Manila] Database Connection Error: php_network_getaddresses: getaddrinfo for ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com failed: No such host is known. 
 [14-Jun-2025 14:31:14 Asia/Manila] Received login data: Array
@@ -2402,18 +2403,60 @@
 [14-Jun-2025 14:31:20 Asia/Manila] List Tellers: Found 10 tellers
 [14-Jun-2025 14:31:20 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":49,"teller_number":"T000033","first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com","status":"pending"},{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":47,"teller_number":"T000031","first_name":"Kirb","last_name":"Consultado","email":"kirbyconsultado@gmail.com","status":"pending"},{"teller_id":42,"teller_number":"T000030","first_name":"San","last_name":"Sento","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":36,"teller_number":"T000029","first_name":"ban","last_name":"tex","email":"ivandelumen05@gmail.com","status":"active"},{"teller_id":35,"teller_number":"T000028","first_name":"Sento","last_name":"Floy","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":29,"teller_number":"T000027","first_name":"Stack","last_name":"Overcash","email":"StackOvercash@gmail.com","status":"active"},{"teller_id":28,"teller_number":"T000026","first_name":"StackOver","last_name":"Cash","email":"StakOverCash@gmail.com","status":"active"},{"teller_id":27,"teller_number":"T000025","first_name":"Gener","last_name":"Andaya","email":"GenerAndaya@gmail.com","status":"active"},{"teller_id":26,"teller_number":"T000024","first_name":"bantex","last_name":"texban","email":"bantex@gmail.com","status":"active"}],"total":"29","page":1,"limit":10}
 [15-Jun-2025 16:54:02 Asia/Manila] Received login data: Array
+
+
+[14-Jun-2025 14:55:35 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T003
+    [password] => password
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:55:35 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T003
+    [password] => password
+    [login_type] => teller
+)
+
+[14-Jun-2025 15:07:02 Asia/Manila] Received login data: Array
+[14-Jun-2025 14:25:41 Asia/Manila] Received login data: Array
+(
+    [teller_number] => admin
+    [password] => Admin@123
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:25:41 Asia/Manila] Received login data: Array
+(
+    [teller_number] => admin
+    [password] => Admin@123
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:26:13 Asia/Manila] Received login data: Array
+
+
 (
     [username] => admin
     [password] => Admin@123
     [login_type] => admin
 )
 
+
 [15-Jun-2025 16:54:02 Asia/Manila] Received login data: Array
+
+
+[14-Jun-2025 15:07:02 Asia/Manila] Received login data: Array
+
+[14-Jun-2025 14:26:13 Asia/Manila] Received login data: Array
+
 (
     [username] => admin
     [password] => Admin@123
     [login_type] => admin
 )
+
 
 [15-Jun-2025 10:54:07 Europe/Berlin] Session data: Array
 (
@@ -2455,12 +2498,19 @@
 [15-Jun-2025 16:54:08 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 16:54:08 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":10}
 [15-Jun-2025 10:54:39 Europe/Berlin] Session data: Array
+
+
+[14-Jun-2025 09:07:12 Europe/Berlin] Session data: Array
+
+[14-Jun-2025 08:26:18 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749977672
             [first_name] => System
@@ -2502,6 +2552,15 @@
             [type] => admin
             [logged_in_at] => 1749977643
             [last_activity] => 1749977679
+
+
+            [logged_in_at] => 1749884823
+            [last_activity] => 1749884823
+
+            [logged_in_at] => 1749882373
+            [last_activity] => 1749882373
+
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -2518,6 +2577,7 @@
         )
 
 )
+
 
 [15-Jun-2025 10:57:50 Europe/Berlin] List Tellers: Loading database configuration
 [15-Jun-2025 16:57:50 Asia/Manila] List Tellers: Connecting to database
@@ -2572,14 +2632,66 @@
 [15-Jun-2025 16:58:36 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 16:58:36 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":10}
 [15-Jun-2025 11:00:34 Europe/Berlin] Session data: Array
+
+[14-Jun-2025 09:07:12 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Total count - 3
+[14-Jun-2025 15:07:12 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 15:07:13 Asia/Manila] List Tellers: Found 3 tellers
+[14-Jun-2025 15:07:13 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"3","page":1,"limit":10}
+[14-Jun-2025 15:08:04 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000003
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jun-2025 15:08:04 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000003
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jun-2025 16:08:53 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000003
+
+[14-Jun-2025 08:26:18 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:26:18 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Total count - 1
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Found 1 tellers
+[14-Jun-2025 14:26:19 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"1","page":1,"limit":10}
+[14-Jun-2025 08:27:03 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749977914
+
+            [logged_in_at] => 1749882373
+            [last_activity] => 1749882417
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -2884,14 +2996,154 @@
 [15-Jun-2025 17:06:18 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 17:06:18 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":6}
 [15-Jun-2025 11:06:22 Europe/Berlin] Session data: Array
+=======
+[14-Jun-2025 08:27:03 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Total count - 2
+[14-Jun-2025 14:27:03 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:27:04 Asia/Manila] List Tellers: Found 2 tellers
+[14-Jun-2025 14:27:04 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"pending"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"2","page":1,"limit":10}
+[14-Jun-2025 14:28:27 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T00002
+    [password] => Geraldkasan123
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:28:27 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T00002
+    [password] => Geraldkasan123
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:28:37 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T00002
+
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+
+[14-Jun-2025 16:08:53 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000003
+
+[14-Jun-2025 14:28:37 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T00002
+
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:28:57 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => Geraldkasan123
+    [login_type] => teller
+)
+
+[14-Jun-2025 14:28:57 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => Geraldkasan123
+    [login_type] => teller
+)
+
+[14-Jun-2025 08:32:34 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 31
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1749882537
+            [last_activity] => 1749882537
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 31
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jun-2025 08:32:34 Europe/Berlin] List Tellers Error: Unauthorized access
+[14-Jun-2025 08:33:22 Europe/Berlin] Session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 31
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1749882537
+            [last_activity] => 1749882537
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 31
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jun-2025 08:33:22 Europe/Berlin] List Tellers Error: Unauthorized access
+[14-Jun-2025 14:33:40 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jun-2025 14:33:40 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jun-2025 08:33:46 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749978377
+
+            [logged_in_at] => 1749882821
+            [last_activity] => 1749882821
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -2908,6 +3160,7 @@
         )
 
 )
+
 
 [15-Jun-2025 11:06:22 Europe/Berlin] List Tellers: Loading database configuration
 [15-Jun-2025 17:06:22 Asia/Manila] List Tellers: Connecting to database
@@ -2923,14 +3176,35 @@
 [15-Jun-2025 17:06:24 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 17:06:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":6}
 [15-Jun-2025 11:07:08 Europe/Berlin] Session data: Array
+
+[14-Jun-2025 08:33:46 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:33:46 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Total count - 2
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Found 2 tellers
+[14-Jun-2025 14:33:47 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"2","page":1,"limit":10}
+[14-Jun-2025 08:39:32 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749978382
+
+            [logged_in_at] => 1749882821
+            [last_activity] => 1749882836
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -2948,6 +3222,7 @@
 
 )
 
+
 [15-Jun-2025 11:07:08 Europe/Berlin] List Tellers: Loading database configuration
 [15-Jun-2025 17:07:08 Asia/Manila] List Tellers: Connecting to database
 [15-Jun-2025 17:07:09 Asia/Manila] List Tellers: Database connection successful
@@ -2962,14 +3237,35 @@
 [15-Jun-2025 17:07:09 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 17:07:09 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":6}
 [15-Jun-2025 11:07:13 Europe/Berlin] Session data: Array
+
+[14-Jun-2025 08:39:32 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:39:32 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Total count - 2
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Found 2 tellers
+[14-Jun-2025 14:39:33 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"2","page":1,"limit":10}
+[14-Jun-2025 08:40:16 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749978428
+
+            [logged_in_at] => 1749882821
+            [last_activity] => 1749883210
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -3001,14 +3297,35 @@
 [15-Jun-2025 17:07:14 Asia/Manila] List Tellers: Found 4 tellers
 [15-Jun-2025 17:07:14 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":33,"teller_number":"T000004","first_name":"gerald","last_name":"kasan","email":"geraldkasan163@gmail.com","status":"active"},{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"4","page":1,"limit":6}
 [15-Jun-2025 11:07:30 Europe/Berlin] Session data: Array
+
+[14-Jun-2025 08:40:16 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:40:16 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Total count - 3
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Found 3 tellers
+[14-Jun-2025 14:40:17 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"pending"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"3","page":1,"limit":10}
+[14-Jun-2025 08:41:02 Europe/Berlin] Session data: Array
+
 (
     [auth] => Array
         (
             [id] => 2
             [identifier] => admin
             [type] => admin
+
             [logged_in_at] => 1749977643
             [last_activity] => 1749978433
+
+            [logged_in_at] => 1749882821
+            [last_activity] => 1749883216
+
             [first_name] => System
             [last_name] => Administrator
             [phone_number] => 
@@ -3025,6 +3342,7 @@
         )
 
 )
+
 
 [15-Jun-2025 11:07:30 Europe/Berlin] List Tellers: Loading database configuration
 [15-Jun-2025 17:07:30 Asia/Manila] List Tellers: Connecting to database
@@ -8967,3 +9285,18 @@
               LIMIT ? OFFSET ?
 [15-Jun-2025 19:20:24 Asia/Manila] List Tellers: Found 9 tellers
 [15-Jun-2025 19:20:24 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":48,"teller_number":"T000032","first_name":"Javier","last_name":"Java","email":"juliemaelumawag@gmail.com","status":"active"},{"teller_id":21,"teller_number":"T000019","first_name":"Angelica Joy","last_name":"Uy","email":"angelica@gmail.com","status":"active"},{"teller_id":18,"teller_number":"T001","first_name":"John","last_name":"Doe","email":"john.doe@bank.com","status":"active"},{"teller_id":16,"teller_number":"T000016","first_name":"Jane","last_name":"Brown","email":"asdfa@asdfads","status":"active"},{"teller_id":14,"teller_number":"T000014","first_name":"John","last_name":"Midnight","email":"john@gmail.com","status":"active"},{"teller_id":13,"teller_number":"T000013","first_name":"Jane","last_name":"Midnight","email":"janemidnight@gmail.com","status":"active"},{"teller_id":3,"teller_number":"","first_name":"Jane","last_name":"Dee","email":"janedee@gmail.com","status":"active"},{"teller_id":2,"teller_number":"T00002","first_name":"John","last_name":"Doe","email":"johndoe@gmail.com","status":"active"},{"teller_id":1,"teller_number":"T00001","first_name":"John","last_name":"Doe","email":"johndoe@gmail.com","status":"active"}],"total":9,"page":1,"limit":10}
+
+[14-Jun-2025 08:41:02 Europe/Berlin] List Tellers: Loading database configuration
+[14-Jun-2025 14:41:02 Asia/Manila] List Tellers: Connecting to database
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Database connection successful
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Pagination - Page: 1, Limit: 10, Offset: 0
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Search term: 
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Count query - SELECT COUNT(*) as total FROM teller
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Total count - 3
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Tellers query - SELECT teller_id, teller_number, first_name, last_name, email, status 
+              FROM teller 
+              ORDER BY teller_id DESC 
+              LIMIT ? OFFSET ?
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Found 3 tellers
+[14-Jun-2025 14:41:03 Asia/Manila] List Tellers: Sending response - {"success":true,"tellers":[{"teller_id":32,"teller_number":"T000003","first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com","status":"active"},{"teller_id":31,"teller_number":"T000002","first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com","status":"active"},{"teller_id":30,"teller_number":"T000001","first_name":"Daniel","last_name":"Victorioso","email":"danielvictorioso.acd@gmail.com","status":"active"}],"total":"3","page":1,"limit":10}
+
