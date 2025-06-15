@@ -743,3 +743,256 @@ async function loadUsers(searchTerm = '') {
             </div>`;
     }
 }
+
+function getAPIBaseURL() {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return '/project-errawrs/src/api';
+    } else {
+        // For dev-admin.stackovercash.site and other domains
+        return '/src/api';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // DOM Elements
+    const dashboardContent = document.querySelector('.dashboard-content');
+    const logoutBtn = document.getElementById('logout_btn');
+    const pageTitle = document.querySelector('.page-title');
+
+    // Ensure critical elements exist
+    if (!dashboardContent || !logoutBtn || !pageTitle) {
+        console.error('Critical DOM elements not found. Stopping script.');
+        return;
+    }
+
+    // Initialize dashboard
+    loadDashboardData();
+    setupEventListeners();
+
+    function setupEventListeners() {
+        // Logout functionality
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleLogout();
+        });
+    }
+
+    async function loadDashboardData() {
+        try {
+            const response = await fetch(`${getAPIBaseURL()}/admin/get_dashboard_data.php`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to load dashboard data');
+            }
+
+            updateDashboardUI(data);
+            showToast('Dashboard data loaded successfully', 'success');
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            showError('Failed to load dashboard data. Please try again later.');
+        }
+    }
+
+    function updateDashboardUI(data) {
+        // Update statistics
+        updateStatistic('total_users', data.total_users || 0);
+        updateStatistic('total_transactions', data.total_transactions || 0);
+        updateStatistic('total_tellers', data.total_tellers || 0);
+        updateStatistic('total_deposits', data.total_deposits || 0);
+
+        // Update recent transactions
+        updateRecentTransactions(data.recent_transactions || []);
+
+        // Update system status
+        updateSystemStatus(data.system_status || {});
+    }
+
+    function updateStatistic(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value.toLocaleString();
+        }
+    }
+
+    function updateRecentTransactions(transactions) {
+        const container = document.querySelector('.recent-transactions');
+        if (!container) return;
+
+        if (transactions.length === 0) {
+            container.innerHTML = `
+                <div class="no-transactions">
+                    <p>No recent transactions</p>
+                </div>
+            `;
+            return;
+        }
+
+        const transactionsList = transactions.map(transaction => `
+            <div class="transaction-item">
+                <div class="transaction-icon">
+                    <i class="fas ${getTransactionIcon(transaction.transaction_type)}"></i>
+                </div>
+                <div class="transaction-details">
+                    <div class="transaction-main">
+                        <h3 class="transaction-title">${formatTransactionType(transaction.transaction_type)}</h3>
+                        <span class="transaction-amount">${formatAmount(transaction.amount)}</span>
+                    </div>
+                    <div class="transaction-meta">
+                        <span class="transaction-id">ID: ${transaction.transaction_id}</span>
+                        <span class="transaction-date">${formatDate(transaction.transaction_date)}</span>
+                        <span class="transaction-status ${getStatusClass(transaction.status)}">${transaction.status}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        container.innerHTML = transactionsList;
+    }
+
+    function updateSystemStatus(status) {
+        const container = document.querySelector('.system-status');
+        if (!container) return;
+
+        const statusItems = [
+            { id: 'server_status', label: 'Server Status', value: status.server_status || 'Unknown' },
+            { id: 'database_status', label: 'Database Status', value: status.database_status || 'Unknown' },
+            { id: 'api_status', label: 'API Status', value: status.api_status || 'Unknown' },
+            { id: 'last_backup', label: 'Last Backup', value: status.last_backup || 'Never' }
+        ];
+
+        const statusHTML = statusItems.map(item => `
+            <div class="status-item">
+                <span class="status-label">${item.label}:</span>
+                <span class="status-value ${getStatusValueClass(item.value)}">${item.value}</span>
+            </div>
+        `).join('');
+
+        container.innerHTML = statusHTML;
+    }
+
+    function getTransactionIcon(type) {
+        const iconMap = {
+            'deposit': 'fa-arrow-down',
+            'withdrawal': 'fa-arrow-up',
+            'transfer': 'fa-exchange-alt'
+        };
+        return iconMap[type.toLowerCase()] || 'fa-circle';
+    }
+
+    function formatTransactionType(type) {
+        return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    }
+
+    function formatAmount(amount) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(amount);
+    }
+
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    function getStatusClass(status) {
+        const statusMap = {
+            'success': 'status-success',
+            'pending': 'status-pending',
+            'failed': 'status-failed'
+        };
+        return statusMap[status.toLowerCase()] || '';
+    }
+
+    function getStatusValueClass(value) {
+        const valueMap = {
+            'Online': 'status-online',
+            'Offline': 'status-offline',
+            'Warning': 'status-warning',
+            'Error': 'status-error'
+        };
+        return valueMap[value] || '';
+    }
+
+    async function handleLogout() {
+        try {
+            const response = await fetch(`${getAPIBaseURL()}/auth/logout.php`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Logging out...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            } else {
+                throw new Error(data.message || 'Logout failed');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            showError('Failed to logout. Please try again.');
+        }
+    }
+
+    function showError(message) {
+        const errorDisplay = document.getElementById('error_display');
+        if (errorDisplay) {
+            errorDisplay.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            errorDisplay.style.display = 'block';
+        }
+    }
+
+    function showToast(message, type) {
+        const toastContainer = document.querySelector('.toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        let iconClass;
+        switch(type) {
+            case 'success': iconClass = 'fas fa-check-circle'; break;
+            case 'error': iconClass = 'fas fa-exclamation-circle'; break;
+            default: iconClass = 'fas fa-info-circle';
+        }
+
+        toast.innerHTML = `
+            <i class="${iconClass}"></i>
+            <span>${message}</span>
+            <button class="toast-close"><i class="fas fa-times"></i></button>
+        `;
+
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            document.body.appendChild(toast);
+            console.warn('Toast container not found, appending toast to body.');
+        }
+
+        setTimeout(() => toast.remove(), 3000);
+
+        const closeButton = toast.querySelector('.toast-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => toast.remove());
+        }
+    }
+});

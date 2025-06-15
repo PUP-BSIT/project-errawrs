@@ -1,657 +1,446 @@
 class TellerManager {
     constructor() {
         this.currentPage = 1;
-        this.pageSize = 6;
-        this.totalTellers = 0;
-        this.searchTerm = '';
-        this.searchTimeout = null;
+        this.itemsPerPage = 10;
+        this.totalPages = 1;
+        this.allTellers = [];
+        this.filteredTellers = [];
+
+        // DOM Elements
+        this.tellerCardsContainer = document.getElementById('teller_cards');
+        this.paginationContainer = document.getElementById('pagination');
+        this.searchTellerInput = document.getElementById('search_teller');
+        this.tellerForm = document.getElementById('teller_form');
+        this.addTellerBtn = document.getElementById('add_teller_btn');
+        this.editTellerModal = new bootstrap.Modal(document.getElementById('editTellerModal'));
+        this.editTellerForm = document.getElementById('edit_teller_form');
+        this.editTellerIdInput = document.getElementById('edit_teller_id');
+        this.editFirstNameInput = document.getElementById('edit_first_name');
+        this.editLastNameInput = document.getElementById('edit_last_name');
+        this.editUsernameInput = document.getElementById('edit_username');
+        this.editStatusSelect = document.getElementById('edit_status');
+        this.resetPasswordBtn = document.getElementById('reset_password_btn');
+        this.confirmResetPasswordBtn = document.getElementById('confirm_reset_password_btn');
+        this.resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+        this.currentTellerToReset = null;
+
+        // Ensure critical elements exist
+        if (!this.tellerCardsContainer || !this.paginationContainer || !this.searchTellerInput || !this.tellerForm || !this.addTellerBtn) {
+            console.error('Critical DOM elements for TellerManager not found. Stopping script.');
+            return; // Stop if critical elements are missing
+        }
+
         this.init();
     }
 
+    getAPIBaseURL() {
+        const hostname = window.location.hostname;
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return '/project-errawrs/src/api';
+        } else {
+            // For dev-admin.stackovercash.site and other domains
+            return '/src/api';
+        }
+    }
+
     init() {
-        this.setupEventListeners();
         this.loadTellers();
+        this.setupEventListeners();
     }
 
     setupEventListeners() {
-        // Search
-        const searchInput = document.getElementById('search_teller');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => this.handleSearch(e));
-        }
-
-        // Create teller button
-        const createBtn = document.getElementById('create_teller_btn');
-        if (createBtn) {
-            createBtn.addEventListener('click', () => this.showCreateModal());
-        }
-
-        // Modal close buttons
-        document.querySelectorAll('.close-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => this.closeModal(e.target.closest('.modal')));
-        });
-
-        // Save teller
-        const saveBtn = document.getElementById('save_btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => this.saveTeller());
-        }
-
-        // Cancel button
-        const cancelBtn = document.getElementById('cancel_btn');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.closeModal(document.getElementById('teller_modal')));
-        }
-
-        // Success modal buttons
-        const doneBtn = document.getElementById('done_btn');
-        const createAnotherBtn = document.getElementById('create_another_btn');
-        if (doneBtn) {
-            doneBtn.addEventListener('click', () => this.closeModal(document.getElementById('success_modal')));
-        }
-        if (createAnotherBtn) {
-            createAnotherBtn.addEventListener('click', () => {
-                this.closeModal(document.getElementById('success_modal'));
-                this.showCreateModal();
-            });
-        }
-
-        // Logout
-        const logoutBtn = document.getElementById('logout_btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => this.handleLogout(e));
-        }
-
-        // Reset password modal buttons
-        const resetPasswordModal = document.getElementById('reset_password_modal');
-        const cancelResetBtn = document.getElementById('cancel_reset_btn');
-        const confirmResetBtn = document.getElementById('confirm_reset_btn');
-        
-        if (cancelResetBtn) {
-            cancelResetBtn.addEventListener('click', () => this.closeModal(resetPasswordModal));
-        }
-        
-        // Close modal when clicking close button
-        const closeResetBtn = resetPasswordModal?.querySelector('.close-btn');
-        if (closeResetBtn) {
-            closeResetBtn.addEventListener('click', () => this.closeModal(resetPasswordModal));
-        }
-
-        // Status change modal buttons
-        const statusModal = document.getElementById('status_change_modal');
-        const cancelStatusBtn = document.getElementById('cancel_status_btn');
-        const closeStatusBtn = statusModal?.querySelector('.close-btn');
-        
-        if (cancelStatusBtn) {
-            cancelStatusBtn.addEventListener('click', () => this.closeModal(statusModal));
-        }
-        if (closeStatusBtn) {
-            closeStatusBtn.addEventListener('click', () => this.closeModal(statusModal));
-        }
+        this.searchTellerInput.addEventListener('input', () => this.handleSearch());
+        this.addTellerBtn.addEventListener('click', () => this.showAddTellerModal());
+        this.tellerForm.addEventListener('submit', (e) => this.handleTellerFormSubmit(e));
+        this.editTellerForm.addEventListener('submit', (e) => this.handleEditTellerFormSubmit(e));
+        this.resetPasswordBtn.addEventListener('click', () => this.showResetPasswordConfirmation());
+        this.confirmResetPasswordBtn.addEventListener('click', () => this.resetTellerPassword());
     }
 
     async loadTellers() {
+        this.tellerCardsContainer.classList.add('loading');
         try {
-            const container = document.getElementById('teller_cards');
-            if (!container) return;
-
-            container.classList.add('loading');
-
-            const params = new URLSearchParams({
-                page: this.currentPage,
-                limit: this.pageSize,
-                search: this.searchTerm
-            });
-
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/list_tellers.php`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 credentials: 'include'
             });
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch tellers: ${response.status}`);
-            }
-
             const data = await response.json();
-            
-            if (data.success) {
-                this.totalTellers = data.total || 0;
-                // Update total tellers count display
-                const totalCountElement = document.getElementById('total_tellers_count');
-                if (totalCountElement) {
-                    totalCountElement.textContent = this.totalTellers.toLocaleString();
-                }
-                this.displayTellers(data.tellers || []);
-                this.updatePagination();
-            } else {
-                throw new Error(data.message || 'Failed to load tellers');
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to fetch tellers');
             }
+
+            this.allTellers = data.list;
+            this.sortTellers(); // Sort them after fetching
+            this.filterAndRenderTellers();
+            this.showToast('Tellers loaded successfully', 'success');
+
         } catch (error) {
-            console.error('Error loading tellers:', error);
-            this.showToast('Failed to load tellers. Please try again.', 'error');
+            this.showToast(`Error: ${error.message}`, 'error');
+            this.renderNoResults();
         } finally {
-            const container = document.getElementById('teller_cards');
-            if (container) {
-                container.classList.remove('loading');
-            }
+            this.tellerCardsContainer.classList.remove('loading');
         }
     }
 
-    displayTellers(tellers) {
-        const container = document.getElementById('teller_cards');
-        if (!container) return;
+    sortTellers() {
+        this.allTellers.sort((a, b) => {
+            // Inactive tellers first
+            if (a.status !== b.status) {
+                return a.status === 'inactive' ? -1 : 1;
+            }
+            // Then by creation date (newest first)
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+    }
 
-        if (tellers.length === 0) {
-            container.innerHTML = `
-                <div class="no-results">
-                    <i class="fas fa-search"></i>
-                    <p>No tellers found</p>
-                </div>`;
+    filterAndRenderTellers() {
+        const searchTerm = this.searchTellerInput.value.toLowerCase();
+        this.filteredTellers = this.allTellers.filter(teller =>
+            `${teller.first_name} ${teller.last_name}`.toLowerCase().includes(searchTerm) ||
+            teller.username.toLowerCase().includes(searchTerm) ||
+            teller.teller_id.toString().includes(searchTerm)
+        );
+        this.currentPage = 1; // Reset to first page on new search/filter
+        this.renderTellers();
+        this.renderPagination();
+    }
+
+    renderTellers() {
+        if (!this.tellerCardsContainer) {
+            console.error('tellerCardsContainer is null. Cannot render tellers.');
             return;
         }
 
-        // Sort tellers: pending first, then by status (active/inactive)
-        const sortedTellers = [...tellers].sort((a, b) => {
-            // If a is pending and b is not, a comes first
-            if (a.status === 'pending' && b.status !== 'pending') return -1;
-            // If b is pending and a is not, b comes first
-            if (b.status === 'pending' && a.status !== 'pending') return 1;
-            // If both are pending or both are not pending, sort by status
-            if (a.status === b.status) return 0;
-            // Active comes before inactive
-            return a.status === 'active' ? -1 : 1;
-        });
+        this.tellerCardsContainer.innerHTML = '';
+        if (this.filteredTellers.length === 0) {
+            this.renderNoResults();
+            return;
+        }
 
-        container.innerHTML = sortedTellers.map(teller => `
-            <div class="teller-card">
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const tellersToShow = this.filteredTellers.slice(startIndex, endIndex);
+
+        this.tellerCardsContainer.style.gridTemplateColumns = tellersToShow.length === 1
+            ? 'minmax(300px, 400px)'
+            : 'repeat(auto-fit, minmax(300px, 1fr))';
+
+
+        tellersToShow.forEach(teller => {
+            const card = document.createElement('div');
+            card.className = 'teller-card';
+            card.innerHTML = `
                 <div class="teller-header">
                     <div class="teller-info">
                         <h3>${teller.first_name} ${teller.last_name}</h3>
-                        <div class="teller-number">${teller.teller_number || 'No Number Assigned'}</div>
+                        <div class="teller-id">Teller ID: ${teller.teller_id}</div>
                     </div>
-                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 
-                        teller.status === 'pending' ? 'status-pending' : 'status-inactive'}">
-                        ${teller.status}
-                    </span>
+                    <span class="status-badge status-${teller.status}">${teller.status}</span>
                 </div>
                 <div class="teller-details">
                     <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-value">${teller.email}</span>
+                        <span class="detail-label">Username:</span>
+                        <span class="detail-value">${teller.username}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Created:</span>
+                        <span class="detail-value">${new Date(teller.created_at).toLocaleDateString()}</span>
                     </div>
                 </div>
                 <div class="teller-actions">
-                    <button class="action-btn" onclick="tellerManager.editTeller(${teller.teller_id})" title="Edit">
-                        <i class="fas fa-edit"></i>
+                    <button class="btn btn-sm btn-primary edit-teller-btn" data-id="${teller.teller_id}">
+                        <i class="fas fa-edit"></i> Edit
                     </button>
-                    <button class="action-btn" onclick="tellerManager.resetPassword(${teller.teller_id})" title="Reset Password">
-                        <i class="fas fa-key"></i>
+                    <button class="btn btn-sm btn-danger delete-teller-btn" data-id="${teller.teller_id}" data-username="${teller.username}">
+                        <i class="fas fa-trash-alt"></i> Delete
                     </button>
-                    ${teller.status !== 'pending' ? `
-                        <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
-                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
-                                title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
-                            <i class="fas fa-power-off"></i>
-                        </button>
-                    ` : `
-                        <button class="action-btn success" 
-                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, 'pending')" 
-                                title="Activate">
-                            <i class="fas fa-power-off"></i>
-                        </button>
-                    `}
                 </div>
-            </div>
-        `).join('');
+            `;
+            this.tellerCardsContainer.appendChild(card);
+        });
+
+        this.tellerCardsContainer.querySelectorAll('.edit-teller-btn').forEach(button => {
+            button.addEventListener('click', (e) => this.showEditTellerModal(e.currentTarget.dataset.id));
+        });
+
+        this.tellerCardsContainer.querySelectorAll('.delete-teller-btn').forEach(button => {
+            button.addEventListener('click', (e) => this.confirmDeleteTeller(e.currentTarget.dataset.id, e.currentTarget.dataset.username));
+        });
     }
 
-    updatePagination() {
-        const container = document.getElementById('pagination');
-        if (!container) return;
+    renderPagination() {
+        this.paginationContainer.innerHTML = '';
+        this.totalPages = Math.ceil(this.filteredTellers.length / this.itemsPerPage);
 
-        const totalPages = Math.ceil(this.totalTellers / this.pageSize);
-        
-        let html = '';
-        
+        if (this.totalPages <= 1) return;
+
         // Previous button
-        html += `
-            <button class="pagination-btn" ${this.currentPage <= 1 ? 'disabled' : ''} 
-                    onclick="tellerManager.changePage(${this.currentPage - 1})">
-                <i class="fas fa-chevron-left"></i>
-                Previous
-            </button>`;
-
-        // Page numbers with ellipsis
-        const maxVisiblePages = 5;
-        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-        if (startPage > 1) {
-            html += `<button onclick="tellerManager.changePage(1)">1</button>`;
-            if (startPage > 2) {
-                html += `<span class="pagination-ellipsis">...</span>`;
+        const prevBtn = this.createPaginationButton('Previous', this.currentPage === 1, () => {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.renderTellers();
+                this.renderPagination();
             }
-        }
+        });
+        this.paginationContainer.appendChild(prevBtn);
 
-        for (let i = startPage; i <= endPage; i++) {
-            html += `
-                <button class="pagination-btn ${i === this.currentPage ? 'active' : ''}"
-                        onclick="tellerManager.changePage(${i})">
-                    ${i}
-                </button>`;
-        }
-
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                html += `<span class="pagination-ellipsis">...</span>`;
-            }
-            html += `<button onclick="tellerManager.changePage(${totalPages})">${totalPages}</button>`;
+        // Page numbers
+        for (let i = 1; i <= this.totalPages; i++) {
+            const pageBtn = this.createPaginationButton(i, i === this.currentPage, () => {
+                this.currentPage = i;
+                this.renderTellers();
+                this.renderPagination();
+            });
+            if (i === this.currentPage) pageBtn.classList.add('active');
+            this.paginationContainer.appendChild(pageBtn);
         }
 
         // Next button
-        html += `
-            <button class="pagination-btn" ${this.currentPage >= totalPages ? 'disabled' : ''} 
-                    onclick="tellerManager.changePage(${this.currentPage + 1})">
-                Next
-                <i class="fas fa-chevron-right"></i>
-            </button>`;
-
-        container.innerHTML = html;
+        const nextBtn = this.createPaginationButton('Next', this.currentPage === this.totalPages, () => {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+                this.renderTellers();
+                this.renderPagination();
+            }
+        });
+        this.paginationContainer.appendChild(nextBtn);
     }
 
-    handleSearch(e) {
-        if (this.searchTimeout) {
-            clearTimeout(this.searchTimeout);
-        }
-
-        this.searchTerm = e.target.value.trim();
-        this.searchTimeout = setTimeout(() => {
-            this.currentPage = 1;
-            this.loadTellers();
-        }, 300);
+    createPaginationButton(text, disabled, onClick) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.disabled = disabled;
+        button.addEventListener('click', onClick);
+        return button;
     }
 
-    showCreateModal() {
-        const modal = document.getElementById('teller_modal');
-        if (!modal) return;
-
-        // Reset form
-        const form = document.getElementById('teller_form');
-        if (form) {
-            form.reset();
-        }
-
-        // Clear hidden teller ID
-        const tellerIdInput = document.getElementById('teller_id');
-        if (tellerIdInput) {
-            tellerIdInput.value = '';
-        }
-
-        // Update modal title and button
-        const title = document.getElementById('modal_title');
-        const saveBtn = document.getElementById('save_btn');
-        if (title) {
-            title.textContent = 'Create New Teller';
-        }
-        if (saveBtn) {
-            saveBtn.textContent = 'Create Teller';
-        }
-
-        // Show modal
-        modal.classList.add('show');
+    handleSearch() {
+        this.filterAndRenderTellers();
     }
 
-    async editTeller(tellerId) {
+    renderNoResults() {
+        this.tellerCardsContainer.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>No tellers found</p>
+            </div>
+        `;
+    }
+
+    showAddTellerModal() {
+        this.tellerForm.reset();
+        document.getElementById('addTellerModalLabel').textContent = 'Add New Teller';
+        // Hide password fields as they are for adding, not editing
+        document.getElementById('add_password_group').style.display = 'block';
+        document.getElementById('add_confirm_password_group').style.display = 'block';
+
+        const addTellerModal = new bootstrap.Modal(document.getElementById('addTellerModal'));
+        addTellerModal.show();
+    }
+
+    async handleTellerFormSubmit(e) {
+        e.preventDefault();
+        
+        const firstName = document.getElementById('first_name').value.trim();
+        const lastName = document.getElementById('last_name').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+
+        if (!firstName || !lastName || !username || !password || !confirmPassword) {
+            this.showToast('Please fill in all fields.', 'error');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            this.showToast('Passwords do not match.', 'error');
+            return;
+        }
+
         try {
-            const response = await fetch(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/add_teller.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    username: username,
+                    password: password
+                }),
                 credentials: 'include'
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch teller details');
-            }
-
             const data = await response.json();
-            
-            if (data.success) {
-                const modal = document.getElementById('teller_modal');
-                const form = document.getElementById('teller_form');
-                
-                if (modal && form) {
-                    // Populate form
-                    document.getElementById('teller_id').value = data.teller.teller_id;
-                    document.getElementById('first_name').value = data.teller.first_name;
-                    document.getElementById('last_name').value = data.teller.last_name;
-                    document.getElementById('email').value = data.teller.email;
 
-                    // Update modal title
-                    document.getElementById('modal_title').textContent = 'Edit Teller';
-
-                    // Show modal
-                    modal.classList.add('show');
-                }
-            } else {
-                throw new Error(data.message || 'Failed to load teller details');
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to add teller');
             }
+
+            this.showToast('Teller added successfully!', 'success');
+            const addTellerModal = bootstrap.Modal.getInstance(document.getElementById('addTellerModal'));
+            addTellerModal.hide();
+            this.loadTellers(); // Reload tellers to show the new one
         } catch (error) {
-            console.error('Error loading teller details:', error);
-            this.showToast(error.message, 'error');
+            this.showToast(`Error adding teller: ${error.message}`, 'error');
         }
     }
 
-    async saveTeller() {
+    showEditTellerModal(tellerId) {
+        this.currentTellerToReset = tellerId; // Store for password reset
+        const teller = this.allTellers.find(t => t.teller_id == tellerId);
+        if (teller) {
+            this.editTellerIdInput.value = teller.teller_id;
+            this.editFirstNameInput.value = teller.first_name;
+            this.editLastNameInput.value = teller.last_name;
+            this.editUsernameInput.value = teller.username;
+            this.editStatusSelect.value = teller.status;
+            this.editTellerModal.show();
+        } else {
+            this.showToast('Teller not found.', 'error');
+        }
+    }
+
+    async handleEditTellerFormSubmit(e) {
+        e.preventDefault();
+        const tellerId = this.editTellerIdInput.value;
+        const firstName = this.editFirstNameInput.value.trim();
+        const lastName = this.editLastNameInput.value.trim();
+        const username = this.editUsernameInput.value.trim();
+        const status = this.editStatusSelect.value;
+
+        if (!firstName || !lastName || !username || !status) {
+            this.showToast('Please fill in all fields.', 'error');
+            return;
+        }
+
         try {
-            const form = document.getElementById('teller_form');
-            if (!form) return;
-
-            const tellerId = document.getElementById('teller_id').value;
-            const isEdit = !!tellerId;
-
-            const formData = {
-                first_name: document.getElementById('first_name').value.trim(),
-                last_name: document.getElementById('last_name').value.trim(),
-                email: document.getElementById('email').value.trim()
-            };
-
-            // Basic validation
-            if (!formData.first_name || !formData.last_name || !formData.email) {
-                this.showToast('Please fill in all fields', 'error');
-                return;
-            }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                this.showToast('Please enter a valid email address', 'error');
-                return;
-            }
-
-            if (isEdit) {
-                formData.teller_id = tellerId;
-            }
-
-            // Log the request data for debugging
-            console.log('Request data:', {
-                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
-                method: isEdit ? 'PUT' : 'POST',
-                body: formData
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/update_teller.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    teller_id: tellerId,
+                    first_name: firstName,
+                    last_name: lastName,
+                    username: username,
+                    status: status
+                }),
+                credentials: 'include'
             });
+            const data = await response.json();
 
-            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
-                method: isEdit ? 'PUT' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(formData)
-            });
-
-            let data;
-            const responseText = await response.text();
-            console.log('Raw response:', responseText);
-
-            try {
-                data = JSON.parse(responseText);
-                console.log('Parsed response:', data);
-            } catch (e) {
-                throw new Error(`Failed to parse response: ${responseText}`);
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to update teller');
             }
-            
-            if (data.success) {
-                // Close teller modal
-                this.closeModal(document.getElementById('teller_modal'));
 
-                // Show success message
-                this.showSuccessModal(data.teller, isEdit);
-
-                // Show email notification message if new teller
-                if (!isEdit) {
-                    this.showToast('A password setup link has been sent to the teller\'s email address', 'success');
-                }
-
-                // Refresh teller list
-                this.loadTellers();
-            } else {
-                throw new Error(data.message || `Failed to ${isEdit ? 'update' : 'create'} teller`);
-            }
+            this.showToast('Teller updated successfully!', 'success');
+            this.editTellerModal.hide();
+            this.loadTellers(); // Reload tellers to show updated info
         } catch (error) {
-            console.error('Error saving teller:', error);
-            this.showToast(error.message, 'error');
+            this.showToast(`Error updating teller: ${error.message}`, 'error');
         }
     }
 
-    async resetPassword(tellerId) {
-        const modal = document.getElementById('reset_password_modal');
-        if (!modal) return;
-
-        // Show the confirmation modal
-        modal.classList.add('show');
-
-        // Set up the confirm button click handler
-        const confirmBtn = document.getElementById('confirm_reset_btn');
-        if (confirmBtn) {
-            const handleConfirm = async () => {
-                try {
-                    // Close the modal first
-                    this.closeModal(modal);
-
-                    const response = await fetch('/project-errawrs/src/api/admin/reset_teller_password.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({ teller_id: tellerId })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to reset password');
-                    }
-
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.showToast('Password has been reset and sent to the teller\'s email address', 'success');
-                    } else {
-                        throw new Error(data.message || 'Failed to reset password');
-                    }
-                } catch (error) {
-                    console.error('Error resetting password:', error);
-                    this.showToast(error.message, 'error');
-                }
-
-                // Remove the event listener after handling
-                confirmBtn.removeEventListener('click', handleConfirm);
-            };
-
-            // Add the event listener
-            confirmBtn.addEventListener('click', handleConfirm);
+    confirmDeleteTeller(tellerId, username) {
+        if (confirm(`Are you sure you want to delete teller "${username}" (ID: ${tellerId})? This action cannot be undone.`)) {
+            this.deleteTeller(tellerId);
         }
     }
 
-    async toggleTellerStatus(tellerId, currentStatus) {
-        const modal = document.getElementById('status_change_modal');
-        const modalTitle = document.getElementById('status_modal_title');
-        const modalMessage = document.getElementById('status_modal_message');
-        const confirmBtn = document.getElementById('confirm_status_btn');
-        const warningIcon = modal?.querySelector('.warning-icon');
-        const modalHeader = modal?.querySelector('.modal-header');
+    async deleteTeller(tellerId) {
+        try {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/delete_teller.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teller_id: tellerId }),
+                credentials: 'include'
+            });
+            const data = await response.json();
 
-        if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
-
-        const isActivating = currentStatus === 'inactive' || currentStatus === 'pending';
-        
-        // Update modal content
-        modalTitle.textContent = isActivating ? 'Activate Teller' : 'Deactivate Teller';
-        modalMessage.textContent = isActivating 
-            ? 'Are you sure you want to activate this teller\'s account?' 
-            : 'Are you sure you want to deactivate this teller\'s account?';
-        confirmBtn.textContent = isActivating ? 'Activate Account' : 'Deactivate Account';
-        confirmBtn.className = isActivating ? 'btn-success' : 'btn-danger';
-        
-        // Update icons and colors
-        warningIcon.className = `warning-icon ${isActivating ? 'activate' : 'deactivate'}`;
-        modalHeader.className = `modal-header warning ${isActivating ? 'activate' : 'deactivate'}`;
-
-        // Show the modal
-        modal.classList.add('show');
-
-        // Set up the confirm button click handler
-        const handleConfirm = async () => {
-            try {
-                // Close the modal first
-                this.closeModal(modal);
-
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ teller_id: tellerId })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to update status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    this.showToast(
-                        `Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 
-                        'success'
-                    );
-                    await this.loadTellers();
-                } else {
-                    throw new Error(data.message || 'Failed to update teller status');
-                }
-            } catch (error) {
-                console.error('Error toggling teller status:', error);
-                this.showToast(error.message, 'error');
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to delete teller');
             }
 
-            // Remove the event listener after handling
-            confirmBtn.removeEventListener('click', handleConfirm);
-        };
-
-        // Add the event listener
-        confirmBtn.addEventListener('click', handleConfirm);
+            this.showToast('Teller deleted successfully!', 'success');
+            this.loadTellers(); // Reload tellers after deletion
+        } catch (error) {
+            this.showToast(`Error deleting teller: ${error.message}`, 'error');
+        }
     }
 
-    showSuccessModal(teller, isEdit) {
-        const modal = document.getElementById('success_modal');
-        if (!modal) return;
+    showResetPasswordConfirmation() {
+        this.editTellerModal.hide(); // Hide edit modal first
+        if (this.currentTellerToReset) {
+            // You might want to display the username of the teller being reset here
+            // e.g., document.getElementById('reset_teller_username').textContent = teller.username;
+            this.resetPasswordModal.show();
+        }
+    }
 
-        // Update success message
-        const message = isEdit 
-            ? 'Teller information updated successfully!'
-            : 'Teller account created successfully! A password setup link has been sent to their email.';
+    async resetTellerPassword() {
+        if (!this.currentTellerToReset) {
+            this.showToast('No teller selected for password reset.', 'error');
+            return;
+        }
         
-        document.getElementById('success_message').textContent = message;
+        try {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/reset_teller_password.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ teller_id: this.currentTellerToReset }),
+                credentials: 'include'
+            });
+            const data = await response.json();
 
-        // Update teller details
-        document.getElementById('success_teller_number').textContent = teller.teller_number;
-        document.getElementById('success_teller_name').textContent = `${teller.first_name} ${teller.last_name}`;
-        document.getElementById('success_teller_email').textContent = teller.email;
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to reset password');
+            }
 
-        // Show/hide create another button
-        const createAnotherBtn = document.getElementById('create_another_btn');
-        if (createAnotherBtn) {
-            createAnotherBtn.style.display = isEdit ? 'none' : 'block';
+            this.showToast('Password reset successfully! New password displayed in console (for testing only).', 'success');
+            console.log('New Password:', data.new_password); // Display new password for admin
+            this.resetPasswordModal.hide();
+            this.currentTellerToReset = null; // Clear selection
+        } catch (error) {
+            this.showToast(`Error resetting password: ${error.message}`, 'error');
         }
-
-        // Show modal
-        modal.classList.add('show');
     }
 
-    closeModal(modal) {
-        if (modal) {
-            modal.classList.remove('show');
-        }
-    }
-
-    showToast(message, type = 'info') {
-        const container = document.querySelector('.toast-container');
-        if (!container) return;
-
+    showToast(message, type) {
+        const toastContainer = document.querySelector('.toast-container');
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         
+        let iconClass;
+        switch(type) {
+            case 'success': iconClass = 'fas fa-check-circle'; break;
+            case 'error': iconClass = 'fas fa-exclamation-circle'; break;
+            default: iconClass = 'fas fa-info-circle';
+        }
+
         toast.innerHTML = `
-            <i class="${this.getToastIcon(type)}"></i>
+            <i class="${iconClass}"></i>
             <span>${message}</span>
-            <button class="toast-close">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="toast-close"><i class="fas fa-times"></i></button>
         `;
 
-        container.appendChild(toast);
-
-        // Add close button functionality
-        const closeBtn = toast.querySelector('.toast-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                toast.remove();
-            });
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            document.body.appendChild(toast);
+            console.warn('Toast container not found, appending toast to body.');
         }
 
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (toast && toast.parentElement) {
-                toast.remove();
-            }
-        }, 5000);
-    }
+        setTimeout(() => toast.remove(), 3000);
 
-    getToastIcon(type) {
-        switch (type) {
-            case 'success':
-                return 'fas fa-check-circle';
-            case 'error':
-                return 'fas fa-exclamation-circle';
-            case 'warning':
-                return 'fas fa-exclamation-triangle';
-            default:
-                return 'fas fa-info-circle';
+        const closeButton = toast.querySelector('.toast-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => toast.remove());
         }
-    }
-
-    formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return 'Invalid date';
-        
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date);
-    }
-
-    changePage(page) {
-        this.currentPage = page;
-        this.loadTellers();
-    }
-
-    async handleLogout(e) {
-        e.preventDefault();
-        
-        // Clear session storage
-        sessionStorage.clear();
-        
-        // Redirect to login page
-        window.location.href = '/project-errawrs/public/admin/login.html';
-    }
-
-    // Initialize the manager
-    static init() {
-        window.tellerManager = new TellerManager();
     }
 }
 
-// Initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', TellerManager.init);
+document.addEventListener('DOMContentLoaded', () => {
+    new TellerManager();
+});
