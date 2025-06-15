@@ -1,7 +1,7 @@
 class TellerManager {
     constructor() {
         this.currentPage = 1;
-        this.pageSize = 6;
+        this.pageSize = 3;
         this.totalTellers = 0;
         this.searchTerm = '';
         this.searchTimeout = null;
@@ -188,25 +188,45 @@ class TellerManager {
         
         // Previous button
         html += `
-            <button ${this.currentPage <= 1 ? 'disabled' : ''} 
+            <button class="pagination-btn" ${this.currentPage <= 1 ? 'disabled' : ''} 
                     onclick="tellerManager.changePage(${this.currentPage - 1})">
+                <i class="fas fa-chevron-left"></i>
                 Previous
             </button>`;
 
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
+        // Page numbers with ellipsis
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (startPage > 1) {
+            html += `<button onclick="tellerManager.changePage(1)">1</button>`;
+            if (startPage > 2) {
+                html += `<span class="pagination-ellipsis">...</span>`;
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
             html += `
-                <button class="${i === this.currentPage ? 'active' : ''}"
+                <button class="pagination-btn ${i === this.currentPage ? 'active' : ''}"
                         onclick="tellerManager.changePage(${i})">
                     ${i}
                 </button>`;
         }
 
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                html += `<span class="pagination-ellipsis">...</span>`;
+            }
+            html += `<button onclick="tellerManager.changePage(${totalPages})">${totalPages}</button>`;
+        }
+
         // Next button
         html += `
-            <button ${this.currentPage >= totalPages ? 'disabled' : ''} 
+            <button class="pagination-btn" ${this.currentPage >= totalPages ? 'disabled' : ''} 
                     onclick="tellerManager.changePage(${this.currentPage + 1})">
                 Next
+                <i class="fas fa-chevron-right"></i>
             </button>`;
 
         container.innerHTML = html;

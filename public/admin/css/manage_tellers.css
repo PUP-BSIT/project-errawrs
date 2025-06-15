@@ -282,21 +282,18 @@ body {
 
 /* Teller Cards Container */
 .teller-cards-wrapper {
-    flex: 1;
     min-height: 0;
-    padding: 0 1rem;
-    overflow-y: auto;
-    height: calc(100vh - 180px);
-    display: flex;
-    flex-direction: column;
 }
 
 .teller-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
-    gap: 1rem;
-    padding-bottom: 1rem;
-    min-height: calc(100vh - 180px); /* Account for header and pagination */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 1rem;
+    min-height: calc(100vh - 180px);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .teller-cards.loading {
@@ -319,7 +316,7 @@ body {
 }
 
 .teller-card {
-    height: 240px; /* Fixed height for all cards */
+    height: 240px;
     background: white;
     border-radius: 10px;
     padding: 1.25rem;
@@ -327,6 +324,7 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .teller-card:hover {
@@ -561,9 +559,14 @@ body {
     margin-top: auto;
     padding: 1.5rem;
     flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
-.pagination button {
+.pagination-btn {
     padding: 0.5rem 1rem;
     border: 1px solid var(--color-mint);
     background: var(--color-white);
@@ -571,23 +574,38 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     color: var(--color-primary-black);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
 }
 
-.pagination button:hover:not(:disabled) {
+.pagination-btn:hover:not(:disabled) {
     background-color: var(--color-lime-green);
     border-color: var(--color-lime-green);
 }
 
-.pagination button.active {
+.pagination-btn.active {
     background-color: var(--color-mint);
     border-color: var(--color-mint);
     color: var(--color-primary-black);
 }
 
-.pagination button:disabled {
+.pagination-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     border-color: var(--color-gray);
+}
+
+.pagination-ellipsis {
+    padding: 0.5rem;
+    color: var(--color-gray);
+    font-weight: bold;
+}
+
+.pagination button:first-child,
+.pagination button:last-child {
+    padding: 0.5rem 1.25rem;
 }
 
 /* Toast Notifications */
