@@ -3,6 +3,16 @@ let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];
 
+function getAPIBaseURL() {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return '/project-errawrs/src/api';
+    } else {
+        // For dev-admin.stackovercash.site and other domains
+        return '/src/api';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const userCardsContainer = document.getElementById('user_cards');
@@ -39,16 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Implement actual logout logic here
             setTimeout(() => window.location.href = 'login.html', 1000);
         });
-    }
-
-    function getAPIBaseURL() {
-        const hostname = window.location.hostname;
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return '/project-errawrs/src/api';
-        } else {
-            // For dev-admin.stackovercash.site and other domains
-            return '/src/api';
-        }
     }
 
     async function fetchUsers() {
