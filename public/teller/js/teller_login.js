@@ -1,5 +1,21 @@
-// Configuration - API base path
-const API_BASE_PATH = "/src/api"; // Corrected API base path to align with Nginx configuration
+// Configuration - Dynamic API base URL detection
+function getAPIBaseURL() {
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+
+    // Check if running on localhost (or common local IP)
+    if (host.startsWith('localhost') || host.startsWith('127.0.0.1') || host.startsWith('192.168.')) {
+        // For local development, the URL includes the project path
+        // Adjust '/project-errawrs/src/api' if your local setup differs
+        return `${protocol}//${host}/project-errawrs/src/api`;
+    } else {
+        // For production/Nginx setup, the root for PHP is /src/api
+        return `${protocol}//${host}/src/api`;
+    }
+}
+
+// Get the API base URL
+const API_BASE_PATH = getAPIBaseURL();
 
 // Toggle password visibility
 function togglePassword() {

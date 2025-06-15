@@ -8,6 +8,16 @@ class TellerManager {
         this.init();
     }
 
+    getAPIBaseURL() {
+        const hostname = window.location.hostname;
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return '/project-errawrs/src/api';
+        } else {
+            // For dev-admin.stackovercash.site and other domains
+            return '/src/api';
+        }
+    }
+
     init() {
         this.setupEventListeners();
         this.loadTellers();
@@ -103,7 +113,7 @@ class TellerManager {
                 search: this.searchTerm
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/list_tellers.php?${params}`, {
                 credentials: 'include'
             });
 
@@ -254,382 +264,321 @@ class TellerManager {
                 Next
                 <i class="fas fa-chevron-right"></i>
             </button>`;
-
+        
         container.innerHTML = html;
     }
 
     handleSearch(e) {
-        if (this.searchTimeout) {
-            clearTimeout(this.searchTimeout);
-        }
-
+        clearTimeout(this.searchTimeout);
         this.searchTerm = e.target.value.trim();
         this.searchTimeout = setTimeout(() => {
             this.currentPage = 1;
             this.loadTellers();
-        }, 300);
+        }, 300); // Debounce search
     }
 
     showCreateModal() {
         const modal = document.getElementById('teller_modal');
-        if (!modal) return;
-
-        // Reset form
         const form = document.getElementById('teller_form');
-        if (form) {
-            form.reset();
-        }
-
-        // Clear hidden teller ID
-        const tellerIdInput = document.getElementById('teller_id');
-        if (tellerIdInput) {
-            tellerIdInput.value = '';
-        }
-
-        // Update modal title and button
-        const title = document.getElementById('modal_title');
+        const modalTitle = document.getElementById('modal_title');
         const saveBtn = document.getElementById('save_btn');
-        if (title) {
-            title.textContent = 'Create New Teller';
-        }
-        if (saveBtn) {
-            saveBtn.textContent = 'Create Teller';
-        }
 
-        // Show modal
-        modal.classList.add('show');
+        form.reset();
+        form.dataset.tellerId = '';
+        modalTitle.textContent = 'Create New Teller';
+        saveBtn.textContent = 'Create Teller';
+        modal.style.display = 'block';
     }
 
     async editTeller(tellerId) {
         try {
-            const response = await fetch(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
+            const response = await fetch(`${this.getAPIBaseURL()}/admin/get_teller.php?id=${tellerId}`, {
                 credentials: 'include'
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch teller details');
-            }
-
             const data = await response.json();
-            
-            if (data.success) {
+
+            if (data.success && data.teller) {
+                const teller = data.teller;
                 const modal = document.getElementById('teller_modal');
                 const form = document.getElementById('teller_form');
-                
-                if (modal && form) {
-                    // Populate form
-                    document.getElementById('teller_id').value = data.teller.teller_id;
-                    document.getElementById('first_name').value = data.teller.first_name;
-                    document.getElementById('last_name').value = data.teller.last_name;
-                    document.getElementById('email').value = data.teller.email;
+                const modalTitle = document.getElementById('modal_title');
+                const saveBtn = document.getElementById('save_btn');
 
-                    // Update modal title
-                    document.getElementById('modal_title').textContent = 'Edit Teller';
+                form.dataset.tellerId = teller.teller_id;
+                document.getElementById('first_name').value = teller.first_name;
+                document.getElementById('last_name').value = teller.last_name;
+                document.getElementById('email').value = teller.email;
+                document.getElementById('phone_number').value = teller.phone_number;
+                // document.getElementById('password').value = ''; // Don't pre-fill password for security
+                // document.getElementById('confirm_password').value = ''; // Don't pre-fill password for security
 
-                    // Show modal
-                    modal.classList.add('show');
-                }
+                // Hide password fields for edit
+                document.getElementById('password_group').style.display = 'none';
+                document.getElementById('confirm_password_group').style.display = 'none';
+
+                modalTitle.textContent = 'Edit Teller';
+                saveBtn.textContent = 'Save Changes';
+                modal.style.display = 'block';
             } else {
-                throw new Error(data.message || 'Failed to load teller details');
+                this.showToast(data.message || 'Teller not found.', 'error');
             }
         } catch (error) {
-            console.error('Error loading teller details:', error);
-            this.showToast(error.message, 'error');
+            console.error('Error fetching teller for edit:', error);
+            this.showToast('Failed to load teller data for editing.', 'error');
         }
     }
 
     async saveTeller() {
+        const form = document.getElementById('teller_form');
+        const tellerId = form.dataset.tellerId;
+        const isEdit = !!tellerId;
+
+        const firstName = document.getElementById('first_name').value.trim();
+        const lastName = document.getElementById('last_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phoneNumber = document.getElementById('phone_number').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+
+        if (!firstName || !lastName || !email || !phoneNumber) {
+            this.showToast('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        if (!isEdit && (!password || !confirmPassword)) {
+            this.showToast('Please set a password for the new teller.', 'error');
+            return;
+        }
+
+        if (!isEdit && password !== confirmPassword) {
+            this.showToast('Passwords do not match.', 'error');
+            return;
+        }
+
+        // Basic email validation
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            this.showToast('Please enter a valid email address.', 'error');
+            return;
+        }
+
+        const url = isEdit 
+            ? `${this.getAPIBaseURL()}/admin/update_teller.php`
+            : `${this.getAPIBaseURL()}/admin/create_teller.php`;
+
+        const method = 'POST';
+        const body = {
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            phone_number: phoneNumber
+        };
+
+        if (!isEdit) {
+            body.password = password;
+        } else {
+            body.teller_id = tellerId;
+        }
+
         try {
-            const form = document.getElementById('teller_form');
-            if (!form) return;
-
-            const tellerId = document.getElementById('teller_id').value;
-            const isEdit = !!tellerId;
-
-            const formData = {
-                first_name: document.getElementById('first_name').value.trim(),
-                last_name: document.getElementById('last_name').value.trim(),
-                email: document.getElementById('email').value.trim()
-            };
-
-            // Basic validation
-            if (!formData.first_name || !formData.last_name || !formData.email) {
-                this.showToast('Please fill in all fields', 'error');
-                return;
-            }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                this.showToast('Please enter a valid email address', 'error');
-                return;
-            }
-
-            if (isEdit) {
-                formData.teller_id = tellerId;
-            }
-
-            // Log the request data for debugging
-            console.log('Request data:', {
-                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
-                method: isEdit ? 'PUT' : 'POST',
-                body: formData
-            });
-
-            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
-                method: isEdit ? 'PUT' : 'POST',
+            const response = await fetch(url, {
+                method: method,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 },
-                credentials: 'include',
-                body: JSON.stringify(formData)
+                body: JSON.stringify(body),
+                credentials: 'include'
             });
 
-            let data;
-            const responseText = await response.text();
-            console.log('Raw response:', responseText);
+            const data = await response.json();
 
-            try {
-                data = JSON.parse(responseText);
-                console.log('Parsed response:', data);
-            } catch (e) {
-                throw new Error(`Failed to parse response: ${responseText}`);
-            }
-            
             if (data.success) {
-                // Close teller modal
+                this.showToast(`Teller ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
                 this.closeModal(document.getElementById('teller_modal'));
-
-                // Show success message
+                this.loadTellers(); // Reload tellers to show the new one
                 this.showSuccessModal(data.teller, isEdit);
-
-                // Show email notification message if new teller
-                if (!isEdit) {
-                    this.showToast('A password setup link has been sent to the teller\'s email address', 'success');
-                }
-
-                // Refresh teller list
-                this.loadTellers();
             } else {
-                throw new Error(data.message || `Failed to ${isEdit ? 'update' : 'create'} teller`);
+                this.showToast(data.message || `Failed to ${isEdit ? 'update' : 'create'} teller.`, 'error');
             }
         } catch (error) {
-            console.error('Error saving teller:', error);
-            this.showToast(error.message, 'error');
+            console.error(`Error ${isEdit ? 'updating' : 'creating'} teller:`, error);
+            this.showToast(`An error occurred while ${isEdit ? 'updating' : 'creating'} the teller.`, 'error');
         }
     }
 
     async resetPassword(tellerId) {
-        const modal = document.getElementById('reset_password_modal');
-        if (!modal) return;
-
-        // Show the confirmation modal
-        modal.classList.add('show');
-
-        // Set up the confirm button click handler
-        const confirmBtn = document.getElementById('confirm_reset_btn');
-        if (confirmBtn) {
-            const handleConfirm = async () => {
-                try {
-                    // Close the modal first
-                    this.closeModal(modal);
-
-                    const response = await fetch('/project-errawrs/src/api/admin/reset_teller_password.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({ teller_id: tellerId })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to reset password');
-                    }
-
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        this.showToast('Password has been reset and sent to the teller\'s email address', 'success');
-                    } else {
-                        throw new Error(data.message || 'Failed to reset password');
-                    }
-                } catch (error) {
-                    console.error('Error resetting password:', error);
-                    this.showToast(error.message, 'error');
-                }
-
-                // Remove the event listener after handling
-                confirmBtn.removeEventListener('click', handleConfirm);
-            };
-
-            // Add the event listener
-            confirmBtn.addEventListener('click', handleConfirm);
+        const resetPasswordModal = document.getElementById('reset_password_modal');
+        const confirmResetBtn = document.getElementById('confirm_reset_btn');
+        const newPasswordInput = document.getElementById('new_password');
+        const confirmNewPasswordInput = document.getElementById('confirm_new_password');
+        
+        if (!resetPasswordModal || !confirmResetBtn || !newPasswordInput || !confirmNewPasswordInput) {
+            console.error('Reset password modal elements not found.');
+            return;
         }
-    }
 
-    async toggleTellerStatus(tellerId, currentStatus) {
-        const modal = document.getElementById('status_change_modal');
-        const modalTitle = document.getElementById('status_modal_title');
-        const modalMessage = document.getElementById('status_modal_message');
-        const confirmBtn = document.getElementById('confirm_status_btn');
-        const warningIcon = modal?.querySelector('.warning-icon');
-        const modalHeader = modal?.querySelector('.modal-header');
+        resetPasswordModal.style.display = 'block';
+        newPasswordInput.value = '';
+        confirmNewPasswordInput.value = '';
 
-        if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
-
-        const isActivating = currentStatus === 'inactive' || currentStatus === 'pending';
-        
-        // Update modal content
-        modalTitle.textContent = isActivating ? 'Activate Teller' : 'Deactivate Teller';
-        modalMessage.textContent = isActivating 
-            ? 'Are you sure you want to activate this teller\'s account?' 
-            : 'Are you sure you want to deactivate this teller\'s account?';
-        confirmBtn.textContent = isActivating ? 'Activate Account' : 'Deactivate Account';
-        confirmBtn.className = isActivating ? 'btn-success' : 'btn-danger';
-        
-        // Update icons and colors
-        warningIcon.className = `warning-icon ${isActivating ? 'activate' : 'deactivate'}`;
-        modalHeader.className = `modal-header warning ${isActivating ? 'activate' : 'deactivate'}`;
-
-        // Show the modal
-        modal.classList.add('show');
-
-        // Set up the confirm button click handler
         const handleConfirm = async () => {
-            try {
-                // Close the modal first
-                this.closeModal(modal);
+            const newPassword = newPasswordInput.value;
+            const confirmNewPassword = confirmNewPasswordInput.value;
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+            if (!newPassword || !confirmNewPassword) {
+                this.showToast('Please enter and confirm the new password.', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                this.showToast('New passwords do not match.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${this.getAPIBaseURL()}/admin/reset_teller_password.php`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    credentials: 'include',
-                    body: JSON.stringify({ teller_id: tellerId })
+                    body: JSON.stringify({ teller_id: tellerId, new_password: newPassword }),
+                    credentials: 'include'
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Failed to update status: ${response.status}`);
-                }
-
                 const data = await response.json();
-                
+
                 if (data.success) {
-                    this.showToast(
-                        `Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 
-                        'success'
-                    );
-                    await this.loadTellers();
+                    this.showToast('Password reset successfully!', 'success');
+                    this.closeModal(resetPasswordModal);
                 } else {
-                    throw new Error(data.message || 'Failed to update teller status');
+                    this.showToast(data.message || 'Failed to reset password.', 'error');
                 }
             } catch (error) {
-                console.error('Error toggling teller status:', error);
-                this.showToast(error.message, 'error');
+                console.error('Error resetting password:', error);
+                this.showToast('An error occurred while resetting the password.', 'error');
             }
-
-            // Remove the event listener after handling
-            confirmBtn.removeEventListener('click', handleConfirm);
+            confirmResetBtn.removeEventListener('click', handleConfirm); // Prevent multiple calls
         };
 
-        // Add the event listener
-        confirmBtn.addEventListener('click', handleConfirm);
+        confirmResetBtn.addEventListener('click', handleConfirm);
+    }
+
+    async toggleTellerStatus(tellerId, currentStatus) {
+        const statusChangeModal = document.getElementById('status_change_modal');
+        const statusMessage = document.getElementById('status_change_message');
+        const confirmStatusBtn = document.getElementById('confirm_status_btn');
+        
+        if (!statusChangeModal || !statusMessage || !confirmStatusBtn) {
+            console.error('Status change modal elements not found.');
+            return;
+        }
+
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        statusMessage.textContent = `Are you sure you want to change the teller's status to "${newStatus}"?`;
+        confirmStatusBtn.textContent = `Confirm ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`;
+        statusChangeModal.style.display = 'block';
+
+        const handleConfirm = async () => {
+            try {
+                const response = await fetch(`${this.getAPIBaseURL()}/admin/update_teller_status.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ teller_id: tellerId, status: newStatus }),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    this.showToast(`Teller status changed to ${newStatus} successfully!`, 'success');
+                    this.closeModal(statusChangeModal);
+                    this.loadTellers(); // Reload tellers to reflect status change
+                } else {
+                    this.showToast(data.message || 'Failed to change teller status.', 'error');
+                }
+            } catch (error) {
+                console.error('Error changing teller status:', error);
+                this.showToast('An error occurred while changing teller status.', 'error');
+            }
+            confirmStatusBtn.removeEventListener('click', handleConfirm); // Prevent multiple calls
+        };
+
+        confirmStatusBtn.addEventListener('click', handleConfirm);
     }
 
     showSuccessModal(teller, isEdit) {
-        const modal = document.getElementById('success_modal');
-        if (!modal) return;
+        const successModal = document.getElementById('success_modal');
+        const successTitle = document.getElementById('success_modal_title');
+        const successMessage = document.getElementById('success_modal_message');
+        const tellerDetailsDiv = document.getElementById('teller_details_display');
 
-        // Update success message
-        const message = isEdit 
-            ? 'Teller information updated successfully!'
-            : 'Teller account created successfully! A password setup link has been sent to their email.';
-        
-        document.getElementById('success_message').textContent = message;
-
-        // Update teller details
-        document.getElementById('success_teller_number').textContent = teller.teller_number;
-        document.getElementById('success_teller_name').textContent = `${teller.first_name} ${teller.last_name}`;
-        document.getElementById('success_teller_email').textContent = teller.email;
-
-        // Show/hide create another button
-        const createAnotherBtn = document.getElementById('create_another_btn');
-        if (createAnotherBtn) {
-            createAnotherBtn.style.display = isEdit ? 'none' : 'block';
+        if (!successModal || !successTitle || !successMessage || !tellerDetailsDiv) {
+            console.error('Success modal elements not found.');
+            return;
         }
 
-        // Show modal
-        modal.classList.add('show');
+        successTitle.textContent = isEdit ? 'Teller Updated Successfully!' : 'Teller Created Successfully!';
+        successMessage.textContent = isEdit 
+            ? 'The teller\'s information has been updated.' 
+            : 'A new teller account has been created.';
+        
+        tellerDetailsDiv.innerHTML = `
+            <p><strong>Name:</strong> ${teller.first_name} ${teller.last_name}</p>
+            <p><strong>Email:</strong> ${teller.email}</p>
+            ${teller.teller_number ? `<p><strong>Teller Number:</strong> ${teller.teller_number}</p>` : ''}
+            ${!isEdit ? `<p class="temp-password-note">Please provide them with their temporary password.</p>` : ''}
+        `;
+        successModal.style.display = 'block';
     }
 
     closeModal(modal) {
         if (modal) {
-            modal.classList.remove('show');
+            modal.style.display = 'none';
         }
     }
 
     showToast(message, type = 'info') {
-        const container = document.querySelector('.toast-container');
-        if (!container) return;
-
+        const toastContainer = document.querySelector('.toast-container');
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         
+        let iconClass = this.getToastIcon(type);
+
         toast.innerHTML = `
-            <i class="${this.getToastIcon(type)}"></i>
+            <i class="${iconClass}"></i>
             <span>${message}</span>
-            <button class="toast-close">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="toast-close"><i class="fas fa-times"></i></button>
         `;
 
-        container.appendChild(toast);
-
-        // Add close button functionality
-        const closeBtn = toast.querySelector('.toast-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                toast.remove();
-            });
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            document.body.appendChild(toast);
+            console.warn('Toast container not found, appending toast to body.');
         }
 
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (toast && toast.parentElement) {
-                toast.remove();
-            }
-        }, 5000);
+        setTimeout(() => toast.remove(), 3000);
+
+        const closeButton = toast.querySelector('.toast-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => toast.remove());
+        }
     }
 
     getToastIcon(type) {
-        switch (type) {
-            case 'success':
-                return 'fas fa-check-circle';
-            case 'error':
-                return 'fas fa-exclamation-circle';
-            case 'warning':
-                return 'fas fa-exclamation-triangle';
-            default:
-                return 'fas fa-info-circle';
+        switch(type) {
+            case 'success': return 'fas fa-check-circle';
+            case 'error': return 'fas fa-exclamation-circle';
+            case 'info': return 'fas fa-info-circle';
+            default: return 'fas fa-info-circle';
         }
     }
 
     formatDate(dateString) {
         if (!dateString) return 'N/A';
-        
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return 'Invalid date';
-        
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(date);
+        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
     changePage(page) {
@@ -639,19 +588,27 @@ class TellerManager {
 
     async handleLogout(e) {
         e.preventDefault();
-        
-        // Clear session storage
-        sessionStorage.clear();
-        
-        // Redirect to login page
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        try {
+            const response = await fetch(`${this.getAPIBaseURL()}/auth/logout.php`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (data.success) {
+                this.showToast('Logged out successfully!', 'success');
+                setTimeout(() => window.location.href = 'login.html', 1000);
+            } else {
+                this.showToast(data.message || 'Logout failed.', 'error');
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+            this.showToast('An error occurred during logout.', 'error');
+        }
     }
 
-    // Initialize the manager
     static init() {
-        window.tellerManager = new TellerManager();
+        new TellerManager();
     }
 }
 
-// Initialize when the DOM is loaded
-document.addEventListener('DOMContentLoaded', TellerManager.init);
+TellerManager.init();
