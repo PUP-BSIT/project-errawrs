@@ -2,10 +2,10 @@
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/SessionManager.php';
 
-SessionManager::getInstance();
+$sessionManager = SessionManager::getInstance();
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Credentials: true');
@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['adminInfo']['id'])) {
+// Check if user is logged in and is an admin using SessionManager
+if (!$sessionManager->isAuthorizedAdmin()) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
@@ -33,9 +33,9 @@ try {
     $result = $conn->query('SELECT COUNT(*) as total FROM transaction');
     $total_transactions = $result ? $result->fetch_assoc()['total'] : 0;
     
-    // Get active tellers count
-    $result = $conn->query("SELECT COUNT(*) as total FROM teller WHERE status = 'active'");
-    $active_tellers = $result ? $result->fetch_assoc()['total'] : 0;
+    // Get total tellers count (formerly active tellers)
+    $result = $conn->query("SELECT COUNT(*) as total FROM teller"); // Removed WHERE clause
+    $total_tellers = $result ? $result->fetch_assoc()['total'] : 0;
     
     // Get pending tellers count
     $result = $conn->query("SELECT COUNT(*) as total FROM teller WHERE status = 'pending'");
@@ -46,7 +46,7 @@ try {
         'stats' => [
             'total_users' => (int)$total_users,
             'total_transactions' => (int)$total_transactions,
-            'active_tellers' => (int)$active_tellers,
+            'total_tellers' => (int)$total_tellers, // Changed key name
             'pending_tellers' => (int)$pending_tellers
         ]
     ]);

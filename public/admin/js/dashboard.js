@@ -198,32 +198,28 @@ class AdminDashboard {
         console.log('Updating dashboard stats:', stats);
         
         // Update statistics
-        const elements = {
-            total_users: document.getElementById('total_users'),
-            total_transactions: document.getElementById('total_transactions'),
-            active_tellers: document.getElementById('active_tellers'),
-            pending_tellers: document.getElementById('pending_tellers')
-        };
+        const totalUsersElement = document.getElementById('total_users');
+        const totalTransactionsElement = document.getElementById('total_transactions');
+        const totalTellersElement = document.getElementById('active_tellers'); // The HTML element for total tellers
+        const pendingTellersElement = document.getElementById('pending_tellers');
 
-        for (const [key, element] of Object.entries(elements)) {
-            if (element && stats[key] !== undefined) {
-                console.log(`Updating ${key}:`, stats[key]);
-                element.textContent = this.formatNumber(stats[key]);
-                
-                // Update the change indicator based on the stat type
-                const changeElement = element.parentElement.querySelector('.stat-change');
-                if (changeElement) {
-                    if (key === 'total_users' || key === 'total_transactions') {
-                        changeElement.textContent = '+5% from last month';
-                        changeElement.className = 'stat-change positive';
-                    } else {
-                        changeElement.textContent = 'No change';
-                        changeElement.className = 'stat-change neutral';
-                    }
-                }
-            } else {
-                console.warn(`Element not found or stat not available for ${key}`);
+        if (totalUsersElement && stats.total_users !== undefined) {
+            totalUsersElement.textContent = this.formatNumber(stats.total_users);
+        }
+        if (totalTransactionsElement && stats.total_transactions !== undefined) {
+            totalTransactionsElement.textContent = this.formatNumber(stats.total_transactions);
+        }
+        if (totalTellersElement && stats.total_tellers !== undefined) {
+            totalTellersElement.textContent = this.formatNumber(stats.total_tellers);
+            // Also update the change indicator for total tellers if needed
+            const changeElement = totalTellersElement.parentElement.querySelector('.stat-change');
+            if (changeElement) {
+                changeElement.textContent = 'No change'; // Or calculate change if available
+                changeElement.className = 'stat-change neutral';
             }
+        }
+        if (pendingTellersElement && stats.pending_tellers !== undefined) {
+            pendingTellersElement.textContent = this.formatNumber(stats.pending_tellers);
         }
     }
 

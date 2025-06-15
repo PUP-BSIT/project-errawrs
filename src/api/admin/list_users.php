@@ -6,6 +6,15 @@ require_once __DIR__ . '/../../config/SessionManager.php';
 $sessionManager = SessionManager::getInstance();
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: http://localhost');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 // Check if admin is logged in using SessionManager
 if (!$sessionManager->isAuthorizedAdmin()) {
@@ -56,9 +65,13 @@ try {
             'account_created_at' => $row['account_created_at']
         ];
     }
+    // Log the list before encoding
+    error_log("List Users API: Data list prepared: " . print_r($list, true));
+    
     echo json_encode(['success' => true, 'list' => $list]);
 } catch (Exception $e) {
     http_response_code(500);
+    error_log("List Users API Error: " . $e->getMessage()); // Log server-side errors
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 } finally {
     if (isset($db)) db_close($db);
