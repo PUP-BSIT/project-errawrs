@@ -11,17 +11,17 @@ class TellerManager {
         this.paginationContainer = document.getElementById('pagination');
         this.searchTellerInput = document.getElementById('search_teller');
         this.tellerForm = document.getElementById('teller_form');
-        this.addTellerBtn = document.getElementById('add_teller_btn');
-        this.editTellerModal = new bootstrap.Modal(document.getElementById('editTellerModal'));
-        this.editTellerForm = document.getElementById('edit_teller_form');
-        this.editTellerIdInput = document.getElementById('edit_teller_id');
-        this.editFirstNameInput = document.getElementById('edit_first_name');
-        this.editLastNameInput = document.getElementById('edit_last_name');
-        this.editUsernameInput = document.getElementById('edit_username');
+        this.addTellerBtn = document.getElementById('create_teller_btn');
+        this.addEditTellerModal = new bootstrap.Modal(document.getElementById('teller_modal'));
+        this.editTellerForm = document.getElementById('teller_form');
+        this.editTellerIdInput = document.getElementById('teller_id');
+        this.editFirstNameInput = document.getElementById('first_name');
+        this.editLastNameInput = document.getElementById('last_name');
+        this.editUsernameInput = document.getElementById('email');
         this.editStatusSelect = document.getElementById('edit_status');
         this.resetPasswordBtn = document.getElementById('reset_password_btn');
         this.confirmResetPasswordBtn = document.getElementById('confirm_reset_password_btn');
-        this.resetPasswordModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+        this.resetPasswordModal = new bootstrap.Modal(document.getElementById('reset_password_modal'));
         this.currentTellerToReset = null;
 
         // Ensure critical elements exist
@@ -29,8 +29,6 @@ class TellerManager {
             console.error('Critical DOM elements for TellerManager not found. Stopping script.');
             return; // Stop if critical elements are missing
         }
-
-        this.init();
     }
 
     getAPIBaseURL() {
@@ -58,27 +56,36 @@ class TellerManager {
     }
 
     async loadTellers() {
+        console.log('loadTellers() called.'); // Debug log
         this.tellerCardsContainer.classList.add('loading');
         try {
-            const response = await fetch(`${this.getAPIBaseURL()}/admin/list_tellers.php`, {
+            const apiURL = `${this.getAPIBaseURL()}/admin/list_tellers.php`;
+            console.log(`Fetching tellers from: ${apiURL}`); // Debug log
+
+            const response = await fetch(apiURL, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include'
             });
+            
+            console.log(`Response status: ${response.status}, OK: ${response.ok}`); // Debug log
+
             const data = await response.json();
+            console.log('API Response data:', data); // Debug log
 
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'Failed to fetch tellers');
             }
 
-            this.allTellers = data.list;
+            this.allTellers = data.tellers;
             this.sortTellers(); // Sort them after fetching
             this.filterAndRenderTellers();
             this.showToast('Tellers loaded successfully', 'success');
 
         } catch (error) {
+            console.error('Error in loadTellers:', error); // Enhanced error log
             this.showToast(`Error: ${error.message}`, 'error');
             this.renderNoResults();
         } finally {
@@ -233,13 +240,8 @@ class TellerManager {
 
     showAddTellerModal() {
         this.tellerForm.reset();
-        document.getElementById('addTellerModalLabel').textContent = 'Add New Teller';
-        // Hide password fields as they are for adding, not editing
-        document.getElementById('add_password_group').style.display = 'block';
-        document.getElementById('add_confirm_password_group').style.display = 'block';
-
-        const addTellerModal = new bootstrap.Modal(document.getElementById('addTellerModal'));
-        addTellerModal.show();
+        document.getElementById('modal_title').textContent = 'Add New Teller';
+        this.addEditTellerModal.show();
     }
 
     async handleTellerFormSubmit(e) {
@@ -280,7 +282,7 @@ class TellerManager {
             }
 
             this.showToast('Teller added successfully!', 'success');
-            const addTellerModal = bootstrap.Modal.getInstance(document.getElementById('addTellerModal'));
+            const addTellerModal = bootstrap.Modal.getInstance(document.getElementById('teller_modal'));
             addTellerModal.hide();
             this.loadTellers(); // Reload tellers to show the new one
         } catch (error) {
@@ -288,18 +290,26 @@ class TellerManager {
         }
     }
 
-    showEditTellerModal(tellerId) {
-        this.currentTellerToReset = tellerId; // Store for password reset
+    async showEditTellerModal(tellerId) {
         const teller = this.allTellers.find(t => t.teller_id == tellerId);
         if (teller) {
+            document.getElementById('modal_title').textContent = 'Edit Teller';
             this.editTellerIdInput.value = teller.teller_id;
             this.editFirstNameInput.value = teller.first_name;
             this.editLastNameInput.value = teller.last_name;
             this.editUsernameInput.value = teller.username;
-            this.editStatusSelect.value = teller.status;
-            this.editTellerModal.show();
+            if (this.editStatusSelect) {
+                this.editStatusSelect.value = teller.status;
+            }
+            if (document.getElementById('add_password_group')) {
+                document.getElementById('add_password_group').style.display = 'none';
+            }
+            if (document.getElementById('add_confirm_password_group')) {
+                document.getElementById('add_confirm_password_group').style.display = 'none';
+            }
+            this.addEditTellerModal.show();
         } else {
-            this.showToast('Teller not found.', 'error');
+            this.showToast('Teller not found for editing', 'error');
         }
     }
 
@@ -336,7 +346,7 @@ class TellerManager {
             }
 
             this.showToast('Teller updated successfully!', 'success');
-            this.editTellerModal.hide();
+            this.addEditTellerModal.hide();
             this.loadTellers(); // Reload tellers to show updated info
         } catch (error) {
             this.showToast(`Error updating teller: ${error.message}`, 'error');
@@ -371,7 +381,7 @@ class TellerManager {
     }
 
     showResetPasswordConfirmation() {
-        this.editTellerModal.hide(); // Hide edit modal first
+        this.addEditTellerModal.hide(); // Hide edit modal first
         if (this.currentTellerToReset) {
             // You might want to display the username of the teller being reset here
             // e.g., document.getElementById('reset_teller_username').textContent = teller.username;
@@ -409,35 +419,28 @@ class TellerManager {
 
     showToast(message, type) {
         const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) {
+            console.error('Toast container not found.');
+            return;
+        }
+
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
-        
-        let iconClass;
-        switch(type) {
-            case 'success': iconClass = 'fas fa-check-circle'; break;
-            case 'error': iconClass = 'fas fa-exclamation-circle'; break;
-            default: iconClass = 'fas fa-info-circle';
-        }
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
 
-        toast.innerHTML = `
-            <i class="${iconClass}"></i>
-            <span>${message}</span>
-            <button class="toast-close"><i class="fas fa-times"></i></button>
-        `;
+        // Animate the toast in
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10); // Small delay to allow CSS transition
 
-        if (toastContainer) {
-            toastContainer.appendChild(toast);
-        } else {
-            document.body.appendChild(toast);
-            console.warn('Toast container not found, appending toast to body.');
-        }
-
-        setTimeout(() => toast.remove(), 3000);
-
-        const closeButton = toast.querySelector('.toast-close');
-        if (closeButton) {
-            closeButton.addEventListener('click', () => toast.remove());
-        }
+        // Animate the toast out and remove after a delay
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => {
+                toast.remove();
+            });
+        }, 3000);
     }
 }
 
