@@ -3,6 +3,16 @@ let currentPage = 1;
 const itemsPerPage = 10;
 let totalPages = 1;
 
+function getAPIBaseURL() {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return '/project-errawrs/src/api';
+    } else {
+        // For dev-admin.stackovercash.site and other domains
+        return '/src/api';
+    }
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
@@ -37,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const searchQuery = searchInput.value.trim();
             // Removed statusFilter as statusSelect is not in HTML
             
-            const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}`, {
+            const response = await fetch(`${getAPIBaseURL()}/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}`, {
                 credentials: 'include'
             });
 

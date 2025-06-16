@@ -186,3 +186,68 @@ class AdminLogin {
 document.addEventListener('DOMContentLoaded', () => {
 	new AdminLogin();
 });
+
+function getAPIBaseURL() {
+	const hostname = window.location.hostname;
+	if (hostname === 'localhost' || hostname === '127.0.0.1') {
+		return '/project-errawrs/src/api';
+	} else {
+		// For dev-admin.stackovercash.site and other domains
+		return '/src/api';
+	}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	const loginForm = document.getElementById('login_form');
+	const usernameInput = document.getElementById('username');
+	const passwordInput = document.getElementById('password');
+	const errorDisplay = document.getElementById('error_display');
+
+	if (!loginForm || !usernameInput || !passwordInput || !errorDisplay) {
+		console.error('Critical DOM elements not found. Stopping script.');
+		return;
+	}
+
+	loginForm.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		
+		const username = usernameInput.value.trim();
+		const password = passwordInput.value;
+
+		if (!username || !password) {
+			showError('Please enter both username and password.');
+			return;
+		}
+
+		try {
+			const response = await fetch(`${getAPIBaseURL()}/auth/login.php`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					username: username,
+					password: password
+				}),
+				credentials: 'include'
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				// Redirect to dashboard on successful login
+				window.location.href = 'dashboard.html';
+			} else {
+				showError(data.message || 'Login failed. Please check your credentials.');
+			}
+		} catch (error) {
+			console.error('Login error:', error);
+			showError('An error occurred during login. Please try again.');
+		}
+	});
+
+	function showError(message) {
+		errorDisplay.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+		errorDisplay.style.display = 'block';
+	}
+});

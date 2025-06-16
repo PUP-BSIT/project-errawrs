@@ -3,6 +3,16 @@ let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];
 
+function getAPIBaseURL() {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return '/project-errawrs/src/api';
+    } else {
+        // For dev-admin.stackovercash.site and other domains
+        return '/src/api';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const userCardsContainer = document.getElementById('user_cards');
@@ -45,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userCardsContainer.classList.add('loading');
         
         try {
-            const response = await fetch('/project-errawrs/src/api/admin/list_users.php', {
+            const response = await fetch(`${getAPIBaseURL()}/admin/list_users.php`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
