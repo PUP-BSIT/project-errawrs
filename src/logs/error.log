@@ -10558,3 +10558,17 @@
     [login_type] => admin
 )
 
+[16-Jun-2025 15:26:36 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T003
+    [password] => password
+    [login_type] => teller
+)
+
+[16-Jun-2025 15:26:36 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T003
+    [password] => password
+    [login_type] => teller
+)
+
