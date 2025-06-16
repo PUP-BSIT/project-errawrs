@@ -1,3 +1,30 @@
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    // Get the current protocol and host
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    
+    // Common local development patterns
+    const commonPaths = [
+        '/project-errawrs/src/api',
+        '/src/api',
+        '/api',
+        '/project-errawrs/api'
+    ];
+    
+    // Try to detect the correct API path
+    for (const path of commonPaths) {
+        const testUrl = `${protocol}//${host}${path}`;
+        // We'll use this as our base and handle errors gracefully
+        return testUrl;
+    }
+    
+    // Fallback to a default path
+    return `${protocol}//${host}/project-errawrs/src/api`;
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
 // Configuration - Dynamic API base URL detection
 function getAPIBaseURL() {
     const protocol = window.location.protocol;
@@ -60,7 +87,7 @@ function showError(message) {
 // Test API connectivity
 async function testAPIConnection() {
     try {
-        const response = await fetch(`${API_BASE_PATH}/auth/login.php`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
             method: 'OPTIONS',
             headers: {
                 'Content-Type': 'application/json'
@@ -124,7 +151,7 @@ async function handleLogin(event) {
         };
 
         // Send login request to backend
-        const response = await fetch(`${API_BASE_PATH}/auth/login.php`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -207,7 +234,7 @@ function handleForgotPassword() {
 
 // Add configuration check when page loads
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('API Base Path:', API_BASE_PATH);
+    console.log('API Base URL:', API_BASE_URL);
     
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
