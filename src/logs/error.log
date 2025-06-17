@@ -10692,3 +10692,59 @@
     [login_type] => admin
 )
 
+[16-Jun-2025 16:59:21 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[16-Jun-2025 16:59:21 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:14:57 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:14:57 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:27:29 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => ADmin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:27:29 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => ADmin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:49:01 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[17-Jun-2025 16:49:01 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
