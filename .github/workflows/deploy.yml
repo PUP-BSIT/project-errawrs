@@ -34,7 +34,7 @@ jobs:
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
-          DEPLOY_PATH=/var/www/html/errawrs/project-errawrs
+          DEPLOY_PATH=/var/www/project-errawrs
           TMP_PATH=/tmp/errawrs_deploy_prod
           ENV_BACKUP_PATH=/tmp/errawrs_env_backup_prod
 
@@ -74,7 +74,7 @@ jobs:
           SSH_KEY=~/.ssh/aws_key # Key for deployment (can be any of the set up keys)
           REMOTE_USER=ubuntu
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com # Assuming same host for dev, change if different
-          DEPLOY_PATH=/var/www/dev # Development deployment path
+          DEPLOY_PATH=/var/www/project-errawrs # Development deployment path - Changed to match Nginx root
           # Use a timestamp or random string for temporary paths to avoid conflicts if multiple jobs run
           TIMESTAMP=$(date +%s)
           TMP_PATH=/tmp/errawrs_deploy_dev_$TIMESTAMP
