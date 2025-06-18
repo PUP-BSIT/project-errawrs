@@ -26,12 +26,33 @@ A lightweight banking application designed for simple and secure financial trans
   - Admin
   - Teller  
   - Account Holder
+
 --- 
  
 ## 🌐 Live Demo
 
 Visit the application here:  
 **🔗 [Errawrs Web Host: StackOverCash](https://www.stackovercash.site/)**
+
+--- 
+
+## 🧪 Demo Account Credentials
+
+Use the following credentials to explore the different roles in the application:
+
+### 👤 User Account
+- **Username:** `Errawrs`  
+- **Password:** `Errawrs123`
+
+### 🧾 Teller Account
+- **Username:** `Errawrs`  
+- **Password:** `Errawrs123`
+
+### 🛠️ Admin Account
+- **Username:** `admin`  
+- **Password:** `Admin@123`
+
+> ⚠️ *Note: These demo accounts are for testing purposes only. Please do not store sensitive information.*
 
 ---
 
