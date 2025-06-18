@@ -5,6 +5,22 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "./bank_teller_login.html";
 }
 
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
 // Global variables
 let currentPage = 1;
 let itemsPerPage = 5; // This will now be fixed at 5
@@ -59,7 +75,7 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${selectedItemCount}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${selectedItemCount}`);
         const data = await response.json();
 
         if (!response.ok) {

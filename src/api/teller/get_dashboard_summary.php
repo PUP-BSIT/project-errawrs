@@ -4,9 +4,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Enable CORS for localhost development
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
 // Handle preflight requests
@@ -15,8 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Include database configuration
-require_once '../../config/database.php';
+// Include database configuration and session manager
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Initialize session manager
+$session = SessionManager::getInstance();
+
+// Check if user is authenticated and is a teller
+if (!$session->isAuthenticated() || $_SESSION['auth']['type'] !== 'teller') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+    exit();
+}
+$session->updateActivity();
 
 try {
     // Get database connection

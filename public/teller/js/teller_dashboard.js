@@ -5,6 +5,22 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "./bank_teller_login.html";
 }
 
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
 // Keep track of last known values to detect changes
 let lastKnownValues = {
     deposits: '0.00',
@@ -112,7 +128,7 @@ function setupSearch() {
 // Perform search
 async function performSearch(searchTerm) {
     try {
-        const response = await fetch(`../../src/api/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
+        const response = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
         const data = await response.json();
 
         const searchResults = document.getElementById('search_results');
@@ -184,7 +200,9 @@ function formatTime(date) {
 // Fetch dashboard summary data
 async function fetchDashboardSummary() {
     try {
-        const response = await fetch(`../../src/api/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`, {
+            credentials: 'include'
+        });
         const data = await response.json();
 
         if (data.success) {
@@ -268,7 +286,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // Load recent registration requests
 async function loadRecentRegistrations() {
     try {
-        const response = await fetch('../../src/api/teller/get_registrations.php');
+        const response = await fetch(`${API_BASE_URL}/teller/get_registrations.php`, {
+            credentials: 'include'
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -325,11 +345,12 @@ async function loadRecentRegistrations() {
 // Handle registration approval/denial
 async function handleRegistration(registrationId, action) {
     try {
-        const response = await fetch('../../src/api/teller/review_registration.php', {
+        const response = await fetch(`${API_BASE_URL}/teller/review_registration.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify({
                 registration_id: registrationId,
                 action: action

@@ -5,6 +5,22 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "./bank_teller_login.html";
 }
 
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
 // Elements
 const searchInput = document.getElementById("search_input");
 const accountCard = document.getElementById("account_card");
@@ -20,7 +36,9 @@ let searchHistory = [];
 // Load search history
 async function loadSearchHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`, {
+            credentials: 'include'
+        });
         const data = await response.json();
 
         if (data.success && data.history) {
@@ -337,7 +355,7 @@ async function searchAccount() {
 
     try {
         const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 searchTerm
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
@@ -496,7 +514,7 @@ async function processTransaction(type) {
 
     try {
         const response = await fetch(
-            `/project-errawrs/src/api/teller/${type}.php`,
+            `${API_BASE_URL}/teller/${type}.php`,
             {
                 method: "POST",
                 headers: {
@@ -575,7 +593,7 @@ async function closeAccount() {
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/close_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -631,7 +649,7 @@ async function reopenAccount() {
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/reopen_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -662,7 +680,7 @@ async function reopenAccount() {
 
         // Fetch updated account data to refresh the UI
         const searchResponse = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 account.account_number
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
@@ -692,7 +710,7 @@ async function updateAccountBalance() {
 
         // Fetch fresh account data
         const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 currentAccount.account_number
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );

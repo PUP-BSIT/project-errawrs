@@ -4,6 +4,19 @@ class RegistrationReview {
         this.setupEventListeners();
     }
 
+    // Configuration - Dynamic base URL detection
+    getBaseURL() {
+        const host = window.location.hostname;
+        
+        // Check if we're on the EC2 server
+        if (host === 'dev-teller.stackovercash.site') {
+            return '/api';
+        }
+        
+        // Local XAMPP environment
+        return '/project-errawrs/src/api';
+    }
+
     setupEventListeners() {
         document.addEventListener('click', (e) => {
             if (e.target.matches('[data-action="approve"]')) {
@@ -16,7 +29,9 @@ class RegistrationReview {
 
     async loadRegistrations() {
         try {
-            const response = await fetch('/project-errawrs/src/api/teller/get_registrations.php');
+            const response = await fetch(`${this.getBaseURL()}/teller/get_registrations.php`, {
+                credentials: 'include'
+            });
             if (response.status === 403) {
                 window.location.href = './bank_teller_login.html';
                 return;
@@ -80,11 +95,12 @@ class RegistrationReview {
             buttons.forEach(btn => btn.disabled = true);
             button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
 
-            const response = await fetch('/project-errawrs/src/api/teller/review_registration.php', {
+            const response = await fetch(`${this.getBaseURL()}/teller/review_registration.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     registration_id: registrationId,
                     action: action
@@ -113,7 +129,7 @@ class RegistrationReview {
             }, 300);
 
         } catch (error) {
-            console.error('Registration action error:', error);
+            console.error('Error:', error);
             this.showNotification(error.message, 'error');
             // Re-enable buttons
             const buttons = document.querySelectorAll(`[data-registration-id="${registrationId}"]`);

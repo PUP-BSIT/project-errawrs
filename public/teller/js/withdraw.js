@@ -1,5 +1,25 @@
 // Get teller info from session storage
-const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
+const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
+if (!tellerInfo || !tellerInfo.teller_number) {
+    console.error("No teller info found in session storage");
+    window.location.href = "./bank_teller_login.html";
+}
+
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
 
 // Define maximum withdrawal amount
 const MAX_WITHDRAW_AMOUNT = 40000;
@@ -433,4 +453,66 @@ amountInput.addEventListener('input', function(e) {
     
     // Validate amount after input
     validateAmount(parseFloat(value) || 0);
-}); 
+});
+
+// Handle withdrawal form submission
+async function handleWithdrawal(event) {
+    event.preventDefault();
+
+    const accountNumber = document.getElementById('account_number').value;
+    const amount = document.getElementById('amount').value;
+    const description = document.getElementById('description').value;
+
+    // Basic validation
+    if (!accountNumber || !amount) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+
+    try {
+        // First, verify the account exists and is active
+        const accountResponse = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(accountNumber)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`, {
+            credentials: 'include'
+        });
+        const accountData = await accountResponse.json();
+
+        if (!accountData.success || !accountData.account) {
+            showNotification('Account not found or inactive', 'error');
+            return;
+        }
+
+        // Check if withdrawal amount is within available balance
+        if (parseFloat(amount) > parseFloat(accountData.account.balance)) {
+            showNotification('Insufficient balance', 'error');
+            return;
+        }
+
+        // Proceed with withdrawal
+        const response = await fetch(`${API_BASE_URL}/teller/withdraw.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                account_number: accountNumber,
+                amount: amount,
+                description: description,
+                teller_number: tellerInfo.teller_number
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification('Withdrawal successful', 'success');
+            // Clear form
+            document.getElementById('withdrawal_form').reset();
+        } else {
+            showNotification(data.error || 'Failed to process withdrawal', 'error');
+        }
+    } catch (error) {
+        console.error('Withdrawal error:', error);
+        showNotification('Error processing withdrawal', 'error');
+    }
+} 
