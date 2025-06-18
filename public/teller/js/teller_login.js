@@ -1,26 +1,14 @@
 // Configuration - Dynamic base URL detection
 function getBaseURL() {
-    // Get the current protocol and host
-    const protocol = window.location.protocol;
-    const host = window.location.host;
+    const host = window.location.hostname;
     
-    // Common local development patterns
-    const commonPaths = [
-        '/project-errawrs/src/api',
-        '/src/api',
-        '/api',
-        '/project-errawrs/api'
-    ];
-    
-    // Try to detect the correct API path
-    for (const path of commonPaths) {
-        const testUrl = `${protocol}//${host}${path}`;
-        // We'll use this as our base and handle errors gracefully
-        return testUrl;
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
     }
     
-    // Fallback to a default path
-    return `${protocol}//${host}/project-errawrs/src/api`;
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
 }
 
 // Get the API base URL

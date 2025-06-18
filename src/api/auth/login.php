@@ -1,24 +1,39 @@
 <?php
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../../logs/error.log');
+
+// Determine environment
+function isLocalEnvironment() {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    return strpos($host, 'localhost') !== false || 
+           strpos($host, '127.0.0.1') !== false ||
+           strpos($host, '[::1]') !== false;
+}
+
+// Set environment-specific settings
+if (isLocalEnvironment()) {
+    ini_set('display_errors', 1); // Show errors in local environment
+    header('Access-Control-Allow-Origin: *'); // Allow all origins in local
+} else {
+    ini_set('display_errors', 0); // Hide errors in production
+    header('Access-Control-Allow-Origin: https://dev-teller.stackovercash.site');
+}
 
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/SessionManager.php';
 
-// Set headers
+// Common headers for both environments
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: http://localhost');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Accept');
+header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization');
 header('Access-Control-Allow-Credentials: true');
 
 // Ensure no output before headers
 ob_start();
 
-// Enhanced error handling for development
+// Enhanced error handling
 function handleError($message, $code = 400, $logError = true) {
     if ($logError) {
         error_log("Login API Error: " . $message);
@@ -28,7 +43,8 @@ function handleError($message, $code = 400, $logError = true) {
     echo json_encode([
         'success' => false,
         'error' => $message,
-        'timestamp' => date('Y-m-d H:i:s')
+        'timestamp' => date('Y-m-d H:i:s'),
+        'environment' => isLocalEnvironment() ? 'local' : 'production'
     ]);
     exit();
 }
@@ -39,9 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Guard against non-POST requests
+// Guard against non-POST requests for actual login attempts
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    handleError('Method not allowed', 405);
+    http_response_code(405);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Method not allowed',
+        'allowed_methods' => ['POST', 'OPTIONS']
+    ]);
+    exit();
 }
 
 try {
@@ -49,70 +71,12 @@ try {
     $db = db_connect();
     if (!$db) {
         throw new Exception('Database connection failed');
-}
-
-// Parse and validate input
-$input = file_get_contents('php://input');
-if (empty($input)) {
-    handleError('No input data received');
-}
-
-$data = json_decode($input, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    handleError('Invalid JSON data: ' . json_last_error_msg());
-}
-
-    // Log received data for debugging
-    error_log("Received login data: " . print_r($data, true));
-
-// Guard against missing required fields
-if (!isset($data['password']) || !isset($data['login_type'])) {
-    handleError('Password and login type are required');
-}
-
-$loginType = strtolower(trim($data['login_type']));
-$password = $data['password'];
-
-// Guard against invalid login type
-$validLoginTypes = ['admin', 'user', 'teller'];
-if (!in_array($loginType, $validLoginTypes)) {
-    handleError('Invalid login type');
-}
-
-// Get identifier based on login type
-$identifier = null;
-if ($loginType === 'teller') {
-    if (!isset($data['teller_number'])) {
-        handleError('Teller number is required');
     }
-    $identifier = trim($data['teller_number']);
-} else {
-    if (!isset($data['username'])) {
-        handleError('Username is required');
-    }
-    $identifier = trim($data['username']);
-}
 
-// Enhanced validation
-if (empty($identifier)) {
-    handleError($loginType === 'teller' ? 'Teller number cannot be empty' : 'Username cannot be empty');
-}
-
-if ($loginType === 'teller') {
-    // More flexible teller number validation
-    if (strlen($identifier) < 1 || strlen($identifier) > 50) {
-        handleError('Invalid teller number format');
-    }
-} else {
-    // Username validation
-    if (strlen($identifier) < 3 || strlen($identifier) > 50) {
-        handleError('Username must be between 3 and 50 characters');
-    }
-}
-
-// Validate password length
-if (strlen($password) < 8) {
-    handleError('Password must be at least 8 characters long');
+    // Parse and validate input
+    $input = file_get_contents('php://input');
+    if (empty($input)) {
+        handleError('No input data received');
     }
 
     $data = json_decode($input, true);
