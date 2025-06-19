@@ -1,81 +1,220 @@
 class RegistrationReview {
     constructor() {
-        this.loadRegistrations();
+        this.currentPage = 1;
+        this.itemsPerPage = 10;
+        this.currentStatus = 'pending';
         this.setupEventListeners();
+        this.loadRegistrations();
     }
 
     // Configuration - Dynamic base URL detection
     getBaseURL() {
-        const host = window.location.hostname;
+        const protocol = window.location.protocol;
+        const host = window.location.host;
         
         // Check if we're on the EC2 server
         if (host === 'dev-teller.stackovercash.site') {
-            return '/api';
+            return `${protocol}//${host}/api`;
         }
         
         // Local XAMPP environment
-        return '/project-errawrs/src/api';
+        return `${protocol}//${host}/project-errawrs/src/api`;
     }
 
     setupEventListeners() {
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('[data-action="approve"]')) {
-                this.handleRegistrationAction(e.target.dataset.registrationId, 'approve');
-            } else if (e.target.matches('[data-action="deny"]')) {
-                this.handleRegistrationAction(e.target.dataset.registrationId, 'deny');
+        // Status filter
+        const statusFilter = document.getElementById('status_filter');
+        if (statusFilter) {
+            statusFilter.addEventListener('change', () => {
+                this.currentStatus = statusFilter.value;
+                this.currentPage = 1;
+                this.loadRegistrations();
+            });
+        }
+
+        // Per page select
+        const perPageSelect = document.getElementById('per-page-select');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', () => {
+                this.itemsPerPage = parseInt(perPageSelect.value);
+                this.currentPage = 1;
+                this.loadRegistrations();
+            });
+        }
+
+        // Modal close button
+        const closeModal = document.querySelector('.close-modal');
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                document.getElementById('application_modal').style.display = 'none';
+            });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('application_modal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
             }
         });
     }
 
     async loadRegistrations() {
         try {
-            const response = await fetch(`${this.getBaseURL()}/teller/get_registrations.php`, {
+            const baseUrl = this.getBaseURL();
+            console.log('Base URL:', baseUrl);
+            
+            const url = new URL(`${baseUrl}/teller/get_registrations.php`);
+            url.searchParams.append('status', this.currentStatus);
+            url.searchParams.append('page', this.currentPage);
+            url.searchParams.append('per_page', this.itemsPerPage);
+
+            console.log('Fetching registrations:', url.toString());
+
+            const response = await fetch(url, {
                 credentials: 'include'
             });
+
             if (response.status === 403) {
                 window.location.href = './bank_teller_login.html';
                 return;
             }
-            if (!response.ok) throw new Error('Failed to fetch registrations');
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server response:', response.status, errorText);
+                throw new Error(`Failed to fetch registrations: ${response.status} ${response.statusText}`);
+            }
             
             const data = await response.json();
-            if (!data.success) throw new Error(data.error);
+            console.log('Received data:', data);
+
+            if (!data.success) {
+                throw new Error(data.error || 'Unknown error occurred');
+            }
 
             this.displayRegistrations(data.registrations);
+            this.updatePagination(data.pagination);
         } catch (error) {
+            console.error('Error in loadRegistrations:', error);
             this.showNotification(error.message, 'error');
+            
+            // Show empty state in the grid
+            const container = document.querySelector('.applications-grid');
+            if (container) {
+                container.innerHTML = `
+                    <div class="no-applications">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading applications. Please try again.</p>
+                    </div>
+                `;
+            }
         }
     }
 
     displayRegistrations(registrations) {
-        const container = document.getElementById('registrations_container');
+        const container = document.querySelector('.applications-grid');
         if (!container) return;
 
         if (!registrations.length) {
-            container.innerHTML = '<div class="no-data">No pending registrations</div>';
+            container.innerHTML = `
+                <div class="no-applications">
+                    <i class="fas fa-inbox fa-3x"></i>
+                    <p>No ${this.currentStatus === 'all' ? '' : this.currentStatus} applications found</p>
+                    ${this.currentStatus !== 'pending' ? `
+                        <button class="btn view-pending" onclick="registrationReview.viewPending()">
+                            <i class="fas fa-clock"></i> View Pending Applications
+                        </button>
+                    ` : ''}
+                </div>
+            `;
             return;
         }
 
         const html = registrations.map(reg => `
-            <div class="registration-card" data-registration-id="${reg.registration_id}">
-                <div class="registration-header">
-                    <h3>${reg.first_name} ${reg.last_name}</h3>
-                    <span class="registration-date">${new Date(reg.created_at).toLocaleDateString()}</span>
-                </div>
-                <div class="registration-details">
-                    <p><strong>Email:</strong> ${reg.email}</p>
-                    <p><strong>Phone:</strong> ${reg.phone_number}</p>
-                    <p><strong>ID Type:</strong> ${reg.id_type}</p>
-                    <p><strong>Nationality:</strong> ${reg.nationality}</p>
-                    <p><strong>Address:</strong> ${reg.street}, ${reg.city}, ${reg.country} ${reg.zip_code}</p>
-                </div>
-                <div class="registration-actions">
-                    <button class="btn btn-success" data-action="approve" data-registration-id="${reg.registration_id}">
-                        <i class="fas fa-check"></i> Approve
+            <div class="registration-card" 
+                 data-registration-id="${reg.registration_id}"
+                 data-dob="${reg.date_of_birth}"
+                 data-street="${reg.street_address || ''}"
+                 data-city="${reg.city || ''}"
+                 data-country="${reg.country || ''}"
+                 data-zip-code="${reg.zip_code || ''}"
+                 data-id-image="${reg.id_image || ''}"
+            >
+                <div class="card-left">
+                    <div class="registration-header">
+                        <div class="applicant-info">
+                            <h3 class="applicant-name">${reg.first_name} ${reg.last_name}</h3>
+                            <div class="meta-info">
+                                <span class="application-date" title="Application Date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    ${new Date(reg.created_at).toLocaleDateString()}
+                                </span>
+                                <span class="application-id" title="Application ID">
+                                    <i class="fas fa-hashtag"></i>
+                                    ${reg.registration_id}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="registration-details">
+                        <div class="detail-row">
+                            <div class="detail-item email">
+                                <i class="far fa-envelope"></i>
+                                <span>${reg.email}</span>
+                            </div>
+                            <div class="detail-item phone">
+                                <i class="fas fa-phone"></i>
+                                <span>${reg.phone_number}</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-item id-type">
+                                <i class="fas fa-id-card"></i>
+                                <span>${reg.id_type}</span>
+                            </div>
+                            <div class="detail-item nationality">
+                                <i class="fas fa-globe"></i>
+                                <span>${reg.nationality}</span>
+                            </div>
+                        </div>
+                        ${reg.status !== 'pending' ? `
+                            <div class="update-info">
+                                <i class="far fa-clock"></i>
+                                Last updated ${this.getTimeAgo(new Date(reg.updated_at))}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <button class="btn btn-view" onclick="registrationReview.viewDetails(${reg.registration_id})">
+                        <i class="fas fa-eye"></i> View Details
                     </button>
-                    <button class="btn btn-danger" data-action="deny" data-registration-id="${reg.registration_id}">
-                        <i class="fas fa-times"></i> Deny
-                    </button>
+                </div>
+
+                <div class="card-right">
+                    <div class="status-section">
+                        <div class="status-badge ${reg.status}" title="Application Status">
+                            <i class="fas ${
+                                reg.status === 'pending' ? 'fa-clock' :
+                                reg.status === 'approved' ? 'fa-check-circle' :
+                                'fa-times-circle'
+                            }"></i>
+                            ${reg.status.charAt(0).toUpperCase() + reg.status.slice(1)}
+                        </div>
+                        ${reg.status === 'pending' ? `
+                            <div class="action-buttons">
+                                <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')"
+                                        title="Deny Application">
+                                    <i class="fas fa-times"></i> Deny
+                                </button>
+                                <button class="btn btn-approve" onclick="registrationReview.handleAction(${reg.registration_id}, 'approve')"
+                                        title="Approve Application">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
         `).join('');
@@ -83,17 +222,221 @@ class RegistrationReview {
         container.innerHTML = html;
     }
 
-    async handleRegistrationAction(registrationId, action) {
-        try {
-            const button = document.querySelector(`[data-action="${action}"][data-registration-id="${registrationId}"]`);
-            const card = document.querySelector(`.registration-card[data-registration-id="${registrationId}"]`);
-            
-            if (!button || !card) return;
+    updatePagination(pagination) {
+        const container = document.querySelector('.pagination-container');
+        if (!container) return;
 
-            // Disable buttons and show loading
-            const buttons = card.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = true);
-            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+        // Update page numbers
+        const pageNumbers = document.getElementById('page-numbers');
+        if (pageNumbers) {
+            let html = '';
+            for (let i = 1; i <= pagination.total_pages; i++) {
+                html += `
+                    <button class="page-number ${i === pagination.current_page ? 'active' : ''}"
+                            onclick="registrationReview.goToPage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+            pageNumbers.innerHTML = html;
+        }
+
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        if (prevBtn) prevBtn.disabled = !pagination.has_prev_page;
+        if (nextBtn) nextBtn.disabled = !pagination.has_next_page;
+
+        // Update showing text
+        const showingText = document.getElementById('showing-text');
+        if (showingText) {
+            const start = (pagination.current_page - 1) * pagination.per_page + 1;
+            const end = Math.min(start + pagination.per_page - 1, pagination.total_items);
+            showingText.textContent = `Showing ${start}-${end} of ${pagination.total_items}`;
+        }
+    }
+
+    async viewDetails(registrationId) {
+        try {
+            const card = document.querySelector(`[data-registration-id="${registrationId}"]`);
+            if (!card) {
+                throw new Error('Registration card not found');
+            }
+
+            // Hide the filter section and applications grid
+            document.querySelector('.filter-section').style.display = 'none';
+            document.querySelector('.applications-grid').style.display = 'none';
+            document.querySelector('.pagination-container').style.display = 'none';
+
+            // Create and show the details view
+            const detailsContainer = document.createElement('div');
+            detailsContainer.className = 'registration-details-view';
+            
+            const details = {
+                id: registrationId,
+                name: card.querySelector('.applicant-name')?.textContent || 'N/A',
+                email: card.querySelector('.email span')?.textContent || 'N/A',
+                phone: card.querySelector('.phone span')?.textContent || 'N/A',
+                idType: card.querySelector('.id-type span')?.textContent || 'N/A',
+                nationality: card.querySelector('.nationality span')?.textContent || 'N/A',
+                status: card.querySelector('.status-badge')?.textContent?.toLowerCase().trim() || 'pending',
+                createdAt: card.querySelector('.application-date')?.textContent?.trim() || 'N/A',
+                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet'
+            };
+
+            detailsContainer.innerHTML = `
+                <div class="details-header">
+                    <button class="btn btn-back" onclick="registrationReview.goBack()">
+                        <i class="fas fa-arrow-left"></i> Back to Applications
+                    </button>
+                    <div class="status-badge ${details.status}">
+                        <i class="fas ${
+                            details.status === 'pending' ? 'fa-clock' :
+                            details.status === 'approved' ? 'fa-check-circle' :
+                            'fa-times-circle'
+                        }"></i>
+                        ${details.status.charAt(0).toUpperCase() + details.status.slice(1)}
+                    </div>
+                </div>
+
+                <div class="details-content">
+                    <div class="details-main">
+                        <div class="section">
+                            <h2>Personal Information</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-user"></i> Full Name</label>
+                                    <span>${details.name}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="far fa-envelope"></i> Email Address</label>
+                                    <span>${details.email}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <span>${details.phone}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-calendar"></i> Date of Birth</label>
+                                    <span>${new Date(card.dataset.dob).toLocaleDateString()}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-globe"></i> Nationality</label>
+                                    <span>${details.nationality}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h2>Address Information</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-map-marker-alt"></i> Street Address</label>
+                                    <span>${card.dataset.street}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-city"></i> City</label>
+                                    <span>${card.dataset.city}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-map"></i> Country</label>
+                                    <span>${card.dataset.country}</span>
+                                </div>
+                                <div class="info-item">
+                                    <label><i class="fas fa-mail-bulk"></i> ZIP Code</label>
+                                    <span>${card.dataset.zipCode}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h2>ID Document</h2>
+                            <div class="id-preview-section">
+                                <div class="id-preview-container">
+                                    <img src="${card.dataset.idImage}" alt="ID Document" class="id-preview-image">
+                                </div>
+                                <div class="id-preview-note">
+                                    <i class="fas fa-search-plus"></i>
+                                    Click to zoom
+                                </div>
+                            </div>
+                        </div>
+
+                        ${details.status === 'pending' ? `
+                            <div class="section">
+                                <h2>Actions</h2>
+                                <div class="details-actions">
+                                    <button class="btn btn-approve" onclick="registrationReview.approveRegistration('${details.id}')">
+                                        <i class="fas fa-check"></i> Approve Application
+                                    </button>
+                                    <button class="btn btn-deny" onclick="registrationReview.rejectRegistration('${details.id}')">
+                                        <i class="fas fa-times"></i> Reject Application
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Add the details view to the page
+            document.querySelector('.main-content').appendChild(detailsContainer);
+
+        } catch (error) {
+            console.error('Error in viewDetails:', error);
+            this.showNotification('Error loading application details', 'error');
+        }
+    }
+
+    goBack() {
+        // Remove the details view
+        const detailsView = document.querySelector('.registration-details-view');
+        if (detailsView) {
+            detailsView.remove();
+        }
+
+        // Show the filter section and applications grid
+        document.querySelector('.filter-section').style.display = 'flex';
+        document.querySelector('.applications-grid').style.display = 'grid';
+        document.querySelector('.pagination-container').style.display = 'flex';
+    }
+
+    viewPending() {
+        this.currentStatus = 'pending';
+        this.currentPage = 1;
+        this.loadRegistrations();
+    }
+
+    getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        
+        let interval = Math.floor(seconds / 31536000);
+        if (interval > 1) return interval + ' years ago';
+        if (interval === 1) return 'a year ago';
+        
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) return interval + ' months ago';
+        if (interval === 1) return 'a month ago';
+        
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) return interval + ' days ago';
+        if (interval === 1) return 'yesterday';
+        
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) return interval + ' hours ago';
+        if (interval === 1) return 'an hour ago';
+        
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) return interval + ' minutes ago';
+        if (interval === 1) return 'a minute ago';
+        
+        return 'just now';
+    }
+
+    async handleAction(registrationId, action) {
+        try {
+            const confirmed = await this.confirmAction(action);
+            if (!confirmed) return;
 
             const response = await fetch(`${this.getBaseURL()}/teller/review_registration.php`, {
                 method: 'POST',
@@ -113,54 +456,76 @@ class RegistrationReview {
             }
             
             const data = await response.json();
-            if (!data.success) throw new Error(data.error || 'Operation failed');
+            if (!data.success) throw new Error(data.error);
+
+            // Close modal if open
+            document.getElementById('application_modal').style.display = 'none';
 
             // Show success message
-            this.showNotification(`Registration ${action === 'approve' ? 'approved' : 'denied'} successfully`, 'success');
-            
-            // Remove the card with animation
-            card.style.opacity = '0';
-            setTimeout(() => {
-                card.remove();
-                // Check if there are no more registrations
-                if (!document.querySelector('.registration-card')) {
-                    this.loadRegistrations(); // Reload to show "No pending registrations" message
-                }
-            }, 300);
+            this.showNotification(
+                `Application successfully ${action === 'approve' ? 'approved' : 'denied'}`,
+                'success'
+            );
+
+            // Reload registrations
+            this.loadRegistrations();
 
         } catch (error) {
-            console.error('Error:', error);
             this.showNotification(error.message, 'error');
-            // Re-enable buttons
-            const buttons = document.querySelectorAll(`[data-registration-id="${registrationId}"]`);
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.innerHTML = btn.dataset.action === 'approve' ? 
-                    '<i class="fas fa-check"></i> Approve' : 
-                    '<i class="fas fa-times"></i> Deny';
-            });
         }
     }
 
+    confirmAction(action) {
+        return new Promise((resolve) => {
+            const message = action === 'approve' ?
+                'Are you sure you want to approve this application?' :
+                'Are you sure you want to deny this application?';
+            
+            if (confirm(message)) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        });
+    }
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.loadRegistrations();
+    }
+
     showNotification(message, type = 'info') {
+        const container = document.getElementById('notification_container');
+        if (!container) return;
+
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
-        notification.textContent = message;
         
-        document.body.appendChild(notification);
+        const icon = document.createElement('i');
+        icon.className = type === 'success' ? 'fas fa-check-circle' :
+                        type === 'error' ? 'fas fa-exclamation-circle' :
+                        'fas fa-info-circle';
         
+        const text = document.createElement('span');
+        text.textContent = message;
+
+        notification.appendChild(icon);
+        notification.appendChild(text);
+        container.appendChild(notification);
+
         // Trigger animation
         setTimeout(() => notification.classList.add('show'), 10);
         
-        // Remove after 3 seconds
+        // Remove after delay
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        }, 5000);
     }
 }
 
 // Initialize when DOM is ready
+let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
-    new RegistrationReview();
+    registrationReview = new RegistrationReview();
 }); 

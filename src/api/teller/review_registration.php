@@ -34,6 +34,7 @@ if (!isset($input['registration_id']) || !isset($input['action']) || !in_array($
 
 $registration_id = $input['registration_id'];
 $action = $input['action'];
+$teller_id = $session->getSessionData()['id'];
 
 try {
     $db = db_connect();
@@ -48,6 +49,20 @@ try {
     if (!$registration) {
         throw new Exception('Registration request not found');
     }
+
+    if ($registration['status'] !== 'pending') {
+        throw new Exception('Registration has already been reviewed');
+    }
+
+    // Update registration status
+    $status = $action === 'approve' ? 'approved' : 'rejected';
+    $stmt = $db->prepare('
+        UPDATE registration_request 
+        SET status = ?, reviewed_at = NOW(), reviewed_by = ? 
+        WHERE registration_id = ?
+    ');
+    $stmt->bind_param('sii', $status, $teller_id, $registration_id);
+    $stmt->execute();
 
     if ($action === 'approve') {
         // Generate a unique username
@@ -108,11 +123,6 @@ try {
         ');
         $insertAccount->bind_param('is', $user_id, $accountNumber);
         $insertAccount->execute();
-
-        // Delete the registration request
-        $deleteReg = $db->prepare('DELETE FROM registration_request WHERE registration_id = ?');
-        $deleteReg->bind_param('i', $registration_id);
-        $deleteReg->execute();
 
         // Send email
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
