@@ -36,6 +36,95 @@ class SessionManager {
         return self::$instance;
     }
 
+    public function storeOTP(string $otp, string $phone, string $purpose = 'general'): bool {
+        try {
+            // Debug logging
+            error_log("Storing OTP - Phone: $phone, Purpose: $purpose");
+            error_log("Session ID before storing: " . session_id());
+            error_log("Session name before storing: " . session_name());
+            error_log("Session data before storing: " . print_r($_SESSION, true));
+
+            // Store OTP in session
+            $_SESSION['otp'] = [
+                'code' => $otp,
+                'phone_number' => $phone,
+                'created_at' => time(),
+                'attempts' => 0
+            ];
+
+            // Ensure session is written
+            session_write_close();
+            
+            // Restart session
+            session_start();
+
+            // Debug logging
+            error_log("OTP stored successfully");
+            error_log("Session data after storing: " . print_r($_SESSION, true));
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error storing OTP: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function verifyOTP(string $input_otp, string $phone, string $purpose = 'general'): bool {
+        try {
+            // Debug logging
+            error_log("Verifying OTP - Input: $input_otp, Phone: $phone, Purpose: $purpose");
+            error_log("Session ID before verify: " . session_id());
+            error_log("Session name before verify: " . session_name());
+            error_log("Full session data before verify: " . print_r($_SESSION, true));
+
+            // Check if OTP session exists
+            if (!isset($_SESSION['otp'])) {
+                error_log("No OTP session found");
+                return false;
+            }
+
+            $sessionOtp = $_SESSION['otp'];
+            $attempts = $sessionOtp['attempts'] ?? 0;
+            $maxAttempts = 3;
+
+            // Check if too many attempts
+            if ($attempts >= $maxAttempts) {
+                unset($_SESSION['otp']);
+                error_log("Too many attempts");
+                return false;
+            }
+
+            // Check if OTP has expired (5 minutes)
+            $expiryTime = 300; // 5 minutes
+            if (time() - $sessionOtp['created_at'] > $expiryTime) {
+                unset($_SESSION['otp']);
+                error_log("OTP has expired");
+                return false;
+            }
+
+            // Verify OTP
+            if ($input_otp !== $sessionOtp['code']) {
+                // Increment attempts
+                $_SESSION['otp']['attempts'] = $attempts + 1;
+                error_log("Invalid OTP");
+                return false;
+            }
+
+            // OTP is valid - clear it from session
+            $verifiedPhone = $sessionOtp['phone_number'];
+            unset($_SESSION['otp']);
+
+            // Set verification success in session
+            $_SESSION['otp_verified'] = true;
+
+            error_log("OTP verified successfully");
+            return true;
+        } catch (Exception $e) {
+            error_log("Error verifying OTP: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function isAuthenticated() {
         return isset($_SESSION['auth']) && isset($_SESSION['auth']['id']);
     }
@@ -45,20 +134,13 @@ class SessionManager {
             return true;
         }
 
-        // Get the current time
         $currentTime = time();
-        
-        // Get the last activity time
         $lastActivity = $_SESSION['auth']['last_activity'] ?? 0;
-        
-        // Calculate time difference
         $timeDiff = $currentTime - $lastActivity;
         
-        // Check if this is a new session (within 5 seconds of login)
         $isNewSession = isset($_SESSION['auth']['logged_in_at']) && 
                        ($currentTime - $_SESSION['auth']['logged_in_at'] <= 5);
         
-        // Don't expire new sessions
         if ($isNewSession) {
             return false;
         }
@@ -69,8 +151,8 @@ class SessionManager {
     public function updateActivity() {
         if ($this->isAuthenticated()) {
             $_SESSION['auth']['last_activity'] = time();
-            session_write_close(); // Ensure the session is written
-            session_start(); // Reopen the session for further use
+            session_write_close();
+            session_start();
         }
     }
 
@@ -82,50 +164,36 @@ class SessionManager {
     }
 
     public function createSession($userData, $type = 'user') {
-        // If there's an active session, destroy it properly
         if (session_status() === PHP_SESSION_ACTIVE) {
-            // Clear session data
             session_unset();
             
-            // Delete the session cookie
             if (isset($_COOKIE[session_name()])) {
-                $params = session_get_cookie_params();
                 setcookie(
                     session_name(),
                     '',
                     time() - 42000,
                     '/',
                     '',
-                    false, // Allow non-HTTPS for localhost
+                    false,
                     true
                 );
             }
             
-            // Destroy the session
             session_destroy();
         }
 
-        // Set cookie parameters
-        $secure = false; // Allow non-HTTPS for localhost
-        $httponly = true;
-        $samesite = 'Lax'; // Allow same-site cookies
-        
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',
             'domain' => '',
-            'secure' => $secure,
-            'httponly' => $httponly,
-            'samesite' => $samesite
+            'secure' => false,
+            'httponly' => true,
+            'samesite' => 'Lax'
         ]);
 
-        // Start a new session
         session_start();
-
-        // Generate a new session ID
         session_regenerate_id(true);
 
-        // Set session data
         $_SESSION['auth'] = [
             'id' => $userData['id'],
             'identifier' => $type === 'teller' ? $userData['teller_number'] : $userData['username'],
@@ -138,15 +206,11 @@ class SessionManager {
             'email' => $userData['email'] ?? null
         ];
 
-        // Add account data for users
         if ($type === 'user' && isset($userData['account'])) {
             $_SESSION['auth']['account'] = $userData['account'];
         }
 
-        // Ensure session data is written
         session_write_close();
-        
-        // Reopen the session
         session_start();
     }
 
@@ -155,10 +219,8 @@ class SessionManager {
             error_log('Killing session for user: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
         }
 
-        // Clear all session variables
         $_SESSION = array();
 
-        // Delete the session cookie
         if (isset($_COOKIE[session_name()])) {
             $params = session_get_cookie_params();
             setcookie(
@@ -172,7 +234,6 @@ class SessionManager {
             );
         }
 
-        // Destroy the session
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }
@@ -201,7 +262,6 @@ class SessionManager {
         ];
     }
 
-    // Getters for configuration values
     public function getSessionTimeout() {
         return $this->sessionTimeout;
     }

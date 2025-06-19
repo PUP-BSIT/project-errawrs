@@ -12,22 +12,32 @@ if (!is_dir($sessionPath)) {
 }
 session_save_path($sessionPath);
 
+// Debug session before start
+error_log("Send OTP - Before session_start - Session save path: " . session_save_path());
+error_log("Send OTP - Before session_start - Session name: " . session_name());
+error_log("Send OTP - Before session_start - Cookies: " . print_r($_COOKIE, true));
+
+// Set session cookie parameters before starting session
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',  // Leave empty for localhost
+    'secure' => false,  // Set to true in production
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+session_start();
+
+// Debug session after start
+error_log("Send OTP - After session_start - Session ID: " . session_id());
+error_log("Send OTP - After session_start - Session name: " . session_name());
+error_log("Send OTP - After session_start - Session data: " . print_r($_SESSION, true));
+
 // Set JSON content type first
 header('Content-Type: application/json');
 
 try {
-    // Set session cookie parameters before starting session
-    session_set_cookie_params([
-        'lifetime' => 0,
-        'path' => '/',
-        'domain' => '',  // Leave empty for localhost
-        'secure' => false,  // Set to true in production
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
-
-    session_start();
-
     // Check if required files exist before requiring them
     $requiredFiles = [
         __DIR__ . '/../../config/database.php',
@@ -50,7 +60,10 @@ try {
         exit();
     }
 
+    // Debug request data
     $rawInput = file_get_contents('php://input');
+    error_log("Send OTP - Raw request data: " . $rawInput);
+
     if (!$rawInput) {
         throw new Exception('No input data received');
     }
@@ -59,6 +72,8 @@ try {
     if (json_last_error() !== JSON_ERROR_NONE) {
         throw new Exception('Invalid JSON data: ' . json_last_error_msg());
     }
+
+    error_log("Send OTP - Decoded input: " . print_r($input, true));
 
     if (!isset($input['phone_number']) || empty($input['phone_number'])) {
         http_response_code(400);
@@ -73,6 +88,8 @@ try {
         $phone = '0' . substr($phone, -10);
     }
 
+    error_log("Send OTP - Normalized phone: " . $phone);
+
     $purpose = $input['purpose'] ?? 'general';
 
     // Load environment variables
@@ -81,6 +98,7 @@ try {
 
     // Format phone number for Semaphore (remove leading 0 and add country code)
     $formattedPhone = '+63' . substr($phone, 1);
+    error_log("Send OTP - Formatted phone for API: " . $formattedPhone);
 
     // Use Semaphore's OTP endpoint
     $apiKey = $_ENV['SEMAPHORE_API_KEY'];
@@ -102,6 +120,9 @@ try {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
+    error_log("Send OTP - API Response: " . $response);
+    error_log("Send OTP - API HTTP Code: " . $httpCode);
+
     if ($httpCode !== 200 || !$response) {
         error_log("Semaphore API Error: " . $response);
         throw new Exception('Failed to send OTP via SMS. Please try again.');
@@ -120,15 +141,27 @@ try {
         throw new Exception('Failed to generate OTP. Please try again.');
     }
 
+    error_log("Send OTP - Generated OTP: " . $otp);
+
     $created_at = time();
 
     // Store OTP in session
     $_SESSION['otp'] = [
-        'code' => $otp,
+        'code' => (string)$otp, // Ensure OTP is stored as string
         'phone_number' => $phone,
         'created_at' => $created_at,
         'attempts' => 0
     ];
+
+    // Debug session data after storing OTP
+    error_log("Send OTP - Session data after storing OTP: " . print_r($_SESSION, true));
+
+    // Ensure session is written
+    session_write_close();
+    session_start();
+
+    // Verify session data was stored
+    error_log("Send OTP - Session data after write/restart: " . print_r($_SESSION, true));
 
     // Send success response without exposing OTP
     echo json_encode([

@@ -162,11 +162,19 @@ class RegistrationManager {
 		// Get the phone number from the form
 		const phoneNumber = document.getElementById("phone_number")?.value || "";
 
+		// Format phone number (ensure it starts with 0)
+		let formattedPhone = phoneNumber.replace(/[^0-9]/g, "");
+		if (formattedPhone.startsWith("63")) {
+			formattedPhone = "0" + formattedPhone.substring(2);
+		}
+
 		// Create the request data
 		const requestData = {
-			phone_number: phoneNumber,
+			phone_number: formattedPhone,
 			purpose: 'registration'
 		};
+
+		console.log('Sending OTP request:', requestData);
 
 		// Make API call to request OTP
 		fetch("/project-errawrs/src/api/auth/send_otp.php", {
@@ -174,15 +182,18 @@ class RegistrationManager {
 			headers: {
 				"Content-Type": "application/json",
 			},
+			credentials: 'include',
 			body: JSON.stringify(requestData),
 		})
 			.then((response) => {
-				if (!response.ok) {
-					return response.json().then(data => {
+				console.log('OTP request response status:', response.status);
+				return response.json().then(data => {
+					console.log('OTP request response data:', data);
+					if (!response.ok) {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
-					});
-				}
-				return response.json();
+					}
+					return data;
+				});
 			})
 			.then((data) => {
 				// Reset submit button
@@ -203,6 +214,7 @@ class RegistrationManager {
 				}
 			})
 			.catch((error) => {
+				console.error('OTP request error:', error);
 				// Reset submit button
 				const submitBtn = document.querySelector('#contact_info_form button[type="submit"]');
 				if (submitBtn) {
@@ -561,7 +573,7 @@ class RegistrationManager {
 
 	verifyOtp() {
 		const otpInput = document.getElementById("otp_code");
-		const verifyBtn = document.getElementById("verify_otp");
+		const verifyBtn = document.getElementById("verify_otp_btn");
 		const otp = otpInput?.value || "";
 
 		if (!otp) {
@@ -578,13 +590,22 @@ class RegistrationManager {
 		}
 
 		// Get the phone number from the form
-		const phoneNumber = document.getElementById("phone_number")?.value || "";
+		let phoneNumber = document.getElementById("phone_number")?.value || "";
+		
+		// Format phone number (ensure it starts with 0)
+		phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+		if (phoneNumber.startsWith("63")) {
+			phoneNumber = "0" + phoneNumber.substring(2);
+		}
 
 		// Create the request data
 		const requestData = {
 			otp: otp,
 			phone_number: phoneNumber,
+			purpose: 'registration'
 		};
+
+		console.log('Sending OTP verification request:', requestData);
 
 		// Make API call to verify OTP
 		fetch("/project-errawrs/src/api/auth/verify_otp.php", {
@@ -592,15 +613,18 @@ class RegistrationManager {
 			headers: {
 				"Content-Type": "application/json",
 			},
+			credentials: 'include',
 			body: JSON.stringify(requestData),
 		})
 			.then((response) => {
-				if (!response.ok) {
-					return response.json().then(data => {
+				console.log('OTP verification response status:', response.status);
+				return response.json().then(data => {
+					console.log('OTP verification response data:', data);
+					if (!response.ok) {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
-					});
-				}
-				return response.json();
+					}
+					return data;
+				});
 			})
 			.then((data) => {
 				if (data.success) {
@@ -628,6 +652,7 @@ class RegistrationManager {
 				}
 			})
 			.catch((error) => {
+				console.error('OTP verification error:', error);
 				this.showNotification(
 					error.message || "An error occurred. Please try again.",
 					NOTIFICATION_TYPES.ERROR
@@ -649,7 +674,13 @@ class RegistrationManager {
 		}
 
 		// Get the phone number from the form
-		const phoneNumber = document.getElementById("phone_number")?.value || "";
+		let phoneNumber = document.getElementById("phone_number")?.value || "";
+		
+		// Format phone number (ensure it starts with 0)
+		phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+		if (phoneNumber.startsWith("63")) {
+			phoneNumber = "0" + phoneNumber.substring(2);
+		}
 
 		// Create the request data
 		const requestData = {
@@ -657,15 +688,19 @@ class RegistrationManager {
 			purpose: 'registration'
 		};
 
+		console.log('Sending resend OTP request:', requestData);
+
 		// Make API call to request new OTP
 		fetch("/project-errawrs/src/api/auth/send_otp.php", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(requestData),
+			credentials: 'include',
+			body: JSON.stringify(requestData)
 		})
 			.then((response) => {
+				console.log('Resend OTP response status:', response.status);
 				if (!response.ok) {
 					return response.json().then(data => {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
