@@ -131,6 +131,25 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmation_modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Confirm Action</h2>
+                <button class="close-modal" onclick="registrationReview.closeConfirmationModal()" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmation_message" style="text-align: center; font-size: 1.1rem; margin: 20px 0;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="registrationReview.closeConfirmationModal()">Cancel</button>
+                <button id="confirm_action_btn" class="btn btn-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Image Zoom Modal (will be created dynamically) -->
 
     <script src="./js/review_registrations.js"></script>

@@ -901,3 +901,44 @@ body {
         padding: 16px;
     }
 }
+
+/* Confirmation Modal Buttons */
+.btn-cancel {
+    background-color: var(--color-bg-gradient-start);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    padding: 12px 24px;
+    min-width: 100px;
+}
+
+.btn-cancel:hover {
+    background-color: var(--color-bg-gradient-end);
+    color: var(--color-primary-black);
+}
+
+.btn-confirm {
+    padding: 12px 24px;
+    min-width: 100px;
+}
+
+.btn-approve {
+    background-color: var(--color-mint);
+    color: var(--color-primary-black);
+}
+
+.btn-approve:hover {
+    background-color: var(--color-lime-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 217, 87, 0.2);
+}
+
+.btn-deny {
+    background-color: var(--color-error);
+    color: var(--color-white);
+}
+
+.btn-deny:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.2);
+}

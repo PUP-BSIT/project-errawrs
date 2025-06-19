@@ -202,6 +202,7 @@ class RegistrationReview {
                             }"></i>
                             ${reg.status.charAt(0).toUpperCase() + reg.status.slice(1)}
                         </div>
+                        
                         ${reg.status === 'pending' ? `
                             <div class="action-buttons">
                                 <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')"
@@ -438,6 +439,8 @@ class RegistrationReview {
             const confirmed = await this.confirmAction(action);
             if (!confirmed) return;
 
+            console.log(`Processing ${action} for registration ${registrationId}`);
+
             const response = await fetch(`${this.getBaseURL()}/teller/review_registration.php`, {
                 method: 'POST',
                 headers: {
@@ -450,15 +453,27 @@ class RegistrationReview {
                 })
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to process registration');
-            }
-            
-            const data = await response.json();
-            if (!data.success) throw new Error(data.error);
+            console.log('Response status:', response.status);
+            const responseText = await response.text();
+            console.log('Response text:', responseText);
 
-            // Close modal if open
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (e) {
+                console.error('Error parsing response:', e);
+                console.error('Raw response:', responseText);
+                throw new Error('Invalid response from server: ' + responseText.substring(0, 100));
+            }
+
+            if (!response.ok || !data.success) {
+                const errorMessage = data.error || data.details || 'Failed to process registration';
+                console.error('Server error:', data);
+                throw new Error(errorMessage);
+            }
+
+            // Close modals
+            this.closeConfirmationModal();
             document.getElementById('application_modal').style.display = 'none';
 
             // Show success message
@@ -468,25 +483,45 @@ class RegistrationReview {
             );
 
             // Reload registrations
-            this.loadRegistrations();
+            await this.loadRegistrations();
 
         } catch (error) {
+            console.error('Error in handleAction:', error);
             this.showNotification(error.message, 'error');
         }
     }
 
     confirmAction(action) {
         return new Promise((resolve) => {
-            const message = action === 'approve' ?
+            const modal = document.getElementById('confirmation_modal');
+            const message = document.getElementById('confirmation_message');
+            const confirmBtn = document.getElementById('confirm_action_btn');
+            
+            // Set message and button style based on action
+            message.textContent = action === 'approve' ?
                 'Are you sure you want to approve this application?' :
                 'Are you sure you want to deny this application?';
             
-            if (confirm(message)) {
+            confirmBtn.className = `btn btn-${action === 'approve' ? 'approve' : 'deny'}`;
+            confirmBtn.textContent = action === 'approve' ? 'Approve' : 'Deny';
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Handle confirm button click
+            const handleConfirm = () => {
+                modal.classList.remove('active');
+                confirmBtn.removeEventListener('click', handleConfirm);
                 resolve(true);
-            } else {
-                resolve(false);
-            }
+            };
+            
+            confirmBtn.addEventListener('click', handleConfirm);
         });
+    }
+
+    closeConfirmationModal() {
+        const modal = document.getElementById('confirmation_modal');
+        modal.classList.remove('active');
     }
 
     goToPage(page) {
