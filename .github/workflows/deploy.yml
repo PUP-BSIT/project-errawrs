@@ -31,6 +31,7 @@ jobs:
       - name: Deploy to Production (main branch)
         if: github.ref == 'refs/heads/main'
         run: |
+<<<<<<< HEAD
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
@@ -67,10 +68,23 @@ jobs:
           # Clean up temporary backup path
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for production."
+=======
+          # Backup .env if it exists
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/html/errawrs/project-errawrs/src/.env ]; then cp /var/www/html/errawrs/project-errawrs/src/.env /tmp/.env.backup; fi'
+          # Remove old files
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo rm -rf /var/www/html/errawrs/project-errawrs/*'
+          # Copy new files
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-prod/
+          # Move new files into place
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-prod/* /var/www/html/errawrs/project-errawrs/ && sudo chown -R www-data:www-data /var/www/html/errawrs/project-errawrs && sudo chmod -R 755 /var/www/html/errawrs/project-errawrs'
+          # Restore .env
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /tmp/.env.backup ]; then mv /tmp/.env.backup /var/www/html/errawrs/project-errawrs/src/.env; fi'
+>>>>>>> main
 
       - name: Deploy to Development (dev branch)
         if: github.ref == 'refs/heads/dev'
         run: |
+<<<<<<< HEAD
           SSH_KEY=~/.ssh/aws_key # Key for deployment (can be any of the set up keys)
           REMOTE_USER=ubuntu
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com # Assuming same host for dev, change if different
@@ -113,6 +127,18 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for development."
 
+=======
+          # Backup .env if it exists
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /var/www/dev/src/.env ]; then cp /var/www/dev/src/.env /tmp/.env.backup; fi'
+          # Remove old files
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo rm -rf /var/www/dev/*'
+          # Copy new files
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/aws_key -r ./* ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com:/tmp/deploy-dev/
+          # Move new files into place
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'sudo mv /tmp/deploy-dev/* /var/www/dev/ && sudo chown -R www-data:www-data /var/www/dev && sudo chmod -R 755 /var/www/dev'
+          # Restore .env
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws_key ubuntu@ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com 'if [ -f /tmp/.env.backup ]; then mv /tmp/.env.backup /var/www/dev/src/.env; fi'
+>>>>>>> main
 
       - name: Deployment Summary
         run: |
@@ -122,4 +148,8 @@ jobs:
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "✅ Successfully deployed to DEVELOPMENT environment"
             echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com (dev site)"
+<<<<<<< HEAD
           fi
+=======
+          fi
+>>>>>>> main
