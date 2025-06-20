@@ -371,12 +371,12 @@ class TellerManager {
 
             // Log the request data for debugging
             console.log('Request data:', {
-                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
+                url: `/project-errawrs/src/api/admin/${isEdit ? 'update.php' : 'create_teller.php'}`,
                 method: isEdit ? 'PUT' : 'POST',
                 body: formData
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
+            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update.php' : 'create_teller.php'}`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
