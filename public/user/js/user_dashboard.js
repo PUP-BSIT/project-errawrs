@@ -5,7 +5,7 @@
 // Currency
 const CURRENCY = {
     SYMBOL: '₱',
-    LOCALE: 'en-US'
+    LOCALE: 'en-PH'
 };
 
 // Timing (in milliseconds)
@@ -20,19 +20,48 @@ const ACCOUNT_STATUS = {
     ACTIVE: 'active'
 };
 
+// Financial Tips
+const FINANCIAL_TIPS = [
+    {
+        title: "Save for Emergencies",
+        content: "Try to save at least 3-6 months of living expenses for unexpected events.",
+        icon: "fa-piggy-bank"
+    },
+    {
+        title: "Track Your Spending",
+        content: "Keep a record of all expenses to understand your spending habits better.",
+        icon: "fa-chart-line"
+    },
+    {
+        title: "Budget Wisely",
+        content: "Follow the 50/30/20 rule: 50% needs, 30% wants, 20% savings.",
+        icon: "fa-wallet"
+    },
+    {
+        title: "Invest for the Future",
+        content: "Consider investing in diverse portfolios for long-term growth.",
+        icon: "fa-chart-pie"
+    },
+    {
+        title: "Avoid Unnecessary Debt",
+        content: "Use credit cards responsibly and pay full balances when possible.",
+        icon: "fa-credit-card"
+    }
+];
+
 // DOM Elements
-const nav_links = document.querySelectorAll('.nav-link');
-const logout_btn = document.getElementById('logout_btn');
-const notification_btn = document.getElementById('notification_btn');
-const add_btn = document.getElementById('add_btn');
-const help_btn = document.getElementById('help_btn');
-const transfer_now_btn = document.getElementById('transfer_now_btn');
-const account_balance_element = document.getElementById('account_balance');
-const transaction_list_element = document.getElementById('transaction_list');
-const user_name_element = document.getElementById('user_name');
-const account_display_container = document.getElementById('account-display-container');
-const user_avatar_container = document.getElementById('user_avatar_container');
-const profile_edit_modal = document.getElementById('edit_profile_modal');
+let nav_links;
+let logout_btn;
+let notification_btn;
+let add_btn;
+let help_btn;
+let transfer_now_btn;
+let account_balance_element;
+let transaction_list_element;
+let user_name_element;
+let account_display_container;
+let user_avatar_container;
+let profile_edit_modal;
 
 // State
 let user_data = {}; // Will be populated from API
@@ -79,10 +108,143 @@ function show_notification(message, type) {
     }, 3000); // 3 seconds notification duration
 }
 
+// Initialize DOM elements
+function initializeDOMElements() {
+    nav_links = document.querySelectorAll('.nav-link');
+    logout_btn = document.getElementById('logout_btn');
+    notification_btn = document.getElementById('notification_btn');
+    add_btn = document.getElementById('add_btn');
+    help_btn = document.getElementById('help_btn');
+    transfer_now_btn = document.getElementById('transfer_now_btn');
+    account_balance_element = document.getElementById('account_balance');
+    transaction_list_element = document.getElementById('transaction_list');
+    user_name_element = document.getElementById('user_name');
+    account_display_container = document.getElementById('account-display-container');
+    user_avatar_container = document.getElementById('user_avatar_container');
+    profile_edit_modal = document.getElementById('edit_profile_modal');
+
+    if (!account_display_container || !account_balance_element) {
+        console.error('Required DOM elements not found');
+        return false;
+    }
+    return true;
+}
+
+// Utility function to mask account number
+function maskAccountNumber(accountNumber) {
+    if (!accountNumber) return '';
+    const visible = accountNumber.slice(-4);
+    const masked = 'x'.repeat(accountNumber.length - 4);
+    return masked + visible;
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    init_dashboard(); // Start the dynamic initialization
+    init_dashboard().catch(error => {
+        console.error('Failed to initialize dashboard:', error);
+        show_notification('Failed to initialize dashboard', 'error');
+    });
+    displayFinancialTip(); // Display initial tip
 });
+
+// Update the fetchUserAccounts function
+async function fetchUserAccounts() {
+    if (!initializeDOMElements()) {
+        console.error('DOM elements not initialized');
+        return;
+    }
+
+    try {
+        const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Accounts API Response:', data);
+
+        // Store the accounts data from the data property
+        user_accounts = data.data || [];
+        console.log('Stored user accounts:', user_accounts);
+        
+        // Update the display
+        updateAccountDisplay();
+        
+        return user_accounts;
+    } catch (error) {
+        console.error('Error fetching accounts:', error);
+        updateAccountDisplay(); // Still update display to show error state
+        throw error;
+    }
+}
+
+// Update Account Display
+function updateAccountDisplay() {
+    if (!account_display_container || !account_balance_element) {
+        console.error('Required DOM elements not found');
+        return;
+    }
+
+    console.log('Updating account display with:', user_accounts);
+
+    // Clear existing content
+    account_display_container.innerHTML = '';
+
+    if (!Array.isArray(user_accounts) || user_accounts.length === 0) {
+        console.log('No accounts found');
+        account_balance_element.textContent = `${CURRENCY.SYMBOL}0.00`;
+        account_display_container.innerHTML = '<div class="no-accounts">No active accounts found</div>';
+        if (transfer_now_btn) {
+            transfer_now_btn.disabled = true;
+        }
+        return;
+    }
+
+    // Sort accounts by account number
+    const sortedAccounts = [...user_accounts].sort((a, b) => 
+        a.account_number.localeCompare(b.account_number)
+    );
+
+    // Use the first account's balance for the main display
+    const primaryAccount = sortedAccounts[0];
+    const formattedBalance = parseFloat(primaryAccount.balance).toLocaleString(CURRENCY.LOCALE, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+    account_balance_element.textContent = `${CURRENCY.SYMBOL}${formattedBalance}`;
+
+    // Display all accounts
+    sortedAccounts.forEach(account => {
+        const accountElement = document.createElement('div');
+        accountElement.className = 'account-item';
+        
+        const accountType = account.account_type 
+            ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
+            : 'Savings';
+            
+        accountElement.innerHTML = `
+            <div class="account-info">
+                <div class="account-type">${accountType} Account</div>
+                <div class="account-number">${maskAccountNumber(account.account_number)}</div>
+            </div>
+        `;
+        
+        account_display_container.appendChild(accountElement);
+    });
+
+    // Enable transfer button
+    if (transfer_now_btn) {
+        transfer_now_btn.disabled = false;
+    }
+}
 
 // Initialize dashboard
 async function init_dashboard() {
@@ -93,12 +255,20 @@ async function init_dashboard() {
             return;
         }
 
+        // Debug log session check result
+        console.log('Session check passed, initializing dashboard...');
+
         // Fetch initial data
-        await Promise.all([
+        const [userData, accountsData] = await Promise.all([
             fetchUserData(),
-            fetchUserAccounts(),
-            fetchFinancialTip()
-        ]);
+            fetchUserAccounts()
+        ]).catch(error => {
+            console.error('Error fetching initial data:', error);
+            throw error; // Re-throw to be caught by the outer try-catch
+        });
+
+        console.log('Fetched user data:', userData);
+        console.log('Fetched accounts data:', accountsData);
 
         // Set up UI interactions
         setup_smooth_animations();
@@ -114,7 +284,6 @@ async function init_dashboard() {
             checkSession().then(isValid => {
                 if (isValid) {
                     fetchUserAccounts();
-                    fetchRecentTransactions();
                 }
             });
         }, 30000); // Check every 30 seconds
@@ -127,7 +296,7 @@ async function init_dashboard() {
 // Check session status
 async function checkSession() {
     try {
-        const response = await fetch(API.AUTH.SESSION_CHECK, {
+        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -136,11 +305,17 @@ async function checkSession() {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            if (response.status === 401) {
+                show_notification('Session expired. Redirecting to login...', 'warning');
+                setTimeout(() => {
+                    window.location.href = ROUTES.LOGIN;
+                }, 2000);
+            }
+            return false;
         }
 
         const data = await response.json();
-        console.log('Session check response:', data); // Debug log
+        console.log('Session check response:', data);
 
         if (!data.success || !data.authenticated) {
             show_notification('Session expired. Redirecting to login...', 'warning');
@@ -160,7 +335,7 @@ async function checkSession() {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(API.AUTH.SESSION_CHECK, {
+        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -186,177 +361,6 @@ async function fetchUserData() {
     } catch (error) {
         console.error('Error fetching user data:', error);
         show_notification('Error loading user data', 'error');
-    }
-}
-
-// Fetch user accounts from API and display primary account balance
-async function fetchUserAccounts() {
-    try {
-        const response = await fetch(API.USER.ACCOUNTS);
-        const data = await response.json();
-
-        if (data.success) {
-            user_accounts = data.accounts || []; // Store accounts in state, handle empty array
-             updateAccountDisplay(); // Call function to update account display and balance
-        } else {
-            show_notification(data.error || 'Failed to fetch accounts', 'error');
-            user_accounts = []; // Ensure state is empty on error
-             updateAccountDisplay(); // Still call update to show empty state
-        }
-    } catch (error) {
-        show_notification('Error fetching accounts', 'error');
-        console.error('Error:', error);
-        user_accounts = []; // Ensure state is empty on error
-         updateAccountDisplay(); // Still call update to show error state
-    }
-}
-
-// Add this helper function for masking account numbers
-function maskAccountNumber(accountNumber) {
-    if (!accountNumber) return '';
-    return accountNumbersMasked ? 
-        '*'.repeat(accountNumber.length - 4) + accountNumber.slice(-4) : 
-        accountNumber;
-}
-
-// Update Account Display (similar to account.js but for dashboard)
-function updateAccountDisplay() {
-    if (!account_display_container || !account_balance_element || !transfer_now_btn) return;
-
-    account_display_container.innerHTML = ''; // Clear existing content
-    console.log('User accounts data:', user_accounts);
-
-    const active_accounts = user_accounts.filter(account => account.status === ACCOUNT_STATUS.ACTIVE);
-
-    if (active_accounts.length > 0) {
-        // Find the account with the lowest account number (544250000007)
-        const defaultAccount = active_accounts.reduce((lowest, current) => {
-            return current.account_number < lowest.account_number ? current : lowest;
-        }, active_accounts[0]);
-
-        // Create the main account display container
-        const accountSelector = document.createElement('div');
-        accountSelector.classList.add('account-number-display');
-
-        // Create the account number text display
-        const accountNumberText = document.createElement('span');
-        accountNumberText.classList.add('account-number-text');
-        accountNumberText.textContent = maskAccountNumber(defaultAccount.account_number);
-        accountNumberText.setAttribute('data-account-number', defaultAccount.account_number);
-
-        // Create controls container
-        const controls = document.createElement('div');
-        controls.classList.add('account-controls');
-
-        // Add toggle mask button
-        const toggleMaskBtn = document.createElement('button');
-        toggleMaskBtn.classList.add('account-toggle-mask');
-        toggleMaskBtn.innerHTML = `<i class="${accountNumbersMasked ? 'fas fa-eye' : 'fas fa-eye-slash'}"></i>`;
-        toggleMaskBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleAccountNumberMask();
-        });
-
-        // Only add dropdown if there are multiple accounts
-        if (active_accounts.length > 1) {
-            // Add dropdown arrow
-            const dropdownArrow = document.createElement('button');
-            dropdownArrow.classList.add('account-dropdown-arrow');
-            dropdownArrow.innerHTML = `<i class="fas fa-chevron-down"></i>`;
-
-            // Create dropdown container
-            const dropdownContainer = document.createElement('div');
-            dropdownContainer.classList.add('dropdown-container');
-
-            // Function to create dropdown items
-            const createDropdownItem = (account, currentDisplayedAccount) => {
-                if (account.account_number === currentDisplayedAccount) return null;
-                
-                const dropdownItem = document.createElement('div');
-                dropdownItem.classList.add('dropdown-item');
-                dropdownItem.textContent = maskAccountNumber(account.account_number);
-                dropdownItem.setAttribute('data-account-number', account.account_number);
-                dropdownItem.setAttribute('data-balance', account.balance);
-                
-                dropdownItem.addEventListener('click', () => {
-                    // Update displayed account
-                    accountNumberText.textContent = maskAccountNumber(account.account_number);
-                    accountNumberText.setAttribute('data-account-number', account.account_number);
-                    update_balance_display(parseFloat(account.balance));
-                    
-                    // Fetch transactions for the selected account
-                    fetchRecentTransactions(account.account_number);
-
-                    // Rebuild dropdown with new items
-                    dropdownContainer.innerHTML = '';
-                    active_accounts.forEach(acc => {
-                        const newItem = createDropdownItem(acc, account.account_number);
-                        if (newItem) dropdownContainer.appendChild(newItem);
-                    });
-
-                    // Hide dropdown after selection
-                    dropdownContainer.classList.remove('active');
-                    dropdownArrow.querySelector('i').classList.remove('active');
-                });
-                
-                return dropdownItem;
-            };
-
-            // Add initial dropdown items
-            active_accounts.forEach(account => {
-                const dropdownItem = createDropdownItem(account, defaultAccount.account_number);
-                if (dropdownItem) dropdownContainer.appendChild(dropdownItem);
-            });
-
-            // Toggle dropdown on arrow click
-            dropdownArrow.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdownContainer.classList.toggle('active');
-                dropdownArrow.querySelector('i').classList.toggle('active');
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!accountSelector.contains(e.target)) {
-                    dropdownContainer.classList.remove('active');
-                    dropdownArrow.querySelector('i').classList.remove('active');
-                }
-            });
-
-            controls.appendChild(toggleMaskBtn);
-            controls.appendChild(dropdownArrow);
-            accountSelector.appendChild(accountNumberText);
-            accountSelector.appendChild(controls);
-            accountSelector.appendChild(dropdownContainer);
-        } else {
-            // Single account display
-            controls.appendChild(toggleMaskBtn);
-            accountSelector.appendChild(accountNumberText);
-            accountSelector.appendChild(controls);
-        }
-
-        account_display_container.appendChild(accountSelector);
-
-        // Update balance display for the displayed account
-        update_balance_display(parseFloat(defaultAccount.balance));
-        
-        // Fetch transactions for the default account
-        fetchRecentTransactions(defaultAccount.account_number);
-
-        // Enable/Disable transfer button based on displayed account balance
-        if (parseFloat(defaultAccount.balance) > 0) {
-            transfer_now_btn.classList.remove('disabled');
-            transfer_now_btn.style.pointerEvents = 'auto';
-        } else {
-            transfer_now_btn.classList.add('disabled');
-            transfer_now_btn.style.pointerEvents = 'none';
-        }
-    } else {
-        // No active accounts
-        account_display_container.innerHTML = `<p class="no-account-message">No active accounts linked</p>`;
-        update_balance_display(0);
-        transfer_now_btn.classList.add('disabled');
-        transfer_now_btn.style.pointerEvents = 'none';
     }
 }
 
@@ -420,7 +424,7 @@ async function fetchRecentTransactions(accountNumber) {
         }
         
         // Update the API endpoint path with account filter
-        const response = await fetch(`${API.USER.TRANSACTIONS}?account=${accountNumber}&limit=5`);
+        const response = await fetch(`${API_ENDPOINTS.USER.TRANSACTIONS}?account=${accountNumber}&limit=5`);
         
         // Check if the response is OK before trying to parse JSON
         if (!response.ok) {
@@ -551,41 +555,6 @@ function populate_profile_form() {
      if (edit_password_input) edit_password_input.value = '';
      if (edit_confirm_password_input) edit_confirm_password_input.value = '';
 
- }
-
-// Fetch and display financial tip
-async function fetchFinancialTip() {
-    try {
-        const response = await fetch(API.USER.FINANCIAL_TIPS);
-        const data = await response.json();
-
-        if (data.success) {
-            const tipContainer = document.getElementById('financial_tip_container');
-            if (!tipContainer) return;
-
-            tipContainer.innerHTML = `
-                <div class="tip-content">
-                    <h3 class="tip-title">${data.tip.title}</h3>
-                    <p class="tip-text">${data.tip.subtitle}</p>
-                </div>
-            `;
-        } else {
-            // Handle unsuccessful response
-            console.log('Financial tip data not available:', data.error || 'Unknown error');
-        }
-    } catch (error) {
-        console.log('Error fetching financial tip:', error);
-        // Don't let this error block the rest of the dashboard from loading
-        const tipContainer = document.getElementById('financial_tip_container');
-        if (tipContainer) {
-            tipContainer.innerHTML = `
-                <div class="tip-content">
-                    <h3 class="tip-title">Financial Wisdom</h3>
-                    <p class="tip-text">Save a little every day for a secure future.</p>
-                </div>
-            `;
-        }
-    }
 }
 
 // Function to handle logout
@@ -597,7 +566,7 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If you are using tokens
 
         // Call backend logout API
-        await fetch(API.AUTH.LOGOUT, { 
+        await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
             method: 'POST',
             credentials: 'same-origin'
         });
@@ -622,6 +591,25 @@ if (logout_btn) {
         event.preventDefault(); 
         handleLogout();
     });
+}
+
+// Display random financial tip
+function displayFinancialTip() {
+    const tipContainer = document.getElementById('financial_tip_container');
+    if (!tipContainer) return;
+
+    const randomTip = FINANCIAL_TIPS[Math.floor(Math.random() * FINANCIAL_TIPS.length)];
+    
+    tipContainer.innerHTML = `
+        <div class="tip-header">
+            <i class="fas ${randomTip.icon}"></i>
+            <h3>Financial Tip</h3>
+        </div>
+        <div class="tip-content">
+            <h4>${randomTip.title}</h4>
+            <p>${randomTip.content}</p>
+        </div>
+    `;
 }
 
 // --- END OF FILE ---
