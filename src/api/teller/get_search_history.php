@@ -40,7 +40,7 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
-    // Get teller_id from teller lookup
+    // Get teller_id
     $teller = mysqli_fetch_assoc($teller_result);
     $teller_id = $teller['teller_id'];
 

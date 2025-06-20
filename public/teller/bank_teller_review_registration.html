@@ -53,60 +53,41 @@
                     <h1>Review Registration Applications</h1>
                     <p class="subtitle">Review and process new account applications</p>
                 </div>
-                <div class="top-icons">
-                    <div class="top-icon" title="Notifications">
-                        <i class="far fa-bell"></i>
-                    </div>
-                    <div class="top-icon" title="Help">
-                        <i class="far fa-question-circle"></i>
-                    </div>
-                </div>
             </div>
 
-            <div id="notification_container" class="notification-container"></div>
-
-            <div class="registration-container">
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <label for="status_filter">Status:</label>
-                        <select id="status_filter" class="filter-select">
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="all">All Applications</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="per-page-select">Show:</label>
-                        <select id="per-page-select" class="filter-select">
-                            <option value="10">10 per page</option>
-                            <option value="15">15 per page</option>
-                            <option value="20">20 per page</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="applications-grid">
-                    <!-- Applications will be dynamically inserted here -->
-                </div>
-
-                <div class="pagination-container">
-                    <div class="pagination-left">
-                        <button id="prev-btn" class="pagination-btn" title="Previous Page">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </button>
-                        <div id="page-numbers" class="page-numbers">
-                            <!-- Page numbers will be populated by JavaScript -->
+            <div class="centered-wrapper">
+                <div id="notification_container" class="notification-container"></div>
+                <div class="registration-container">
+                    <div class="filter-section">
+                        <div class="filter-group">
+                            <label for="status_filter">Status:</label>
+                            <select id="status_filter" class="filter-select">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="all">All Applications</option>
+                            </select>
                         </div>
-                        <button id="next-btn" class="pagination-btn" title="Next Page">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </button>
+                        <div class="filter-group">
+                            <label for="search_box">Search:</label>
+                            <input id="search_box" class="filter-search" type="text" placeholder="Account number or name...">
+                        </div>
                     </div>
-                    
-                    <div class="pagination-right">
-                        <span id="showing-text" class="showing-text">
-                            <!-- Will be populated by JavaScript -->
-                        </span>
+                    <div class="applications-grid">
+                        <!-- Applications will be dynamically inserted here -->
+                    </div>
+                    <div class="pagination-container">
+                        <div class="pagination-left">
+                            <button id="prev-btn" class="pagination-btn" title="Previous Page">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <div id="page-numbers" class="page-numbers">
+                                <!-- Page numbers will be populated by JavaScript -->
+                            </div>
+                            <button id="next-btn" class="pagination-btn" title="Next Page">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

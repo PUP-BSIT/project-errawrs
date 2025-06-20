@@ -1,4 +1,7 @@
 [14-Jun-2025 13:31:30 Asia/Manila] Raw input: {"first_name":"mikka","last_name":"kette","email":"esparagozamikkakette@gmail.com"}
 [14-Jun-2025 14:26:57 Asia/Manila] Raw input: {"first_name":"Gerald","last_name":"Mamasalanang","email":"cscb.vpr.gerald@gmail.com"}
 [14-Jun-2025 14:40:10 Asia/Manila] Raw input: {"first_name":"Sento","last_name":"San","email":"geraldmamasalanang8@gmail.com"}
-[20-Jun-2025 14:27:58 Asia/Manila] Raw input: {"first_name":"John","last_name":"Doe","email":"stackovercash.site@gmail.com"}
+[21-Jun-2025 02:58:28 Asia/Manila] Raw input: {"first_name":"Kirfloy","last_name":"Bugoy","email":"juliemaelumawag@gmail.com"}
+[21-Jun-2025 02:58:30 Asia/Manila] Database Error: Field 'password_hash' doesn't have a default value
+[21-Jun-2025 02:58:30 Asia/Manila] Create Teller Error: Database error: Field 'password_hash' doesn't have a default value
+[21-Jun-2025 03:10:59 Asia/Manila] Raw input: {"first_name":"Kirfloy","last_name":"Bugoy","email":"juliemaelumawag@gmail.com"}

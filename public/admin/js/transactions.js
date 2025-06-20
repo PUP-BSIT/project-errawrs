@@ -7,7 +7,6 @@ let totalPages = 1;
 const transactionContent = document.querySelector('.transactions-content');
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
-const statusSelect = document.querySelector('.status-select');
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
@@ -30,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load transactions from the API
 async function loadTransactions() {
     try {
-        const searchQuery = searchInput.value.trim();
-        const statusFilter = statusSelect.value;
-        
-        const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`, {
+        const searchQuery = searchInput.value ? searchInput.value.trim() : '';
+        const statusFilter = '';
+        const url = `/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
+        console.log('Fetching transactions from:', url);
+        const response = await fetch(url, {
             credentials: 'include'
         });
 
@@ -80,10 +80,18 @@ function displayTransactions(transactions) {
         const transactionEl = document.createElement('div');
         transactionEl.className = 'transaction-item';
         
-        const statusClass = getStatusClass(transaction.status);
         const transactionType = formatTransactionType(transaction.transaction_type);
         const amount = formatAmount(transaction.amount);
         const date = formatDate(transaction.transaction_date);
+
+        // Handle sender and receiver display based on transaction type
+        let senderDisplay = transaction.sender_username || 'N/A';
+        let receiverDisplay = transaction.receiver_username || 'N/A';
+
+        // For deposit transactions, show teller name as sender
+        if (transaction.transaction_type.toLowerCase() === 'deposit') {
+            senderDisplay = transaction.teller_name || transaction.sender_username || 'N/A';
+        }
 
         transactionEl.innerHTML = `
             <div class="transaction-icon">
@@ -97,11 +105,15 @@ function displayTransactions(transactions) {
                 <div class="transaction-meta">
                     <span class="transaction-id">ID: ${transaction.transaction_id}</span>
                     <span class="transaction-date">${date}</span>
-                    <span class="transaction-status ${statusClass}">${transaction.status}</span>
                 </div>
                 <div class="transaction-users">
-                    <span>From: ${transaction.sender_username || 'N/A'}</span>
-                    <span>To: ${transaction.receiver_username || 'N/A'}</span>
+                    <div>
+                        <span>From: ${senderDisplay}</span>
+                        <span>To: ${receiverDisplay}</span>
+                    </div>
+                    <div class="transaction-completed">
+                        Completed
+                    </div>
                 </div>
             </div>
         `;
@@ -169,15 +181,6 @@ function createPaginationButton(type, content, enabled, isActive = false) {
 }
 
 // Utility functions
-function getStatusClass(status) {
-    const statusMap = {
-        'success': 'status-success',
-        'pending': 'status-pending',
-        'failed': 'status-failed'
-    };
-    return statusMap[status.toLowerCase()] || '';
-}
-
 function getTransactionIcon(type) {
     const iconMap = {
         'deposit': 'fa-arrow-down',

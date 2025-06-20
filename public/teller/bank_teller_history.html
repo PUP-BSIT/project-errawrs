@@ -23,10 +23,9 @@
             
             <div class="user-profile">
                 <a href="bank_teller_view_profile.html">
-                    <img src="../assets/images/profile_bank_teller.jpg"
-                          alt="User Avatar" class="user-avatar">
+                    <div class="user-avatar dynamic-avatar"></div>
                 </a>
-                <div class="user-name">Jovani Avi</div>
+                <div class="user-name"></div>
             </div>
             
             <div class="nav-menu">
@@ -51,18 +50,6 @@
         </div>
 
         <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div id="notification_container" 
-                      class="notification-container"></div>
-                <div class="top-icons">
-                    <div class="top-icon"><i class="fa-regular fa-bell">
-                    </i></div>
-                    <div class="top-icon"><i class="fa-regular fa-square-plus">
-                    </i></div>
-                </div>
-            </div>
-
             <div class="history-container">
                 <h1>Transaction History</h1>
 
@@ -111,6 +98,7 @@
             </div>
         </div>
     </div>
+    <div id="notification_container" class="notification-container"></div>
     <script src="./js/history.js"></script>
 </body>
 </html>

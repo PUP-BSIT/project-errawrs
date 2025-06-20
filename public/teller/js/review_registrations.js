@@ -1,11 +1,12 @@
 class RegistrationReview {
     constructor() {
         this.currentPage = 1;
-        this.itemsPerPage = 10;
+        this.itemsPerPage = 2; // Always 2 per page
         this.currentStatus = 'pending';
+        this.allRegistrations = [];
+        this.filteredRegistrations = [];
         this.setupEventListeners();
         this.loadRegistrations();
-        this.displayUserProfile();
     }
 
     // Configuration - Dynamic base URL detection
@@ -33,13 +34,14 @@ class RegistrationReview {
             });
         }
 
-        // Per page select
-        const perPageSelect = document.getElementById('per-page-select');
-        if (perPageSelect) {
-            perPageSelect.addEventListener('change', () => {
-                this.itemsPerPage = parseInt(perPageSelect.value);
+        // Search box
+        const searchBox = document.getElementById('search_box');
+        if (searchBox) {
+            searchBox.addEventListener('input', () => {
                 this.currentPage = 1;
-                this.loadRegistrations();
+                this.applySearchFilter();
+                this.displayRegistrations(this.getPaginatedRegistrations());
+                this.updatePagination();
             });
         }
 
@@ -47,7 +49,7 @@ class RegistrationReview {
         const closeModal = document.querySelector('.close-modal');
         if (closeModal) {
             closeModal.addEventListener('click', () => {
-                document.getElementById('application_modal').style.display = 'none';
+                document.getElementById('application_modal').style.display = '';
             });
         }
 
@@ -55,7 +57,7 @@ class RegistrationReview {
         window.addEventListener('click', (e) => {
             const modal = document.getElementById('application_modal');
             if (e.target === modal) {
-                modal.style.display = 'none';
+                modal.style.display = '';
             }
         });
     }
@@ -63,44 +65,30 @@ class RegistrationReview {
     async loadRegistrations() {
         try {
             const baseUrl = this.getBaseURL();
-            console.log('Base URL:', baseUrl);
-            
             const url = new URL(`${baseUrl}/teller/get_registrations.php`);
             url.searchParams.append('status', this.currentStatus);
-            url.searchParams.append('page', this.currentPage);
-            url.searchParams.append('per_page', this.itemsPerPage);
-
-            console.log('Fetching registrations:', url.toString());
-
-            const response = await fetch(url, {
-                credentials: 'include'
-            });
-
+            // Fetch all registrations for search and pagination
+            url.searchParams.append('page', 1);
+            url.searchParams.append('per_page', 1000);
+            const response = await fetch(url, { credentials: 'include' });
             if (response.status === 403) {
                 window.location.href = './bank_teller_login.html';
                 return;
             }
-
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Server response:', response.status, errorText);
                 throw new Error(`Failed to fetch registrations: ${response.status} ${response.statusText}`);
             }
-            
             const data = await response.json();
-            console.log('Received data:', data);
-
             if (!data.success) {
                 throw new Error(data.error || 'Unknown error occurred');
             }
-
-            this.displayRegistrations(data.registrations);
-            this.updatePagination(data.pagination);
+            this.allRegistrations = data.registrations;
+            this.applySearchFilter();
+            this.displayRegistrations(this.getPaginatedRegistrations());
+            this.updatePagination();
         } catch (error) {
-            console.error('Error in loadRegistrations:', error);
             this.showNotification(error.message, 'error');
-            
-            // Show empty state in the grid
             const container = document.querySelector('.applications-grid');
             if (container) {
                 container.innerHTML = `
@@ -113,10 +101,31 @@ class RegistrationReview {
         }
     }
 
+    applySearchFilter() {
+        const searchBox = document.getElementById('search_box');
+        const query = searchBox ? searchBox.value.trim().toLowerCase() : '';
+        if (!query) {
+            this.filteredRegistrations = this.allRegistrations;
+        } else {
+            this.filteredRegistrations = this.allRegistrations.filter(reg => {
+                return (
+                    (reg.account_number && reg.account_number.toLowerCase().includes(query)) ||
+                    (reg.first_name && reg.first_name.toLowerCase().includes(query)) ||
+                    (reg.last_name && reg.last_name.toLowerCase().includes(query))
+                );
+            });
+        }
+    }
+
+    getPaginatedRegistrations() {
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        return this.filteredRegistrations.slice(start, end);
+    }
+
     displayRegistrations(registrations) {
         const container = document.querySelector('.applications-grid');
         if (!container) return;
-
         if (!registrations.length) {
             container.innerHTML = `
                 <div class="no-applications">
@@ -131,7 +140,6 @@ class RegistrationReview {
             `;
             return;
         }
-
         const html = registrations.map(reg => `
             <div class="registration-card" 
                  data-registration-id="${reg.registration_id}"
@@ -220,21 +228,17 @@ class RegistrationReview {
                 </div>
             </div>
         `).join('');
-
         container.innerHTML = html;
     }
 
-    updatePagination(pagination) {
-        const container = document.querySelector('.pagination-container');
-        if (!container) return;
-
-        // Update page numbers
+    updatePagination() {
+        const totalPages = Math.ceil(this.filteredRegistrations.length / this.itemsPerPage) || 1;
         const pageNumbers = document.getElementById('page-numbers');
         if (pageNumbers) {
             let html = '';
-            for (let i = 1; i <= pagination.total_pages; i++) {
+            for (let i = 1; i <= totalPages; i++) {
                 html += `
-                    <button class="page-number ${i === pagination.current_page ? 'active' : ''}"
+                    <button class="page-number ${i === this.currentPage ? 'active' : ''}"
                             onclick="registrationReview.goToPage(${i})">
                         ${i}
                     </button>
@@ -242,20 +246,10 @@ class RegistrationReview {
             }
             pageNumbers.innerHTML = html;
         }
-
-        // Update navigation buttons
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
-        if (prevBtn) prevBtn.disabled = !pagination.has_prev_page;
-        if (nextBtn) nextBtn.disabled = !pagination.has_next_page;
-
-        // Update showing text
-        const showingText = document.getElementById('showing-text');
-        if (showingText) {
-            const start = (pagination.current_page - 1) * pagination.per_page + 1;
-            const end = Math.min(start + pagination.per_page - 1, pagination.total_items);
-            showingText.textContent = `Showing ${start}-${end} of ${pagination.total_items}`;
-        }
+        if (prevBtn) prevBtn.disabled = this.currentPage === 1;
+        if (nextBtn) nextBtn.disabled = this.currentPage === totalPages;
     }
 
     async viewDetails(registrationId) {
@@ -527,7 +521,8 @@ class RegistrationReview {
 
     goToPage(page) {
         this.currentPage = page;
-        this.loadRegistrations();
+        this.displayRegistrations(this.getPaginatedRegistrations());
+        this.updatePagination();
     }
 
     showNotification(message, type = 'info') {
@@ -558,50 +553,15 @@ class RegistrationReview {
             setTimeout(() => notification.remove(), 300);
         }, 5000);
     }
-
-    // Display user profile information
-    displayUserProfile() {
-        const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
-        if (tellerInfo) {
-            // Update the user name in the sidebar
-            const userNameElement = document.querySelector('.user-name');
-            if (userNameElement) {
-                userNameElement.textContent = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-            }
-
-            // Fetch additional profile details if needed
-            this.fetchTellerProfile(tellerInfo.teller_number);
-        }
-    }
-
-    // Fetch teller profile from the server
-    async fetchTellerProfile(tellerNumber) {
-        try {
-            const baseUrl = this.getBaseURL();
-            const response = await fetch(`${baseUrl}/teller/view_profile.php?teller_number=${tellerNumber}`, {
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch teller profile');
-            }
-
-            const data = await response.json();
-            if (data.success) {
-                // Update any additional profile information if needed
-                const userNameElement = document.querySelector('.user-name');
-                if (userNameElement) {
-                    userNameElement.textContent = `${data.first_name} ${data.last_name}`;
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching teller profile:', error);
-        }
-    }
 }
 
 // Initialize when DOM is ready
 let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
     registrationReview = new RegistrationReview();
+    const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
+    const userNameElement = document.querySelector('.user-name');
+    if (userNameElement && tellerInfo && tellerInfo.name) {
+        userNameElement.textContent = tellerInfo.name;
+    }
 }); 

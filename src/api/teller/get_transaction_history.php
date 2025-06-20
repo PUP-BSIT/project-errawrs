@@ -45,11 +45,11 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
-    // Get teller_id from teller lookup
+    // Get teller_id
     $teller = mysqli_fetch_assoc($teller_result);
     $teller_id = $teller['teller_id'];
 
-    // Get total count for pagination (for this teller)
+    // Get total count for pagination
     $count_sql = "SELECT COUNT(*) as total FROM transaction WHERE teller_id = ?";
     $count_stmt = mysqli_prepare($conn, $count_sql);
     mysqli_stmt_bind_param($count_stmt, "i", $teller_id);
@@ -58,7 +58,7 @@ try {
     $total_records = mysqli_fetch_assoc($count_result)['total'];
     $total_pages = ceil($total_records / $limit);
 
-    // Get transactions with related information (for this teller)
+    // Get transactions with related information
     $transactions_sql = "SELECT 
         t.transaction_id,
         t.transaction_type,

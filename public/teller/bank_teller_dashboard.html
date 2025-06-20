@@ -24,8 +24,7 @@
             
             <div class="user-profile">
                 <a href="bank_teller_view_profile.html">
-                    <img src="../assets/images/profile_bank_teller.jpg"
-                     alt="User Avatar" class="user-avatar"></a>
+                    <div class="user-avatar dynamic-avatar"></div></a>
                 <div class="user-name"></div>
             </div>
             
@@ -51,22 +50,30 @@
         </div>
 
         <div class="main-content">
-            <div id="notification_container" class="notification-container"></div>
-
-            <div class="welcome-section">
-                <div class="greeting-container">
-                    <div class="hello-text">Hello</div>
-                    <div class="name-text"></div>
-                </div>
+            <div class="top-row">
                 <div class="search-container">
                     <div class="search-label">Quick Search</div>
                     <div class="search-input-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="quick_search" class="search-input" 
-                               placeholder="Search by name, account number">
+                               placeholder="Search by name or account number">
                     </div>
                     <div id="search_results" class="search-results"></div>
                 </div>
+                <div class="registration-section">
+                    <div class="section-header">
+                        <h2>Recent Registration Requests</h2>
+                        <a href="bank_teller_review_registration.html" class="btn-view-all">View All</a>
+                    </div>
+                    <div class="registration-list" id="recent_registrations">
+                        <!-- Registration items will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="greeting-container">
+                <div class="hello-text">Hello</div>
+                <div class="name-text"></div>
             </div>
 
             <div class="stats-grid">
@@ -131,20 +138,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Registration Section -->
-            <div class="registration-section">
-                <div class="section-header">
-                    <h2>Recent Registration Requests</h2>
-                    <a href="bank_teller_review_registration.html" class="btn-view-all">View All</a>
-                </div>
-                <div class="registration-list" id="recent_registrations">
-                    <!-- Registration items will be injected here by JS -->
-                </div>
-            </div>
-            <!-- End Registration Section -->
         </div>
     </div>
+    <div id="notification_container" class="notification-container"></div>
     <script src="./js/teller_dashboard.js"></script>
 </body>
 </html>

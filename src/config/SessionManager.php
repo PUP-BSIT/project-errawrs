@@ -243,4 +243,8 @@ class SessionManager {
     public function getSessionWarnTime() {
         return $this->sessionWarnTime;
     }
+
+    public function isAuthorizedAdmin() {
+        return $this->isAuthenticated() && isset($_SESSION['auth']['type']) && $_SESSION['auth']['type'] === 'admin';
+    }
 } 
