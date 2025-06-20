@@ -435,7 +435,7 @@ class TellerManager {
                     // Close the modal first
                     this.closeModal(modal);
 
-                    const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                    const response = await fetch('/project-errawrs/src/api/admin/reset_teller_password.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
