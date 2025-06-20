@@ -123,6 +123,7 @@ let transactions = [];
 
 // Function to show a notification (Assuming this is a shared function or needs to be added)
 function showNotification(message, type) {
+    const notification_container = document.querySelector('.notification-container');
     if (!notification_container) return;
 
     const notification = document.createElement('div');

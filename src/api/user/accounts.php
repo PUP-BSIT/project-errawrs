@@ -32,7 +32,7 @@ error_log("Session data in accounts.php: " . print_r($_SESSION, true));
 if (!$sessionManager->isAuthenticated()) {
     error_log("Unauthorized access attempt to accounts.php. Session data: " . print_r($_SESSION, true));
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized access']);
+    echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit();
 }
 
@@ -72,12 +72,12 @@ try {
     
     error_log("Found accounts: " . print_r($accounts, true));
     
-    echo json_encode(['data' => $accounts]);
+    echo json_encode(['success' => true, 'accounts' => $accounts]);
     
 } catch (Exception $e) {
     error_log("Error in accounts.php: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Server error occurred']);
+    echo json_encode(['success' => false, 'error' => 'Server error occurred']);
 } finally {
     if (isset($stmt)) {
         $stmt->close();

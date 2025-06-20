@@ -1,59 +1,17 @@
 <?php
 use Dotenv\Dotenv;
 
-// Prevent PHP from displaying errors directly
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
 
-// Set session save path to XAMPP temp directory
-$sessionPath = __DIR__ . '/../../../tmp';
-if (!is_dir($sessionPath)) {
-    mkdir($sessionPath, 0777, true);
-}
-session_save_path($sessionPath);
-
-// Debug session before start
-error_log("Send OTP - Before session_start - Session save path: " . session_save_path());
-error_log("Send OTP - Before session_start - Session name: " . session_name());
-error_log("Send OTP - Before session_start - Cookies: " . print_r($_COOKIE, true));
-
-// Set session cookie parameters before starting session
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => '',  // Leave empty for localhost
-    'secure' => false,  // Set to true in production
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-
-session_start();
-
-// Debug session after start
-error_log("Send OTP - After session_start - Session ID: " . session_id());
-error_log("Send OTP - After session_start - Session name: " . session_name());
-error_log("Send OTP - After session_start - Session data: " . print_r($_SESSION, true));
+$sessionManager = SessionManager::getInstance();
+$sessionManager->initSession();
 
 // Set JSON content type first
 header('Content-Type: application/json');
 
 try {
-    // Check if required files exist before requiring them
-    $requiredFiles = [
-        __DIR__ . '/../../config/database.php',
-        __DIR__ . '/../../../vendor/autoload.php',
-        __DIR__ . '/../../config/SessionManager.php'
-    ];
-
-    foreach ($requiredFiles as $file) {
-        if (!file_exists($file)) {
-            throw new Exception("Required file not found: " . basename($file));
-        }
-        require_once $file;
-    }
-
-    $sessionManager = SessionManager::getInstance();
-
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(['success' => false, 'error' => 'Method not allowed']);

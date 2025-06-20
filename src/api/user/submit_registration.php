@@ -112,7 +112,7 @@ try {
         }
 
         // Insert into registration_request table
-        $stmt = $db->prepare('INSERT INTO registration_request (first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending")');
+        $stmt = $db->prepare('INSERT INTO registration_request (first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image, status, request_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", "new_registration")');
         
         // Create placeholder for id_image path
         $id_image_path = '';

@@ -100,7 +100,7 @@ async function handleLogin(e) {
         const data = await response.json();
 
         if (data.success) {
-            showNotification(TEXT.LOGIN_SUCCESS, NOTIFICATION_TYPE.SUCCESS);
+            showNotification('Login successful! Redirecting...', 'success');
             
             // Store user data in sessionStorage
             const userInfo = {
@@ -122,11 +122,11 @@ async function handleLogin(e) {
                 window.location.href = ROUTES.DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
-            throw new Error(data.error || TEXT.LOGIN_ERROR);
+            showNotification(data.error || 'An unknown error occurred.', 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
-        showNotification(error.message || TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+        showNotification('Failed to connect to the server.', 'error');
     } finally {
         hideLoadingState();
     }

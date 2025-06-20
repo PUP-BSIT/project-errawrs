@@ -1,47 +1,32 @@
 <?php
-session_start();
+
+require_once __DIR__ . '/../../config/SessionManager.php';
 require_once __DIR__ . '/../../config/database.php';
 // require_once __DIR__ . '/../../config/mailer.php'; // Uncomment and use your mailer
 
+$session = SessionManager::getInstance();
+$session->initSession();
+
 header('Content-Type: application/json');
 
-// Check if user is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
+if (!$session->isAuthenticated() || !isset($_SESSION['auth']['type']) || $_SESSION['auth']['type'] !== 'user') {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit();
 }
 
-// Get POST data
+if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'OTP has not been verified.']);
+    exit();
+}
+
 $input = json_decode(file_get_contents('php://input'), true);
-$account_type = isset($input['account_type']) ? $input['account_type'] : null;
-$verified = isset($input['verified']) ? $input['verified'] : false;
+$account_type = $input['account_type'] ?? null;
 
-// Validate account_type
-if (!$account_type) {
+if (!$account_type || !in_array($account_type, ['savings', 'credit'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Account type is required']);
-    exit();
-}
-
-// Validate account_type values
-if (!in_array($account_type, ['savings', 'checking', 'time_deposit', 'credit'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Invalid account type']);
-    exit();
-}
-
-// Verify that OTP has been verified if creating account
-if ($verified !== true) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'OTP verification required']);
-    exit();
-}
-
-// Check if OTP exists and has been verified
-if (!isset($_SESSION['otp'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'No verified OTP found. Please complete verification first']);
+    echo json_encode(['success' => false, 'error' => 'Valid account type is required.']);
     exit();
 }
 
@@ -50,45 +35,52 @@ try {
     $db->begin_transaction();
     
     $user_id = $_SESSION['auth']['id'];
-    $user_email = $_SESSION['auth']['email'];
-    $user_name = $_SESSION['auth']['first_name'] ?? 'User';
     
-    // Check if user already has 3 accounts
-    $checkStmt = $db->prepare('SELECT COUNT(*) as account_count FROM account WHERE user_id = ? AND status = "active"');
-    $checkStmt->bind_param('i', $user_id);
-    $checkStmt->execute();
-    $result = $checkStmt->get_result();
-    $row = $result->fetch_assoc();
+    // Check account limits
+    $stmt = $db->prepare('SELECT type, status FROM account WHERE user_id = ?');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $accounts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     
-    if ($row['account_count'] >= 3) {
-        throw new Exception('Maximum number of accounts (3) reached');
+    $active_accounts = array_filter($accounts, fn($acc) => $acc['status'] === 'active');
+
+    if (count($active_accounts) >= 3) {
+        throw new Exception('You have reached the maximum number of active accounts (3).');
+    }
+
+    $savings_count = count(array_filter($active_accounts, fn($acc) => $acc['type'] === 'savings'));
+    $credit_count = count(array_filter($active_accounts, fn($acc) => $acc['type'] === 'credit'));
+
+    if ($account_type === 'savings' && $savings_count >= 2) {
+        throw new Exception('You can only have a maximum of 2 savings accounts.');
+    }
+
+    if ($account_type === 'credit' && $credit_count >= 1) {
+        throw new Exception('You can only have a maximum of 1 credit account.');
     }
     
-    // Insert into registration_request for teller review
     $requestStmt = $db->prepare('INSERT INTO registration_request (user_id, request_type, account_type, status, created_at) VALUES (?, "add_account", ?, "pending", NOW())');
     $requestStmt->bind_param('is', $user_id, $account_type);
     $requestStmt->execute();
     
-    // Commit transaction
     $db->commit();
     
-    // Clear OTP session data
-    unset($_SESSION['otp']);
+    unset($_SESSION['otp_verified']);
     
     // Send email to user (replace with your mailer)
+    $user_name = $_SESSION['auth']['first_name'] ?? 'Valued Customer';
+    $user_email = $_SESSION['auth']['email'] ?? '';
     $subject = "Stack Overcash: New Account Request Submitted";
     $body = "Hello $user_name,\n\nYour request to open a new $account_type account has been received and is pending teller review. You will be notified by email once it is approved or denied.\n\nThank you!";
     // send_mail($user_email, $subject, $body); // Uncomment and use your mailer
 
     echo json_encode([
         'success' => true,
-        'message' => 'Your request to open a new account is under review. You will be notified by email once it is processed.'
+        'message' => 'Your request to open a new account has been submitted for review.'
     ]);
 
 } catch (Exception $e) {
-    if (isset($db)) {
-        $db->rollback();
-    }
-    http_response_code(400);
+    $db->rollback();
+    http_response_code(400); // Bad Request for business logic errors
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 } 

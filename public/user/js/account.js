@@ -1,18 +1,19 @@
 // Extend the existing API object from session-manager.js
-// Add account-specific endpoints
+if (!window.API) {
+    window.API = {};
+}
 if (!API.USER) API.USER = {};
 if (!API.AUTH) API.AUTH = {};
 
 // Add or update USER endpoints
 Object.assign(API.USER, {
-        ACCOUNTS: '../../src/api/user/accounts.php',
-        CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php',
-        UPDATE_PROFILE: '../../src/api/user/profile/update.php'
+    ACCOUNTS: '../../src/api/user/accounts.php',
+    CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php'
 });
 
 // Add or update AUTH endpoints
 Object.assign(API.AUTH, {
-        SEND_OTP: '../../src/api/auth/send_otp.php',
+    SEND_OTP: '../../src/api/auth/send_otp.php',
     VERIFY_OTP: '../../src/api/auth/verify_otp.php'
 });
 
@@ -62,7 +63,7 @@ const DOM = {
 };
 
 // State
-let state = {
+const state = {
     selectedAccountType: null,
     userAccounts: [],
     userData: {}
@@ -108,18 +109,16 @@ const CLASS = {
 };
 
 const TEXT = {
-    PHONE_NUMBER_NOT_FOUND: 'Phone number not found in user profile',
-    OTP_SENT: 'OTP sent successfully. Please verify to complete account creation.',
-    OTP_SEND_ERROR: 'Failed to send OTP',
-    OTP_ERROR: 'Error sending OTP',
-    ENTER_OTP: 'Please enter OTP',
+    PHONE_NUMBER_NOT_FOUND: 'Your phone number is not available. Please update your profile.',
+    OTP_SENT: 'An OTP has been sent to your phone number.',
+    OTP_SEND_ERROR: 'Failed to send OTP. Please try again later.',
+    INVALID_OTP: 'The OTP you entered is incorrect.',
     ACCOUNT_TYPE_NOT_FOUND: 'Account type not found. Please try again.',
-    ACCOUNT_CREATED: 'Your request to open a new account is under review. You will be notified by email once it is processed.',
-    ACCOUNT_ERROR: 'Failed to create account',
-    INVALID_OTP: 'Invalid OTP',
+    ACCOUNT_CREATED: 'Your request for a new account has been submitted for review.',
+    ACCOUNT_ERROR: 'Failed to create account. Please try again.',
+    FETCH_ACCOUNTS_ERROR: 'Could not load your accounts.',
     SESSION_EXPIRED: 'Session has expired. Please login again.',
     USER_DATA_ERROR: 'Error fetching user data',
-    FETCH_ACCOUNTS_ERROR: 'Error fetching accounts',
     ACCOUNTS_ERROR: 'Error loading accounts',
     LOGOUT_SUCCESS: 'Successfully logged out',
     LOGOUT_ERROR: 'Error logging out'
@@ -170,54 +169,6 @@ function getNotificationIcon(type) {
     }
 }
 
-// Fetch user data from API
-async function fetchUserData() {
-    try {
-        console.log('Fetching user data...');
-        const response = await fetch(API.AUTH.SESSION_CHECK, {
-            credentials: 'include',  // Important for sending cookies
-            headers: {
-                'Accept': 'application/json',
-                'Cache-Control': 'no-cache'
-            }
-        });
-
-        const data = await response.json();
-        console.log('Session check full response:', data); // Debug log
-
-        if (data.success && data.authenticated) {
-            state.userData = data.user;
-            console.log('User data:', state.userData);
-            
-            // Check for account in user data
-            if (data.user && data.user.account) {
-                console.log('Account data found in user:', data.user.account);
-                state.userAccounts = [data.user.account];
-            } 
-            // Check for account in userInfo (from logs we see it's here)
-            else if (data.userInfo && data.userInfo.account) {
-                console.log('Account data found in userInfo:', data.userInfo.account);
-                state.userAccounts = [data.userInfo.account];
-            } else {
-                console.log('No account data found');
-                state.userAccounts = [];
-            }
-            
-            updateUserDisplay();
-            updateAccountDisplay();
-        } else {
-            console.log('Session check failed:', data); // Debug log
-            showNotification(data.error || TEXT.SESSION_EXPIRED, CLASS.ERROR);
-            setTimeout(() => {
-                window.location.href = ROUTES.LOGIN;
-            }, TIMING.REDIRECT_DELAY);
-        }
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        showNotification(TEXT.USER_DATA_ERROR, CLASS.ERROR);
-    }
-}
-
 // Update user display elements
 function updateUserDisplay() {
     if (DOM.displays.userName) {
@@ -240,20 +191,19 @@ function displayUserInitial() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
-        // Use session check endpoint which already includes account data
-        const response = await fetch(API.AUTH.SESSION_CHECK);
+        const response = await fetch(API.USER.ACCOUNTS);
         const data = await response.json();
 
-        if (data.success && data.authenticated) {
-            // Extract accounts array from user data
-            state.userAccounts = data.user.account ? [data.user.account] : [];
+        if (data.success && data.accounts) {
+            state.userAccounts = data.accounts;
             updateAccountDisplay();
         } else {
-            showNotification(data.error || TEXT.FETCH_ACCOUNTS_ERROR, CLASS.ERROR);
+            console.error('Error fetching accounts:', data.error);
+            showNotification(data.error || TEXT.ACCOUNTS_ERROR, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification(TEXT.ACCOUNTS_ERROR, CLASS.ERROR);
-        console.error('Error:', error);
+        console.error('Error fetching user accounts:', error);
+        showNotification(TEXT.FETCH_ACCOUNTS_ERROR, CLASS.ERROR);
     }
 }
 
@@ -416,238 +366,119 @@ function attachAccountItemListeners() {
 
 // Event Handlers
 async function handleAddAccount() {
-    // Check if user already has maximum number of accounts (3)
     if (state.userAccounts && state.userAccounts.length >= 3) {
-        // Silently return without showing error
         return;
     }
-    
-    if (!DOM.modals.accountType) return;
     DOM.modals.accountType.classList.remove('hidden');
-    DOM.modals.accountType.classList.add('active');
 }
 
-async function handleLogout() {
-    try {
-        const response = await fetch(API.AUTH.LOGOUT);
-        const data = await response.json();
+function attachEventListeners() {
+    DOM.inputs.accountTypeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            state.selectedAccountType = e.target.value;
+            DOM.buttons.proceedAccountType.disabled = false;
+        });
+    });
 
-        if (data.success) {
-            showNotification(TEXT.LOGOUT_SUCCESS, CLASS.SUCCESS);
-            setTimeout(() => {
-                window.location.href = ROUTES.LOGIN;
-            }, TIMING.REDIRECT_DELAY);
-        } else {
-            showNotification(data.error || TEXT.LOGOUT_ERROR, CLASS.ERROR);
-        }
-    } catch (error) {
-        showNotification(TEXT.LOGOUT_ERROR, CLASS.ERROR);
-        console.error('Error:', error);
-    }
+    DOM.buttons.proceedAccountType.addEventListener('click', () => {
+        sessionStorage.setItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE, state.selectedAccountType);
+        DOM.modals.accountType.classList.add('hidden');
+        DOM.modals.confirmation.classList.remove('hidden');
+        DOM.displays.selectedAccountType.textContent = state.selectedAccountType;
+    });
+
+    DOM.buttons.cancelAccountType.addEventListener('click', () => {
+        DOM.modals.accountType.classList.add('hidden');
+        DOM.buttons.proceedAccountType.disabled = true;
+        DOM.inputs.accountTypeRadios.forEach(r => r.checked = false);
+    });
+
+    DOM.inputs.confirmAddAccount.addEventListener('change', (e) => {
+        DOM.buttons.proceedAddAccount.disabled = !e.target.checked;
+    });
+
+    DOM.buttons.proceedAddAccount.addEventListener('click', handleProceedAddAccount);
+    
+    DOM.buttons.cancelAddAccount.addEventListener('click', () => {
+        DOM.modals.confirmation.classList.add('hidden');
+        DOM.inputs.confirmAddAccount.checked = false;
+        DOM.buttons.proceedAddAccount.disabled = true;
+    });
+
+    DOM.buttons.verifyOtp.addEventListener('click', handleVerifyOtp);
+
+    DOM.buttons.cancelOtp.addEventListener('click', () => {
+        DOM.modals.otp.classList.add('hidden');
+    });
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    // Only fetch user data once - it includes account data
-    fetchUserData();
-    
-    // Initialize account type selection
-    const account_type_radios = document.querySelectorAll('input[name="account_type"]');
-    const proceed_account_type_button = document.getElementById('proceed_account_type_button');
-    const account_type_modal = document.getElementById('account_type_modal');
-    const selected_account_type_span = document.getElementById('selected_account_type');
-    const confirmation_modal = document.getElementById('confirmation_modal');
-    
-    let selectedAccountType = null;
-
-    if (account_type_radios) {
-        account_type_radios.forEach((radio) => {
-            radio.addEventListener('change', () => {
-                selectedAccountType = radio.value;
-                if (proceed_account_type_button) {
-                    proceed_account_type_button.disabled = false;
-                }
-            });
-        });
+function init() {
+    const storedUserData = sessionStorage.getItem('userData');
+    if (storedUserData) {
+        state.userData = JSON.parse(storedUserData);
     }
+    fetchUserAccounts();
+    attachEventListeners();
+}
 
-    if (proceed_account_type_button) {
-        proceed_account_type_button.addEventListener('click', () => {
-            if (selectedAccountType && account_type_modal && selected_account_type_span && confirmation_modal) {
-                account_type_modal.classList.add('hidden');
-                selected_account_type_span.textContent = selectedAccountType;
-                confirmation_modal.classList.remove('hidden');
-            }
-        });
-    }
-
-    // Initialize cancel account type button
-    if (DOM.buttons.cancelAccountType) {
-        DOM.buttons.cancelAccountType.addEventListener('click', () => {
-            if (DOM.modals.accountType) {
-                DOM.modals.accountType.classList.add(CLASS.HIDDEN);
-                state.selectedAccountType = null;
-                if (DOM.inputs.accountTypeRadios) {
-                    DOM.inputs.accountTypeRadios.forEach((radio) => (radio.checked = false));
-                }
-                if (DOM.buttons.proceedAccountType) {
-                    DOM.buttons.proceedAccountType.disabled = true;
-                }
-            }
-        });
-    }
-
-    // Initialize confirmation checkbox
-    if (DOM.inputs.confirmAddAccount && DOM.buttons.proceedAddAccount) {
-        DOM.inputs.confirmAddAccount.addEventListener('change', () => {
-            DOM.buttons.proceedAddAccount.disabled = !DOM.inputs.confirmAddAccount.checked;
-        });
-    }
-
-    // Initialize proceed add account button
-    if (DOM.buttons.proceedAddAccount) {
-        DOM.buttons.proceedAddAccount.addEventListener('click', handleProceedAddAccount);
-    }
-
-    // Initialize cancel add account button
-    if (DOM.buttons.cancelAddAccount && DOM.modals.confirmation && DOM.inputs.confirmAddAccount) {
-        DOM.buttons.cancelAddAccount.addEventListener('click', () => {
-            DOM.modals.confirmation.classList.add(CLASS.HIDDEN);
-            DOM.inputs.confirmAddAccount.checked = false;
-            if (DOM.buttons.proceedAddAccount) {
-                DOM.buttons.proceedAddAccount.disabled = true;
-            }
-        });
-    }
-
-    // Initialize verify OTP button
-    if (DOM.buttons.verifyOtp) {
-        DOM.buttons.verifyOtp.addEventListener('click', handleVerifyOtp);
-    }
-
-    // Initialize cancel OTP button
-    if (DOM.buttons.cancelOtp && DOM.modals.otp && DOM.inputs.otp) {
-        DOM.buttons.cancelOtp.addEventListener('click', () => {
-            DOM.modals.otp.classList.add(CLASS.HIDDEN);
-            DOM.inputs.otp.value = '';
-        });
-    }
-});
+document.addEventListener('DOMContentLoaded', init);
 
 // Handle proceed add account
 async function handleProceedAddAccount() {
+    const phoneNumber = state.userData.phone_number;
+    if (!phoneNumber) {
+        showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
+        return;
+    }
+
     try {
-        const phoneNumber = state.userData.phone_number;
-        
-        if (!phoneNumber) {
-            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
-            return;
-        }
-        
-        // Store selected account type in localStorage for later use
-        localStorage.setItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE, state.selectedAccountType);
-        
-        // Send OTP to user's phone number
         const response = await fetch(API.AUTH.SEND_OTP, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    phone_number: phoneNumber,
-                }),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone_number: phoneNumber, purpose: 'create_account' }),
         });
-
         const data = await response.json();
-
         if (data.success) {
-            const confirmation_modal = document.getElementById('confirmation_modal');
-            const otp_modal = document.getElementById('otp_modal');
-            const otp_input = document.getElementById('otp_input');
-            
-            if (confirmation_modal) confirmation_modal.classList.add(CLASS.HIDDEN);
-            if (otp_modal) otp_modal.classList.remove(CLASS.HIDDEN);
-            if (otp_input) otp_input.value = '';
-            
+            DOM.modals.confirmation.classList.add(CLASS.HIDDEN);
+            DOM.modals.otp.classList.remove(CLASS.HIDDEN);
             showNotification(TEXT.OTP_SENT, CLASS.SUCCESS);
         } else {
             showNotification(data.error || TEXT.OTP_SEND_ERROR, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
-        console.error('Error:', error);
+        showNotification(TEXT.OTP_SEND_ERROR, CLASS.ERROR);
     }
 }
 
 // Handle verify OTP
 async function handleVerifyOtp() {
-    const otp_input = document.getElementById('otp_input');
-    const otp = otp_input ? otp_input.value.trim() : '';
+    const otp = DOM.inputs.otp.value;
+    const accountType = sessionStorage.getItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
 
-    if (!otp) {
-        showNotification(TEXT.ENTER_OTP, CLASS.ERROR);
+    if (!otp || !accountType) {
+        showNotification('OTP and account type are required.', CLASS.ERROR);
         return;
     }
 
+    DOM.modals.processing.classList.remove(CLASS.HIDDEN);
     try {
-        const phoneNumber = state.userData.phone_number;
-        
-        if (!phoneNumber) {
-            showNotification(TEXT.PHONE_NUMBER_NOT_FOUND, CLASS.ERROR);
-            return;
-        }
-        
-        // First verify the OTP
         const verifyResponse = await fetch(API.AUTH.VERIFY_OTP, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    otp: otp,
-                    phone_number: phoneNumber
-                }),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ otp, phone_number: state.userData.phone_number, purpose: 'create_account' }),
         });
-
         const verifyData = await verifyResponse.json();
 
         if (verifyData.success) {
-            // Get the account type from localStorage
-            const accountType = localStorage.getItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
-            
-            if (!accountType) {
-                showNotification(TEXT.ACCOUNT_TYPE_NOT_FOUND, CLASS.ERROR);
-                return;
-            }
-            
-            // If OTP verification is successful, submit the add account request
             const createResponse = await fetch(API.USER.CREATE_ACCOUNT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        account_type: accountType,
-                        verified: true
-                    }),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account_type: accountType }),
             });
-
             const createData = await createResponse.json();
-
             if (createData.success) {
-                const otp_modal = document.getElementById('otp_modal');
-                if (otp_modal) otp_modal.classList.add(CLASS.HIDDEN);
-                
-                // Show processing/under review modal
-                const processing_modal = document.getElementById('processing_modal');
-                if (processing_modal) processing_modal.classList.remove(CLASS.HIDDEN);
-                
-                showNotification(TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
-                
-                // Clear the stored account type
-                localStorage.removeItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
-                
-                // Do NOT refresh account list, since account is not created yet
+                showNotification(createData.message || TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
+                fetchUserAccounts();
             } else {
                 showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
             }
@@ -655,10 +486,10 @@ async function handleVerifyOtp() {
             showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
         }
     } catch (error) {
-        showNotification(TEXT.OTP_ERROR, CLASS.ERROR);
-        console.error('Error:', error);
+        showNotification('An unexpected error occurred.', CLASS.ERROR);
+    } finally {
+        DOM.modals.otp.classList.add(CLASS.HIDDEN);
+        DOM.modals.processing.classList.add(CLASS.HIDDEN);
+        sessionStorage.removeItem(STORAGE_KEY.PENDING_ACCOUNT_TYPE);
     }
-}
-
-// Export functions for use in other files
-window.handleLogout = handleLogout; 
+} 

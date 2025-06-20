@@ -136,7 +136,7 @@
 
                             <div class="form-group">
                                 <label for="edit_username">Username</label>
-                                <input type="text" id="edit_username" class="form-input" placeholder="Choose a unique username">
+                                <input type="text" id="edit_username" class="form-input" placeholder="" readonly>
                                 <i class="fas fa-at input-icon"></i>
                                 <div class="helper-text">This will be your unique identifier for login</div>
                             </div>
@@ -176,6 +176,7 @@
         <div class="notification-container"></div>
 
         <!-- Load configuration first -->
+        <script src="./js/auth-guard.js"></script>
         <script src="./js/config.js"></script>
         
         <!-- Load API and session management -->
@@ -184,5 +185,6 @@
         
         <!-- Load page-specific scripts -->
         <script src="./js/profile.js"></script>
+        <script src="./js/logout.js"></script>
     </body>
 </html> 

@@ -171,8 +171,8 @@ async function fetchUserAccounts() {
         const data = await response.json();
         console.log('Accounts API Response:', data);
 
-        // Store the accounts data from the data property
-        user_accounts = data.data || [];
+        // Store the accounts data from the accounts property
+        user_accounts = data.accounts || [];
         console.log('Stored user accounts:', user_accounts);
         
         // Update the display
@@ -560,27 +560,19 @@ function populate_profile_form() {
 // Function to handle logout
 async function handleLogout() {
     try {
-        // Clear relevant items from localStorage
-        localStorage.removeItem('user');
-        localStorage.removeItem('account'); // Assuming account data is also stored
-        localStorage.removeItem('token'); // If you are using tokens
-
-        // Call backend logout API
-        await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
-            method: 'POST',
-            credentials: 'same-origin'
+        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
+            method: 'POST'
         });
-
-        // Redirect to login page after successful logout
-        window.location.href = './index.html';
+        const data = await response.json();
+        if (data.success) {
+            show_notification('Successfully logged out.', 'success');
+            window.location.href = ROUTES.LOGIN;
+        } else {
+            show_notification(data.error || 'Logout failed.', 'error');
+        }
     } catch (error) {
-        console.error('Error during logout:', error);
-        // Show a notification that logout might not have been clean
-        show_notification('Logout might not have been fully successful', 'warning');
-        // Redirect anyway after a short delay
-        setTimeout(() => {
-            window.location.href = './index.html';
-        }, 1500);
+        show_notification('An error occurred during logout.', 'error');
+        console.error('Logout error:', error);
     }
 }
 
@@ -598,16 +590,16 @@ function displayFinancialTip() {
     const tipContainer = document.getElementById('financial_tip_container');
     if (!tipContainer) return;
 
-    const randomTip = FINANCIAL_TIPS[Math.floor(Math.random() * FINANCIAL_TIPS.length)];
+    const tip = FINANCIAL_TIPS[Math.floor(Math.random() * FINANCIAL_TIPS.length)];
     
     tipContainer.innerHTML = `
         <div class="tip-header">
-            <i class="fas ${randomTip.icon}"></i>
+            <i class="fas ${tip.icon}"></i>
             <h3>Financial Tip</h3>
         </div>
         <div class="tip-content">
-            <h4>${randomTip.title}</h4>
-            <p>${randomTip.content}</p>
+            <h4>${tip.title}</h4>
+            <p>${tip.content}</p>
         </div>
     `;
 }

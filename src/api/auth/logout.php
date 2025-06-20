@@ -7,58 +7,53 @@
  */
 
 require_once __DIR__ . '/../../config/SessionManager.php';
-$sessionManager = SessionManager::getInstance();
+
+$session = SessionManager::getInstance();
+$session->initSession(); // Ensure session is started before trying to kill it
 
 // Set JSON response headers
 header('Content-Type: application/json');
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Pragma: no-cache');
+header('Access-Control-Allow-Origin: *'); // Or specify your domain
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Log the logout request
-if ($sessionManager->isAuthenticated()) {
-    error_log('Logout request received. User: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
 }
 
-// Handle different request types
-$requestMethod = $_SERVER['REQUEST_METHOD'];
+try {
+    // Log the logout request
+    if ($session->isAuthenticated()) {
+        error_log('Logout request received. User: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
+    }
 
-switch ($requestMethod) {
-    case 'POST':
-        // Clean up session
-        $sessionManager->killSession();
-        
-        // Return success response
-        echo json_encode([
-            'success' => true,
-            'message' => 'Logout successful',
-            'timestamp' => date('Y-m-d H:i:s')
-        ]);
-        break;
-        
-    case 'GET':
-        // For GET requests (like session expiration checks)
-        $expired = isset($_GET['expired']) && $_GET['expired'] === 'true';
-        $message = $expired ? 'Session expired' : 'Logout successful';
-        
-        // Clean up session
-        $sessionManager->killSession();
-        
-        // Return response
-        echo json_encode([
-            'success' => true,
-            'message' => $message,
-            'expired' => $expired,
-            'timestamp' => date('Y-m-d H:i:s')
-        ]);
-        break;
-        
-    default:
-        // Method not allowed
-        http_response_code(405);
-        echo json_encode([
-            'success' => false,
-            'error' => 'Method not allowed',
-            'allowed_methods' => ['GET', 'POST']
-        ]);
-        break;
+    // Clean up session
+    $session->killSession();
+    
+    // Final check to ensure session is gone
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_unset();
+        session_destroy();
+    }
+    
+    // Clear cookie as a fallback
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+
+    // Return success response
+    echo json_encode([
+        'success' => true,
+        'message' => 'Logout successful',
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
+} catch (Exception $e) {
+    // Even if there's an error, the client should proceed with logout
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'An error occurred during logout.', 'details' => $e->getMessage()]);
 } 

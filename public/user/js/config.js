@@ -1,44 +1,42 @@
-// Base path configuration
-const BASE_PATH = {
-    // API base path - will be used for all API calls
-    API: '/project-errawrs/src/api',
-    
-    // Assets base path
-    ASSETS: '/project-errawrs/public/assets',
-    
-    // Routes base path for navigation
-    ROUTES: {
-        USER: '/project-errawrs/public/user',  // Absolute path for user routes
-        ADMIN: '/project-errawrs/public/admin',
-        TELLER: '/project-errawrs/public/teller'
-    }
-};
+const API_BASE_URL = '/project-errawrs/src/api';
 
-// API endpoints configuration
 const API_ENDPOINTS = {
-    AUTH: {
-        LOGIN: `${BASE_PATH.API}/auth/login.php`,
-        LOGOUT: `${BASE_PATH.API}/auth/logout.php`,
-        SESSION_CHECK: `${BASE_PATH.API}/auth/session_check.php`,
-        VERIFY_OTP: `${BASE_PATH.API}/auth/verify_otp.php`,
-        SEND_OTP: `${BASE_PATH.API}/auth/send_otp.php`
-    },
-    USER: {
-        PROFILE: `${BASE_PATH.API}/user/profile.php`,
-        ACCOUNTS: `${BASE_PATH.API}/user/accounts.php`,
-        TRANSACTION: `${BASE_PATH.API}/user/transaction.php`,
-        TRANSFER: `${BASE_PATH.API}/user/transfer.php`
-    }
+    LOGIN: `${API_BASE_URL}/auth/login.php`,
+    LOGOUT: `${API_BASE_URL}/auth/logout.php`,
+    SEND_OTP: `${API_BASE_URL}/auth/send_otp.php`,
+    VERIFY_OTP: `${API_BASE_URL}/auth/verify_otp.php`,
+    SUBMIT_REGISTRATION: `${API_BASE_URL}/user/submit_registration.php`,
+    SESSION_CHECK: `${API_BASE_URL}/auth/session_check.php`,
+    GET_ACCOUNTS: `${API_BASE_URL}/user/accounts.php`,
+    FUND_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions.php`,
+    GET_TRANSACTION_DETAILS: `${API_BASE_URL}/user/get_transaction_details.php`,
+    UPDATE_PROFILE: `${API_BASE_URL}/user/update_profile.php`,
+    CREATE_ADDITIONAL_ACCOUNT: `${API_BASE_URL}/user/create_additional_account.php`,
+    FORGOT_USERNAME: `${API_BASE_URL}/user/forgot_username.php`,
+    REQUEST_PASSWORD_RESET: `${API_BASE_URL}/user/request_password_reset.php`,
+    VERIFY_RESET_TOKEN: `${API_BASE_URL}/user/verify_reset_token.php`,
+    RESET_PASSWORD: `${API_BASE_URL}/user/reset_password.php`,
 };
 
-// Route paths configuration
 const ROUTES = {
-    LOGIN: `${BASE_PATH.ROUTES.USER}/login_account_holder.html`,
-    DASHBOARD: `${BASE_PATH.ROUTES.USER}/user_dashboard.html`,
-    PROFILE: `${BASE_PATH.ROUTES.USER}/profile.html`,
-    ACCOUNT: `${BASE_PATH.ROUTES.USER}/account.html`,
-    TRANSACTION: `${BASE_PATH.ROUTES.USER}/transaction.html`,
-    TRANSFER: `${BASE_PATH.ROUTES.USER}/transfer.html`,
-    CONTACT: `${BASE_PATH.ROUTES.USER}/contact_us.html`,
-    REGISTRATION: `${BASE_PATH.ROUTES.USER}/registration.html`
-}; 
+    USER_DASHBOARD: '/project-errawrs/public/user/user_dashboard.html',
+    LOGIN: '/project-errawrs/public/user/login_account_holder.html',
+    PROFILE: '/project-errawrs/public/user/profile.html',
+    ACCOUNT: '/project-errawrs/public/user/account.html',
+    TRANSACTION: '/project-errawrs/public/user/transaction.html',
+    TRANSFER: '/project-errawrs/public/user/transfer.html',
+    TRANSFER_SUCCESS: '/project-errawrs/public/user/transfer_success.html',
+    CONTACT: '/project-errawrs/public/user/contact_us.html',
+    REGISTRATION: '/project-errawrs/public/user/registration.html',
+};
+
+// Function to dynamically create notification
+function createNotification(message, type = 'info', duration = 5000) {
+    const container = document.querySelector('.notification-container') || document.body;
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    container.appendChild(notification);
+    setTimeout(() => notification.remove(), duration);
+} 

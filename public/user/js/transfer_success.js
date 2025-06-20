@@ -1,6 +1,6 @@
 // API Endpoints
 const API = {
-    TRANSFER_SUCCESS: '../../src/api/user/transfer_success.php'
+    TRANSFER_SUCCESS: '../../src/api/user/get_transaction_details.php'
 };
 
 // Element IDs

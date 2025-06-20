@@ -3,46 +3,68 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
-// Set session save path to XAMPP temp directory
-$sessionPath = __DIR__ . '/../../../tmp';
-if (!is_dir($sessionPath)) {
-    mkdir($sessionPath, 0777, true);
-}
-session_save_path($sessionPath);
-
-// Set session cookie parameters before starting session
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => '',  // Leave empty for localhost
-    'secure' => false,  // Set to true in production
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-
-// Debug session before start
-error_log("Before session_start - Session save path: " . session_save_path());
-error_log("Before session_start - Session name: " . session_name());
-error_log("Before session_start - Cookies: " . print_r($_COOKIE, true));
-
-session_start();
-
-// Debug session info
-error_log("After session_start - Session ID: " . session_id());
-error_log("After session_start - Session Name: " . session_name());
-error_log("After session_start - Session Save Path: " . session_save_path());
-error_log("After session_start - Full Session Data: " . print_r($_SESSION, true));
-
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/SessionManager.php';
 
-// Set JSON content type
+$sessionManager = SessionManager::getInstance();
+$sessionManager->initSession();
+
+function execute_internal_transfer($transfer_data) {
+    $db = db_connect();
+    $db->begin_transaction();
+
+    try {
+        $userId = $_SESSION['auth']['id'];
+        $amount = floatval($transfer_data['transaction_amount']);
+        $sourceAccountNo = strval($transfer_data['source_account_no']);
+        $recipientAccountNo = strval($transfer_data['recipient_account_no']);
+
+        // All validations are repeated here for security
+        $stmt = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND user_id = ? AND status = 'active'");
+        $stmt->bind_param('si', $sourceAccountNo, $userId);
+        $stmt->execute();
+        $source = $stmt->get_result()->fetch_assoc();
+        if (!$source) throw new Exception('Invalid source account or you do not own this account');
+        if ($source['balance'] < $amount) throw new Exception('Insufficient balance');
+
+        $stmt = $db->prepare("SELECT account_id FROM account WHERE account_number = ? AND status = 'active'");
+        $stmt->bind_param('s', $recipientAccountNo);
+        $stmt->execute();
+        $recipient = $stmt->get_result()->fetch_assoc();
+        if (!$recipient) throw new Exception('Invalid recipient account');
+        if ($source['account_id'] === $recipient['account_id']) throw new Exception('Cannot transfer to the same account');
+
+        // Execute transfer
+        $stmt_deduct = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ?");
+        $stmt_deduct->bind_param('di', $amount, $source['account_id']);
+        $stmt_deduct->execute();
+        if ($stmt_deduct->affected_rows !== 1) throw new Exception('Failed to update source account balance');
+
+        $stmt_credit = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_id = ?");
+        $stmt_credit->bind_param('di', $amount, $recipient['account_id']);
+        $stmt_credit->execute();
+        if ($stmt_credit->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
+
+        $stmt_trans = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW())");
+        $description = "Transfer to account {$recipientAccountNo}";
+        $stmt_trans->bind_param('diis', $amount, $source['account_id'], $recipient['account_id'], $description);
+        $stmt_trans->execute();
+        $transaction_id = $db->insert_id;
+
+        $db->commit();
+        
+        return ['success' => true, 'transaction_id' => $transaction_id, 'redirect_url' => $transfer_data['redirect_url']];
+
+    } catch (Exception $e) {
+        $db->rollback();
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+// Main script logic
 header('Content-Type: application/json');
 
-$sessionManager = SessionManager::getInstance();
-
-try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(['success' => false, 'error' => 'Method not allowed']);
@@ -116,30 +138,45 @@ try {
         exit();
     }
 
+// OTP is correct
+$_SESSION['otp']['attempts'] = 0; // Reset attempts on success
+$_SESSION['otp_verified'] = true; // Set the flag for other scripts to check
+
     // OTP is valid - clear it from session
     $verifiedPhone = $sessionOtp['phone_number'];
     unset($_SESSION['otp']);
 
-    // Set verification success in session
-    $_SESSION['otp_verified'] = true;
-
     error_log("Verify OTP - Successful verification for phone: " . $verifiedPhone);
     error_log("Verify OTP - Final session data: " . print_r($_SESSION, true));
 
+// OTP is correct, proceed based on purpose
+$purpose = $input['purpose'] ?? null;
+$transfer_payload = $input['transfer_payload'] ?? null;
+
+if ($purpose === 'fund_transfer' || $purpose === 'external_transfer') {
+    if (empty($transfer_payload)) {
+        throw new Exception("Transfer payload is missing.");
+    }
+
+    // For now, we only handle internal transfer here
+    if ($purpose === 'fund_transfer') {
+        $result = execute_internal_transfer($transfer_payload);
+        if ($result['success']) {
     echo json_encode([
         'success' => true,
-        'message' => 'OTP verified successfully',
-        'phone_number' => $verifiedPhone
-    ]);
-
-} catch (Exception $e) {
-    error_log("Verify OTP Error: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'An error occurred while verifying OTP.',
-        'debug_message' => $e->getMessage()
-    ]);
+                'message' => 'Transfer completed successfully', 
+                'transaction_id' => $result['transaction_id'],
+                'redirect_url' => $result['redirect_url']
+            ]);
+        } else {
+            throw new Exception($result['error']);
+        }
+    } else {
+        // Placeholder for external transfer logic
+        throw new Exception("External transfer not yet implemented in this flow.");
+    }
+} else {
+    // Handle other OTP purposes if any
+    echo json_encode(['success' => true, 'message' => 'OTP verified successfully']);
 }
 ?>
