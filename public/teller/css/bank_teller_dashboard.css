@@ -362,7 +362,7 @@ body {
     left: 0;
     width: 100%;
     background: var(--color-white);
-    max-height: 250px;
+    max-height: 360px;
     overflow-y: auto;
     margin-top: 5px;
     border-radius: var(--border-radius-small);
@@ -782,8 +782,4 @@ body {
     align-items: flex-start;
     gap: 32px;
     margin-bottom: 24px;
-}
-
-.dashboard-flex-row, .dashboard-left, .dashboard-right {
-    display: none !important;
 }
