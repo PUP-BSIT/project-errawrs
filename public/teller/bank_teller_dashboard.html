@@ -50,20 +50,30 @@
         </div>
 
         <div class="main-content">
-            <div class="welcome-section" style="margin-top:0;">
-                <div class="greeting-container">
-                    <div class="hello-text">Hello</div>
-                    <div class="name-text"></div>
-                </div>
+            <div class="top-row">
                 <div class="search-container">
                     <div class="search-label">Quick Search</div>
                     <div class="search-input-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="quick_search" class="search-input" 
-                               placeholder="Search by name, account or phone...">
+                               placeholder="Search by name or account number">
                     </div>
                     <div id="search_results" class="search-results"></div>
                 </div>
+                <div class="registration-section">
+                    <div class="section-header">
+                        <h2>Recent Registration Requests</h2>
+                        <a href="bank_teller_review_registration.html" class="btn-view-all">View All</a>
+                    </div>
+                    <div class="registration-list" id="recent_registrations">
+                        <!-- Registration items will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="greeting-container">
+                <div class="hello-text">Hello</div>
+                <div class="name-text"></div>
             </div>
 
             <div class="stats-grid">
@@ -128,18 +138,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Registration Section -->
-            <div class="registration-section">
-                <div class="section-header">
-                    <h2>Recent Registration Requests</h2>
-                    <a href="bank_teller_review_registration.html" class="btn-view-all">View All</a>
-                </div>
-                <div class="registration-list" id="recent_registrations">
-                    <!-- Registration items will be injected here by JS -->
-                </div>
-            </div>
-            <!-- End Registration Section -->
         </div>
     </div>
     <div id="notification_container" class="notification-container"></div>
