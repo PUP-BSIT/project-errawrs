@@ -40,10 +40,6 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
-    // Get teller_id from teller lookup
-    $teller = mysqli_fetch_assoc($teller_result);
-    $teller_id = $teller['teller_id'];
-
     // Get the teller's recent transactions which represent their search history
     // We'll use the transaction table to find accounts they've interacted with
     $history_sql = "SELECT DISTINCT 
@@ -57,13 +53,11 @@ try {
     JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
     JOIN user u ON a.user_id = u.user_id
     WHERE t.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-      AND t.teller_id = ?
     GROUP BY a.account_id, a.account_number, a.balance, a.account_type, a.status, account_name
     ORDER BY MAX(t.created_at) DESC
     LIMIT 10";
 
     $history_stmt = mysqli_prepare($conn, $history_sql);
-    mysqli_stmt_bind_param($history_stmt, "i", $teller_id);
     mysqli_stmt_execute($history_stmt);
     $history_result = mysqli_stmt_get_result($history_stmt);
 
