@@ -22,7 +22,7 @@ function getBaseURL() {
 const API_BASE_URL = getBaseURL();
 
 // Define maximum deposit amount
-const MAX_DEPOSIT_AMOUNT = 50000;
+const MAX_DEPOSIT_AMOUNT = 500000;
 
 if (!tellerInfo) {
     window.location.href = './bank_teller_login.html';

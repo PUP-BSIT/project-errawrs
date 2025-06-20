@@ -22,7 +22,7 @@ function getBaseURL() {
 const API_BASE_URL = getBaseURL();
 
 // Define maximum withdrawal amount
-const MAX_WITHDRAW_AMOUNT = 40000;
+const MAX_WITHDRAW_AMOUNT = 300000;
 
 if (!tellerInfo) {
     window.location.href = './bank_teller_login.html';
