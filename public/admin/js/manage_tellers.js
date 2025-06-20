@@ -476,6 +476,7 @@ class TellerManager {
         const confirmBtn = document.getElementById('confirm_status_btn');
         const warningIcon = modal?.querySelector('.warning-icon');
         const modalHeader = modal?.querySelector('.modal-header');
+        const loadingOverlay = document.getElementById('loading_overlay');
 
         if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
 
@@ -501,6 +502,13 @@ class TellerManager {
             try {
                 // Close the modal first
                 this.closeModal(modal);
+
+                // Show loading overlay
+                if (loadingOverlay) {
+                    loadingOverlay.querySelector('.loading-text').textContent = 
+                        isActivating ? 'Activating account...' : 'Deactivating account...';
+                    loadingOverlay.classList.add('show');
+                }
 
                 const response = await fetch('/project-errawrs/src/api/admin/update.php', {
                     method: 'PUT',
@@ -533,6 +541,11 @@ class TellerManager {
             } catch (error) {
                 console.error('Error toggling teller status:', error);
                 this.showToast(error.message, 'error');
+            } finally {
+                // Hide loading overlay
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('show');
+                }
             }
 
             // Remove the event listener after handling
