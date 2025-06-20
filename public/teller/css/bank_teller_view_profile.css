@@ -115,6 +115,20 @@ body {
     background-color: #333;
 }
 
+.nav-selected {
+    display: block;
+    padding: 16px 20px;
+    background-color: rgba(182, 255, 74, 0.1);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: -0.2px;
+    transition: all 0.3s ease;
+    border-left: 5px solid var(--color-lime-green);
+}
+
 .nav-logout {
     display: flex;
     align-items: center;
@@ -153,6 +167,8 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
@@ -163,7 +179,6 @@ body {
 
 .page-header {
     text-align: center;
-    margin-top: auto;
     margin-bottom: 40px;
 }
 
@@ -183,7 +198,6 @@ body {
     grid-template-columns: auto 1fr;
     gap: 30px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    margin: 0 auto auto auto;
 }
 
 .account-avatar {
@@ -212,61 +226,13 @@ body {
 }
 
 .value {
-    font-size: 1.7rem;
-    font-weight: 500;
-    color: var(--color-primary-black);
+    font-size: 1.1rem;
+    color: #333;
 }
 
 .status-active {
     color: var(--color-mint);
-    font-size: 1.8rem;
-    font-weight: 500;
-}
-
-/* Top Bar Styles */
-.top-bar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: transparent;
-}
-
-.top-icons {
-    display: flex;
-    gap: 15px;
-}
-
-.top-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: var(--color-white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.top-icon i {
-    font-size: 1.4rem;
-    color: var(--color-primary-black);
-}
-
-.top-icon:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    background: var(--color-mint);
-}
-
-.top-icon:hover i {
-    color: var(--color-white);
+    font-weight: 600;
 }
 
 /* Notification Styles */

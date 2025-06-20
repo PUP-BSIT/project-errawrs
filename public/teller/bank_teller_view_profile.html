@@ -23,19 +23,19 @@
             </div>
             
             <div class="user-profile">
-                <div class="user-avatar">
-                    <img src="../assets/images/profile_bank_teller.jpg" 
-                          alt="Bank Teller Profile" />
-                </div>
-                <div class="user-name">Jovani Avi</div>
+                <a href="bank_teller_view_profile.html">
+                    <div class="user-avatar dynamic-avatar"></div>
+                </a>
+                <div class="user-name" id="user_name"></div>
             </div>
             
             <div class="nav-menu">
-                <a href="bank_teller_dashboard.html" class="nav-item">
-                      Dashboard</a>
-                <a href="bank_teller_search_account.html" class="nav-item">
-                      Search Account</a>
-                <a href="bank_teller_history.html" class="nav-item">History</a>
+                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
+                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
+                <a href="bank_teller_deposit.html" class="nav-item">Deposit</a>
+                <a href="bank_teller_withdraw.html" class="nav-item">Withdraw</a>
+                <a href="bank_teller_review_registration.html" class="nav-item">Review Registration</a>
+                <a href="bank_teller_history.html" class="nav-item">Transaction</a>
             </div>
             
             <div class="nav-logout">
@@ -47,42 +47,30 @@
         </div>
 
         <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div id="notification_container" 
-                      class="notification-container"></div>
-                <div class="top-icons">
-                    <div class="top-icon"><i class="fa-regular fa-bell"></i>
-                      </div>
-                    <div class="top-icon"><i class="fa-regular fa-square-plus">
-                    </i></div>
-                </div>
-            </div>
-
             <div class="page-header">
                 <span>View Account</span>
             </div>
             
-            <div class="account-card">
-                <div class="account-avatar">
-                    <img src="../assets/images/profile_bank_teller.jpg" 
-                        alt="Customer Profile" />
+            <div class="account-card" id="account_card">
+                <div class="account-avatar" id="account_avatar">
+                    <div class="user-avatar dynamic-avatar"></div>
                 </div>
-                <div class="account-info">
+                <div class="account-info" id="account_info">
                     <span class="label">First Name</span>
-                    <span class="value">John</span>
+                    <span class="value" id="first_name"></span>
                     
                     <span class="label">Last Name</span>
-                    <span class="value">Doe</span>
+                    <span class="value" id="last_name"></span>
                     
                     <span class="label">Email Address</span>
-                    <span class="value">johndoe@gmail.com</span>
+                    <span class="value" id="email_address"></span>
                     
                     <span class="label">Status</span>
-                    <span class="status-active">Active</span>
+                    <span class="value" id="status"></span>
                 </div>
             </div>
         </div>
     </div>
+    <script src="./js/view_profile.js"></script>
 </body>
 </html>
