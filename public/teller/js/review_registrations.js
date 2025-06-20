@@ -559,9 +559,28 @@ class RegistrationReview {
 let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
     registrationReview = new RegistrationReview();
+    
+    // Get teller info from session storage and populate user profile
     const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
     const userNameElement = document.querySelector('.user-name');
-    if (userNameElement && tellerInfo && tellerInfo.name) {
-        userNameElement.textContent = tellerInfo.name;
+    const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
+    
+    if (tellerInfo) {
+        let fullName = '';
+        if (tellerInfo.first_name && tellerInfo.last_name) {
+            fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        } else if (tellerInfo.name) {
+            fullName = tellerInfo.name;
+        }
+        
+        if (userNameElement && fullName) {
+            userNameElement.textContent = fullName;
+        }
+        
+        // Set avatar initial
+        if (avatarElement && fullName) {
+            const initial = fullName.trim().charAt(0).toUpperCase();
+            avatarElement.textContent = initial;
+        }
     }
 }); 
