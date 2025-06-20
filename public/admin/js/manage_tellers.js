@@ -180,25 +180,24 @@ class TellerManager {
                     </div>
                 </div>
                 <div class="teller-actions">
-                    <button class="action-btn" onclick="tellerManager.editTeller(${teller.teller_id})" title="Edit">
+                    <button class="action-btn action-edit ${teller.status === 'pending' ? 'disabled' : ''}" 
+                            onclick="${teller.status === 'pending' ? 'return false;' : `tellerManager.editTeller(${teller.teller_id})`}" 
+                            title="Edit" ${teller.status === 'pending' ? 'disabled' : ''}>
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn" onclick="tellerManager.resetPassword(${teller.teller_id})" title="Reset Password">
+                    <button class="action-btn action-reset ${teller.status === 'pending' ? 'disabled' : ''}" 
+                            onclick="${teller.status === 'pending' ? 'return false;' : `tellerManager.resetPassword(${teller.teller_id})`}" 
+                            title="Reset Password" ${teller.status === 'pending' ? 'disabled' : ''}>
                         <i class="fas fa-key"></i>
                     </button>
-                    ${teller.status !== 'pending' ? `
-                        <button class="action-btn ${teller.status === 'active' ? 'warning' : 'success'}" 
-                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')" 
-                                title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}">
-                            <i class="fas fa-power-off"></i>
-                        </button>
-                    ` : `
-                        <button class="action-btn success" 
-                                onclick="tellerManager.toggleTellerStatus(${teller.teller_id}, 'pending')" 
-                                title="Activate">
-                            <i class="fas fa-power-off"></i>
-                        </button>
-                    `}
+                    <button class="action-btn 
+                                ${teller.status === 'active' ? 'warning' : 'success'}
+                                ${teller.status === 'pending' ? 'disabled' : ''}" 
+                            onclick="${teller.status === 'pending' ? 'return false;' : `tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')`}" 
+                            title="${teller.status === 'active' ? 'Deactivate' : 'Activate'}"
+                            ${teller.status === 'pending' ? 'disabled' : ''}>
+                        <i class="fas fa-power-off"></i>
+                    </button>
                 </div>
             </div>
         `).join('');

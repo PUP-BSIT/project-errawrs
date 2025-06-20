@@ -442,6 +442,34 @@ body {
     color: var(--color-mint);
 }
 
+.action-btn.action-edit:hover {
+    background-color: #e8f5e9;
+}
+.action-btn.action-edit:hover i {
+    color: var(--color-mint);
+}
+
+.action-btn.action-reset:hover {
+    background-color: #fff3e0;
+}
+.action-btn.action-reset:hover i {
+    color: #ef6c00;
+}
+
+.action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.action-btn.disabled:hover {
+    background-color: transparent;
+}
+
+.action-btn.disabled i {
+    color: var(--color-gray);
+}
+
 /* Modals */
 .modal {
     display: none;
