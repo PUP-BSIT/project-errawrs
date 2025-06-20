@@ -11,6 +11,46 @@ if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
+// Check if this is a status update
+if (isset($data['teller_id']) && isset($data['status'])) {
+    try {
+        $db = db_connect();
+        
+        // Start transaction
+        $db->begin_transaction();
+        
+        // Update status
+        $stmt = $db->prepare('UPDATE teller SET status = ? WHERE teller_id = ?');
+        $stmt->bind_param('si', $data['status'], $data['teller_id']);
+        
+        if (!$stmt->execute()) {
+            throw new Exception('Failed to update teller status');
+        }
+        
+        // Get updated teller information
+        $selectStmt = $db->prepare('SELECT teller_id, teller_number, first_name, last_name, email, status FROM teller WHERE teller_id = ?');
+        $selectStmt->bind_param('i', $data['teller_id']);
+        $selectStmt->execute();
+        $result = $selectStmt->get_result();
+        $teller = $result->fetch_assoc();
+        
+        // Commit transaction
+        $db->commit();
+        
+        echo json_encode(['success' => true, 'teller' => $teller]);
+        exit();
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        if (isset($db)) {
+            $db->rollback();
+        }
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit();
+    }
+}
+
+// Regular teller information update
 if (!isset($data['teller_id'], $data['first_name'], $data['last_name'], $data['email'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Missing required fields']);
