@@ -241,13 +241,13 @@ body {
 }
 
 .value {
-    font-size: 1.1rem;
-    color: #333;
+    font-size: 1.3rem;
 }
 
 .status-active {
     color: var(--color-mint);
     font-weight: 600;
+    font-size: 1.5rem;
 }
 
 /* Notification Styles */
