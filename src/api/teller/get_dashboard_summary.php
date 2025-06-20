@@ -31,6 +31,14 @@ if (!$session->isAuthenticated() || $_SESSION['auth']['type'] !== 'teller') {
 }
 $session->updateActivity();
 
+// Get teller ID from session
+$teller_id = isset($_SESSION['auth']['id']) ? $_SESSION['auth']['id'] : null;
+if (!$teller_id) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Teller ID not found in session']);
+    exit();
+}
+
 try {
     // Get database connection
     $conn = db_connect();
@@ -40,31 +48,33 @@ try {
     $today_end = date('Y-m-d 23:59:59');
     $current_date = date('Y-m-d');
 
-    // Get total deposits today
+    // Get total deposits today for this teller
     $deposits_query = "SELECT COALESCE(SUM(amount), 0) as total 
                       FROM transaction 
                       WHERE created_at BETWEEN ? AND ?
                       AND transaction_type = 'deposit'
-                      AND status = 'completed'";
+                      AND status = 'completed'
+                      AND teller_id = ?";
     $deposits_stmt = mysqli_prepare($conn, $deposits_query);
-    mysqli_stmt_bind_param($deposits_stmt, 'ss', $today_start, $today_end);
+    mysqli_stmt_bind_param($deposits_stmt, 'ssi', $today_start, $today_end, $teller_id);
     mysqli_stmt_execute($deposits_stmt);
     $deposits_result = mysqli_stmt_get_result($deposits_stmt);
     $total_deposits = mysqli_fetch_assoc($deposits_result)['total'];
 
-    // Get total withdrawals today
+    // Get total withdrawals today for this teller
     $withdrawals_query = "SELECT COALESCE(SUM(amount), 0) as total 
                          FROM transaction 
                          WHERE created_at BETWEEN ? AND ?
                          AND transaction_type = 'withdrawal'
-                         AND status = 'completed'";
+                         AND status = 'completed'
+                         AND teller_id = ?";
     $withdrawals_stmt = mysqli_prepare($conn, $withdrawals_query);
-    mysqli_stmt_bind_param($withdrawals_stmt, 'ss', $today_start, $today_end);
+    mysqli_stmt_bind_param($withdrawals_stmt, 'ssi', $today_start, $today_end, $teller_id);
     mysqli_stmt_execute($withdrawals_stmt);
     $withdrawals_result = mysqli_stmt_get_result($withdrawals_stmt);
     $total_withdrawals = mysqli_fetch_assoc($withdrawals_result)['total'];
 
-    // Get total closed accounts today
+    // Get total closed accounts today (global)
     $closed_query = "SELECT COUNT(*) as total 
                     FROM account 
                     WHERE DATE(created_at) = ? 
@@ -75,7 +85,7 @@ try {
     $closed_result = mysqli_stmt_get_result($closed_stmt);
     $total_closed = mysqli_fetch_assoc($closed_result)['total'];
 
-    // Get total reopened accounts today
+    // Get total reopened accounts today (global)
     $reopened_query = "SELECT COUNT(*) as total 
                       FROM account 
                       WHERE DATE(created_at) = ? 
@@ -93,7 +103,7 @@ try {
     $reopened_result = mysqli_stmt_get_result($reopened_stmt);
     $total_reopened = mysqli_fetch_assoc($reopened_result)['total'];
 
-    // Get total pending accounts today
+    // Get total pending accounts today (global)
     $pending_query = "SELECT COUNT(*) as total 
                      FROM account 
                      WHERE DATE(created_at) = ? 
@@ -104,7 +114,7 @@ try {
     $pending_result = mysqli_stmt_get_result($pending_stmt);
     $total_pending = mysqli_fetch_assoc($pending_result)['total'];
 
-    // Get total declined accounts today
+    // Get total declined accounts today (global)
     $declined_query = "SELECT COUNT(*) as total 
                       FROM account 
                       WHERE DATE(created_at) = ? 
