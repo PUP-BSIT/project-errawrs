@@ -1,0 +1,380 @@
+/* CSS Variables */
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --font-main: 'Montserrat', sans-serif;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+    --color-login-button: #ee5634;
+    --color-input-bg: #e5e5e5;
+    --color-border: #ddd;
+    --color-text-muted: #666;
+    --color-success: #28a745;
+    --color-error: #dc3545;
+    --color-warning: #ffc107;
+    --color-info: #17a2b8;
+    --color-success-bg: #d4edda;
+    --color-error-bg: #f8d7da;
+    --color-warning-bg: #fff3cd;
+    --color-info-bg: #d1ecf1;
+    --border-radius-small: 8px;
+    --border-radius-medium: 20px;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 2rem;
+    --spacing-xl: 3rem;
+    --box-shadow-light: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --transition-default: 0.3s ease;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: linear-gradient(
+        135deg, 
+        var(--color-bg-gradient-start) 0%, 
+        var(--color-bg-gradient-end) 100%
+    );
+    min-height: 100vh;
+    color: var(--color-primary-black);
+}
+
+/* Header */
+.main-header {
+    background-color: var(--color-primary-black);
+    padding: 1.25rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+.header {
+    background: var(--color-primary-black);
+    padding: 1rem 0;
+}
+
+.site-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.site-logo span {
+    color: var(--color-lime-green);
+}
+
+.main-nav {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.main-nav a {
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color var(--transition-default);
+}
+
+.main-nav a:hover {
+    color: var(--color-lime-green);
+}
+
+/* Main Content */
+.content-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 4rem auto;
+    gap: var(--spacing-xl);
+    padding: 0 var(--spacing-large);
+    align-items: flex-start;
+}
+
+/* Contact Form */
+.contact-form-wrapper {
+    background-color: var(--color-primary-black);
+    border-radius: var(--border-radius-medium);
+    padding: 2.5rem;
+    width: 450px;
+    box-shadow: var(--box-shadow-heavy);
+}
+
+.form-header-section h2 {
+    color: var(--color-white);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-small);
+}
+
+.form-header-section h2 span {
+    color: var(--color-lime-green);
+}
+
+.header-subtitle {
+    color: var(--color-gray);
+    margin-bottom: var(--spacing-large);
+    font-size: 0.95rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-input-field {
+    width: 100%;
+    padding: var(--spacing-medium);
+    border: none;
+    border-radius: var(--border-radius-small);
+    background-color: var(--color-white);
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    color: var(--color-primary-black);
+    outline: none;
+    transition: all var(--transition-default);
+}
+
+.form-input-field:focus {
+    box-shadow: 0 0 0 3px rgba(182, 255, 74, 0.3);
+    transform: scale(1.02);
+}
+
+.form-input-field::placeholder {
+    color: var(--color-gray);
+}
+
+.message-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-submit-button {
+    width: 100%;
+    padding: var(--spacing-medium);
+    background-color: var(--color-gray);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-submit-button:hover {
+    background-color: #8a8a8a;
+    transform: translateY(-2px);
+}
+
+.form-submit-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Illustration Section */
+.contact-info-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-large);
+}
+
+.illustration-wrapper {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--box-shadow-light);
+    text-align: center;
+}
+
+.contact-illustration-image {
+    width: 350px;
+    height: 280px;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+/* Contact Info */
+.contact-details-container {
+    display: flex;
+    gap: var(--spacing-xl);
+    justify-content: center;
+}
+
+.contact-detail-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-detail-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--color-primary-black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-medium);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.contact-detail-icon i {
+    font-size: 1.2rem;
+    color: var(--color-white);
+}
+
+.contact-detail-label {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-small);
+    color: var(--color-primary-black);
+}
+
+.contact-detail-value {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+/* Alert Styles */
+.notification-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-small);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: slideInDown 0.3s ease;
+}
+
+.alert-success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border-left: 4px solid var(--color-success);
+}
+
+.alert-error {
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+    border-left: 4px solid var(--color-error);
+}
+
+.alert-warning {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+    border-left: 4px solid var(--color-warning);
+}
+
+.alert-info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info);
+    border-left: 4px solid var(--color-info);
+}
+
+.alert-close-button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.alert-close-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.contact-form-wrapper,
+.contact-info-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.contact-form-wrapper.animate-in,
+.contact-info-section.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column;
+        gap: var(--spacing-large);
+        margin: var(--spacing-large) auto;
+    }
+
+    .contact-form-wrapper {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .illustration-wrapper {
+        padding: var(--spacing-large);
+    }
+
+    .contact-illustration-image {
+        width: 280px;
+        height: 220px;
+    }
+
+    .contact-details-container {
+        flex-direction: column;
+        gap: var(--spacing-large);
+    }
+
+    .main-header {
+        padding: var(--spacing-medium);
+    }
+
+    .main-nav {
+        gap: var(--spacing-medium);
+    }
+
+    .notification-alert {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+}
