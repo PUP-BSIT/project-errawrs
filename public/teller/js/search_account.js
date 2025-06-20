@@ -79,18 +79,15 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Hide search history when showing a single account
+    // Always hide search history when showing search results
+    searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
+
+    // Set single card layout if only one account
     if (accounts.length === 1) {
-        searchHistoryContainer.classList.add("hidden");
-        searchHistoryContainer.style.display = "none";
         accountContainer.classList.add("single-card");
     } else {
         accountContainer.classList.remove("single-card");
-        // Only show search history if we have entries
-        if (searchHistory.length > 0) {
-            searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
-        }
     }
 
     accounts.forEach((account) => {
@@ -229,8 +226,8 @@ function updateAccountDetails(accounts) {
         accountContainer.appendChild(cardWrapper);
     });
 
-    // Only load search history if not showing a single account
-    if (accounts.length !== 1) {
+    // Only load search history if not showing any accounts (empty search)
+    if (accounts.length === 0) {
         loadSearchHistory();
     }
 }
@@ -279,9 +276,9 @@ function addToSearchHistory(account) {
     // Add to the beginning of the array
     searchHistory.unshift(newEntry);
 
-    // Keep only the last 10 entries
-    if (searchHistory.length > 10) {
-        searchHistory.pop();
+    // Keep only the last 5 entries (limit to 5 accounts)
+    if (searchHistory.length > 5) {
+        searchHistory.splice(5);
     }
 
     // Update the UI immediately
@@ -294,6 +291,7 @@ function updateSearchHistory() {
     
     if (searchHistory.length === 0) {
         searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
         return;
     }
 
@@ -316,13 +314,17 @@ function updateSearchHistory() {
         historyBody.appendChild(row);
     });
 
-    // Show search history container if we have entries and not showing a single account
+    // Only show search history if we have entries and no search term
+    const searchTerm = searchInput.value.trim();
     const accountContainer = document.querySelector(".account-container");
     const hasAccounts = accountContainer.children.length > 0;
     
-    if (!hasAccounts || accountContainer.children.length > 1) {
+    if (!searchTerm && !hasAccounts && searchHistory.length > 0) {
         searchHistoryContainer.classList.remove("hidden");
         searchHistoryContainer.style.display = "block";
+    } else {
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
     }
 }
 
@@ -754,6 +756,27 @@ window.addEventListener("storage", (e) => {
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
+    // Update user profile if available
+    if (tellerInfo) {
+        const userNameElements = document.querySelectorAll(".user-name");
+        const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+        let fullName = '';
+        
+        if (tellerInfo.first_name && tellerInfo.last_name) {
+            fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+            userNameElements.forEach(el => el.textContent = fullName);
+        } else if (tellerInfo.name) {
+            fullName = tellerInfo.name;
+            userNameElements.forEach(el => el.textContent = tellerInfo.name);
+        }
+        
+        // Set avatar initial
+        if (avatarElement && fullName) {
+            const initial = fullName.trim().charAt(0).toUpperCase();
+            avatarElement.textContent = initial;
+        }
+    }
+
     const contentArea = document.querySelector(".content-area");
     
     // Load search history initially
@@ -794,14 +817,6 @@ document.addEventListener("DOMContentLoaded", () => {
             searchAccount();
         }
     });
-
-    // Update user profile if available
-    if (tellerInfo) {
-        const userNameElement = document.querySelector(".user-name");
-        if (userNameElement) {
-            userNameElement.textContent = tellerInfo.name;
-        }
-    }
 
     // Close account actions when clicking outside
     document.addEventListener("click", (e) => {
