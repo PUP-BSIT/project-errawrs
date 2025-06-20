@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+$session = SessionManager::getInstance();
 
 // Prevent any HTML error output
 error_reporting(E_ALL);
@@ -31,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Verify admin is logged in
-if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'admin') {
+if (!$session->isAuthorizedAdmin()) {
     sendError('Unauthorized access', 401);
 }
 

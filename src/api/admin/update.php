@@ -1,4 +1,13 @@
 <?php
+require_once __DIR__ . '/../../config/SessionManager.php';
+$session = SessionManager::getInstance();
+
+if (!$session->isAuthorizedAdmin()) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+    exit();
+}
+
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
