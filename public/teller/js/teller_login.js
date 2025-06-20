@@ -30,28 +30,45 @@ function togglePassword() {
     }
 }
 
-// Show error message
-function showError(message) {
-    // Remove any existing error message
-    const existingError = document.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
+// Show notification (error or success)
+function showNotification(message, type = 'error', position = 'right') {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+
+    const notificationDiv = document.createElement('div');
+    notificationDiv.className = `notification ${type}`;
+    
+    // Add center class if position is center
+    if (position === 'center') {
+        notificationDiv.classList.add('center');
     }
+    
+    notificationDiv.textContent = message;
 
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.cssText = 'color: #dc3545; margin-top: 10px; text-align: center; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;';
-    errorDiv.textContent = message;
+    document.body.appendChild(notificationDiv);
 
-    const loginForm = document.getElementById('loginForm');
-    loginForm.appendChild(errorDiv);
-
-    // Remove the error message after 5 seconds
+    // Remove the notification after 5 seconds
     setTimeout(() => {
-        if (errorDiv.parentNode) {
-            errorDiv.remove();
+        if (notificationDiv.parentNode) {
+            notificationDiv.remove();
         }
     }, 5000);
+}
+
+// Show error message
+function showError(message) {
+    showNotification(message, 'error', 'right');
+}
+
+// Show success message
+function showSuccess(message) {
+    showNotification(message, 'success', 'right');
+}
+
+// Show info message (centered)
+function showInfo(message) {
+    showNotification(message, 'info', 'center');
 }
 
 // Test API connectivity
@@ -161,7 +178,7 @@ async function handleLogin(event) {
             sessionStorage.setItem('tellerInfo', JSON.stringify(tellerInfo));
 
             // Show success message briefly before redirect
-            showError('Login successful! Redirecting...');
+            showSuccess('Login successful! Redirecting...');
             
             // Redirect to dashboard after a short delay
             setTimeout(() => {
@@ -192,14 +209,9 @@ async function handleLogin(event) {
     }
 }
 
-// Handle forgot username
-function handleForgotUsername() {
-    showError("Please contact your administrator to recover your username.");
-}
-
 // Handle forgot password
 function handleForgotPassword() {
-    showError("Please contact your administrator to reset your password.");
+    showInfo("Please contact your administrator to reset your password.");
 }
 
 // Add configuration check when page loads
