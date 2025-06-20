@@ -56,28 +56,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update name in sidebar and greeting section
     const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
-    
+    const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+    let fullName = '';
     if (tellerInfo.first_name && tellerInfo.last_name) {
-        const fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
         userNameElements.forEach(el => el.textContent = fullName);
         nameTextElement.textContent = fullName + "!";
     } else if (tellerInfo.name) {
+        fullName = tellerInfo.name;
         userNameElements.forEach(el => el.textContent = tellerInfo.name);
         nameTextElement.textContent = tellerInfo.name + "!";
     }
-
+    // Set avatar initial
+    if (avatarElement && fullName) {
+        const initial = fullName.trim().charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
+    }
     // Set up search functionality
     setupSearch();
-
     // Fetch and update dashboard summary
     fetchDashboardSummary();
-
     // Set up auto-refresh every 5 minutes
     setInterval(fetchDashboardSummary, 5 * 60 * 1000);
-
     // Load recent registrations
     loadRecentRegistrations();
-    
     // Refresh registrations every 30 seconds
     setInterval(loadRecentRegistrations, 30000);
 });
