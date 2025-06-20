@@ -149,14 +149,11 @@
       $mail->Subject = 'Complete Your Teller Account Setup';
       $mail->Body = "Dear {$data['first_name']} {$data['last_name']},\n\n"
           . "An account has been created for you as a teller at StackOvercash. Here are your account details:\n\n"
-          . "Teller Number: {$teller_number}\n"
-          . "Temporary Password: {$temp_password}\n\n"
+          . "Teller Number: {$teller_number}\n\n"
           . "Please click the link below to set your password and complete your setup:\n"
           . "http://localhost/project-errawrs/public/teller/set_password.html?teller_email=" . urlencode($data['email']) . "\n\n"
-          . "For security reasons, please change your password immediately after logging in.\n\n"
           . "If you did not request this account, please ignore this email.\n\n"
           . "Best regards,\nStackOvercash Team";
-
       $mail->send();
 
       $db->commit();
