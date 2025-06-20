@@ -213,12 +213,12 @@ try {
         $year = date('y');
         $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
 
-            // Insert into account table
-            $insertAccount = $db->prepare('
-                INSERT INTO account (user_id, account_number, balance, status, account_type, created_at, teller_id)
-                VALUES (?, ?, 0.00, "active", "savings", NOW(), ?)
-            ');
-            $insertAccount->bind_param('isi', $user_id, $accountNumber, $teller_id);
+        // Insert into account table
+        $insertAccount = $db->prepare('
+            INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
+            VALUES (?, ?, 0.00, "active", "savings", NOW())
+        ');
+        $insertAccount->bind_param('is', $user_id, $accountNumber);
             if (!$insertAccount->execute()) {
                 throw new Exception('Failed to create bank account: ' . $insertAccount->error);
             }
