@@ -101,8 +101,7 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 2rem;
-    overflow-y: auto;
+    margin: auto;
 }
 
 /* Transaction Content Styles */
@@ -110,7 +109,7 @@ body {
     background-color: var(--color-white);
     border-radius: 16px;
     padding: 24px;
-    max-width: 900px;
+    max-width: 720px;
     margin: auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
@@ -188,7 +187,7 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
-    max-width: 600px;
+    max-width: 700px;
     width: 100%;
 }
 
