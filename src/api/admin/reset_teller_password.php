@@ -84,7 +84,7 @@ try {
     $db->begin_transaction();
 
     // Fetch teller info
-    $stmt = $db->prepare("SELECT teller_id, first_name, last_name, email FROM teller WHERE teller_id = ?");
+    $stmt = $db->prepare("SELECT teller_id, teller_number, first_name, last_name, email FROM teller WHERE teller_id = ?");
     if (!$stmt) throw new Exception("Database prepare failed: " . $db->error);
     $stmt->bind_param("i", $teller_id);
     if (!$stmt->execute()) throw new Exception("Database execute failed: " . $stmt->error);
@@ -116,7 +116,7 @@ try {
     $mail->Subject = 'Reset Your Teller Account Password';
     $mail->Body = "Dear {$teller['first_name']} {$teller['last_name']},\n\n"
         . "A password reset has been requested for your teller account at StackOvercash. Here are your temporary credentials:\n\n"
-        . "Teller Number: {$teller['teller_id']}\n"
+        . "Teller Number: {$teller['teller_number']}\n"
         . "Temporary Password: {$temp_password}\n\n"
         . "Please click the link below to set your new password and complete the reset process:\n"
         . "http://localhost/project-errawrs/public/teller/set_password.html?teller_email=" . urlencode($teller['email']) . "\n\n"
