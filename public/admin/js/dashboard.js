@@ -209,18 +209,6 @@ class AdminDashboard {
             if (element && stats[key] !== undefined) {
                 console.log(`Updating ${key}:`, stats[key]);
                 element.textContent = this.formatNumber(stats[key]);
-                
-                // Update the change indicator based on the stat type
-                const changeElement = element.parentElement.querySelector('.stat-change');
-                if (changeElement) {
-                    if (key === 'total_users' || key === 'total_transactions') {
-                        changeElement.textContent = '+5% from last month';
-                        changeElement.className = 'stat-change positive';
-                    } else {
-                        changeElement.textContent = 'No change';
-                        changeElement.className = 'stat-change neutral';
-                    }
-                }
             } else {
                 console.warn(`Element not found or stat not available for ${key}`);
             }
