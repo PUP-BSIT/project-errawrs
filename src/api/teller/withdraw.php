@@ -115,16 +115,14 @@ try {
             status,
             created_at,
             completed_at,
-            description,
-            teller_id
-        ) VALUES (?, ?, 'withdrawal', 'completed', NOW(), NOW(), ?, ?)";
+            description
+        ) VALUES (?, ?, 'withdrawal', 'completed', NOW(), NOW(), ?)";
         
         $transaction_stmt = mysqli_prepare($conn, $transaction_sql);
-        mysqli_stmt_bind_param($transaction_stmt, "idsi", 
+        mysqli_stmt_bind_param($transaction_stmt, "ids", 
             $account['account_id'],
             $amount,
-            $description,
-            $teller['teller_id']
+            $description
         );
         
         if (!mysqli_stmt_execute($transaction_stmt)) {

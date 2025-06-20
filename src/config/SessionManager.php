@@ -5,28 +5,12 @@ class SessionManager {
     private $sessionTimeout;
     private $sessionRefreshTime;
     private $sessionWarnTime;
+    private $isInitialized = false;
 
     private function __construct() {
-        // Session configuration
-        ini_set('session.cookie_httponly', 1);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.cookie_secure', 0); // Allow non-HTTPS for localhost
-        ini_set('session.cookie_samesite', 'Lax'); // Allow same-site cookies
-        ini_set('session.gc_maxlifetime', 300); // 5 minutes
-        ini_set('session.cookie_lifetime', 0); // Until browser closes
-
-        // Session name
-        session_name('STACKOVERCASH_SESSID');
-
-        // Define timeouts
-        $this->sessionTimeout = 300;       // 5 minutes
-        $this->sessionRefreshTime = 60;    // 1 minute
-        $this->sessionWarnTime = 60;       // 1 minute warning
-
-        // Start session if not already started
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        $this->sessionTimeout = 3600;      // 1 hour
+        $this->sessionRefreshTime = 1800;  // 30 minutes
+        $this->sessionWarnTime = 300;      // 5 minute warning
     }
 
     public static function getInstance() {
@@ -36,8 +20,33 @@ class SessionManager {
         return self::$instance;
     }
 
+    public function initSession() {
+        if ($this->isInitialized) {
+            return;
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            // Session configuration
+            ini_set('session.cookie_httponly', 1);
+            ini_set('session.use_only_cookies', 1);
+            ini_set('session.cookie_secure', 0); // Allow non-HTTPS for localhost
+            ini_set('session.cookie_samesite', 'Lax');
+            ini_set('session.gc_maxlifetime', 3600); // 1 hour
+            ini_set('session.cookie_lifetime', 0); // Until browser closes
+
+            // Session name
+            session_name('STACKOVERCASH_SESSID');
+            
+            session_start();
+        }
+
+        $this->isInitialized = true;
+    }
+
     public function storeOTP(string $otp, string $phone, string $purpose = 'general'): bool {
         try {
+            $this->initSession();
+
             // Debug logging
             error_log("Storing OTP - Phone: $phone, Purpose: $purpose");
             error_log("Session ID before storing: " . session_id());
@@ -52,12 +61,6 @@ class SessionManager {
                 'attempts' => 0
             ];
 
-            // Ensure session is written
-            session_write_close();
-            
-            // Restart session
-            session_start();
-
             // Debug logging
             error_log("OTP stored successfully");
             error_log("Session data after storing: " . print_r($_SESSION, true));
@@ -71,6 +74,8 @@ class SessionManager {
 
     public function verifyOTP(string $input_otp, string $phone, string $purpose = 'general'): bool {
         try {
+            $this->initSession();
+
             // Debug logging
             error_log("Verifying OTP - Input: $input_otp, Phone: $phone, Purpose: $purpose");
             error_log("Session ID before verify: " . session_id());
@@ -111,7 +116,6 @@ class SessionManager {
             }
 
             // OTP is valid - clear it from session
-            $verifiedPhone = $sessionOtp['phone_number'];
             unset($_SESSION['otp']);
 
             // Set verification success in session
@@ -126,6 +130,7 @@ class SessionManager {
     }
 
     public function isAuthenticated() {
+        $this->initSession();
         return isset($_SESSION['auth']) && isset($_SESSION['auth']['id']);
     }
 
@@ -138,10 +143,17 @@ class SessionManager {
         $lastActivity = $_SESSION['auth']['last_activity'] ?? 0;
         $timeDiff = $currentTime - $lastActivity;
         
+        // Don't expire new sessions
         $isNewSession = isset($_SESSION['auth']['logged_in_at']) && 
                        ($currentTime - $_SESSION['auth']['logged_in_at'] <= 5);
         
         if ($isNewSession) {
+            return false;
+        }
+        
+        // Auto-refresh session if within refresh window
+        if ($timeDiff <= $this->sessionRefreshTime) {
+            $this->updateActivity();
             return false;
         }
         
@@ -151,8 +163,6 @@ class SessionManager {
     public function updateActivity() {
         if ($this->isAuthenticated()) {
             $_SESSION['auth']['last_activity'] = time();
-            session_write_close();
-            session_start();
         }
     }
 
@@ -164,7 +174,9 @@ class SessionManager {
     }
 
     public function createSession($userData, $type = 'user') {
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        $this->initSession();
+
+        // Clear any existing session data
             session_unset();
             
             if (isset($_COOKIE[session_name()])) {
@@ -174,24 +186,11 @@ class SessionManager {
                     time() - 42000,
                     '/',
                     '',
-                    false,
+                false,
                     true
                 );
             }
             
-            session_destroy();
-        }
-
-        session_set_cookie_params([
-            'lifetime' => 0,
-            'path' => '/',
-            'domain' => '',
-            'secure' => false,
-            'httponly' => true,
-            'samesite' => 'Lax'
-        ]);
-
-        session_start();
         session_regenerate_id(true);
 
         $_SESSION['auth'] = [
@@ -200,66 +199,37 @@ class SessionManager {
             'type' => $type,
             'logged_in_at' => time(),
             'last_activity' => time(),
-            'first_name' => $userData['first_name'] ?? '',
-            'last_name' => $userData['last_name'] ?? '',
+            'first_name' => $userData['first_name'],
+            'last_name' => $userData['last_name'],
             'phone_number' => $userData['phone_number'] ?? null,
             'email' => $userData['email'] ?? null
         ];
 
-        if ($type === 'user' && isset($userData['account'])) {
-            $_SESSION['auth']['account'] = $userData['account'];
-        }
-
-        session_write_close();
-        session_start();
+        error_log("Session created with data: " . print_r($_SESSION, true));
     }
 
     public function killSession() {
-        if ($this->isAuthenticated()) {
-            error_log('Killing session for user: ' . ($_SESSION['auth']['identifier'] ?? 'unknown'));
-        }
-
-        $_SESSION = array();
-
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_unset();
+            session_destroy();
+            
         if (isset($_COOKIE[session_name()])) {
-            $params = session_get_cookie_params();
             setcookie(
                 session_name(),
                 '',
                 time() - 42000,
-                $params['path'],
-                $params['domain'],
-                $params['secure'],
-                $params['httponly']
-            );
+                    '/',
+                    '',
+                    false,
+                    true
+                );
+            }
         }
-
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
-    }
-
-    public function isAuthorizedAdmin() {
-        return $this->isAuthenticated() && 
-               isset($_SESSION['auth']['type']) && 
-               $_SESSION['auth']['type'] === 'admin';
     }
 
     public function getSessionData() {
-        if (!$this->isAuthenticated()) {
-            return null;
-        }
-
-        return [
-            'id' => $_SESSION['auth']['id'],
-            'username' => $_SESSION['auth']['identifier'],
-            'type' => $_SESSION['auth']['type'],
-            'first_name' => $_SESSION['auth']['first_name'] ?? '',
-            'last_name' => $_SESSION['auth']['last_name'] ?? '',
-            'phone_number' => $_SESSION['auth']['phone_number'] ?? '',
-            'last_activity' => $_SESSION['auth']['last_activity'],
-            'session_expires_in' => $this->getTimeUntilExpiry()
-        ];
+        $this->initSession();
+        return $_SESSION['auth'] ?? null;
     }
 
     public function getSessionTimeout() {

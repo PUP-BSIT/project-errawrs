@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../config/database.php';
+// require_once __DIR__ . '/../../config/mailer.php'; // Uncomment and use your mailer
+
 header('Content-Type: application/json');
 
 // Check if user is logged in
@@ -45,12 +47,11 @@ if (!isset($_SESSION['otp'])) {
 
 try {
     $db = db_connect();
-    
-    // Start transaction
     $db->begin_transaction();
     
-    // Get user ID from session
     $user_id = $_SESSION['auth']['id'];
+    $user_email = $_SESSION['auth']['email'];
+    $user_name = $_SESSION['auth']['first_name'] ?? 'User';
     
     // Check if user already has 3 accounts
     $checkStmt = $db->prepare('SELECT COUNT(*) as account_count FROM account WHERE user_id = ? AND status = "active"');
@@ -63,38 +64,10 @@ try {
         throw new Exception('Maximum number of accounts (3) reached');
     }
     
-    // Get the next account sequence number
-    $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
-    $seqRow = $seqResult->fetch_assoc();
-    $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
-    
-    // Generate account number (544YY0######)
-    $year = date('y');
-    $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
-    
-    // Create new account with account_type
-    $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status, account_type) VALUES (?, ?, 0.00, "active", ?)');
-    $accountStmt->bind_param('iss', $user_id, $accountNumber, $account_type);
-    
-    if (!$accountStmt->execute()) {
-        throw new Exception('Failed to create new account');
-    }
-    
-    $account_id = $accountStmt->insert_id;
-    
-    // Get all user's accounts
-    $allAccountsStmt = $db->prepare('SELECT account_id, account_number, balance, status, account_type FROM account WHERE user_id = ? AND status = "active"');
-    $allAccountsStmt->bind_param('i', $user_id);
-    $allAccountsStmt->execute();
-    $allAccountsResult = $allAccountsStmt->get_result();
-    
-    $accounts = [];
-    while ($account = $allAccountsResult->fetch_assoc()) {
-        $accounts[] = $account;
-    }
-    
-    // Update session with new account information
-    $_SESSION['auth']['all_accounts'] = $accounts;
+    // Insert into registration_request for teller review
+    $requestStmt = $db->prepare('INSERT INTO registration_request (user_id, request_type, account_type, status, created_at) VALUES (?, "add_account", ?, "pending", NOW())');
+    $requestStmt->bind_param('is', $user_id, $account_type);
+    $requestStmt->execute();
     
     // Commit transaction
     $db->commit();
@@ -102,22 +75,17 @@ try {
     // Clear OTP session data
     unset($_SESSION['otp']);
     
-    // Return success response with new account details
+    // Send email to user (replace with your mailer)
+    $subject = "Stack Overcash: New Account Request Submitted";
+    $body = "Hello $user_name,\n\nYour request to open a new $account_type account has been received and is pending teller review. You will be notified by email once it is approved or denied.\n\nThank you!";
+    // send_mail($user_email, $subject, $body); // Uncomment and use your mailer
+
     echo json_encode([
         'success' => true,
-        'message' => 'Account created successfully',
-        'new_account' => [
-            'account_id' => $account_id,
-            'account_number' => $accountNumber,
-            'balance' => '0.00',
-            'status' => 'active',
-            'account_type' => $account_type
-        ],
-        'all_accounts' => $accounts
+        'message' => 'Your request to open a new account is under review. You will be notified by email once it is processed.'
     ]);
 
 } catch (Exception $e) {
-    // Rollback transaction on error
     if (isset($db)) {
         $db->rollback();
     }

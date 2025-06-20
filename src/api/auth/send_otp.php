@@ -122,6 +122,8 @@ try {
 
     error_log("Send OTP - API Response: " . $response);
     error_log("Send OTP - API HTTP Code: " . $httpCode);
+    // Log the full API response for debugging
+    error_log("Send OTP - Full Semaphore API Response: " . print_r($response, true));
 
     if ($httpCode !== 200 || !$response) {
         error_log("Semaphore API Error: " . $response);
@@ -164,10 +166,15 @@ try {
     error_log("Send OTP - Session data after write/restart: " . print_r($_SESSION, true));
 
     // Send success response without exposing OTP
-    echo json_encode([
-        'success' => true, 
+    $responseArr = [
+        'success' => true,
         'message' => 'OTP sent successfully to your phone number.'
-    ]);
+    ];
+    // Expose OTP in development environment for debugging
+    if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
+        $responseArr['dev_otp'] = $otp;
+    }
+    echo json_encode($responseArr);
 
 } catch (Exception $e) {
     error_log("Send OTP Error: " . $e->getMessage());

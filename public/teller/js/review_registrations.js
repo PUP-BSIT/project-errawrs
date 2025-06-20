@@ -151,7 +151,7 @@ class RegistrationReview {
                  data-id-image="${reg.id_image || ''}"
             >
                 <div class="card-left">
-                    <div class="registration-header">
+                <div class="registration-header">
                         <div class="applicant-info">
                             <h3 class="applicant-name">${reg.first_name} ${reg.last_name}</h3>
                             <div class="meta-info">
@@ -165,9 +165,9 @@ class RegistrationReview {
                                 </span>
                             </div>
                         </div>
-                    </div>
+                </div>
 
-                    <div class="registration-details">
+                <div class="registration-details">
                         <div class="detail-row">
                             <div class="detail-item email">
                                 <i class="far fa-envelope"></i>
@@ -194,7 +194,7 @@ class RegistrationReview {
                                 Last updated ${this.getTimeAgo(new Date(reg.updated_at))}
                             </div>
                         ` : ''}
-                    </div>
+                </div>
 
                     <button class="btn btn-view" onclick="registrationReview.viewDetails(${reg.registration_id})">
                         <i class="fas fa-eye"></i> View Details
@@ -216,8 +216,8 @@ class RegistrationReview {
                             <div class="action-buttons">
                                 <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')"
                                         title="Deny Application">
-                                    <i class="fas fa-times"></i> Deny
-                                </button>
+                        <i class="fas fa-times"></i> Deny
+                    </button>
                                 <button class="btn btn-approve" onclick="registrationReview.handleAction(${reg.registration_id}, 'approve')"
                                         title="Approve Application">
                                     <i class="fas fa-check"></i> Approve
@@ -543,7 +543,7 @@ class RegistrationReview {
         notification.appendChild(icon);
         notification.appendChild(text);
         container.appendChild(notification);
-
+        
         // Trigger animation
         setTimeout(() => notification.classList.add('show'), 10);
         

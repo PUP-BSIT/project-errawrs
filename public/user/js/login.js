@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+const API_LOGIN = API_ENDPOINTS.AUTH.LOGIN;
+
 async function handleLogin(e) {
     e.preventDefault();
 
@@ -207,60 +209,48 @@ function togglePasswordVisibility(toggleBtn) {
 }
 
 function showNotification(message, type = 'info') {
-    // Notification Types
-    const NOTIFICATION_TYPE = {
-        SUCCESS: 'success',
-        ERROR: 'error',
-        INFO: 'info'
-    };
-    
-    // Icons
-    const ICON = {
-        SUCCESS: 'fa-check-circle',
-        ERROR: 'fa-exclamation-circle',
-        INFO: 'fa-info-circle',
-        CLOSE: 'fas fa-times'
-    };
-    
-    // Timing
-    const TIMING = {
-        NOTIFICATION_HIDE: 5000
-    };
-    
-    // Selectors
-    const SELECTOR = {
-        NOTIFICATION: '.notification'
-    };
-
     // Create notification container if it doesn't exist
-    let container = document.querySelector(SELECTOR.NOTIFICATION);
+    let container = document.querySelector('.notification-container');
     if (!container) {
         container = document.createElement('div');
-        container.className = 'notification';
+        container.className = 'notification-container';
         document.body.appendChild(container);
     }
 
-    // Create notification content
-    container.className = `notification notification-${type}`;
-    container.innerHTML = `
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    // Add icon based on type
+    const icon = type === 'success' ? 'fa-check-circle' : 
+                type === 'error' ? 'fa-exclamation-circle' : 
+                'fa-info-circle';
+    
+    notification.innerHTML = `
         <div class="notification-content">
-            <i class="fas ${
-                type === NOTIFICATION_TYPE.SUCCESS
-                    ? ICON.SUCCESS
-                    : type === NOTIFICATION_TYPE.ERROR
-                    ? ICON.ERROR
-                    : ICON.INFO
-            }"></i>
+            <i class="fas ${icon}"></i>
             <span>${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
-                <i class="${ICON.CLOSE}"></i>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
             </button>
         </div>
     `;
 
-    // Auto-hide after some time
+    // Add to container
+    container.appendChild(notification);
+
+    // Add close button functionality
+    const closeBtn = notification.querySelector('.close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            notification.remove();
+        });
+    }
+
+    // Auto-hide after 5 seconds
     setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+        if (notification && notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
 }

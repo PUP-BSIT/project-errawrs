@@ -187,11 +187,11 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				console.log('OTP request response status:', response.status);
-				return response.json().then(data => {
+					return response.json().then(data => {
 					console.log('OTP request response data:', data);
 					if (!response.ok) {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
-					}
+				}
 					return data;
 				});
 			})
@@ -618,11 +618,11 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				console.log('OTP verification response status:', response.status);
-				return response.json().then(data => {
+					return response.json().then(data => {
 					console.log('OTP verification response data:', data);
 					if (!response.ok) {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
-					}
+				}
 					return data;
 				});
 			})

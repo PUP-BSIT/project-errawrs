@@ -14,8 +14,8 @@ try {
     if (!$sessionManager->isAuthenticated() || $sessionManager->getSessionData()['type'] !== 'teller') {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
-        exit();
-    }
+    exit();
+}
 
     // Get filter parameters
     $status = $_GET['status'] ?? 'pending';
@@ -25,7 +25,7 @@ try {
 
     // Connect to database
     $db = db_connect();
-
+    
     // Build query based on status filter
     $whereClause = $status !== 'all' ? "WHERE status = ?" : "";
     
@@ -56,9 +56,9 @@ try {
                 status,
                 created_at,
                 updated_at
-              FROM registration_request
+        FROM registration_request
               " . $whereClause . "
-              ORDER BY created_at DESC
+        ORDER BY created_at DESC
               LIMIT ? OFFSET ?";
 
     $stmt = $db->prepare($query);

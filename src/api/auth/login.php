@@ -15,7 +15,7 @@ function isLocalEnvironment() {
 // Set environment-specific settings
 if (isLocalEnvironment()) {
     ini_set('display_errors', 1); // Show errors in local environment
-    header('Access-Control-Allow-Origin: *'); // Allow all origins in local
+    header('Access-Control-Allow-Origin: http://localhost'); // Allow localhost in local env
 } else {
     ini_set('display_errors', 0); // Hide errors in production
     header('Access-Control-Allow-Origin: https://dev-teller.stackovercash.site');
@@ -71,12 +71,12 @@ try {
     $db = db_connect();
     if (!$db) {
         throw new Exception('Database connection failed');
-    }
+}
 
-    // Parse and validate input
-    $input = file_get_contents('php://input');
-    if (empty($input)) {
-        handleError('No input data received');
+// Parse and validate input
+$input = file_get_contents('php://input');
+if (empty($input)) {
+    handleError('No input data received');
     }
 
     $data = json_decode($input, true);
@@ -229,14 +229,20 @@ try {
     $sessionManager->updateActivity();
 
     // Prepare success response
-    http_response_code(200);
-    echo json_encode([
+    $responseData = [
         'success' => true,
         'message' => 'Login successful',
-        'user' => $user, // Return user data (without hash)
+        'user' => array_merge($user, $additionalData), // Include account data for users
         'login_type' => $loginType,
         'timestamp' => date('Y-m-d H:i:s')
-    ]);
+    ];
+
+    // Log the response for debugging
+    error_log("Login successful. Response data: " . print_r($responseData, true));
+    error_log("Session data after login: " . print_r($_SESSION, true));
+
+    http_response_code(200);
+    echo json_encode($responseData);
 
 } catch (Exception $e) {
     error_log("Login Exception: " . $e->getMessage());
