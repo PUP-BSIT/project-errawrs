@@ -435,7 +435,7 @@ class TellerManager {
                     // Close the modal first
                     this.closeModal(modal);
 
-                    const response = await fetch('/project-errawrs/src/api/admin/reset_teller_password.php', {
+                    const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -502,13 +502,17 @@ class TellerManager {
                 // Close the modal first
                 this.closeModal(modal);
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
-                    method: 'POST',
+                const response = await fetch('/project-errawrs/src/api/admin/update.php', {
+                    method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     credentials: 'include',
-                    body: JSON.stringify({ teller_id: tellerId })
+                    body: JSON.stringify({ 
+                        teller_id: tellerId,
+                        status: isActivating ? 'active' : 'inactive'
+                    })
                 });
 
                 if (!response.ok) {
@@ -519,7 +523,7 @@ class TellerManager {
                 
                 if (data.success) {
                     this.showToast(
-                        `Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 
+                        `Teller ${isActivating ? 'activated' : 'deactivated'} successfully`, 
                         'success'
                     );
                     await this.loadTellers();
