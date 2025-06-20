@@ -51,11 +51,21 @@
         </div>
 
         <div class="main-content">
-            <div class="top-bar">
-                <div id="notification_container" class="notification-container"></div>
-                <div class="top-icons">
-                    <div class="top-icon"><i class="fa-regular fa-bell"></i></div>
-                    <div class="top-icon"><i class="fa-regular fa-square-plus"></i></div>
+            <div id="notification_container" class="notification-container"></div>
+
+            <div class="welcome-section">
+                <div class="greeting-container">
+                    <div class="hello-text">Hello</div>
+                    <div class="name-text"></div>
+                </div>
+                <div class="search-container">
+                    <div class="search-label">Quick Search</div>
+                    <div class="search-input-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="quick_search" class="search-input" 
+                               placeholder="Search by name, account or phone...">
+                    </div>
+                    <div id="search_results" class="search-results"></div>
                 </div>
             </div>
 
@@ -122,21 +132,6 @@
                 </div>
             </div>
 
-            <div class="welcome-section">
-                <div class="greeting-container">
-                    <div class="hello-text">Hello</div>
-                    <div class="name-text"></div>
-                </div>
-                <div class="search-container">
-                    <div class="search-label">Quick Search</div>
-                    <div class="search-input-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="quick_search" class="search-input" 
-                               placeholder="Search by name, account or phone...">
-                    </div>
-                    <div id="search_results" class="search-results"></div>
-                </div>
-            </div>
             <!-- Registration Section -->
             <div class="registration-section">
                 <div class="section-header">
@@ -150,7 +145,6 @@
             <!-- End Registration Section -->
         </div>
     </div>
-    <div id="notification_container" class="notification-container"></div>
     <script src="./js/teller_dashboard.js"></script>
 </body>
 </html>

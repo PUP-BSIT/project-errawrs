@@ -182,7 +182,7 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 24px 32px 0px 32px;
+    padding: 32px;
     margin-left: 250px;
     height: 100vh;
     overflow-y: auto;
@@ -328,10 +328,9 @@ body {
 .welcome-section {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin: 0px 50px;
-    position: relative;
-    padding: 20px 0;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 0 24px;
 }
 
 /* Search Container Styles */
@@ -476,8 +475,8 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    padding: 24px;
-    margin: 0px auto;
+    padding: 0 24px;
+    margin: 0px auto 32px;
     max-width: 1200px;
 }
 

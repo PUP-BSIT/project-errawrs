@@ -266,9 +266,15 @@ function updateDashboardSummary(summary) {
         if (numberElement && updatedElement) {
             const currentParsedValue = parseValue(item.amount_count);
 
+            // Only update the timestamp if the value has changed
             if (lastKnownValues[lastKnownValueKey] !== currentParsedValue) {
-                numberElement.textContent = item.amount_count; // Always display the original string from PHP
+                numberElement.textContent = item.amount_count;
                 updatedElement.textContent = `Last update: ${currentTime}`;
+                lastKnownValues[lastKnownValueKey] = currentParsedValue;
+            } else if (!lastKnownValues[lastKnownValueKey]) {
+                // If it's the first load, just set the value without timestamp
+                numberElement.textContent = item.amount_count;
+                updatedElement.textContent = '';
                 lastKnownValues[lastKnownValueKey] = currentParsedValue;
             }
         }
@@ -332,9 +338,20 @@ async function loadRecentRegistrations() {
             </div>
         `).join('');
 
-        // Update pending count in summary
-        document.getElementById('total-pending').textContent = `${data.registrations.length} Requests`;
-        document.getElementById('pending-updated').textContent = formatTime(new Date());
+        // Update pending count in summary only if it changed
+        const currentPendingCount = data.registrations.length;
+        const pendingElement = document.getElementById('total-pending');
+        const pendingUpdatedElement = document.getElementById('pending-updated');
+        
+        if (lastKnownValues.pending_accounts !== currentPendingCount) {
+            pendingElement.textContent = `${currentPendingCount} Requests`;
+            pendingUpdatedElement.textContent = `Last update: ${formatTime(new Date())}`;
+            lastKnownValues.pending_accounts = currentPendingCount;
+        } else if (!lastKnownValues.pending_accounts) {
+            pendingElement.textContent = `${currentPendingCount} Requests`;
+            pendingUpdatedElement.textContent = '';
+            lastKnownValues.pending_accounts = currentPendingCount;
+        }
 
     } catch (error) {
         console.error('Error loading registrations:', error);
