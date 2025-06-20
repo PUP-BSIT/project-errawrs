@@ -215,10 +215,10 @@ try {
 
             // Insert into account table
             $insertAccount = $db->prepare('
-                INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
-                VALUES (?, ?, 0.00, "active", "savings", NOW())
+                INSERT INTO account (user_id, account_number, balance, status, account_type, created_at, teller_id)
+                VALUES (?, ?, 0.00, "active", "savings", NOW(), ?)
             ');
-            $insertAccount->bind_param('is', $user_id, $accountNumber);
+            $insertAccount->bind_param('isi', $user_id, $accountNumber, $teller_id);
             if (!$insertAccount->execute()) {
                 throw new Exception('Failed to create bank account: ' . $insertAccount->error);
             }
