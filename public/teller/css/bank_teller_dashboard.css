@@ -197,7 +197,7 @@ body {
 /* Main Content Styles */
 .main-content {
     flex: 1;
-    padding: 24px 32px 0px 32px;
+    padding: 35px 32px 0px 32px;
     margin-left: 250px;
     height: 100vh;
     overflow-y: auto;
