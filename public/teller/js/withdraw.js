@@ -22,13 +22,29 @@ function getBaseURL() {
 const API_BASE_URL = getBaseURL();
 
 // Define maximum withdrawal amount
-const MAX_WITHDRAW_AMOUNT = 40000;
+const MAX_WITHDRAW_AMOUNT = 300000;
 
 if (!tellerInfo) {
     window.location.href = './bank_teller_login.html';
 } else {
     // Display teller name when page loads
-    document.querySelector('.user-name').textContent = tellerInfo.name;
+    const userNameElements = document.querySelectorAll('.user-name');
+    const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
+    let fullName = '';
+    
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        userNameElements.forEach(el => el.textContent = fullName);
+    } else if (tellerInfo.name) {
+        fullName = tellerInfo.name;
+        userNameElements.forEach(el => el.textContent = tellerInfo.name);
+    }
+    
+    // Set avatar initial
+    if (avatarElement && fullName) {
+        const initial = fullName.trim().charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
+    }
 }
 
 let selectedAccount = null;
