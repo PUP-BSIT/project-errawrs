@@ -305,7 +305,7 @@ body {
 }
 
 .teller-card {
-    height: 235px;
+    height: 200px;
     background: white;
     border-radius: 10px;
     padding: 1.25rem;
@@ -367,14 +367,11 @@ body {
 
 .teller-details {
     flex: 1;
-    margin: 1rem 0;
-    overflow-y: auto; /* Allow scrolling if content is too long */
+    margin: 10px 0px 0px 0px;
 }
 
 .detail-row {
     display: flex;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
 }
 
 .detail-label {
@@ -440,6 +437,34 @@ body {
 
 .action-btn.success:hover i {
     color: var(--color-mint);
+}
+
+.action-btn.action-edit:hover {
+    background-color: #e8f5e9;
+}
+.action-btn.action-edit:hover i {
+    color: var(--color-mint);
+}
+
+.action-btn.action-reset:hover {
+    background-color: #fff3e0;
+}
+.action-btn.action-reset:hover i {
+    color: #ef6c00;
+}
+
+.action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.action-btn.disabled:hover {
+    background-color: transparent;
+}
+
+.action-btn.disabled i {
+    color: var(--color-gray);
 }
 
 /* Modals */
