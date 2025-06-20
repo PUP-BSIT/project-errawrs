@@ -111,7 +111,8 @@ try {
                 su.last_name AS sender_last_name,
                 ru.username AS receiver_username, 
                 ru.first_name AS receiver_first_name, 
-                ru.last_name AS receiver_last_name
+                ru.last_name AS receiver_last_name,
+                CONCAT(teller.first_name, ' ', teller.last_name) AS teller_full_name
             FROM 
                 transaction t
             LEFT JOIN 
@@ -122,6 +123,8 @@ try {
                 account ra ON t.receiver_account_id = ra.account_id
             LEFT JOIN 
                 user ru ON ra.user_id = ru.user_id
+            LEFT JOIN 
+                teller ON t.teller_id = teller.teller_id
             " . $where_clause . "
             ORDER BY t.created_at DESC
             LIMIT ? OFFSET ?";
