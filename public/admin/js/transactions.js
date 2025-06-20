@@ -80,10 +80,18 @@ function displayTransactions(transactions) {
         const transactionEl = document.createElement('div');
         transactionEl.className = 'transaction-item';
         
-        const statusClass = getStatusClass(transaction.status);
         const transactionType = formatTransactionType(transaction.transaction_type);
         const amount = formatAmount(transaction.amount);
         const date = formatDate(transaction.transaction_date);
+
+        // Handle sender and receiver display based on transaction type
+        let senderDisplay = transaction.sender_username || 'N/A';
+        let receiverDisplay = transaction.receiver_username || 'N/A';
+
+        // For deposit transactions, show teller name as sender
+        if (transaction.transaction_type.toLowerCase() === 'deposit') {
+            senderDisplay = transaction.teller_name || transaction.sender_username || 'N/A';
+        }
 
         transactionEl.innerHTML = `
             <div class="transaction-icon">
@@ -97,11 +105,15 @@ function displayTransactions(transactions) {
                 <div class="transaction-meta">
                     <span class="transaction-id">ID: ${transaction.transaction_id}</span>
                     <span class="transaction-date">${date}</span>
-                    <span class="transaction-status ${statusClass}">${transaction.status}</span>
                 </div>
                 <div class="transaction-users">
-                    <span>From: ${transaction.sender_username || 'N/A'}</span>
-                    <span>To: ${transaction.receiver_username || 'N/A'}</span>
+                    <div>
+                        <span>From: ${senderDisplay}</span>
+                        <span>To: ${receiverDisplay}</span>
+                    </div>
+                    <div class="transaction-completed">
+                        Completed
+                    </div>
                 </div>
             </div>
         `;
@@ -169,15 +181,6 @@ function createPaginationButton(type, content, enabled, isActive = false) {
 }
 
 // Utility functions
-function getStatusClass(status) {
-    const statusMap = {
-        'success': 'status-success',
-        'pending': 'status-pending',
-        'failed': 'status-failed'
-    };
-    return statusMap[status.toLowerCase()] || '';
-}
-
 function getTransactionIcon(type) {
     const iconMap = {
         'deposit': 'fa-arrow-down',
