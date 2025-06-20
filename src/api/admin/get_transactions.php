@@ -112,7 +112,7 @@ try {
                 ru.username AS receiver_username, 
                 ru.first_name AS receiver_first_name, 
                 ru.last_name AS receiver_last_name,
-                teller.teller_number AS teller_number
+                CONCAT(teller.first_name, ' ', teller.last_name) AS teller_full_name
             FROM 
                 transaction t
             LEFT JOIN 
