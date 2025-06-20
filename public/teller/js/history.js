@@ -38,11 +38,23 @@ let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    initializeApplication();
     // Update teller name in the UI
     const userNameElement = document.querySelector(".user-name");
-    if (userNameElement && tellerInfo.name) {
+    const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+    let fullName = '';
+    
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        userNameElement.textContent = fullName;
+    } else if (tellerInfo.name) {
+        fullName = tellerInfo.name;
         userNameElement.textContent = tellerInfo.name;
+    }
+    
+    // Set avatar initial
+    if (avatarElement && fullName) {
+        const initial = fullName.trim().charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
     }
     
     // Set initial items per page in select
@@ -50,6 +62,19 @@ document.addEventListener("DOMContentLoaded", function () {
     if (perPageSelect) {
         perPageSelect.value = selectedItemCount.toString();
     }
+    
+    // Handle logout
+    document.querySelector('.nav-logout a').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Clear session storage
+        sessionStorage.removeItem('tellerInfo');
+        
+        // Redirect to login page
+        window.location.href = './bank_teller_login.html';
+    });
+    
+    initializeApplication();
 });
 
 async function initializeApplication() {
