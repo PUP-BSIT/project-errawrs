@@ -249,7 +249,7 @@ body {
 }
 
 .transaction-completed {
-    font-size: 18px;
+    font-size: 15px;
     color: var(--color-mint);
     font-weight: 600;
 }
