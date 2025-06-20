@@ -101,13 +101,15 @@ try {
             created_at,
             completed_at,
             description,
-            amount
-        ) VALUES (?, 'deposit', 'completed', NOW(), NOW(), ?, 0.00)";
+            amount,
+            teller_id
+        ) VALUES (?, 'deposit', 'completed', NOW(), NOW(), ?, 0.00, ?)";
         
         $transaction_stmt = mysqli_prepare($conn, $transaction_sql);
-        mysqli_stmt_bind_param($transaction_stmt, "is", 
+        mysqli_stmt_bind_param($transaction_stmt, "isi", 
             $account['account_id'],
-            $reason
+            $reason,
+            $teller['teller_id']
         );
         
         if (!mysqli_stmt_execute($transaction_stmt)) {
