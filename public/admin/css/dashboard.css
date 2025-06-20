@@ -149,20 +149,33 @@ body {
 }
 
 .stat-details h3 {
-    font-size: 1rem;
-    margin-bottom: 5px;
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.25rem;
 }
 
 .stat-number {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--color-mint);
+    margin-bottom: 0.25rem;
 }
 
 .stat-change {
     font-size: 0.75rem;
     display: flex;
     align-items: center;
+}
+
+.stat-change.positive {
+    color: #00ff9d;
+}
+
+.stat-change.negative {
+    color: #ff4757;
+}
+
+.stat-change.neutral {
+    color: #666;
 }
 
 /* Content Sections */

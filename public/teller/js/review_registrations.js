@@ -5,7 +5,6 @@ class RegistrationReview {
         this.currentStatus = 'pending';
         this.setupEventListeners();
         this.loadRegistrations();
-        this.displayUserProfile();
     }
 
     // Configuration - Dynamic base URL detection
@@ -557,46 +556,6 @@ class RegistrationReview {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 5000);
-    }
-
-    // Display user profile information
-    displayUserProfile() {
-        const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
-        if (tellerInfo) {
-            // Update the user name in the sidebar
-            const userNameElement = document.querySelector('.user-name');
-            if (userNameElement) {
-                userNameElement.textContent = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-            }
-
-            // Fetch additional profile details if needed
-            this.fetchTellerProfile(tellerInfo.teller_number);
-        }
-    }
-
-    // Fetch teller profile from the server
-    async fetchTellerProfile(tellerNumber) {
-        try {
-            const baseUrl = this.getBaseURL();
-            const response = await fetch(`${baseUrl}/teller/view_profile.php?teller_number=${tellerNumber}`, {
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch teller profile');
-            }
-
-            const data = await response.json();
-            if (data.success) {
-                // Update any additional profile information if needed
-                const userNameElement = document.querySelector('.user-name');
-                if (userNameElement) {
-                    userNameElement.textContent = `${data.first_name} ${data.last_name}`;
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching teller profile:', error);
-        }
     }
 }
 
