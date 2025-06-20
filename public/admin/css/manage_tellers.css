@@ -368,7 +368,6 @@ body {
 .teller-details {
     flex: 1;
     margin: 1rem 0;
-    overflow-y: auto; /* Allow scrolling if content is too long */
 }
 
 .detail-row {
