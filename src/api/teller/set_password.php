@@ -14,6 +14,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = json_decode(file_get_contents('php://input'), true);
 $teller_email = $input['teller_email'] ?? '';
 $password = $input['password'] ?? '';
+$token = $input['token'] ?? '';
+
+if ($token) {
+    // Password reset via token
+    require_once __DIR__ . '/../../config/database.php';
+    $db = db_connect();
+    $stmt = $db->prepare('SELECT teller_email FROM password_resets WHERE token = ? AND expires_at > NOW()');
+    $stmt->bind_param('s', $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    if (!$row) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Invalid or expired token']);
+        exit();
+    }
+    $teller_email = $row['teller_email'];
+    // Continue to password update below
+}
 
 if (!$teller_email || !$password) {
     http_response_code(400);
@@ -29,13 +48,13 @@ if (strlen($password) < 8) {
 try {
     $db = db_connect();
     $db->begin_transaction();
-    $stmt = $db->prepare('SELECT teller_id FROM teller WHERE email = ? AND status = "pending"');
+    $stmt = $db->prepare('SELECT teller_id FROM teller WHERE email = ?');
     $stmt->bind_param('s', $teller_email);
     $stmt->execute();
     $result = $stmt->get_result();
     $teller = $result->fetch_assoc();
     if (!$teller) {
-        throw new Exception('Invalid email or account not pending');
+        throw new Exception('Invalid email');
     }
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $db->prepare('UPDATE teller SET password_hash = ?, status = "active" WHERE teller_id = ?');

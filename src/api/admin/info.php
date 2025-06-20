@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+$session = SessionManager::getInstance();
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');
@@ -14,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Check if user is logged in and is an admin
-if (!isset($_SESSION['admin_id'])) {
+if (!$session->isAuthenticated() || $session->getSessionData()['type'] !== 'admin') {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
@@ -22,9 +24,9 @@ if (!isset($_SESSION['admin_id'])) {
 
 try {
     $conn = db_connect();
-    
+    $admin_id = $session->getSessionData()['id'];
     $stmt = $conn->prepare('SELECT admin_id, username, first_name, last_name, email FROM admin WHERE admin_id = ?');
-    $stmt->bind_param('i', $_SESSION['admin_id']);
+    $stmt->bind_param('i', $admin_id);
     $stmt->execute();
     $result = $stmt->get_result();
     

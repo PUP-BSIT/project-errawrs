@@ -7,7 +7,6 @@ let totalPages = 1;
 const transactionContent = document.querySelector('.transactions-content');
 const searchInput = document.querySelector('.search-input');
 const searchBtn = document.querySelector('.search-btn');
-const statusSelect = document.querySelector('.status-select');
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
@@ -30,10 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load transactions from the API
 async function loadTransactions() {
     try {
-        const searchQuery = searchInput.value.trim();
-        const statusFilter = statusSelect.value;
-        
-        const response = await fetch(`/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`, {
+        const searchQuery = searchInput.value ? searchInput.value.trim() : '';
+        const statusFilter = '';
+        const url = `/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
+        console.log('Fetching transactions from:', url);
+        const response = await fetch(url, {
             credentials: 'include'
         });
 
