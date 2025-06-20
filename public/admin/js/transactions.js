@@ -88,9 +88,9 @@ function displayTransactions(transactions) {
         let senderDisplay = transaction.sender_username || 'N/A';
         let receiverDisplay = transaction.receiver_username || 'N/A';
 
-        // For deposit transactions, show teller name as sender
-        if (transaction.transaction_type.toLowerCase() === 'deposit') {
-            senderDisplay = transaction.teller_name || transaction.sender_username || 'N/A';
+        // If teller_number is present, show it as the sender (for teller-initiated transactions)
+        if (transaction.teller_number) {
+            senderDisplay = transaction.teller_number;
         }
 
         transactionEl.innerHTML = `
