@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         userName.textContent = tellerInfo.name;
     }
 
-    // Set avatar initial
-    if (fullName) {
+    // Set avatar initial (matching dashboard logic)
+    if (dynamicAvatars.length > 0 && fullName) {
         const initial = fullName.trim().charAt(0).toUpperCase();
         dynamicAvatars.forEach(avatar => {
             avatar.textContent = initial;
