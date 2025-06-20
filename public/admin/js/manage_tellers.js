@@ -371,12 +371,12 @@ class TellerManager {
 
             // Log the request data for debugging
             console.log('Request data:', {
-                url: `/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`,
+                url: `/project-errawrs/src/api/admin/${isEdit ? 'update.php' : 'create_teller.php'}`,
                 method: isEdit ? 'PUT' : 'POST',
                 body: formData
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update' : 'create'}_teller.php`, {
+            const response = await fetch(`/project-errawrs/src/api/admin/${isEdit ? 'update.php' : 'create_teller.php'}`, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -476,6 +476,7 @@ class TellerManager {
         const confirmBtn = document.getElementById('confirm_status_btn');
         const warningIcon = modal?.querySelector('.warning-icon');
         const modalHeader = modal?.querySelector('.modal-header');
+        const loadingOverlay = document.getElementById('loading_overlay');
 
         if (!modal || !modalTitle || !modalMessage || !confirmBtn || !warningIcon || !modalHeader) return;
 
@@ -502,13 +503,24 @@ class TellerManager {
                 // Close the modal first
                 this.closeModal(modal);
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
-                    method: 'POST',
+                // Show loading overlay
+                if (loadingOverlay) {
+                    loadingOverlay.querySelector('.loading-text').textContent = 
+                        isActivating ? 'Activating account...' : 'Deactivating account...';
+                    loadingOverlay.classList.add('show');
+                }
+
+                const response = await fetch('/project-errawrs/src/api/admin/update.php', {
+                    method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     credentials: 'include',
-                    body: JSON.stringify({ teller_id: tellerId })
+                    body: JSON.stringify({ 
+                        teller_id: tellerId,
+                        status: isActivating ? 'active' : 'inactive'
+                    })
                 });
 
                 if (!response.ok) {
@@ -519,7 +531,7 @@ class TellerManager {
                 
                 if (data.success) {
                     this.showToast(
-                        `Teller ${data.status === 'active' ? 'activated' : 'deactivated'} successfully`, 
+                        `Teller ${isActivating ? 'activated' : 'deactivated'} successfully`, 
                         'success'
                     );
                     await this.loadTellers();
@@ -529,6 +541,11 @@ class TellerManager {
             } catch (error) {
                 console.error('Error toggling teller status:', error);
                 this.showToast(error.message, 'error');
+            } finally {
+                // Hide loading overlay
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('show');
+                }
             }
 
             // Remove the event listener after handling

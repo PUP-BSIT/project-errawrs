@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/review_registrations.css">
@@ -51,7 +51,7 @@
             </div>
             
             <div class="nav-logout">
-                <a href="#" onclick="handleLogout(event)">
+                <a href="./bank_teller_login.html">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
@@ -59,33 +59,51 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="notification-container"></div>
-                <div class="top-icons">
-                    <div class="top-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <div class="top-icon">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                </div>
-            </div>
-
             <!-- Page Header -->
             <div class="page-header">
                 <h1>Review Registrations</h1>
                 <p>Review and approve/deny pending user registrations</p>
             </div>
 
-            <!-- Registrations Container -->
-            <div id="registrations_container">
-                <!-- Registration cards will be dynamically inserted here -->
-                <div class="loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Loading registrations...
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="status_filter">Status:</label>
+                    <select id="status_filter" class="filter-select">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="per-page-select">Show:</label>
+                    <select id="per-page-select" class="filter-select">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
                 </div>
             </div>
+
+            <!-- Applications Grid -->
+            <div class="applications-grid">
+                <!-- Registration cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-left">
+                    <button id="prev-btn" class="pagination-btn" disabled>Previous</button>
+                    <div id="page-numbers" class="page-numbers"></div>
+                    <button id="next-btn" class="pagination-btn" disabled>Next</button>
+                </div>
+                <div id="showing-text" class="showing-text"></div>
+            </div>
+
+            <!-- Notification Container -->
+            <div id="notification_container"></div>
         </div>
     </div>
 

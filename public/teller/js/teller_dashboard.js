@@ -128,10 +128,17 @@ function setupSearch() {
 // Perform search
 async function performSearch(searchTerm) {
     try {
+        const searchResults = document.getElementById('search_results');
+        
+        // Show loading state
+        searchResults.innerHTML = `
+            <div class="loading-results">
+                <i class="fas fa-spinner fa-spin"></i>
+                Searching...
+            </div>`;
+
         const response = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
         const data = await response.json();
-
-        const searchResults = document.getElementById('search_results');
 
         if (!data.success) {
             searchResults.innerHTML = `
@@ -153,12 +160,14 @@ async function performSearch(searchTerm) {
 
         // Display results
         const resultsHtml = data.accounts.map(account => `
-            <div class="search-result-item">
-                <div class="result-name">${account.user.name}</div>
-                <div class="result-account">
-                    <div>Account: ${account.account_number}</div>
-                    <div>Balance: ₱${account.balance}</div>
-                    <div>Status: <span class="status-text ${account.status}">${account.status}</span></div>
+            <div class="suggestion-item${account.status === 'closed' ? ' closed' : ''}">
+                <div class="account-info">
+                    <div class="account-number">${account.account_number}</div>
+                    <div class="account-name">${account.user.name}</div>
+                </div>
+                <div class="account-details">
+                    <div class="account-balance">${formatCurrency(account.balance)}</div>
+                    ${account.status === 'closed' ? '<div class="status-badge closed">CLOSED</div>' : ''}
                 </div>
             </div>
         `).join('');
@@ -174,6 +183,31 @@ async function performSearch(searchTerm) {
                 <i class="fas fa-exclamation-circle"></i>
                 Error searching accounts
             </div>`;
+    }
+}
+
+// Format currency function
+function formatCurrency(amount) {
+    // Convert to number if it's a string
+    amount = typeof amount === 'string' ? parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
+    
+    // Check if amount is too large (more than 10 digits)
+    if (amount >= 10000000000) { // 10 billion
+        // Format in billions
+        return new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            notation: 'compact',
+            maximumFractionDigits: 2
+        }).format(amount);
+    } else {
+        // Regular formatting for smaller amounts
+        return new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
     }
 }
 
@@ -266,9 +300,15 @@ function updateDashboardSummary(summary) {
         if (numberElement && updatedElement) {
             const currentParsedValue = parseValue(item.amount_count);
 
+            // Only update the timestamp if the value has changed
             if (lastKnownValues[lastKnownValueKey] !== currentParsedValue) {
-                numberElement.textContent = item.amount_count; // Always display the original string from PHP
+                numberElement.textContent = item.amount_count;
                 updatedElement.textContent = `Last update: ${currentTime}`;
+                lastKnownValues[lastKnownValueKey] = currentParsedValue;
+            } else if (!lastKnownValues[lastKnownValueKey]) {
+                // If it's the first load, just set the value without timestamp
+                numberElement.textContent = item.amount_count;
+                updatedElement.textContent = '';
                 lastKnownValues[lastKnownValueKey] = currentParsedValue;
             }
         }
@@ -332,9 +372,20 @@ async function loadRecentRegistrations() {
             </div>
         `).join('');
 
-        // Update pending count in summary
-        document.getElementById('total-pending').textContent = `${data.registrations.length} Requests`;
-        document.getElementById('pending-updated').textContent = formatTime(new Date());
+        // Update pending count in summary only if it changed
+        const currentPendingCount = data.registrations.length;
+        const pendingElement = document.getElementById('total-pending');
+        const pendingUpdatedElement = document.getElementById('pending-updated');
+        
+        if (lastKnownValues.pending_accounts !== currentPendingCount) {
+            pendingElement.textContent = `${currentPendingCount} Requests`;
+            pendingUpdatedElement.textContent = `Last update: ${formatTime(new Date())}`;
+            lastKnownValues.pending_accounts = currentPendingCount;
+        } else if (!lastKnownValues.pending_accounts) {
+            pendingElement.textContent = `${currentPendingCount} Requests`;
+            pendingUpdatedElement.textContent = '';
+            lastKnownValues.pending_accounts = currentPendingCount;
+        }
 
     } catch (error) {
         console.error('Error loading registrations:', error);
