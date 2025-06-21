@@ -1,6 +1,6 @@
 // API Endpoints
 const API = {
-    CONTACT_SUBMIT: '../../src/api/public/contact_submit.php'
+    CONTACT_SUBMIT: '../../src/api/public/contact_mailer.php'
 };
 
 // Element IDs
@@ -168,25 +168,29 @@ class ContactFormHandler {
         this.setLoadingState(true);
 
         try {
-            const formData = {
-                name: this.form.querySelector(`#${ELEMENT_ID.FULL_NAME}`).value,
-                email: this.form.querySelector(`#${ELEMENT_ID.EMAIL_ADDRESS}`).value,
-                subject: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_SUBJECT}`).value,
-                message: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value
-            };
+            const formData = new FormData();
+            formData.append('name', this.form.querySelector(`#${ELEMENT_ID.FULL_NAME}`).value);
+            formData.append('email', this.form.querySelector(`#${ELEMENT_ID.EMAIL_ADDRESS}`).value);
+            formData.append('subject', this.form.querySelector(`#${ELEMENT_ID.MESSAGE_SUBJECT}`).value);
+            formData.append('message', this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value);
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, TIMING.FORM_SUBMIT_SIMULATION));
-            
-            // Simulate successful submission
-            this.showNotification(TEXT.MESSAGE_SENT, ALERT_TYPES.SUCCESS);
-            this.form.reset();
-            
-            // Remove success classes after form reset
-            inputs.forEach(input => {
-                input.classList.remove(CLASS.SUCCESS);
+            const response = await fetch(API.CONTACT_SUBMIT, {
+                method: 'POST',
+                body: formData
             });
 
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                this.showNotification(TEXT.MESSAGE_SENT, ALERT_TYPES.SUCCESS);
+                this.form.reset();
+                // Remove success classes after form reset
+                inputs.forEach(input => {
+                    input.classList.remove(CLASS.SUCCESS);
+                });
+            } else {
+                this.showNotification(result.message || TEXT.SEND_FAILURE, ALERT_TYPES.ERROR);
+            }
         } catch (error) {
             console.error('Form submission error:', error);
             this.showNotification(TEXT.SEND_FAILURE, ALERT_TYPES.ERROR);
