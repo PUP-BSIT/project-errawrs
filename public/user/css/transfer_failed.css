@@ -1,0 +1,46 @@
+.result-container {
+    max-width: 500px;
+    margin: 80px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 40px 32px 32px 32px;
+    text-align: center;
+}
+
+.result-icon {
+    font-size: 60px;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.result-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.result-message {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #b52a37;
+} 

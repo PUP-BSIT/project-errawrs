@@ -4,17 +4,19 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Register</title>
-        <link rel="icon" href="data:,">
+        <link rel="icon" href="data:," />
 
         <!-- Google Fonts -->
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"/>
+            rel="stylesheet"
+        />
 
         <!-- Font Awesome -->
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
 
         <!-- Custom CSS -->
         <link rel="stylesheet" href="../user/css/register.css" />
@@ -40,10 +42,21 @@
             <div class="container">
                 <!-- Breadcrumb -->
                 <div class="breadcrumb">
-                    <a href="./login_account_holder.html" class="breadcrumb-link">Login</a>
+                    <a
+                        href="./login_account_holder.html"
+                        class="breadcrumb-link"
+                        >Login</a
+                    >
                     <span class="breadcrumb-separator">&gt;</span>
-                    <span class="breadcrumb-current">Register to StackOvercash</span>
-                    <button type="button" id="start_over_btn" class="btn-start-over" title="Clear form and start over">
+                    <span class="breadcrumb-current"
+                        >Register to StackOvercash</span
+                    >
+                    <button
+                        type="button"
+                        id="start_over_btn"
+                        class="btn-start-over"
+                        title="Clear form and start over"
+                    >
                         <i class="fas fa-refresh"></i> Start Over
                     </button>
                 </div>
@@ -68,42 +81,97 @@
 
                     <div class="registration-content">
                         <!-- Step 1: Identification Documents -->
-                        <div class="form-step active" id="step_one_identification">
+                        <div
+                            class="form-step active"
+                            id="step_one_identification"
+                        >
                             <div class="form-header">
                                 <h2>Identification Documents</h2>
-                                <p>Please provide your identification details.</p>
+                                <p>
+                                    Please provide your identification details.
+                                </p>
                             </div>
 
-                            <form class="registration-form" id="identification_form">
+                            <form
+                                class="registration-form"
+                                id="identification_form"
+                            >
                                 <div class="form-section">
                                     <h3>ID Information</h3>
                                     <div class="form-group">
                                         <label for="id_type">ID Type</label>
-                                        <select id="id_type" name="id_type" required>
-                                            <option value="">Select ID Type</option>
-                                            <option value="passport">Passport</option>
-                                            <option value="national_id">National ID</option>
-                                            <option value="drivers_license">Driver's License</option>
-                                            <option value="school_id">School ID (for students)</option>
+                                        <select
+                                            id="id_type"
+                                            name="id_type"
+                                            required
+                                        >
+                                            <option value="">
+                                                Select ID Type
+                                            </option>
+                                            <option value="passport">
+                                                Passport
+                                            </option>
+                                            <option value="national_id">
+                                                National ID
+                                            </option>
+                                            <option value="drivers_license">
+                                                Driver's License
+                                            </option>
+                                            <option value="school_id">
+                                                School ID (for students)
+                                            </option>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="form-group">
-                                        <label for="id_image">Upload ID Image</label>
-                                        <div class="file-upload-container" id="file_upload_container">
-                                            <input type="file" id="id_image" name="id_image" accept="image/jpeg,image/jpg,image/png" class="file-input" required>
+                                        <label for="id_image"
+                                            >Upload ID Image</label
+                                        >
+                                        <div
+                                            class="file-upload-container"
+                                            id="file_upload_container"
+                                        >
+                                            <input
+                                                type="file"
+                                                id="id_image"
+                                                name="id_image"
+                                                accept="image/jpeg,image/jpg,image/png"
+                                                class="file-input"
+                                                required
+                                            />
                                             <div class="file-upload-label">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>Drag and drop your ID image here or click to browse</span>
+                                                <i
+                                                    class="fas fa-cloud-upload-alt"
+                                                ></i>
+                                                <span
+                                                    >Drag and drop your ID image
+                                                    here or click to
+                                                    browse</span
+                                                >
                                             </div>
-                                            <div class="preview-info-compact" style="display: none;">
-                                                <div class="file-name-display"></div>
+                                            <div
+                                                class="preview-info-compact"
+                                                style="display: none"
+                                            >
+                                                <div
+                                                    class="file-name-display"
+                                                ></div>
                                                 <div class="preview-actions">
-                                                    <button type="button" class="btn-view-image">
-                                                        <i class="fas fa-eye"></i>
+                                                    <button
+                                                        type="button"
+                                                        class="btn-view-image"
+                                                    >
+                                                        <i
+                                                            class="fas fa-eye"
+                                                        ></i>
                                                     </button>
-                                                    <button type="button" class="remove-image">
-                                                        <i class="fas fa-trash"></i>
+                                                    <button
+                                                        type="button"
+                                                        class="remove-image"
+                                                    >
+                                                        <i
+                                                            class="fas fa-trash"
+                                                        ></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -112,7 +180,10 @@
                                 </div>
 
                                 <div class="form-actions">
-                                    <button type="submit" class="btn btn-continue">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-continue"
+                                    >
                                         Next <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
@@ -126,14 +197,22 @@
                                 <p>Please provide your contact details.</p>
                             </div>
 
-                            <form class="registration-form" id="contact_info_form">
+                            <form
+                                class="registration-form"
+                                id="contact_info_form"
+                            >
                                 <!-- Page 1: Personal Information -->
-                                <div class="form-page active" id="contact_page_1">
+                                <div
+                                    class="form-page active"
+                                    id="contact_page_1"
+                                >
                                     <div class="form-section">
                                         <h3>Personal Information</h3>
-                                        
+
                                         <div class="form-group">
-                                            <label for="first_name">First Name</label>
+                                            <label for="first_name"
+                                                >First Name</label
+                                            >
                                             <input
                                                 type="text"
                                                 id="first_name"
@@ -142,11 +221,14 @@
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
                                                 required
-                                                autocomplete="given-name"/>
+                                                autocomplete="given-name"
+                                            />
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="last_name">Surname</label>
+                                            <label for="last_name"
+                                                >Surname</label
+                                            >
                                             <input
                                                 type="text"
                                                 id="last_name"
@@ -155,31 +237,52 @@
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
                                                 required
-                                                autocomplete="family-name"/>
+                                                autocomplete="family-name"
+                                            />
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="date_of_birth">Date of Birth</label>
+                                            <label for="date_of_birth"
+                                                >Date of Birth</label
+                                            >
                                             <input
                                                 type="date"
                                                 id="date_of_birth"
                                                 name="date_of_birth"
                                                 required
                                                 autocomplete="bday"
-                                                max="2006-12-31"/>
-                                            <div id="age_warning" class="warning-text" style="display: none;">
-                                                <i class="fas fa-exclamation-triangle"></i>
-                                                You must be at least 18 years old to register.
+                                                max="2006-12-31"
+                                            />
+                                            <div
+                                                id="age_warning"
+                                                class="warning-text"
+                                                style="display: none"
+                                            >
+                                                <i
+                                                    class="fas fa-exclamation-triangle"
+                                                ></i>
+                                                You must be at least 18 years
+                                                old to register.
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-back" id="back_to_identification">
-                                            <i class="fas fa-arrow-left"></i> Back
+                                        <button
+                                            type="button"
+                                            class="btn btn-back"
+                                            id="back_to_identification"
+                                        >
+                                            <i class="fas fa-arrow-left"></i>
+                                            Back
                                         </button>
-                                        <button type="button" class="btn btn-continue" id="to_contact_page_2">
-                                            Next <i class="fas fa-arrow-right"></i>
+                                        <button
+                                            type="button"
+                                            class="btn btn-continue"
+                                            id="to_contact_page_2"
+                                        >
+                                            Next
+                                            <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -188,20 +291,25 @@
                                 <div class="form-page" id="contact_page_2">
                                     <div class="form-section">
                                         <h3>Contact Details</h3>
-                                        
+
                                         <div class="form-group">
-                                            <label for="email">Email Address</label>
+                                            <label for="email"
+                                                >Email Address</label
+                                            >
                                             <input
                                                 type="email"
                                                 id="email"
                                                 name="email"
                                                 placeholder="Enter your email address"
                                                 required
-                                                autocomplete="email"/>
+                                                autocomplete="email"
+                                            />
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="phone_number">Phone Number</label>
+                                            <label for="phone_number"
+                                                >Phone Number</label
+                                            >
                                             <div class="phone-input-group">
                                                 <span class="phone-flag"></span>
                                                 <input
@@ -212,30 +320,61 @@
                                                     required
                                                     autocomplete="tel"
                                                     pattern="(\+63|0)[0-9]{10}"
-                                                    title="Please enter a valid Philippine phone number"/>
+                                                    title="Please enter a valid Philippine phone number"
+                                                />
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group">
-                                            <label for="nationality">Nationality</label>
-                                            <select id="nationality" name="nationality" required>
-                                                <option value="">Select Nationality</option>
-                                                <option value="filipino">Filipino</option>
-                                                <option value="american">American</option>
-                                                <option value="canadian">Canadian</option>
-                                                <option value="british">British</option>
-                                                <option value="australian">Australian</option>
-                                                <option value="other">Other</option>
+                                            <label for="nationality"
+                                                >Nationality</label
+                                            >
+                                            <select
+                                                id="nationality"
+                                                name="nationality"
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select Nationality
+                                                </option>
+                                                <option value="filipino">
+                                                    Filipino
+                                                </option>
+                                                <option value="american">
+                                                    American
+                                                </option>
+                                                <option value="canadian">
+                                                    Canadian
+                                                </option>
+                                                <option value="british">
+                                                    British
+                                                </option>
+                                                <option value="australian">
+                                                    Australian
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-back" id="back_to_contact_page_1">
-                                            <i class="fas fa-arrow-left"></i> Back
+                                        <button
+                                            type="button"
+                                            class="btn btn-back"
+                                            id="back_to_contact_page_1"
+                                        >
+                                            <i class="fas fa-arrow-left"></i>
+                                            Back
                                         </button>
-                                        <button type="button" class="btn btn-continue" id="to_contact_page_3">
-                                            Next <i class="fas fa-arrow-right"></i>
+                                        <button
+                                            type="button"
+                                            class="btn btn-continue"
+                                            id="to_contact_page_3"
+                                        >
+                                            Next
+                                            <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -246,14 +385,17 @@
                                         <h3>Address Information</h3>
 
                                         <div class="form-group">
-                                            <label for="street">Street Address</label>
+                                            <label for="street"
+                                                >Street Address</label
+                                            >
                                             <input
                                                 type="text"
                                                 id="street"
                                                 name="street"
                                                 placeholder="Enter your street address"
                                                 required
-                                                autocomplete="address-line1"/>
+                                                autocomplete="address-line1"
+                                            />
                                         </div>
 
                                         <div class="form-group">
@@ -264,11 +406,14 @@
                                                 name="city"
                                                 placeholder="Enter your city"
                                                 required
-                                                autocomplete="address-level2"/>
+                                                autocomplete="address-level2"
+                                            />
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="zip_code">Zip Code</label>
+                                            <label for="zip_code"
+                                                >Zip Code</label
+                                            >
                                             <input
                                                 type="text"
                                                 id="zip_code"
@@ -277,38 +422,75 @@
                                                 pattern="[0-9]{4,10}"
                                                 title="Please enter a valid zip code"
                                                 required
-                                                autocomplete="postal-code"/>
+                                                autocomplete="postal-code"
+                                            />
                                         </div>
 
                                         <div class="form-group">
                                             <label for="country">Country</label>
-                                            <select id="country" name="country" required>
-                                                <option value="">Select Country</option>
-                                                <option value="philippines">Philippines</option>
-                                                <option value="united_states">United States</option>
-                                                <option value="canada">Canada</option>
-                                                <option value="united_kingdom">United Kingdom</option>
-                                                <option value="australia">Australia</option>
-                                                <option value="other">Other</option>
+                                            <select
+                                                id="country"
+                                                name="country"
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select Country
+                                                </option>
+                                                <option value="philippines">
+                                                    Philippines
+                                                </option>
+                                                <option value="united_states">
+                                                    United States
+                                                </option>
+                                                <option value="canada">
+                                                    Canada
+                                                </option>
+                                                <option value="united_kingdom">
+                                                    United Kingdom
+                                                </option>
+                                                <option value="australia">
+                                                    Australia
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button type="button" class="btn btn-back" id="back_to_contact_page_2">
-                                            <i class="fas fa-arrow-left"></i> Back
+                                        <button
+                                            type="button"
+                                            class="btn btn-back"
+                                            id="back_to_contact_page_2"
+                                        >
+                                            <i class="fas fa-arrow-left"></i>
+                                            Back
                                         </button>
-                                        <button type="submit" class="btn btn-continue">
-                                            Submit <i class="fas fa-arrow-right"></i>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-continue"
+                                        >
+                                            Submit
+                                            <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- Pagination Indicator -->
                                 <div class="form-pagination">
-                                    <div class="pagination-dot active" data-page="1"></div>
-                                    <div class="pagination-dot" data-page="2"></div>
-                                    <div class="pagination-dot" data-page="3"></div>
+                                    <div
+                                        class="pagination-dot active"
+                                        data-page="1"
+                                    ></div>
+                                    <div
+                                        class="pagination-dot"
+                                        data-page="2"
+                                    ></div>
+                                    <div
+                                        class="pagination-dot"
+                                        data-page="3"
+                                    ></div>
                                 </div>
                             </form>
                         </div>
@@ -325,13 +507,18 @@
                                     <i class="fas fa-hourglass-half"></i>
                                 </div>
                                 <p class="processing-message">
-                                    Your account is currently under review for approval.
-                                    This process may take 1-2 business days.
-                                    Please check your registered email for updates on your account status.
+                                    Your account is currently under review for
+                                    approval. This process may take 1-2 business
+                                    days. Please check your registered email for
+                                    updates on your account status.
                                 </p>
                                 <div class="form-actions">
-                                    <a href="./index.html" class="btn btn-secondary">
-                                        <i class="fas fa-home"></i> Go to Home Page
+                                    <a
+                                        href="./index.html"
+                                        class="btn btn-secondary"
+                                    >
+                                        <i class="fas fa-home"></i> Go to Home
+                                        Page
                                     </a>
                                 </div>
                             </div>
@@ -342,11 +529,15 @@
         </main>
 
         <!-- OTP Verification Modal -->
-        <div id="otp_modal" class="modal-overlay" style="display: none;">
+        <div id="otp_modal" class="modal-overlay" style="display: none">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Verify Your Phone</h3>
-                    <button type="button" class="modal-close" id="close_otp_modal">
+                    <button
+                        type="button"
+                        class="modal-close"
+                        id="close_otp_modal"
+                    >
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -361,14 +552,19 @@
                                 maxlength="6"
                                 pattern="[0-9]{6}"
                                 required
-                                autocomplete="one-time-code"/>
+                                autocomplete="one-time-code"
+                            />
                         </div>
                         <div class="resend-link">
                             <span>Didn't receive the code?</span>
                             <a href="#" id="resend_otp">Resend code in 60s</a>
                         </div>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-continue" id="verify_otp_btn">
+                            <button
+                                type="submit"
+                                class="btn btn-continue"
+                                id="verify_otp_btn"
+                            >
                                 Verify
                             </button>
                         </div>
@@ -380,7 +576,11 @@
         <!-- Image Preview Modal -->
         <div id="image_preview_modal" class="image-modal-overlay">
             <div class="image-modal-content">
-                <button type="button" class="modal-close-btn" id="close_image_preview">
+                <button
+                    type="button"
+                    class="modal-close-btn"
+                    id="close_image_preview"
+                >
                     <i class="fas fa-times"></i>
                 </button>
                 <img src="" alt="ID Preview" />

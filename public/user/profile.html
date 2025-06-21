@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Profile</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet"/>
+            rel="stylesheet"
+        />
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="./css/user_dashboard.css"/> <!-- Keep some base styles -->
-        <link rel="stylesheet" href="./css/profile.css"/> <!-- New profile specific styles -->
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="./css/user_dashboard.css" />
+        <!-- Keep some base styles -->
+        <link rel="stylesheet" href="./css/profile.css" />
+        <!-- New profile specific styles -->
     </head>
     <body class="authenticated-page">
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
+            <div class="sidebar" style="background-color: #000">
                 <div class="sidebar-header">
                     <div class="logo">
                         <span class="logo-stack">Stack</span>
@@ -26,9 +30,13 @@
                     </div>
                 </div>
                 <div class="user-profile">
-                    <div class="avatar" id="user_avatar_container" aria-label="User avatar">
+                    <div
+                        class="avatar"
+                        id="user_avatar_container"
+                        aria-label="User avatar"
+                    >
                         <!-- User initial will go here -->
-                         <div class="edit-icon hidden" id="edit_profile_icon">
+                        <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
@@ -37,39 +45,80 @@
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard" aria-label="Dashboard">
-                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                            <a
+                                href="./user_dashboard.html"
+                                class="nav-link"
+                                data-page="dashboard"
+                                aria-label="Dashboard"
+                            >
+                                <i
+                                    class="fas fa-tachometer-alt"
+                                    aria-hidden="true"
+                                ></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transfer.html" class="nav-link" data-page="transfer" aria-label="Transfer funds">
-                                <i class="fas fa-exchange-alt" aria-hidden="true"></i>
+                            <a
+                                href="./transfer.html"
+                                class="nav-link"
+                                data-page="transfer"
+                                aria-label="Transfer funds"
+                            >
+                                <i
+                                    class="fas fa-exchange-alt"
+                                    aria-hidden="true"
+                                ></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transaction.html" class="nav-link" data-page="transaction" aria-label="View transactions">
-                                <i class="fas fa-receipt" aria-hidden="true"></i>
+                            <a
+                                href="./transaction.html"
+                                class="nav-link"
+                                data-page="transaction"
+                                aria-label="View transactions"
+                            >
+                                <i
+                                    class="fas fa-receipt"
+                                    aria-hidden="true"
+                                ></i>
                                 Transactions
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./account.html" class="nav-link" data-page="account" aria-label="Manage accounts">
+                            <a
+                                href="./account.html"
+                                class="nav-link"
+                                data-page="account"
+                                aria-label="Manage accounts"
+                            >
                                 <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="./profile.html" class="nav-link" data-page="profile" aria-label="User profile">
-                                <i class="fas fa-user-circle" aria-hidden="true"></i>
+                            <a
+                                href="./profile.html"
+                                class="nav-link"
+                                data-page="profile"
+                                aria-label="User profile"
+                            >
+                                <i
+                                    class="fas fa-user-circle"
+                                    aria-hidden="true"
+                                ></i>
                                 Profile
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
+                    <button
+                        class="logout-btn"
+                        id="logout_btn"
+                        aria-label="Log out of account"
+                    >
                         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
                     </button>
@@ -79,14 +128,16 @@
             <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
-                <header class="main-header">
-                </header>
+                <header class="main-header"></header>
 
                 <!-- Profile Content -->
                 <div class="profile-content">
                     <div class="profile-header">
                         <h2>Edit Profile</h2>
-                        <p>Update your personal information and manage your account settings</p>
+                        <p>
+                            Update your personal information and manage your
+                            account settings
+                        </p>
                     </div>
 
                     <div class="profile-grid">
@@ -104,21 +155,46 @@
 
                             <div class="form-group">
                                 <label for="edit_first_name">First Name</label>
-                                <input type="text" id="edit_first_name" class="form-input" placeholder="Enter your first name">
-                                <div class="helper-text">Your given name as it appears on official documents</div>
+                                <input
+                                    type="text"
+                                    id="edit_first_name"
+                                    class="form-input"
+                                    placeholder="Enter your first name"
+                                />
+                                <div class="helper-text">
+                                    Your given name as it appears on official
+                                    documents
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="edit_last_name">Last Name</label>
-                                <input type="text" id="edit_last_name" class="form-input" placeholder="Enter your last name">
-                                <div class="helper-text">Your family name as it appears on official documents</div>
+                                <input
+                                    type="text"
+                                    id="edit_last_name"
+                                    class="form-input"
+                                    placeholder="Enter your last name"
+                                />
+                                <div class="helper-text">
+                                    Your family name as it appears on official
+                                    documents
+                                </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="edit_phone_number">Phone Number</label>
-                                <input type="tel" id="edit_phone_number" class="form-input" placeholder="e.g., 09123456789">
+                                <label for="edit_phone_number"
+                                    >Phone Number</label
+                                >
+                                <input
+                                    type="tel"
+                                    id="edit_phone_number"
+                                    class="form-input"
+                                    placeholder="e.g., 09123456789"
+                                />
                                 <i class="fas fa-phone input-icon"></i>
-                                <div class="helper-text">Used for account security and notifications</div>
+                                <div class="helper-text">
+                                    Used for account security and notifications
+                                </div>
                             </div>
                         </div>
 
@@ -136,36 +212,73 @@
 
                             <div class="form-group">
                                 <label for="edit_username">Username</label>
-                                <input type="text" id="edit_username" class="form-input" placeholder="" readonly>
+                                <input
+                                    type="text"
+                                    id="edit_username"
+                                    class="form-input"
+                                    placeholder=""
+                                    readonly
+                                />
                                 <i class="fas fa-at input-icon"></i>
-                                <div class="helper-text">This will be your unique identifier for login</div>
+                                <div class="helper-text">
+                                    This will be your unique identifier for
+                                    login
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="edit_password">New Password</label>
-                                <input type="password" id="edit_password" class="form-input" placeholder="Enter new password">
-                                <i class="fas fa-eye input-icon toggle-password" data-target="edit_password"></i>
-                                <div class="helper-text">Leave blank to keep current password</div>
+                                <input
+                                    type="password"
+                                    id="edit_password"
+                                    class="form-input"
+                                    placeholder="Enter new password"
+                                />
+                                <i
+                                    class="fas fa-eye input-icon toggle-password"
+                                    data-target="edit_password"
+                                ></i>
+                                <div class="helper-text">
+                                    Leave blank to keep current password
+                                </div>
                                 <div class="password-strength">
                                     <div class="password-strength-bar"></div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="edit_confirm_password">Confirm New Password</label>
-                                <input type="password" id="edit_confirm_password" class="form-input" placeholder="Confirm new password">
-                                <i class="fas fa-eye input-icon toggle-password" data-target="edit_confirm_password"></i>
-                                <div class="helper-text">Re-enter your new password to confirm</div>
+                                <label for="edit_confirm_password"
+                                    >Confirm New Password</label
+                                >
+                                <input
+                                    type="password"
+                                    id="edit_confirm_password"
+                                    class="form-input"
+                                    placeholder="Confirm new password"
+                                />
+                                <i
+                                    class="fas fa-eye input-icon toggle-password"
+                                    data-target="edit_confirm_password"
+                                ></i>
+                                <div class="helper-text">
+                                    Re-enter your new password to confirm
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="button-group">
-                        <button id="save_profile_button" class="btn primary-btn">
+                        <button
+                            id="save_profile_button"
+                            class="btn primary-btn"
+                        >
                             <i class="fas fa-save"></i>
                             Save Changes
                         </button>
-                        <button id="cancel_edit_button" class="btn secondary-btn">
+                        <button
+                            id="cancel_edit_button"
+                            class="btn secondary-btn"
+                        >
                             <i class="fas fa-times"></i>
                             Cancel
                         </button>
@@ -178,13 +291,13 @@
         <!-- Load configuration first -->
         <script src="./js/auth-guard.js"></script>
         <script src="./js/config.js"></script>
-        
+
         <!-- Load API and session management -->
         <script src="./js/api.js"></script>
         <script src="./js/session-manager.js"></script>
-        
+
         <!-- Load page-specific scripts -->
         <script src="./js/profile.js"></script>
         <script src="./js/logout.js"></script>
     </body>
-</html> 
+</html>
