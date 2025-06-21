@@ -216,7 +216,7 @@ class RegistrationManager {
 		console.log('Sending OTP request:', requestData);
 
 		// Make API call to request OTP
-		fetch("/project-errawrs/src/api/auth/send_otp.php", {
+		fetch(API_ENDPOINTS.SEND_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -656,7 +656,7 @@ class RegistrationManager {
 		console.log('Sending OTP verification request:', requestData);
 
 		// Make API call to verify OTP
-		fetch("/project-errawrs/src/api/auth/verify_otp.php", {
+		fetch(API_ENDPOINTS.VERIFY_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -747,7 +747,7 @@ class RegistrationManager {
 		console.log('Sending resend OTP request:', requestData);
 
 		// Make API call to request new OTP
-		fetch("/project-errawrs/src/api/auth/send_otp.php", {
+		fetch(API_ENDPOINTS.SEND_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -842,7 +842,7 @@ class RegistrationManager {
 		}
 
 		// Use the submit_registration.php endpoint
-		fetch("/project-errawrs/src/api/user/submit_registration.php", {
+		fetch(API_ENDPOINTS.SUBMIT_REGISTRATION, {
 			method: "POST",
 			credentials: 'include',
 			body: formData,
