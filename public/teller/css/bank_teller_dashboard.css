@@ -453,6 +453,15 @@ body {
     gap: 24px;
     padding: 0;
     max-width: 100%;
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+    background: linear-gradient(135deg, 
+                var(--color-bg-gradient-start) 0%, 
+                var(--color-bg-gradient-end) 100%);
+    padding: 20px 0;
+    margin: 20px 0;
+    border-radius: 16px;
 }
 
 .stat-card {
