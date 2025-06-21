@@ -4,10 +4,30 @@
 .env.development
 .env.test
 .env.production
+
 dev.stackovercash.site.conf
 nginx.conf
 techblinders_api.md
 ./src/api/services/EXTERNAL_API_DOC.md
 ./src/api/services/README.md
 stackovercash_api_doc.md
+
+# Dependencies
 vendor/
+
+# Logs
+/src/logs/*
+*.log
+error_log
+debug_log
+
+# Temporary files
+tmp/
+tmp/.gitkeep
+/tmp/*
+/tmp/.gitkeep
+
+# Editor
+.vscode
+
+

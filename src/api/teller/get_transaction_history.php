@@ -45,9 +45,16 @@ try {
         throw new Exception('Unauthorized. Invalid or inactive teller.');
     }
 
+    // Get teller_id
+    $teller = mysqli_fetch_assoc($teller_result);
+    $teller_id = $teller['teller_id'];
+
     // Get total count for pagination
-    $count_sql = "SELECT COUNT(*) as total FROM transaction";
-    $count_result = mysqli_query($conn, $count_sql);
+    $count_sql = "SELECT COUNT(*) as total FROM transaction WHERE teller_id = ?";
+    $count_stmt = mysqli_prepare($conn, $count_sql);
+    mysqli_stmt_bind_param($count_stmt, "i", $teller_id);
+    mysqli_stmt_execute($count_stmt);
+    $count_result = mysqli_stmt_get_result($count_stmt);
     $total_records = mysqli_fetch_assoc($count_result)['total'];
     $total_pages = ceil($total_records / $limit);
 
@@ -75,11 +82,12 @@ try {
     LEFT JOIN user su ON sa.user_id = su.user_id
     LEFT JOIN account ra ON t.receiver_account_id = ra.account_id
     LEFT JOIN user ru ON ra.user_id = ru.user_id
+    WHERE t.teller_id = ?
     ORDER BY t.created_at DESC
     LIMIT ? OFFSET ?";
 
     $transactions_stmt = mysqli_prepare($conn, $transactions_sql);
-    mysqli_stmt_bind_param($transactions_stmt, "ii", $limit, $offset);
+    mysqli_stmt_bind_param($transactions_stmt, "iii", $teller_id, $limit, $offset);
     mysqli_stmt_execute($transactions_stmt);
     $transactions_result = mysqli_stmt_get_result($transactions_stmt);
 

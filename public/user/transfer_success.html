@@ -36,40 +36,45 @@
                     <h3 class="username" id="user_name"></h3>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard">
+                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard" aria-label="Dashboard">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
                                 Dashboard
                             </a>
                         </li>
-                        <li class="nav-item active"> <!-- Active class for Transfer -->
-                            <a href="./transfer.html" class="nav-link" data-page="transfer">
+                        <li class="nav-item active">
+                            <a href="./transfer.html" class="nav-link" data-page="transfer" aria-label="Transfer funds">
+                                <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transaction.html" class="nav-link" data-page="transaction">
-                                Transaction
+                            <a href="./transaction.html" class="nav-link" data-page="transaction" aria-label="View transactions">
+                                <i class="fas fa-receipt" aria-hidden="true"></i>
+                                Transactions
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./account.html" class="nav-link" data-page="account">
+                            <a href="./account.html" class="nav-link" data-page="account" aria-label="Manage accounts">
+                                <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./profile.html" class="nav-link" data-page="profile">
+                            <a href="./profile.html" class="nav-link" data-page="profile" aria-label="User profile">
+                                <i class="fas fa-user-circle" aria-hidden="true"></i>
                                 Profile
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="./index.html" class="logout-btn" id="logout_btn">
-                        <i class="fas fa-sign-out-alt"></i>
+                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -77,19 +82,6 @@
             <div class="main-content">
                 <!-- Header -->
                 <header class="main-header">
-                    <div class="header-actions">
-                        <button
-                            class="icon-btn notification-btn"
-                            id="notification_btn">
-                            <i class="fas fa-bell"></i>
-                        </button>
-                        <button class="icon-btn add-btn" id="add_btn">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="icon-btn help-btn" id="help_btn">
-                            <i class="fas fa-question-circle"></i>
-                        </button>
-                    </div>
                 </header>
 
                 <!-- Success Content -->
@@ -133,6 +125,8 @@
         
         <div class="notification-container"></div>
         
+        <script src="./js/auth-guard.js"></script>
+        <script src="./js/config.js"></script>
         <script src="./js/transfer_success.js"></script>
     </body>
 </html> 

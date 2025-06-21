@@ -5,6 +5,22 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "./bank_teller_login.html";
 }
 
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
 // Elements
 const searchInput = document.getElementById("search_input");
 const accountCard = document.getElementById("account_card");
@@ -20,7 +36,9 @@ let searchHistory = [];
 // Load search history
 async function loadSearchHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_search_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}`, {
+            credentials: 'include'
+        });
         const data = await response.json();
 
         if (data.success && data.history) {
@@ -61,18 +79,15 @@ function updateAccountDetails(accounts) {
     const accountContainer = document.querySelector(".account-container");
     accountContainer.innerHTML = "";
 
-    // Hide search history when showing a single account
+    // Always hide search history when showing search results
+    searchHistoryContainer.classList.add("hidden");
+    searchHistoryContainer.style.display = "none";
+
+    // Set single card layout if only one account
     if (accounts.length === 1) {
-        searchHistoryContainer.classList.add("hidden");
-        searchHistoryContainer.style.display = "none";
         accountContainer.classList.add("single-card");
     } else {
         accountContainer.classList.remove("single-card");
-        // Only show search history if we have entries
-        if (searchHistory.length > 0) {
-            searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
-        }
     }
 
     accounts.forEach((account) => {
@@ -191,11 +206,11 @@ function updateAccountDetails(accounts) {
                 chevron.style.transform = 'rotate(0deg)';
                 
                 if (button.classList.contains('deposit')) {
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showDepositForm();
+                    sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));
+                    window.location.href = "./bank_teller_deposit.html";
                 } else if (button.classList.contains('withdraw')) {
-                    sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
-                    showWithdrawForm();
+                    sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));
+                    window.location.href = "./bank_teller_withdraw.html";
                 } else if (button.classList.contains('close')) {
                     sessionStorage.setItem("currentAccount", JSON.stringify({...account, balance: balance}));
                     closeAccount();
@@ -211,8 +226,8 @@ function updateAccountDetails(accounts) {
         accountContainer.appendChild(cardWrapper);
     });
 
-    // Only load search history if not showing a single account
-    if (accounts.length !== 1) {
+    // Only load search history if not showing any accounts (empty search)
+    if (accounts.length === 0) {
         loadSearchHistory();
     }
 }
@@ -261,9 +276,9 @@ function addToSearchHistory(account) {
     // Add to the beginning of the array
     searchHistory.unshift(newEntry);
 
-    // Keep only the last 10 entries
-    if (searchHistory.length > 10) {
-        searchHistory.pop();
+    // Keep only the last 5 entries (limit to 5 accounts)
+    if (searchHistory.length > 5) {
+        searchHistory.splice(5);
     }
 
     // Update the UI immediately
@@ -276,6 +291,7 @@ function updateSearchHistory() {
     
     if (searchHistory.length === 0) {
         searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
         return;
     }
 
@@ -298,13 +314,17 @@ function updateSearchHistory() {
         historyBody.appendChild(row);
     });
 
-    // Show search history container if we have entries and not showing a single account
+    // Only show search history if we have entries and no search term
+    const searchTerm = searchInput.value.trim();
     const accountContainer = document.querySelector(".account-container");
     const hasAccounts = accountContainer.children.length > 0;
     
-    if (!hasAccounts || accountContainer.children.length > 1) {
+    if (!searchTerm && !hasAccounts && searchHistory.length > 0) {
         searchHistoryContainer.classList.remove("hidden");
         searchHistoryContainer.style.display = "block";
+    } else {
+        searchHistoryContainer.classList.add("hidden");
+        searchHistoryContainer.style.display = "none";
     }
 }
 
@@ -337,7 +357,7 @@ async function searchAccount() {
 
     try {
         const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 searchTerm
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
@@ -496,7 +516,7 @@ async function processTransaction(type) {
 
     try {
         const response = await fetch(
-            `/project-errawrs/src/api/teller/${type}.php`,
+            `${API_BASE_URL}/teller/${type}.php`,
             {
                 method: "POST",
                 headers: {
@@ -575,7 +595,7 @@ async function closeAccount() {
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/close_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/close_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -631,7 +651,7 @@ async function reopenAccount() {
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/reopen_account.php`, {
+        const response = await fetch(`${API_BASE_URL}/teller/reopen_account.php`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -662,7 +682,7 @@ async function reopenAccount() {
 
         // Fetch updated account data to refresh the UI
         const searchResponse = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 account.account_number
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
@@ -692,7 +712,7 @@ async function updateAccountBalance() {
 
         // Fetch fresh account data
         const response = await fetch(
-            `/project-errawrs/src/api/teller/search_account.php?search=${encodeURIComponent(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(
                 currentAccount.account_number
             )}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
@@ -736,6 +756,27 @@ window.addEventListener("storage", (e) => {
 
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
+    // Update user profile if available
+    if (tellerInfo) {
+        const userNameElements = document.querySelectorAll(".user-name");
+        const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+        let fullName = '';
+        
+        if (tellerInfo.first_name && tellerInfo.last_name) {
+            fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+            userNameElements.forEach(el => el.textContent = fullName);
+        } else if (tellerInfo.name) {
+            fullName = tellerInfo.name;
+            userNameElements.forEach(el => el.textContent = tellerInfo.name);
+        }
+        
+        // Set avatar initial
+        if (avatarElement && fullName) {
+            const initial = fullName.trim().charAt(0).toUpperCase();
+            avatarElement.textContent = initial;
+        }
+    }
+
     const contentArea = document.querySelector(".content-area");
     
     // Load search history initially
@@ -776,14 +817,6 @@ document.addEventListener("DOMContentLoaded", () => {
             searchAccount();
         }
     });
-
-    // Update user profile if available
-    if (tellerInfo) {
-        const userNameElement = document.querySelector(".user-name");
-        if (userNameElement) {
-            userNameElement.textContent = tellerInfo.name;
-        }
-    }
 
     // Close account actions when clicking outside
     document.addEventListener("click", (e) => {

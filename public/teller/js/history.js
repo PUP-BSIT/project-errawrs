@@ -5,14 +5,31 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "./bank_teller_login.html";
 }
 
+// Configuration - Dynamic base URL detection
+function getBaseURL() {
+    const host = window.location.hostname;
+    
+    // Check if we're on the EC2 server
+    if (host === 'dev-teller.stackovercash.site') {
+        return '/api';
+    }
+    
+    // Local XAMPP environment
+    return '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
 // Global variables
 let currentPage = 1;
-let itemsPerPage = 5;
+let itemsPerPage = 5; // This will now be fixed at 5
+let selectedItemCount = 5; // This will track the user's selection
 let totalItems = 0;
 let totalPages = 0;
 let lastFetchTime = null;
 const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-const ITEMS_PER_VIEW = 5; // Fixed number of items to display per page
+const MAX_ITEMS_PER_PAGE = 5; // Maximum items to display per page
 
 // Table data storage
 let tableData = [];
@@ -21,12 +38,43 @@ let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    initializeApplication();
     // Update teller name in the UI
     const userNameElement = document.querySelector(".user-name");
-    if (userNameElement && tellerInfo.name) {
+    const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+    let fullName = '';
+    
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+        userNameElement.textContent = fullName;
+    } else if (tellerInfo.name) {
+        fullName = tellerInfo.name;
         userNameElement.textContent = tellerInfo.name;
     }
+    
+    // Set avatar initial
+    if (avatarElement && fullName) {
+        const initial = fullName.trim().charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
+    }
+    
+    // Set initial items per page in select
+    const perPageSelect = document.getElementById("per-page-select");
+    if (perPageSelect) {
+        perPageSelect.value = selectedItemCount.toString();
+    }
+    
+    // Handle logout
+    document.querySelector('.nav-logout a').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Clear session storage
+        sessionStorage.removeItem('tellerInfo');
+        
+        // Redirect to login page
+        window.location.href = './bank_teller_login.html';
+    });
+    
+    initializeApplication();
 });
 
 async function initializeApplication() {
@@ -52,7 +100,7 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`/project-errawrs/src/api/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${itemsPerPage}`);
+        const response = await fetch(`${API_BASE_URL}/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${selectedItemCount}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -73,14 +121,23 @@ async function fetchTransactionHistory() {
             }));
             filteredData = [...tableData];
             totalItems = data.pagination.total_records;
-            totalPages = data.pagination.total_pages;
+            // Calculate total pages based on MAX_ITEMS_PER_PAGE
+            totalPages = Math.ceil(selectedItemCount / MAX_ITEMS_PER_PAGE);
             lastFetchTime = new Date().getTime();
+            
+            // Update display after fetching new data
+            updateTableDisplay();
+            updatePaginationDisplay();
         } else {
             tableData = [];
             filteredData = [];
             totalItems = 0;
             totalPages = 0;
             showNotification("No transaction history found", "info");
+            
+            // Update display for empty state
+            updateTableDisplay();
+            updatePaginationDisplay();
         }
     } catch (error) {
         console.error("Error fetching transaction history:", error);
@@ -128,16 +185,14 @@ function goToNextPage() {
 
 function changeItemsPerPage() {
     const selectElement = document.getElementById("per-page-select");
-    const newItemsPerPage = parseInt(selectElement.value);
+    const newItemCount = parseInt(selectElement.value);
     
-    if (newItemsPerPage !== itemsPerPage) {
-        itemsPerPage = newItemsPerPage;
-        currentPage = 1; // Reset to first page when changing items per page
+    if (newItemCount !== selectedItemCount) {
+        selectedItemCount = newItemCount;
+        currentPage = 1; // Reset to first page when changing items count
         
-        fetchTransactionHistory().then(() => {
-            updateTableDisplay();
-            updatePaginationDisplay();
-        });
+        // Fetch new data with updated items count
+        fetchTransactionHistory();
     }
 }
 
@@ -151,28 +206,28 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
-    const actualPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
-    const displayPages = Math.min(totalPages, actualPages);
+    // Calculate total pages based on selected item count and MAX_ITEMS_PER_PAGE
+    totalPages = Math.ceil(selectedItemCount / MAX_ITEMS_PER_PAGE);
 
-    if (displayPages <= 0) {
+    if (totalPages <= 0) {
         return; // No pages to display
     }
 
     // Adjust current page if it's beyond the actual data
-    if (currentPage > displayPages) {
-        currentPage = displayPages;
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
     }
 
     // Calculate the range of page numbers to show
     let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(displayPages, currentPage + 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
 
     // Always show at least 5 pages if available
-    if (endPage - startPage < 4 && displayPages > 4) {
+    if (endPage - startPage < 4 && totalPages > 4) {
         if (startPage === 1) {
-            endPage = Math.min(5, displayPages);
-        } else if (endPage === displayPages) {
-            startPage = Math.max(1, displayPages - 4);
+            endPage = Math.min(5, totalPages);
+        } else if (endPage === totalPages) {
+            startPage = Math.max(1, totalPages - 4);
         }
     }
 
@@ -190,18 +245,18 @@ function updatePaginationDisplay() {
     }
 
     // Add last page button if not in range
-    if (endPage < displayPages) {
-        if (endPage < displayPages - 1) {
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
             addEllipsis();
         }
-        addPageButton(displayPages);
+        addPageButton(totalPages);
     }
 
-    // Update showing text with proper padding
+    // Update showing text
     updateShowingText();
 
-    // Enable/disable navigation buttons based on actual pages
-    updateNavigationButtons(displayPages);
+    // Update navigation buttons
+    updateNavigationButtons(totalPages);
 }
 
 // Update navigation buttons state
@@ -221,13 +276,12 @@ function updateNavigationButtons(displayPages) {
 function updateShowingText() {
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        if (totalItems === 0) {
+        if (filteredData.length === 0) {
             showingText.textContent = "Showing 0 to 0 of 0 entries";
         } else {
-            const startItem = ((currentPage - 1) * ITEMS_PER_VIEW) + 1;
-            const endItem = Math.min(startItem + ITEMS_PER_VIEW - 1, totalItems);
-            const totalPages = Math.ceil(totalItems / ITEMS_PER_VIEW);
-            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+            const startItem = ((currentPage - 1) * MAX_ITEMS_PER_PAGE) + 1;
+            const endItem = Math.min(startItem + MAX_ITEMS_PER_PAGE - 1, filteredData.length);
+            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${filteredData.length} entries (Page ${currentPage} of ${totalPages})`;
         }
     }
 }
@@ -251,8 +305,8 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * ITEMS_PER_VIEW;
-    const endIndex = startIndex + ITEMS_PER_VIEW;
+    const startIndex = (currentPage - 1) * MAX_ITEMS_PER_PAGE;
+    const endIndex = Math.min(startIndex + MAX_ITEMS_PER_PAGE, filteredData.length);
     return filteredData.slice(startIndex, endIndex);
 }
 
@@ -382,14 +436,11 @@ function updateTableDisplay() {
         return;
     }
 
-    // Create new rows (limited to ITEMS_PER_VIEW)
+    // Create new rows based on itemsPerPage
     currentPageData.forEach(function (item) {
         const row = createTableRow(item);
         tableBody.appendChild(row);
     });
-
-    // Update total pages based on items per page selection
-    totalPages = Math.ceil(totalItems / itemsPerPage);
 }
 
 // Row interaction functions
@@ -439,6 +490,7 @@ function showTransactionDetails(transaction) {
 // Filter and sort functions
 function filterData(filterFunction) {
     filteredData = tableData.filter(filterFunction);
+    totalPages = Math.ceil(filteredData.length / itemsPerPage);
     currentPage = 1; // Reset to first page
     updateTableDisplay();
     updatePaginationDisplay();

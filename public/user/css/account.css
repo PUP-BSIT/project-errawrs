@@ -69,273 +69,260 @@
 
 .account-list-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 24px;
-    padding: 4px;
-    margin-bottom: 16px; /* Add bottom margin */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
 }
 
 /* Enhanced Account Item */
 .account-item {
-    min-height: 200px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    border-radius: 28px;
-    padding: 24px;
-    box-shadow: 
-        0 4px 16px rgba(0, 0, 0, 0.03),
-        0 1px 2px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 16px;
     position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.account-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(182, 255, 74, 0.08) 0%,
-        rgba(126, 217, 87, 0.08) 100%);
-    border-radius: 28px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: visible;
+    margin-bottom: 12px;
 }
 
 .account-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.08),
-        0 2px 4px rgba(0, 0, 0, 0.12);
-    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
-.account-item:hover::before {
-    opacity: 1;
-}
-
-.account-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    position: relative;
-    z-index: 1;
-}
-
-.info-group {
+/* Add Account Item */
+.add-account-item {
+    background-color: transparent;
+    border: 2px dashed rgba(136, 193, 43, 0.4);
+    border-radius: 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    background: transparent;
-    padding: 0;
-    position: relative;
-    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-height: 140px;
+    transition: all 0.3s ease;
+}
+
+.add-account-item:hover {
+    border-color: rgba(136, 193, 43, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+.add-account-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.5s ease;
+}
+
+.add-account-item:hover .add-account-icon {
+    transform: rotate(360deg);
+}
+
+.add-account-icon i {
+    font-size: 24px;
+    color: #88c12b;
+}
+
+.add-account-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Three dots button and menu positioning */
+.three-dots {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+/* Info Group Layout */
+.info-group {
+    margin-bottom: 10px;
 }
 
 .info-label {
-    font-size: 14px;
-    color: #64748b;
+    font-size: 12px;
+    color: #6c757d;
     font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
 }
 
 .info-value {
-    font-size: 28px;
+    font-size: 20px;
     font-weight: 700;
-    color: var(--color-primary-black);
-    letter-spacing: -0.5px;
+    color: #212529;
 }
 
-/* Account Number Value */
-.info-group:first-child .info-value {
-    font-size: 24px;
-    letter-spacing: 0.5px;
-}
-
-/* Balance Value */
-.info-group:nth-child(3) .info-value {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-/* Account Status Badges */
+/* Account Status Badge */
 .account-status {
     display: inline-flex;
     align-items: center;
-    padding: 6px 12px;
-    border-radius: 100px;
     font-size: 14px;
     font-weight: 500;
-    height: 28px;
-    white-space: nowrap;
-    width: fit-content;
-    position: relative;
-    z-index: 1;
 }
 
 .account-status.active {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
+    color: #10b981;
 }
 
 .account-status.active::before {
     content: '';
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background-color: #10b981;
     margin-right: 6px;
-}
-
-.account-status.closed {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-}
-
-.account-status.closed::before {
-    background-color: #ef4444;
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 /* Account Type Badge */
 .account-type-badge {
     display: inline-flex;
     align-items: center;
-    padding: 8px 12px;
-    border-radius: 100px;
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
-    height: 32px;
-    white-space: nowrap;
-    width: fit-content;
-    position: relative;
-    z-index: 1;
-}
-
-.account-type-badge::before {
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    margin-right: 8px;
 }
 
 .account-type-badge.savings {
-    background: rgba(37, 99, 235, 0.1);
-    color: #2563eb;
+    background-color: #e3f2fd;
+    color: #1976d2;
 }
 
 .account-type-badge.savings::before {
-    content: '\f555'; /* Piggy bank icon */
+    content: '□';
+    margin-right: 6px;
+    color: #1976d2;
 }
 
 .account-type-badge.credit {
-    background: rgba(168, 85, 247, 0.1);
-    color: #7c3aed;
+    background-color: #f3e5f5;
+    color: #7b1fa2;
 }
 
 .account-type-badge.credit::before {
-    content: '\f09d'; /* Credit card icon */
+    content: '◆';
+    margin-right: 6px;
+    color: #7b1fa2;
 }
 
-.account-type-badge.standard {
-    background: rgba(71, 85, 105, 0.1);
-    color: #475569;
+/* Account Header */
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
-.account-type-badge.standard::before {
-    content: '\f19c'; /* Bank icon */
+.account-header h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
 }
 
 /* Account Actions */
 .account-actions {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 15px;
     z-index: 10;
 }
 
+/* Three Dots Button */
 .three-dots-button {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.9);
     border: none;
-    width: 32px;
-    height: 32px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    color: #64748b;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-    position: relative;
-    z-index: 11;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .three-dots-button:hover {
-    opacity: 1;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.three-dots-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Action Menu */
 .action-menu {
     position: absolute;
-    top: 100%;
     right: 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    box-shadow: 
-        0 4px 24px rgba(0, 0, 0, 0.12),
-        0 1px 2px rgba(0, 0, 0, 0.05);
-    padding: 8px;
-    min-width: 160px; /* Slightly reduced width since we have fewer items */
-    z-index: 100;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    transform-origin: top right;
-    animation: menuFadeIn 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    margin-top: 8px;
+    top: 42px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 11;
+    min-width: 160px;
+    overflow: hidden;
 }
 
 .menu-item {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 12px 16px;
     text-align: left;
-    background: none;
+    padding: 12px 16px;
     border: none;
-    color: #334155;
+    background: none;
     cursor: pointer;
+    transition: background-color 0.3s;
     font-size: 14px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    gap: 12px;
-    position: relative;
+    font-weight: 500;
+    color: #333;
+}
+
+.menu-item:hover {
+    background-color: #f8f9fa;
 }
 
 .menu-item::before {
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
+    margin-right: 10px;
     font-size: 14px;
+    width: 18px;
+    text-align: center;
 }
 
 .menu-item.transfer-button::before {
-    content: '\f362';
-    color: #2563eb;
+    content: '\f362'; /* Exchange alt icon */
+    color: #2196f3;
 }
 
 .menu-item.close-button::before {
-    content: '\f057';
-    color: #dc2626;
-}
-
-.menu-item:hover {
-    background-color: rgba(248, 250, 252, 0.8);
-    color: var(--color-primary-black);
-    transform: translateX(4px);
+    content: '\f057'; /* Times circle icon */
+    color: #f44336;
 }
 
 .action-menu.hidden {
@@ -348,11 +335,11 @@
 @keyframes menuFadeIn {
     from {
         opacity: 0;
-        transform: scale(0.95) translateY(-5px);
+        transform: scale(0.9);
     }
     to {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1);
     }
 }
 
@@ -785,4 +772,249 @@
     font-size: 12px;
     color: var(--color-text-muted);
     margin-top: 4px;
+}
+
+/* Processing Modal Styles */
+.processing-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-warning);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.processing-icon i {
+    font-size: 40px;
+    color: var(--color-primary-black);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#processing_modal .modal-content {
+    max-width: 450px;
+    text-align: center;
+}
+
+#processing_modal p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+#processing_modal .important-note {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left: 3px solid var(--color-warning);
+    padding: 12px 15px;
+    text-align: left;
+    margin-bottom: 25px;
+    border-radius: 4px;
+}
+
+#processing_modal .important-note strong {
+    color: var(--color-primary-black);
+}
+
+#processing_modal .btn {
+    display: inline-block;
+    min-width: 120px;
+}
+
+/* Account Footer */
+.account-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Transfer Button */
+.transfer-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transfer-button:hover {
+    background-color: rgba(33, 150, 243, 0.2);
+    transform: translateY(-2px);
+}
+
+.transfer-button i {
+    font-size: 14px;
+}
+
+/* No Accounts Message */
+.no-accounts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 30px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.95));
+    border-radius: 24px;
+    text-align: center;
+    border: 1px dashed rgba(126, 217, 87, 0.4);
+    box-shadow: inset 0 0 20px rgba(182, 255, 74, 0.1);
+    margin: 20px 0;
+}
+
+.no-accounts i {
+    font-size: 4rem;
+    color: var(--color-mint);
+    margin-bottom: 24px;
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+.no-accounts p {
+    font-size: 1.25rem;
+    color: var(--color-primary-black);
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.no-accounts .btn {
+    margin-top: 10px;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Account Item Header and Footer */
+.account-item-header {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 5;
+}
+
+.account-item-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transfer-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transfer-button:hover {
+    background-color: rgba(33, 150, 243, 0.2);
+    transform: translateY(-2px);
+}
+
+.transfer-button i {
+    font-size: 14px;
+}
+
+/* Improved Three Dots Button */
+.three-dots-button {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.three-dots-button:hover {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.three-dots-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Action Menu Positioning */
+.action-menu {
+    position: absolute;
+    right: 0;
+    top: 38px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+    min-width: 160px;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: menuFadeIn 0.2s ease;
+}
+
+/* Account Footer */
+.account-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Transfer Button */
+.transfer-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transfer-button:hover {
+    background-color: rgba(33, 150, 243, 0.2);
+    transform: translateY(-2px);
+}
+
+.transfer-button i {
+    font-size: 14px;
 } 

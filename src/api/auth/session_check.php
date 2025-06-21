@@ -1,51 +1,83 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+require_once __DIR__ . '/../../config/Database.php';
+
+// Initialize session
+$sessionManager = SessionManager::getInstance();
+$sessionManager->initSession();
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/error.log');
+
+// Start output buffering
+ob_start();
+
+// Set headers
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: http://localhost');  // Change this to match your domain
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Session timeout in seconds (5 minutes)
-define('SESSION_TIMEOUT', 300);
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-// Check if session exists
-if (!isset($_SESSION['auth']) || !isset($_SESSION['auth']['id'])) {
+try {
+    // Debug logging
+    error_log("Session check - Session data: " . print_r($_SESSION, true));
+    error_log("Session check - Cookie data: " . print_r($_COOKIE, true));
+
+    // Check if user is authenticated
+    if ($sessionManager->isAuthenticated()) {
+        // Update last activity
+        $sessionManager->updateActivity();
+
+        // Use account data from session if available
+        $userData = [
+            'id' => $_SESSION['auth']['id'],
+            'username' => $_SESSION['auth']['identifier'],
+            'first_name' => $_SESSION['auth']['first_name'],
+            'last_name' => $_SESSION['auth']['last_name'],
+            'phone_number' => $_SESSION['auth']['phone_number'],
+            'email' => $_SESSION['auth']['email']
+        ];
+        
+        // Add account data if it exists in session
+        if (isset($_SESSION['userInfo']['account'])) {
+            $userData['account'] = $_SESSION['userInfo']['account'];
+        }
+
+        echo json_encode([
+            'success' => true,
+            'authenticated' => true,
+            'user' => $userData,
+            'userInfo' => $_SESSION['userInfo'] ?? null // Include the full userInfo object
+        ]);
+    } else {
+        error_log("Session check failed - Not authenticated");
     http_response_code(401);
     echo json_encode([
         'success' => false,
         'authenticated' => false,
-        'error' => 'Not authenticated'
+            'error' => 'Session expired or invalid'
     ]);
-    exit();
-}
+    }
 
-// Check if session has expired based on last activity time
-if (isset($_SESSION['auth']['last_activity']) && 
-    (time() - $_SESSION['auth']['last_activity'] > SESSION_TIMEOUT)) {
-    // Session has expired
-    session_unset();
-    session_destroy();
-    http_response_code(401);
+} catch (Exception $e) {
+    error_log("Session check error: " . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
         'authenticated' => false,
-        'error' => 'Session expired'
+        'error' => 'Internal server error'
     ]);
-    exit();
-}
-
-// Update last activity time
-$_SESSION['auth']['last_activity'] = time();
-
-// Return session data
-echo json_encode([
-    'success' => true,
-    'authenticated' => true,
-    'user' => [
-        'id' => $_SESSION['auth']['id'],
-        'username' => $_SESSION['auth']['identifier'],
-        'type' => $_SESSION['auth']['type'],
-        'first_name' => $_SESSION['auth']['first_name'] ?? '',
-        'last_name' => $_SESSION['auth']['last_name'] ?? '',
-        'phone_number' => $_SESSION['auth']['phone_number'] ?? '',
-        'last_activity' => $_SESSION['auth']['last_activity'],
-        'session_expires_in' => SESSION_TIMEOUT
-    ]
-]); 
+} finally {
+    // Flush output buffer
+    ob_end_flush();
+} 

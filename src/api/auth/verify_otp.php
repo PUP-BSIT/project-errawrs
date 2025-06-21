@@ -1,218 +1,182 @@
 <?php
-session_start();
+// Prevent PHP from displaying errors directly
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
+require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+$sessionManager = SessionManager::getInstance();
+$sessionManager->initSession();
+
+function execute_internal_transfer($transfer_data) {
+    $db = db_connect();
+    $db->begin_transaction();
+
+    try {
+        $userId = $_SESSION['auth']['id'];
+        $amount = floatval($transfer_data['transaction_amount']);
+        $sourceAccountNo = strval($transfer_data['source_account_no']);
+        $recipientAccountNo = strval($transfer_data['recipient_account_no']);
+
+        // All validations are repeated here for security
+        $stmt = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND user_id = ? AND status = 'active'");
+        $stmt->bind_param('si', $sourceAccountNo, $userId);
+        $stmt->execute();
+        $source = $stmt->get_result()->fetch_assoc();
+        if (!$source) throw new Exception('Invalid source account or you do not own this account');
+        if ($source['balance'] < $amount) throw new Exception('Insufficient balance');
+
+        $stmt = $db->prepare("SELECT account_id FROM account WHERE account_number = ? AND status = 'active'");
+        $stmt->bind_param('s', $recipientAccountNo);
+        $stmt->execute();
+        $recipient = $stmt->get_result()->fetch_assoc();
+        if (!$recipient) throw new Exception('Invalid recipient account');
+        if ($source['account_id'] === $recipient['account_id']) throw new Exception('Cannot transfer to the same account');
+
+        // Execute transfer
+        $stmt_deduct = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ?");
+        $stmt_deduct->bind_param('di', $amount, $source['account_id']);
+        $stmt_deduct->execute();
+        if ($stmt_deduct->affected_rows !== 1) throw new Exception('Failed to update source account balance');
+
+        $stmt_credit = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_id = ?");
+        $stmt_credit->bind_param('di', $amount, $recipient['account_id']);
+        $stmt_credit->execute();
+        if ($stmt_credit->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
+
+        $stmt_trans = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW())");
+        $description = "Transfer to account {$recipientAccountNo}";
+        $stmt_trans->bind_param('diis', $amount, $source['account_id'], $recipient['account_id'], $description);
+        $stmt_trans->execute();
+        $transaction_id = $db->insert_id;
+
+        $db->commit();
+        
+        return ['success' => true, 'transaction_id' => $transaction_id, 'redirect_url' => $transfer_data['redirect_url']];
+
+    } catch (Exception $e) {
+        $db->rollback();
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+// Main script logic
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-    exit();
-}
-
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
-
-// Validate required fields
-if (!isset($data['otp']) || !isset($data['phone_number'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'OTP and phone number are required']);
-    exit();
-}
-
-$otp = $data['otp'];
-$phone_number = $data['phone_number'];
-
-// Validate OTP format (6 digits)
-if (!preg_match('/^\d{6}$/', $otp)) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Invalid OTP format']);
-    exit();
-}
-
-// Phone number validation and conversion
-$phone = $phone_number;
-$phone = preg_replace('/[^0-9+]/', '', $phone);
-
-if (preg_match('/^\+?639\d{9}$/', $phone)) {
-    $phone = '0' . substr($phone, -10);
-}
-
-// Check if OTP exists in session
-if (!isset($_SESSION['otp'])) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'No OTP request found. Please request a new OTP']);
-    exit();
-}
-
-$storedOTP = $_SESSION['otp'];
-
-// Determine the purpose of this OTP verification
-$isRegistration = isset($_SESSION['registration']);
-
-// If this is for registration, check registration data
-if ($isRegistration) {
-    if (!isset($_SESSION['registration'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'No registration data found. Please start registration process again']);
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Method not allowed']);
         exit();
     }
-    $registration = $_SESSION['registration'];
-    
-    // Validate phone number matches registration data
-    if ($registration['phone_number'] !== $phone) {
+
+    // Debug request data
+    $rawInput = file_get_contents('php://input');
+    error_log("Verify OTP - Raw request data: " . $rawInput);
+
+    $input = json_decode($rawInput, true);
+    if (!$input || !isset($input['otp']) || empty($input['otp'])) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Phone number does not match registration data']);
+        echo json_encode(['success' => false, 'error' => 'OTP is required']);
         exit();
     }
-}
 
-// Validate phone number matches OTP request
-if ($storedOTP['phone_number'] !== $phone) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Phone number does not match OTP request']);
-    exit();
-}
+    error_log("Verify OTP - Input data: " . print_r($input, true));
 
-// Check if OTP is expired (10 minutes)
-if (time() - $storedOTP['created_at'] > 600) {
+    if (!isset($_SESSION['otp'])) {
+        error_log("Verify OTP - No OTP session found. Session data: " . print_r($_SESSION, true));
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'No OTP session found. Please request a new OTP.']);
+        exit();
+    }
+
+    // Get OTP data from session
+    $sessionOtp = $_SESSION['otp'];
+    error_log("Verify OTP - Session OTP data: " . print_r($sessionOtp, true));
+    error_log("Verify OTP - Comparing input OTP '" . $input['otp'] . "' with session OTP '" . $sessionOtp['code'] . "'");
+
+    $attempts = $sessionOtp['attempts'] ?? 0;
+    $maxAttempts = 3;
+
+    // Check if too many attempts
+    if ($attempts >= $maxAttempts) {
+        unset($_SESSION['otp']);
+        error_log("Verify OTP - Max attempts reached: " . $attempts);
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Too many attempts. Please request a new OTP.']);
+        exit();
+    }
+
+    // Check if OTP has expired (5 minutes)
+    $expiryTime = 300; // 5 minutes
+    $timeDiff = time() - $sessionOtp['created_at'];
+    error_log("Verify OTP - Time difference: " . $timeDiff . " seconds");
+
+    if ($timeDiff > $expiryTime) {
+        unset($_SESSION['otp']);
+        error_log("Verify OTP - OTP expired. Created at: " . date('Y-m-d H:i:s', $sessionOtp['created_at']));
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'OTP has expired. Please request a new one.']);
+        exit();
+    }
+
+    // Verify OTP
+    if ($input['otp'] !== $sessionOtp['code']) {
+        // Increment attempts
+        $_SESSION['otp']['attempts'] = $attempts + 1;
+        $remainingAttempts = $maxAttempts - ($attempts + 1);
+
+        error_log("Verify OTP - Invalid OTP. Input: " . $input['otp'] . ", Expected: " . $sessionOtp['code']);
+        error_log("Verify OTP - Attempts: " . ($attempts + 1) . ", Remaining: " . $remainingAttempts);
+
+        http_response_code(400);
+        echo json_encode([
+            'success' => false, 
+            'error' => "Invalid OTP. {$remainingAttempts} attempts remaining."
+        ]);
+        exit();
+    }
+
+// OTP is correct
+$_SESSION['otp']['attempts'] = 0; // Reset attempts on success
+$_SESSION['otp_verified'] = true; // Set the flag for other scripts to check
+
+    // OTP is valid - clear it from session
+    $verifiedPhone = $sessionOtp['phone_number'];
     unset($_SESSION['otp']);
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'OTP has expired. Please request a new one']);
-    exit();
-}
 
-// Check if too many attempts (max 3)
-if ($storedOTP['attempts'] >= 3) {
-    unset($_SESSION['otp']);
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Too many failed attempts. Please request a new OTP']);
-    exit();
-}
+    error_log("Verify OTP - Successful verification for phone: " . $verifiedPhone);
+    error_log("Verify OTP - Final session data: " . print_r($_SESSION, true));
 
-// Verify OTP
-if ($otp !== $storedOTP['code']) {
-    // Increment attempts
-    $_SESSION['otp']['attempts']++;
-    $remainingAttempts = 3 - $_SESSION['otp']['attempts'];
-    
-    http_response_code(400);
-    echo json_encode([
-        'success' => false, 
-        'error' => "Invalid OTP. $remainingAttempts attempts remaining"
-    ]);
-    exit();
-}
+// OTP is correct, proceed based on purpose
+$purpose = $input['purpose'] ?? null;
+$transfer_payload = $input['transfer_payload'] ?? null;
 
-// If this is not a registration flow, just return success
-if (!$isRegistration) {
-    $_SESSION['otp_verified'] = true;
-    echo json_encode([
-        'success' => true,
-        'message' => 'OTP verified successfully'
-    ]);
-    exit();
-}
+if ($purpose === 'fund_transfer' || $purpose === 'external_transfer') {
+    if (empty($transfer_payload)) {
+        throw new Exception("Transfer payload is missing.");
+    }
 
-// Below is the registration flow
-try {
-    $db = db_connect();
-    
-    // Start transaction
-    $db->begin_transaction();
-    
-    // Check if username already exists
-    $checkStmt = $db->prepare('SELECT user_id FROM user WHERE username = ?');
-    $checkStmt->bind_param('s', $registration['username']);
-    $checkStmt->execute();
-    $result = $checkStmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        throw new Exception('Username is already taken');
-    }
-    
-    // Check if phone number already exists
-    $checkPhoneStmt = $db->prepare('SELECT user_id FROM user WHERE phone_number = ?');
-    $checkPhoneStmt->bind_param('s', $registration['phone_number']);
-    $checkPhoneStmt->execute();
-    $phoneResult = $checkPhoneStmt->get_result();
-    
-    if ($phoneResult->num_rows > 0) {
-        throw new Exception('Phone number is already registered');
-    }
-    
-    // Insert new user
-    $stmt = $db->prepare('INSERT INTO user (username, password_hash, first_name, last_name, phone_number) VALUES (?, ?, ?, ?, ?)');
-    
-    // Ensure password is properly hashed using PASSWORD_DEFAULT
-    $password = $registration['password'];
-    $password_hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
-    
-    if ($password_hash === false) {
-        throw new Exception('Failed to hash password');
-    }
-    
-    $stmt->bind_param('sssss', 
-        $registration['username'],
-        $password_hash,
-        $registration['first_name'],
-        $registration['last_name'],
-        $registration['phone_number']
-    );
-    
-    if (!$stmt->execute()) {
-        throw new Exception('Failed to create user account');
-    }
-    
-    $user_id = $stmt->insert_id;
-
-    // Get the next account sequence number
-    $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
-    $seqRow = $seqResult->fetch_assoc();
-    $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
-    
-    // Generate account number (544YY0######)
-    $year = date('y');
-    $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
-    
-    // Create account for the user
-    $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status) VALUES (?, ?, 0.00, "active")');
-    $accountStmt->bind_param('is', $user_id, $accountNumber);
-    
-    if (!$accountStmt->execute()) {
-        throw new Exception('Failed to create bank account');
-    }
-    
-    $account_id = $accountStmt->insert_id;
-    
-    // Commit transaction
-    $db->commit();
-    
-    // Clear session data
-    unset($_SESSION['otp']);
-    unset($_SESSION['registration']);
-    
+    // For now, we only handle internal transfer here
+    if ($purpose === 'fund_transfer') {
+        $result = execute_internal_transfer($transfer_payload);
+        if ($result['success']) {
     echo json_encode([
         'success' => true,
-        'message' => 'Registration completed successfully',
-        'user' => [
-            'user_id' => $user_id,
-            'username' => $registration['username'],
-            'first_name' => $registration['first_name'],
-            'last_name' => $registration['last_name'],
-            'phone_number' => $registration['phone_number']
-        ],
-        'account' => [
-            'account_id' => $account_id,
-            'account_number' => $accountNumber,
-            'balance' => '0.00',
-            'status' => 'active'
-        ]
-    ]);
-} catch (Exception $e) {
-    // Rollback transaction on error
-    if (isset($db)) {
-        $db->rollback();
+                'message' => 'Transfer completed successfully', 
+                'transaction_id' => $result['transaction_id'],
+                'redirect_url' => $result['redirect_url']
+            ]);
+        } else {
+            throw new Exception($result['error']);
+        }
+    } else {
+        // Placeholder for external transfer logic
+        throw new Exception("External transfer not yet implemented in this flow.");
     }
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-} 
+} else {
+    // Handle other OTP purposes if any
+    echo json_encode(['success' => true, 'message' => 'OTP verified successfully']);
+}
+?>

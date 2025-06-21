@@ -6,6 +6,8 @@ const FORM_VALIDATION = {
 	USERNAME_MAX_LENGTH: 20,
 	FIRST_NAME_MIN_LENGTH: 2,
 	LAST_NAME_MIN_LENGTH: 2,
+	MIN_AGE: 18,
+	MAX_AGE: 100,
 };
 
 const NOTIFICATION_TYPES = {
@@ -16,9 +18,15 @@ const NOTIFICATION_TYPES = {
 };
 
 const STEPS = {
-	ENROLLMENT: 1,
-	VERIFICATION: 2,
-	SUCCESS: 3,
+	STEP_ONE_IDENTIFICATION: 1,
+	STEP_TWO_CONTACT: 2,
+	STEP_THREE_PROCESSING: 3,
+};
+
+const CONTACT_PAGES = {
+	PAGE_ONE: 1,
+	PAGE_TWO: 2,
+	PAGE_THREE: 3,
 };
 
 const TIMER_SETTINGS = {
@@ -29,6 +37,7 @@ const TIMER_SETTINGS = {
 	API_SIMULATION_DELAY_SHORT: 1000,
 	API_SIMULATION_DELAY_MEDIUM: 1500,
 	API_SIMULATION_DELAY_LONG: 2000,
+	REDIRECT_DELAY: 2000,
 };
 
 const INPUT_TYPES = {
@@ -45,799 +54,681 @@ const BUTTON_STATES = {
 
 class RegistrationManager {
 	constructor() {
-		this.currentStep = STEPS.ENROLLMENT;
-		this.maxStep = STEPS.SUCCESS;
+		this.currentStep = STEPS.STEP_ONE_IDENTIFICATION;
+		this.maxStep = STEPS.STEP_THREE_PROCESSING;
+		this.currentContactPage = CONTACT_PAGES.PAGE_ONE;
 		this.formData = null;
-		this.resendTimer = null;
-		this.registeredData = null;
 		this.idImage = null;
 		this.isUnder18 = false;
-		this.bindEvents();
+
+		// Initialize forms
+		this.initializeIdentificationForm();
+		this.initializeContactForm();
+		this.initializeOtpForm();
+
+		// Initialize back buttons
+		this.initializeBackButtons();
+
+		// Load saved form data and update UI
+		this.loadFormData();
+		this.updateStepIndicators();
 	}
 
-	bindEvents() {
-		// Form submissions
-		const detailsForm = document.getElementById("details_form");
-		const otpForm = document.getElementById("otp_form");
-
-		if (detailsForm) {
-			detailsForm.addEventListener("submit", (e) => {
-				this.handleDetailsSubmit(e);
-			});
-
-			// Add input event listeners to save data as user types
-			const inputs = detailsForm.querySelectorAll('input');
-			inputs.forEach(input => {
-				input.addEventListener('input', () => {
-					this.saveFormData();
-				});
-			});
-		}
-
-		if (otpForm) {
-			otpForm.addEventListener("submit", (e) => {
-				this.handleOtpSubmit(e);
-			});
-		}
-
-		// Back button handlers
-		const backToStepOneBtn = document.getElementById("back_to_step_one");
-		const backToStepTwoBtn = document.getElementById("back_to_step_two");
-		
-		if (backToStepOneBtn) {
-			backToStepOneBtn.addEventListener("click", () => {
-				this.goToStep(STEPS.ENROLLMENT);
-			});
-		}
-
-		if (backToStepTwoBtn) {
-			backToStepTwoBtn.addEventListener("click", () => {
-				this.goToStep(STEPS.VERIFICATION);
-			});
-		}
-
-		// Send OTP button
-		const sendOtpBtn = document.getElementById("send_otp");
-		if (sendOtpBtn) {
-			sendOtpBtn.addEventListener("click", () => {
-				this.sendSmsCode();
-			});
-		}
-
-		// Resend OTP link
-		const resendOtpLink = document.getElementById("resend_otp");
-		if (resendOtpLink) {
-			resendOtpLink.addEventListener("click", (e) => {
-				e.preventDefault();
-				if (!this.resendTimer) {
-					this.sendSmsCode();
-				}
-			});
-		}
-
-		// Password toggle buttons
-		const passwordToggleBtns =
-			document.querySelectorAll(".password-toggle");
-		passwordToggleBtns.forEach((button) => {
-			button.addEventListener("click", (e) => {
-				this.togglePassword(e.target.closest(".password-toggle"));
-			});
-		});
-
-		// Dashboard button
-		const dashboardBtn = document.querySelector(".btn-dashboard");
-		if (dashboardBtn) {
-			dashboardBtn.addEventListener("click", () => {
-				this.goToDashboard();
-			});
-		}
-
-		// Login button on success page
-		const loginNowBtn = document.getElementById("login_now_btn");
-		if (loginNowBtn) {
-			loginNowBtn.addEventListener("click", () => {
-				window.location.href = "./login_account_holder.html";
-			});
-		}
-
-		// Real-time form validation
-		this.setupFormValidation();
-
-		// Date of birth validation
-		const dobInput = document.getElementById('date_of_birth');
-		if (dobInput) {
-			dobInput.addEventListener('change', (e) => this.validateAge(e.target));
-			// Set max date to 18 years ago
-			const today = new Date();
-			const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-			dobInput.max = maxDate.toISOString().split('T')[0];
-		}
-
-		// File upload handling
-		const fileInput = document.getElementById('id_image');
-		const uploadContainer = document.querySelector('.file-upload-container');
-
-		if (fileInput && uploadContainer) {
-			fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
-
-			// Drag and drop events
-			uploadContainer.addEventListener('dragover', (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				if (!this.idImage) {
-					uploadContainer.classList.add('drag-over');
-				}
-			});
-
-			uploadContainer.addEventListener('dragleave', (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				uploadContainer.classList.remove('drag-over');
-			});
-
-			uploadContainer.addEventListener('drop', (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				uploadContainer.classList.remove('drag-over');
-				
-				if (!this.idImage) {
-					const files = e.dataTransfer.files;
-					if (files.length) {
-						fileInput.files = files;
-						this.handleFileSelect({ target: fileInput });
-					}
-				}
-			});
-		}
-	}
-
-	setupFormValidation() {
-		// Account number validation
-		const accountNumberInput = document.getElementById("account_number");
-		if (accountNumberInput) {
-			accountNumberInput.addEventListener("input", (e) => {
-				this.validateAccountNumber(e.target);
-			});
-		}
-
-		// SMS code validation
-		const smsCodeInput = document.getElementById("sms_code");
-		if (smsCodeInput) {
-			smsCodeInput.addEventListener("input", (e) => {
-				this.validateSmsCode(e.target);
-			});
-		}
-
-		// Password validation
-		const passwordInput = document.getElementById("password");
-		const confirmPasswordInput =
-			document.getElementById("confirm_password");
-
-		if (passwordInput) {
-			passwordInput.addEventListener("input", (e) => {
-				this.validatePassword(e.target);
-				if (confirmPasswordInput && confirmPasswordInput.value) {
-					this.validatePasswordMatch(
-						passwordInput,
-						confirmPasswordInput
-					);
-				}
-			});
-		}
-
-		if (confirmPasswordInput) {
-			confirmPasswordInput.addEventListener("input", () => {
-				if (passwordInput) {
-					this.validatePasswordMatch(
-						passwordInput,
-						confirmPasswordInput
-					);
-				}
-			});
-		}
-
-		// Username validation
-		const usernameInput = document.getElementById("username");
-		if (usernameInput) {
-			usernameInput.addEventListener("input", (e) => {
-				this.validateUsername(e.target);
-			});
-		}
-
-		// First name validation
-		const firstNameInput = document.getElementById("first_name");
-		if (firstNameInput) {
-			// Remove any non-letter characters immediately
-			firstNameInput.addEventListener("input", (e) => {
-				e.target.value = e.target.value.replace(/[^A-Za-z\s-]/g, '');
-				this.validateName(e.target, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
-			});
-		}
-
-		// Last name validation
-		const lastNameInput = document.getElementById("last_name");
-		if (lastNameInput) {
-			// Remove any non-letter characters immediately
-			lastNameInput.addEventListener("input", (e) => {
-				e.target.value = e.target.value.replace(/[^A-Za-z\s-]/g, '');
-				this.validateName(e.target, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
-			});
-		}
-	}
-
-	validateAccountNumber(input) {
-		const value = input.value;
-		const digitOnlyRegex = /^\d+$/;
-		const isValid =
-			digitOnlyRegex.test(value) &&
-			value.length >= FORM_VALIDATION.ACCOUNT_NUMBER_MIN_LENGTH;
-
-		const errorMsg =
-			`Account number must be at least ` +
-			`${FORM_VALIDATION.ACCOUNT_NUMBER_MIN_LENGTH} digits`;
-		this.setInputValidation(input, isValid, errorMsg);
-		return isValid;
-	}
-
-	validateSmsCode(input) {
-		const value = input.value;
-		const smsCodeRegex = new RegExp(
-			`^\\d{${FORM_VALIDATION.SMS_CODE_LENGTH}}$`
-		);
-		const isValid = smsCodeRegex.test(value);
-
-		const errorMsg =
-			`SMS code must be ` + `${FORM_VALIDATION.SMS_CODE_LENGTH} digits`;
-		this.setInputValidation(input, isValid, errorMsg);
-		return isValid;
-	}
-
-	validatePassword(input) {
-		const value = input.value;
-		const requirements = {
-			length: value.length >= FORM_VALIDATION.PASSWORD_MIN_LENGTH,
-			uppercase: /[A-Z]/.test(value),
-			lowercase: /[a-z]/.test(value),
-			number: /\d/.test(value),
-			symbol: /[!@#$%^&*(),.?":{}|<>]/.test(value)
-		};
-
-		// Update requirements display
-		const requirementsDiv = input.parentElement.querySelector('.password-requirements');
-		if (!requirementsDiv) {
-			const newRequirementsDiv = document.createElement('div');
-			newRequirementsDiv.className = 'password-requirements';
-			newRequirementsDiv.innerHTML = `
-				<span class="requirement ${requirements.length ? 'met' : ''}" data-requirement="length">
-					<i class="fas ${requirements.length ? 'fa-check' : 'fa-times'}"></i> 8+ characters
-				</span>
-				<span class="requirement ${requirements.uppercase ? 'met' : ''}" data-requirement="uppercase">
-					<i class="fas ${requirements.uppercase ? 'fa-check' : 'fa-times'}"></i> Uppercase
-				</span>
-				<span class="requirement ${requirements.lowercase ? 'met' : ''}" data-requirement="lowercase">
-					<i class="fas ${requirements.lowercase ? 'fa-check' : 'fa-times'}"></i> Lowercase
-				</span>
-				<span class="requirement ${requirements.number ? 'met' : ''}" data-requirement="number">
-					<i class="fas ${requirements.number ? 'fa-check' : 'fa-times'}"></i> Number
-				</span>
-				<span class="requirement ${requirements.symbol ? 'met' : ''}" data-requirement="symbol">
-					<i class="fas ${requirements.symbol ? 'fa-check' : 'fa-times'}"></i> Symbol
-				</span>
-			`;
-			input.parentElement.appendChild(newRequirementsDiv);
-		} else {
-			Object.keys(requirements).forEach(req => {
-				const reqElement = requirementsDiv.querySelector(`[data-requirement="${req}"]`);
-				if (reqElement) {
-					reqElement.classList.toggle('met', requirements[req]);
-					const icon = reqElement.querySelector('i');
-					if (icon) {
-						icon.className = `fas ${requirements[req] ? 'fa-check' : 'fa-times'}`;
-					}
-				}
-			});
-		}
-
-		const isValid = Object.values(requirements).every(Boolean);
-		this.setInputValidation(input, isValid, "Please meet all password requirements");
-		return isValid;
-	}
-
-	validatePasswordMatch(passwordInput, confirmPasswordInput) {
-		console.log("validatePasswordMatch called.");
-		const passwordValue = passwordInput.value;
-		const confirmPasswordValue = confirmPasswordInput.value;
-		const isValid =
-			passwordValue === confirmPasswordValue && passwordValue.length > 0;
-
-		this.setInputValidation(
-			confirmPasswordInput,
-			isValid,
-			"Passwords do not match"
-		);
-		console.log("validatePasswordMatch result:", isValid);
-		return isValid;
-	}
-
-	validateUsername(input) {
-		console.log("validateUsername called.");
-		const value = input.value;
-		const usernameRegex = new RegExp(
-			`^[a-zA-Z0-9_]{${FORM_VALIDATION.USERNAME_MIN_LENGTH},` +
-				`${FORM_VALIDATION.USERNAME_MAX_LENGTH}}$`
-		);
-		const isValid = usernameRegex.test(value);
-
-		const errorMsg =
-			`Username must be ` +
-			`${FORM_VALIDATION.USERNAME_MIN_LENGTH}-` +
-			`${FORM_VALIDATION.USERNAME_MAX_LENGTH} characters ` +
-			`(letters, numbers, underscore only)`;
-		this.setInputValidation(input, isValid, errorMsg);
-		console.log("validateUsername result:", isValid);
-		return isValid;
-	}
-
-	validateName(input, minLength) {
-		console.log("validateName called.");
-		const value = input.value.trim();
-		const lettersOnlyRegex = /^[A-Za-z\s-]+$/;
-		const isValidLength = value.length >= minLength;
-		const isValidCharacters = lettersOnlyRegex.test(value);
-		const isValid = isValidLength && isValidCharacters;
-
-		let errorMsg = '';
-		if (!isValidLength) {
-			errorMsg = `Name must be at least ${minLength} characters`;
-		} else if (!isValidCharacters) {
-			errorMsg = 'Name can only contain letters, spaces, and hyphens';
-		}
-
-		this.setInputValidation(input, isValid, errorMsg);
-		console.log("validateName result:", isValid);
-		return isValid;
-	}
-
-	setInputValidation(input, isValid, errorMessage) {
-		const formGroup = input.closest(".form-group");
-
-		if (!formGroup) return;
-
-		// Remove existing validation classes
-		formGroup.classList.remove("error", "success");
-
-		// Remove existing error message
-		const existingError = formGroup.querySelector(".error-message");
-		if (existingError) {
-			existingError.remove();
-		}
-
-		if (input.value.length > 0) {
-			if (isValid) {
-				formGroup.classList.add("success");
-			} else {
-				formGroup.classList.add("error");
-
-				// Add error message
-				const errorDiv = document.createElement("div");
-				errorDiv.className = "error-message";
-				errorDiv.textContent = errorMessage;
-				formGroup.appendChild(errorDiv);
-			}
-		}
-	}
-
-	handleDetailsSubmit(e) {
+	handleIdentificationSubmit(e) {
 		e.preventDefault();
 
-		// Check age first
-		const dobInput = document.getElementById('date_of_birth');
-		if (dobInput && !this.validateAge(dobInput)) {
-			this.showNotification('You must be at least 18 years old to register.', NOTIFICATION_TYPES.ERROR);
-			return;
-		}
-
-		// Get all form inputs
 		const inputs = {
-			firstNameInput: document.getElementById("first_name"),
-			lastNameInput: document.getElementById("last_name"),
-			dateOfBirthInput: document.getElementById("date_of_birth"),
-			nationalityInput: document.getElementById("nationality"),
-			streetInput: document.getElementById("street"),
-			cityInput: document.getElementById("city"),
-			zipCodeInput: document.getElementById("zip_code"),
-			countryInput: document.getElementById("country"),
-			emailInput: document.getElementById("email"),
-			phoneNumberInput: document.getElementById("phone_number"),
 			idTypeInput: document.getElementById("id_type"),
 			idImageInput: document.getElementById("id_image"),
-			usernameInput: document.getElementById("username"),
-			passwordInput: document.getElementById("password"),
-			confirmPasswordInput: document.getElementById("confirm_password"),
-			securityQ1Input: document.getElementById("security_q1"),
-			securityQ2Input: document.getElementById("security_q2"),
-			securityQ3Input: document.getElementById("security_q3")
 		};
 
-		// Check if all inputs exist
 		for (const [key, input] of Object.entries(inputs)) {
 			if (!input) {
 				console.error(`${key} not found in form.`);
-				this.showNotification("An internal error occurred.", NOTIFICATION_TYPES.ERROR);
+				this.showNotification(
+					"An internal error occurred.",
+					NOTIFICATION_TYPES.ERROR
+				);
 				return;
 			}
 		}
 
-		// Validate all fields
 		const validations = {
-			isFirstNameValid: this.validateName(inputs.firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH),
-			isLastNameValid: this.validateName(inputs.lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH),
-			isDateOfBirthValid: inputs.dateOfBirthInput.value.trim() !== "",
-			isNationalityValid: inputs.nationalityInput.value.trim() !== "",
-			isStreetValid: inputs.streetInput.value.trim() !== "",
-			isCityValid: inputs.cityInput.value.trim() !== "",
-			isZipCodeValid: inputs.zipCodeInput.value.trim() !== "",
-			isCountryValid: inputs.countryInput.value.trim() !== "",
-			isEmailValid: this.validateEmail(inputs.emailInput),
-			isPhoneNumberValid: this.validatePhoneNumber(inputs.phoneNumberInput),
 			isIdTypeValid: inputs.idTypeInput.value !== "",
 			isIdImageValid: this.idImage !== null,
-			isUsernameValid: this.validateUsername(inputs.usernameInput),
-			isPasswordValid: this.validatePassword(inputs.passwordInput),
-			isPasswordMatchValid: this.validatePasswordMatch(inputs.passwordInput, inputs.confirmPasswordInput),
-			isSecurityQ1Valid: inputs.securityQ1Input.value.trim() !== "",
-			isSecurityQ2Valid: inputs.securityQ2Input.value.trim() !== "",
-			isSecurityQ3Valid: inputs.securityQ3Input.value.trim() !== ""
 		};
 
-		const allFieldsValid = Object.values(validations).every(isValid => isValid);
+		const allFieldsValid = Object.values(validations).every(
+			(isValid) => isValid
+		);
 
 		if (!validations.isIdImageValid) {
-			this.showNotification("Please upload your ID image.", NOTIFICATION_TYPES.ERROR);
+			this.showNotification(
+				"Please upload your ID image.",
+				NOTIFICATION_TYPES.ERROR
+			);
 			return;
 		}
 
 		if (allFieldsValid) {
-			// Save form data before proceeding
 			this.saveFormData();
-
-			// Create FormData object for file upload
-			const formData = new FormData();
-			
-			// Add all text fields
-			const formFields = {
-				first_name: inputs.firstNameInput.value.trim(),
-				last_name: inputs.lastNameInput.value.trim(),
-				date_of_birth: inputs.dateOfBirthInput.value,
-				nationality: inputs.nationalityInput.value.trim(),
-				street: inputs.streetInput.value.trim(),
-				city: inputs.cityInput.value.trim(),
-				zip_code: inputs.zipCodeInput.value.trim(),
-				country: inputs.countryInput.value.trim(),
-				email: inputs.emailInput.value.trim(),
-				phone_number: inputs.phoneNumberInput.value.trim(),
-				id_type: inputs.idTypeInput.value,
-				username: inputs.usernameInput.value.trim(),
-				password: inputs.passwordInput.value,
-				security_questions: {
-					first_school: inputs.securityQ1Input.value.trim(),
-					childhood_friend: inputs.securityQ2Input.value.trim(),
-					favorite_show: inputs.securityQ3Input.value.trim()
-				}
-			};
-
-			// Add the form fields as a JSON string
-			formData.append('data', JSON.stringify(formFields));
-			
-			// Add the ID image
-			if (this.idImage) {
-				// Convert base64 to blob
-				const byteString = atob(this.idImage.data.split(',')[1]);
-				const mimeString = this.idImage.data.split(',')[0].split(':')[1].split(';')[0];
-				const ab = new ArrayBuffer(byteString.length);
-				const ia = new Uint8Array(ab);
-				for (let i = 0; i < byteString.length; i++) {
-					ia[i] = byteString.charCodeAt(i);
-				}
-				const blob = new Blob([ab], { type: mimeString });
-				formData.append('id_image', blob, this.idImage.name);
-			}
-
-			// Send registration data to API
-			fetch('/project-errawrs/src/api/user/register.php', {
-				method: 'POST',
-				body: formData
-			})
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					this.goToStep(STEPS.VERIFICATION);
-					this.showNotification("Please verify your phone number.", NOTIFICATION_TYPES.SUCCESS);
-				} else {
-					this.showNotification(data.error || "Registration failed. Please try again.", NOTIFICATION_TYPES.ERROR);
-				}
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				this.showNotification(
-					"An error occurred during registration. Please try again.",
-					NOTIFICATION_TYPES.ERROR
-				);
-			});
+			this.goToStep(STEPS.STEP_TWO_CONTACT);
 		} else {
-			this.showNotification("Please fill in all fields correctly.", NOTIFICATION_TYPES.ERROR);
+			this.showNotification(
+				"Please fill in all identification details correctly.",
+				NOTIFICATION_TYPES.ERROR
+			);
 		}
 	}
 
-	handleOtpSubmit(e) {
+	handleContactInfoSubmit(e) {
 		e.preventDefault();
 
-		const otpCodeInput = document.getElementById("otp_code");
-		const submitBtn = document.querySelector('#otp_form button[type="submit"]');
-
-		if (!otpCodeInput || !submitBtn) {
-			console.error("OTP input element or submit button not found.");
-			this.showNotification(
-				"An internal error occurred.",
-				NOTIFICATION_TYPES.ERROR
-			);
-			return;
-		}
-
-		const otpCode = otpCodeInput.value.trim();
-		if (!otpCode) {
-			this.showNotification(
-				"Please enter the OTP code.",
-				NOTIFICATION_TYPES.ERROR
-			);
-			return;
-		}
-
-		const isOtpValid = otpCode.length === FORM_VALIDATION.SMS_CODE_LENGTH;
-		if (isOtpValid) {
-			this.showLoadingState("otp_form");
-			submitBtn.style.opacity = "0.5";
-			submitBtn.disabled = true;
-			
-			// Make actual API call to verify OTP
-			fetch('/project-errawrs/src/api/auth/verify_otp.php', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					otp: otpCode,
-					phone_number: this.formData.phone_number
-				})
-			})
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					// Store the registration data from the API response
-					this.registeredData = {
-						username: data.user.username,
-						account_number: data.user.account_number,
-						status: 'Active'
-					};
-					
-					// Update success page elements
-					const usernameElement = document.getElementById("registered_username");
-					const accountNumberElement = document.getElementById("account_number");
-					
-					if (usernameElement) {
-						usernameElement.textContent = this.registeredData.username;
-					}
-					if (accountNumberElement) {
-						accountNumberElement.textContent = this.registeredData.account_number;
-					}
-
-					this.hideLoadingState("otp_form");
-					this.goToStep(STEPS.SUCCESS);
-					this.showNotification(
-						"Registration completed successfully!",
-						NOTIFICATION_TYPES.SUCCESS
-					);
-				} else {
-					this.hideLoadingState("otp_form");
-					submitBtn.style.opacity = "1";
-					submitBtn.disabled = false;
-					this.showNotification(
-						data.error || "Failed to verify OTP. Please try again.",
-						NOTIFICATION_TYPES.ERROR
-					);
-				}
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				this.hideLoadingState("otp_form");
-				submitBtn.style.opacity = "1";
-				submitBtn.disabled = false;
-				this.showNotification(
-					"An error occurred while verifying OTP. Please try again.",
-					NOTIFICATION_TYPES.ERROR
-				);
-			});
-		} else {
-			this.showNotification(
-				`Please enter a valid ${FORM_VALIDATION.SMS_CODE_LENGTH}-digit OTP.`,
-				NOTIFICATION_TYPES.ERROR
-			);
-			otpCodeInput.focus();
-		}
-	}
-
-	goToStep(step) {
-		console.log("goToStep called with step:", step);
-		const isValidStep = step >= STEPS.ENROLLMENT && step <= this.maxStep;
-		if (!isValidStep) return;
-
-		// Don't allow going back if registration is complete
-		if (this.registeredData && step < STEPS.SUCCESS) {
-			this.showNotification("Registration is already complete. Please log in.", NOTIFICATION_TYPES.INFO);
-			return;
-		}
-
-		const currentStepElement = document.querySelector('.form-step.active');
-		const newStepElement = document.getElementById(`step_${this.getStepName(step)}`);
-
-		if (!newStepElement) {
-			console.error(`Target step element not found: step_${this.getStepName(step)}`);
-			return;
-		}
-
-		// If going back to step 1, prepare the data first
-		if (step === STEPS.ENROLLMENT) {
-			// Ensure form data exists
-			if (!this.formData) {
-				this.formData = this.collectFormData();
+		if (this.currentContactPage === CONTACT_PAGES.PAGE_ONE) {
+			if (!this.validateContactPage1()) {
+				return;
 			}
-		}
-
-		// Hide current step with animation
-		if (currentStepElement) {
-			currentStepElement.style.opacity = '0';
-			currentStepElement.style.transform = 'translateY(20px)';
-			
-			setTimeout(() => {
-				currentStepElement.classList.remove('active');
-				currentStepElement.style.display = 'none';
-				
-				// Show new step
-				newStepElement.style.display = 'block';
-				newStepElement.offsetHeight; // Trigger reflow
-				newStepElement.classList.add('active');
-				newStepElement.style.opacity = '1';
-				newStepElement.style.transform = 'translateY(0)';
-
-				// Handle step-specific logic
-				if (step === STEPS.ENROLLMENT) {
-					console.log("Restoring form data:", this.formData);
-					this.restoreFormData();
-				} else if (step === STEPS.VERIFICATION) {
-					// Clear any existing OTP input
-					const otpInput = document.getElementById('otp_code');
-					if (otpInput) otpInput.value = '';
-					
-					// Reset the resend timer if it exists
-					if (this.resendTimer) {
-						clearInterval(this.resendTimer);
-						this.startResendTimer();
-					}
-				}
-			}, 300);
-		} else {
-			// If there's no current step, just show the new step immediately
-			newStepElement.style.display = 'block';
-			newStepElement.classList.add('active');
-			if (step === STEPS.ENROLLMENT) {
-				console.log("Restoring form data:", this.formData);
-				this.restoreFormData();
+			this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
+			return;
+		} else if (this.currentContactPage === CONTACT_PAGES.PAGE_TWO) {
+			if (!this.validateContactPage2()) {
+				return;
 			}
-		}
-
-		this.currentStep = step;
-		this.updateStepIndicators();
-	}
-
-	showNewStep(step) {
-		// Show new step with animation
-		const stepId = step === STEPS.SUCCESS ? 'complete_step' : `step_${this.getStepName(step)}`;
-		const newStepElement = document.getElementById(stepId);
-		
-		if (newStepElement) {
-			newStepElement.style.display = 'block';
-			// Trigger reflow
-			newStepElement.offsetHeight;
-			newStepElement.classList.add('active');
-			newStepElement.style.opacity = '1';
-			newStepElement.style.transform = 'translateY(0)';
-
-			// If moving to verification step, disable continue button initially
-			if (step === STEPS.VERIFICATION) {
-				const submitBtn = document.querySelector('#otp_form button[type="submit"]');
-				const otpInput = document.getElementById("otp_code");
-				if (submitBtn) {
-					submitBtn.style.opacity = "0.5";
-					submitBtn.disabled = true;
-				}
-				if (otpInput) {
-					otpInput.value = ""; // Clear OTP input
-				}
-			}
-		} else {
-			console.error(`Step element with id ${stepId} not found`);
-		}
-	}
-
-	getStepName(step) {
-		switch (step) {
-			case STEPS.ENROLLMENT:
-				return "one";
-			case STEPS.VERIFICATION:
-				return "two";
-			case STEPS.SUCCESS:
-				return "three";
-			default:
-				return "one";
-		}
-	}
-
-	updateStepIndicators() {
-		const steps = document.querySelectorAll('.step');
-		steps.forEach((step, index) => {
-			const stepNumber = index + 1;
-			step.classList.remove('active', 'complete');
-			
-			if (stepNumber === this.currentStep) {
-				step.classList.add('active');
-			} else if (stepNumber < this.currentStep) {
-				step.classList.add('complete');
-			}
-		});
-	}
-
-	sendSmsCode() {
-		const sendBtn = document.getElementById("send_otp");
-		const submitBtn = document.querySelector(
-			'#otp_form button[type="submit"]'
-		);
-		const otpInput = document.getElementById("otp_code");
-
-		if (!sendBtn || !submitBtn || !otpInput) {
-			console.error("Required elements not found");
+			this.goToContactPage(CONTACT_PAGES.PAGE_THREE);
 			return;
 		}
 
-		// Check if we have the phone number
-		if (!this.formData || !this.formData.phone_number) {
-			this.showNotification(
-				"Please complete the registration form first",
-				NOTIFICATION_TYPES.ERROR
-			);
-			this.goToStep(STEPS.ENROLLMENT);
+		if (!this.validateContactPage3()) {
 			return;
 		}
+
+		// Save form data
+		this.saveFormData();
 
 		// Show loading state
-		sendBtn.innerHTML = BUTTON_STATES.SENDING;
-		sendBtn.disabled = true;
-		otpInput.value = ""; // Clear any previous OTP
-		submitBtn.style.opacity = "0.5";
-		submitBtn.disabled = true;
-		// Send OTP request
-		fetch("../../src/api/auth/send_otp.php", {
+		const submitBtn = document.querySelector(
+			'#contact_info_form button[type="submit"]'
+		);
+		if (submitBtn) {
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = BUTTON_STATES.PROCESSING;
+		}
+
+		// Request OTP
+		this.requestOtp();
+	}
+
+	requestOtp() {
+		// Get the phone number from the form
+		const phoneNumber = document.getElementById("phone_number")?.value || "";
+
+		// Format phone number (ensure it starts with 0)
+		let formattedPhone = phoneNumber.replace(/[^0-9]/g, "");
+		if (formattedPhone.startsWith("63")) {
+			formattedPhone = "0" + formattedPhone.substring(2);
+		}
+
+		// OTP Modal handlers
+		const closeOtpModalBtn = document.getElementById("close_otp_modal");
+		const otpVerificationForm = document.getElementById("otp_verification_form");
+		const resendOtpBtn = document.getElementById("resend_otp");
+
+		if (closeOtpModalBtn) {
+			closeOtpModalBtn.addEventListener("click", () => {
+				this.hideOtpModal();
+			});
+		}
+
+		if (otpVerificationForm) {
+			otpVerificationForm.addEventListener("submit", (e) => {
+				e.preventDefault();
+				this.verifyOtp();
+			});
+		}
+
+		if (resendOtpBtn) {
+			resendOtpBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.resendOtp();
+			});
+		}
+
+		// Create the request data
+		const requestData = {
+			phone_number: formattedPhone,
+			purpose: 'registration'
+		};
+
+		console.log('Sending OTP request:', requestData);
+
+		// Make API call to request OTP
+		fetch("/project-errawrs/src/api/auth/send_otp.php", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				phone_number: this.formData.phone_number,
-			}),
+			credentials: 'include',
+			body: JSON.stringify(requestData),
 		})
 			.then((response) => {
+				console.log('OTP request response status:', response.status);
+					return response.json().then(data => {
+					console.log('OTP request response data:', data);
+					if (!response.ok) {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+				}
+					return data;
+				});
+			})
+			.then((data) => {
+				// Reset submit button
+				const submitBtn = document.querySelector('#contact_info_form button[type="submit"]');
+				if (submitBtn) {
+					submitBtn.innerHTML = 'Submit <i class="fas fa-arrow-right"></i>';
+					submitBtn.disabled = false;
+				}
+
+				if (data.success) {
+					this.showNotification(data.message, NOTIFICATION_TYPES.SUCCESS);
+					this.showOtpModal();
+				} else {
+					this.showNotification(
+						data.error || "Failed to send verification code. Please try again.",
+						NOTIFICATION_TYPES.ERROR
+					);
+				}
+			})
+			.catch((error) => {
+				console.error('OTP request error:', error);
+				// Reset submit button
+				const submitBtn = document.querySelector('#contact_info_form button[type="submit"]');
+				if (submitBtn) {
+					submitBtn.innerHTML = 'Submit <i class="fas fa-arrow-right"></i>';
+					submitBtn.disabled = false;
+				}
+
+				this.showNotification(
+					error.message || "An error occurred. Please try again.",
+					NOTIFICATION_TYPES.ERROR
+				);
+			});
+	}
+
+	validateContactPage1() {
+		const inputs = {
+			firstName: document.getElementById("first_name"),
+			lastName: document.getElementById("last_name"),
+			dateOfBirth: document.getElementById("date_of_birth"),
+		};
+
+		let isValid = true;
+
+		// Check if all inputs exist
+		for (const [key, input] of Object.entries(inputs)) {
+			if (!input) {
+				console.error(`${key} input not found`);
+				isValid = false;
+			}
+		}
+
+		if (!isValid) {
+			this.showNotification("An error occurred. Please try again.", NOTIFICATION_TYPES.ERROR);
+			return false;
+		}
+
+		// Validate first name
+		if (!this.validateName(inputs.firstName, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH)) {
+			this.setInputValidation(inputs.firstName, false, "Please enter a valid first name");
+			isValid = false;
+		}
+
+		// Validate last name
+		if (!this.validateName(inputs.lastName, FORM_VALIDATION.LAST_NAME_MIN_LENGTH)) {
+			this.setInputValidation(inputs.lastName, false, "Please enter a valid last name");
+			isValid = false;
+		}
+
+		// Validate date of birth
+		if (!this.validateAge(inputs.dateOfBirth)) {
+			isValid = false;
+		}
+
+		if (!isValid) {
+			this.showNotification(
+				"Please fill in all personal information correctly.",
+				NOTIFICATION_TYPES.ERROR
+			);
+		}
+
+		return isValid;
+	}
+
+	validateContactPage2() {
+		const inputs = {
+			email: document.getElementById("email"),
+			phoneNumber: document.getElementById("phone_number"),
+			nationality: document.getElementById("nationality"),
+		};
+
+		let isValid = true;
+
+		if (!inputs.email || !this.validateEmail(inputs.email)) {
+			this.setInputValidation(inputs.email, false, "Please enter a valid email address");
+			isValid = false;
+		}
+		if (!inputs.phoneNumber || !this.validatePhoneNumber(inputs.phoneNumber)) {
+			this.setInputValidation(inputs.phoneNumber, false, "Please enter a valid phone number");
+			isValid = false;
+		}
+		if (!inputs.nationality || inputs.nationality.value === "") {
+			this.setInputValidation(
+				inputs.nationality,
+				false,
+				"Please select your nationality"
+			);
+			isValid = false;
+		}
+
+		if (!isValid) {
+			this.showNotification(
+				"Please fill in all contact details correctly.",
+				NOTIFICATION_TYPES.ERROR
+			);
+		}
+
+		return isValid;
+	}
+
+	validateContactPage3() {
+		const inputs = {
+			street: document.getElementById("street"),
+			city: document.getElementById("city"),
+			zipCode: document.getElementById("zip_code"),
+			country: document.getElementById("country"),
+		};
+
+		let isValid = true;
+
+		if (!inputs.street || inputs.street.value.trim() === "") {
+			this.setInputValidation(
+				inputs.street,
+				false,
+				"Please enter your street address"
+			);
+			isValid = false;
+		}
+		if (!inputs.city || inputs.city.value.trim() === "") {
+			this.setInputValidation(
+				inputs.city,
+				false,
+				"Please enter your city"
+			);
+			isValid = false;
+		}
+		if (!inputs.zipCode || !this.validateZipCode(inputs.zipCode)) {
+			this.setInputValidation(inputs.zipCode, false, "Please enter a valid zip code");
+			isValid = false;
+		}
+		if (!inputs.country || inputs.country.value === "") {
+			this.setInputValidation(
+				inputs.country,
+				false,
+				"Please select your country"
+			);
+			isValid = false;
+		}
+
+		if (!isValid) {
+			this.showNotification(
+				"Please fill in all address information correctly.",
+				NOTIFICATION_TYPES.ERROR
+			);
+		}
+
+		return isValid;
+	}
+
+	goToContactPage(page) {
+		if (page < CONTACT_PAGES.PAGE_ONE || page > CONTACT_PAGES.PAGE_THREE) {
+			return;
+		}
+
+		const currentPageElement = document.querySelector(".form-page.active");
+		let newPageElement;
+
+		switch (page) {
+			case CONTACT_PAGES.PAGE_ONE:
+				newPageElement = document.getElementById("contact_page_1");
+				break;
+			case CONTACT_PAGES.PAGE_TWO:
+				newPageElement = document.getElementById("contact_page_2");
+				break;
+			case CONTACT_PAGES.PAGE_THREE:
+				newPageElement = document.getElementById("contact_page_3");
+				break;
+		}
+
+		if (!newPageElement) {
+			console.error(`Target page element not found for page: ${page}`);
+			return;
+		}
+
+		// Determine animation direction
+		const direction = page > this.currentContactPage ? "right" : "left";
+
+		// Apply slide out animation to current page
+		if (currentPageElement) {
+			currentPageElement.classList.add(direction === "right" ? "slide-left" : "slide-right");
+			currentPageElement.addEventListener("transitionend", () => {
+				currentPageElement.classList.remove("active", "slide-left", "slide-right");
+				currentPageElement.style.display = "none";
+			}, { once: true });
+
+			// Show and animate new page
+			newPageElement.style.display = "block";
+			newPageElement.classList.add(direction === "right" ? "slide-in-right" : "slide-in-left");
+
+			// Force reflow
+			newPageElement.offsetHeight;
+
+			// Add active class to trigger animation
+			newPageElement.classList.add("active");
+			
+			// Remove animation classes after transition
+			newPageElement.addEventListener("transitionend", () => {
+				newPageElement.classList.remove("slide-in-right", "slide-in-left");
+			}, { once: true });
+		} else {
+			// If no current page, just show the new page
+			newPageElement.style.display = "block";
+			newPageElement.classList.add("active");
+		}
+
+		this.currentContactPage = page;
+		this.updatePaginationDots();
+		this.saveFormData();
+	}
+
+	updatePaginationDots() {
+		const dots = document.querySelectorAll(".pagination-dot");
+		dots.forEach((dot, index) => {
+			const pageNum = index + 1;
+			dot.classList.toggle(
+				"active",
+				pageNum === this.currentContactPage
+			);
+		});
+	}
+
+	handlePaginationDotClick(pageNumber) {
+		// If trying to skip ahead, validate current page first
+		if (pageNumber > this.currentContactPage) {
+			if (
+				this.currentContactPage === CONTACT_PAGES.PAGE_ONE &&
+				!this.validateContactPage1()
+			) {
+				return;
+			} else if (
+				this.currentContactPage === CONTACT_PAGES.PAGE_TWO &&
+				!this.validateContactPage2()
+			) {
+				return;
+			}
+		}
+
+		this.goToContactPage(pageNumber);
+	}
+
+	initializeOtpForm() {
+		const otpForm = document.getElementById("otp_verification_form");
+		if (!otpForm) return;
+
+		otpForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			this.verifyOtp();
+		});
+
+		// Add input validation for OTP code
+		const otpInput = document.getElementById("otp_code");
+		if (otpInput) {
+			otpInput.addEventListener("input", (e) => {
+				e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+			});
+		}
+
+		// Handle resend OTP
+		const resendBtn = document.getElementById("resend_otp");
+		if (resendBtn) {
+			resendBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (resendBtn.style.pointerEvents !== "none") {
+					this.handleContactInfoSubmit(e);
+				}
+			});
+		}
+	}
+
+	showOtpModal() {
+		const otpModal = document.getElementById("otp_modal");
+		const otpInput = document.getElementById("otp_code");
+		
+		if (!otpModal || !otpInput) {
+			console.error("OTP modal elements not found");
+			return;
+		}
+
+		// Reset OTP input
+		otpInput.value = "";
+
+		// Show modal with animation
+		otpModal.style.display = "flex";
+		requestAnimationFrame(() => {
+			otpModal.classList.add("active");
+		});
+
+		// Focus on OTP input
+		otpInput.focus();
+
+		// Start countdown for resend button
+		this.startResendCountdown();
+
+		// Setup close handlers
+		const closeBtn = document.getElementById("close_otp_modal");
+		if (closeBtn) {
+			closeBtn.onclick = (e) => {
+				e.preventDefault();
+				this.hideOtpModal();
+			};
+		}
+
+		// Close on outside click
+		otpModal.onclick = (e) => {
+			if (e.target === otpModal) {
+				this.hideOtpModal();
+			}
+		};
+
+		// Close on escape key
+		document.addEventListener("keydown", (e) => {
+			if (e.key === "Escape") {
+				this.hideOtpModal();
+			}
+		}, { once: true });
+	}
+
+	hideOtpModal() {
+		const otpModal = document.getElementById("otp_modal");
+		if (!otpModal) return;
+
+		// Remove active class to trigger fade out animation
+		otpModal.classList.remove("active");
+
+		// Hide modal after animation
+		setTimeout(() => {
+			otpModal.style.display = "none";
+			// Reset OTP input
+			const otpInput = document.getElementById("otp_code");
+			if (otpInput) {
+				otpInput.value = "";
+			}
+		}, 300);
+	}
+
+	startResendCountdown() {
+		const resendBtn = document.getElementById("resend_otp");
+		if (!resendBtn) return;
+
+		let countdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
+		resendBtn.textContent = `Resend code in ${countdown}s`;
+		resendBtn.style.pointerEvents = "none";
+		resendBtn.style.opacity = "0.5";
+
+		const countdownInterval = setInterval(() => {
+			countdown--;
+			if (countdown <= 0) {
+				clearInterval(countdownInterval);
+				resendBtn.textContent = "Resend code";
+				resendBtn.style.pointerEvents = "auto";
+				resendBtn.style.opacity = "1";
+			} else {
+				resendBtn.textContent = `Resend code in ${countdown}s`;
+			}
+		}, 1000);
+	}
+
+	verifyOtp() {
+		const otpInput = document.getElementById("otp_code");
+		const verifyBtn = document.getElementById("verify_otp_btn");
+		const otp = otpInput?.value || "";
+
+		if (!otp) {
+			this.showNotification(
+				"Please enter the verification code.",
+				NOTIFICATION_TYPES.ERROR
+			);
+			return;
+		}
+
+		if (verifyBtn) {
+			verifyBtn.innerHTML = BUTTON_STATES.PROCESSING;
+			verifyBtn.disabled = true;
+		}
+
+		// Get the phone number from the form
+		let phoneNumber = document.getElementById("phone_number")?.value || "";
+		
+		// Format phone number (ensure it starts with 0)
+		phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+		if (phoneNumber.startsWith("63")) {
+			phoneNumber = "0" + phoneNumber.substring(2);
+		}
+
+		// Create the request data
+		const requestData = {
+			otp: otp,
+			phone_number: phoneNumber,
+			purpose: 'registration'
+		};
+
+		console.log('Sending OTP verification request:', requestData);
+
+		// Make API call to verify OTP
+		fetch("/project-errawrs/src/api/auth/verify_otp.php", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: 'include',
+			body: JSON.stringify(requestData),
+		})
+			.then((response) => {
+				console.log('OTP verification response status:', response.status);
+					return response.json().then(data => {
+					console.log('OTP verification response data:', data);
+					if (!response.ok) {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+				}
+					return data;
+				});
+			})
+			.then((data) => {
+				if (data.success) {
+					this.hideOtpModal();
+
+					// Reset OTP form
+					if (otpInput) otpInput.value = "";
+					if (verifyBtn) {
+						verifyBtn.innerHTML = "Verify";
+						verifyBtn.disabled = false;
+					}
+
+					// Submit registration data
+					this.submitRegistrationData();
+				} else {
+					// Show error message
+					this.showNotification(
+						data.error || "Invalid verification code. Please try again.",
+						NOTIFICATION_TYPES.ERROR
+					);
+					if (verifyBtn) {
+						verifyBtn.innerHTML = "Verify";
+						verifyBtn.disabled = false;
+					}
+				}
+			})
+			.catch((error) => {
+				console.error('OTP verification error:', error);
+				this.showNotification(
+					error.message || "An error occurred. Please try again.",
+					NOTIFICATION_TYPES.ERROR
+				);
+				if (verifyBtn) {
+					verifyBtn.innerHTML = "Verify";
+					verifyBtn.disabled = false;
+				}
+			});
+	}
+
+	resendOtp() {
+		// Show loading state on resend button
+		const resendBtn = document.getElementById("resend_otp");
+		if (resendBtn) {
+			resendBtn.textContent = "Sending...";
+			resendBtn.style.pointerEvents = "none";
+			resendBtn.style.opacity = "0.5";
+		}
+
+		// Get the phone number from the form
+		let phoneNumber = document.getElementById("phone_number")?.value || "";
+		
+		// Format phone number (ensure it starts with 0)
+		phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+		if (phoneNumber.startsWith("63")) {
+			phoneNumber = "0" + phoneNumber.substring(2);
+		}
+
+		// Create the request data
+		const requestData = {
+			phone_number: phoneNumber,
+			purpose: 'registration'
+		};
+
+		console.log('Sending resend OTP request:', requestData);
+
+		// Make API call to request new OTP
+		fetch("/project-errawrs/src/api/auth/send_otp.php", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: 'include',
+			body: JSON.stringify(requestData)
+		})
+			.then((response) => {
+				console.log('Resend OTP response status:', response.status);
 				if (!response.ok) {
-					return response.json().then((data) => {
-						throw new Error(data.error || "Failed to send OTP");
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
 					});
 				}
 				return response.json();
@@ -845,80 +736,180 @@ class RegistrationManager {
 			.then((data) => {
 				if (data.success) {
 					this.showNotification(
-						"SMS code sent successfully! Please enter the code.",
+						"A new verification code has been sent to your phone.",
 						NOTIFICATION_TYPES.SUCCESS
 					);
-					this.startResendTimer();
-					// Enable submit button after OTP is sent
-					submitBtn.style.opacity = "1";
-					submitBtn.disabled = false;
-					otpInput.focus(); // Focus the OTP input field
+					this.startResendCountdown();
 				} else {
-					sendBtn.innerHTML = BUTTON_STATES.SEND;
-					sendBtn.disabled = false;
 					this.showNotification(
-						data.error,
+						data.error || "Failed to send verification code. Please try again.",
+						NOTIFICATION_TYPES.ERROR
+					);
+					if (resendBtn) {
+						resendBtn.textContent = "Resend code";
+						resendBtn.style.pointerEvents = "auto";
+						resendBtn.style.opacity = "1";
+					}
+				}
+			})
+			.catch((error) => {
+				console.error("Error requesting OTP:", error);
+				this.showNotification(
+					error.message || "Failed to send verification code. Please try again.",
+					NOTIFICATION_TYPES.ERROR
+				);
+				if (resendBtn) {
+					resendBtn.textContent = "Resend code";
+					resendBtn.style.pointerEvents = "auto";
+					resendBtn.style.opacity = "1";
+				}
+			});
+	}
+
+	submitRegistrationData() {
+		const submitBtn = document.querySelector(
+			'#contact_info_form button[type="submit"]'
+		);
+		if (submitBtn) {
+			this.showLoadingState("contact_info_form");
+		}
+
+		const formData = new FormData();
+
+		const formFields = {
+			id_type: document.getElementById("id_type")?.value || "",
+			email: document.getElementById("email")?.value || "",
+			phone_number: document.getElementById("phone_number")?.value || "",
+			first_name: document.getElementById("first_name")?.value || "",
+			last_name: document.getElementById("last_name")?.value || "",
+			date_of_birth: document.getElementById("date_of_birth")?.value || "",
+			nationality: document.getElementById("nationality")?.value || "",
+			street: document.getElementById("street")?.value || "",
+			city: document.getElementById("city")?.value || "",
+			zip_code: document.getElementById("zip_code")?.value || "",
+			country: document.getElementById("country")?.value || "",
+		};
+
+		formData.append("data", JSON.stringify(formFields));
+
+		if (this.idImage) {
+			const byteString = atob(this.idImage.data.split(",")[1]);
+			const mimeString = this.idImage.data
+				.split(",")[0]
+				.split(":")[1]
+				.split(";")[0];
+			const ab = new ArrayBuffer(byteString.length);
+			const ia = new Uint8Array(ab);
+			for (let i = 0; i < byteString.length; i++) {
+				ia[i] = byteString.charCodeAt(i);
+			}
+			const blob = new Blob([ab], { type: mimeString });
+			formData.append("id_image", blob, this.idImage.name);
+		}
+
+		// Use the submit_registration.php endpoint
+		fetch("/project-errawrs/src/api/user/submit_registration.php", {
+			method: "POST",
+			body: formData,
+		})
+			.then((response) => {
+				if (!response.ok) {
+					return response.json().then(data => {
+						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+					});
+				}
+				return response.json();
+			})
+			.then((data) => {
+				this.hideLoadingState("contact_info_form");
+				if (data.success) {
+					this.goToStep(STEPS.STEP_THREE_PROCESSING);
+					this.showNotification(
+						"Registration successful! Please check your email for further instructions.",
+						NOTIFICATION_TYPES.SUCCESS
+					);
+				} else {
+					console.error("API response data:", data);
+					this.showNotification(
+						data.error || "Registration failed. Please try again.",
 						NOTIFICATION_TYPES.ERROR
 					);
 				}
 			})
 			.catch((error) => {
-				sendBtn.innerHTML = BUTTON_STATES.SEND;
-				sendBtn.disabled = false;
+				this.hideLoadingState("contact_info_form");
+				console.error("Error:", error);
 				this.showNotification(
-					error.message ||
-						"Failed to send SMS code. Please try again.",
+					error.message || "Registration failed. Please try again.",
 					NOTIFICATION_TYPES.ERROR
 				);
-				console.error("Error:", error);
 			});
 	}
 
-	startResendTimer() {
-		const resendLink = document.getElementById("resend_otp");
-		const sendBtn = document.getElementById("send_otp");
-		const submitBtn = document.querySelector(
-			'#otp_form button[type="submit"]'
-		);
+	goToStep(step) {
+		console.log("Going to step:", step);
+		
+		if (step < STEPS.STEP_ONE_IDENTIFICATION || step > STEPS.STEP_THREE_PROCESSING) {
+			console.error("Invalid step:", step);
+			return;
+		}
 
-		if (!resendLink || !sendBtn || !submitBtn) return;
+		try {
+			// Save current form data
+			this.saveFormData();
+			console.log("Form data saved");
 
-		this.resendCountdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
+			// Hide all steps
+			document.querySelectorAll(".form-step").forEach((el) => {
+				el.classList.remove("active");
+			});
 
-		// Disable send button and resend link, but keep submit enabled
-		resendLink.style.pointerEvents = "none";
-		resendLink.style.opacity = "0.5";
-		sendBtn.disabled = true;
-		sendBtn.innerHTML = `Resend in ${this.resendCountdown}s`;
-		this.resendTimer = setInterval(() => {
-			this.resendCountdown--;
-			resendLink.textContent = `Resend code in ${this.resendCountdown}s`;
-			sendBtn.innerHTML = `Resend in ${this.resendCountdown}s`;
-			if (this.resendCountdown <= 0) {
-				clearInterval(this.resendTimer);
-				this.resendTimer = null;
-				resendLink.textContent = "Resend code";
-				resendLink.style.pointerEvents = "auto";
-				resendLink.style.opacity = "1";
-				sendBtn.disabled = false;
-				sendBtn.innerHTML = BUTTON_STATES.SEND;
+			// Show target step
+			let targetStep;
+			switch (step) {
+				case STEPS.STEP_ONE_IDENTIFICATION:
+					targetStep = document.getElementById("step_one_identification");
+					this.currentContactPage = CONTACT_PAGES.PAGE_ONE;
+					break;
+				case STEPS.STEP_TWO_CONTACT:
+					targetStep = document.getElementById("step_two_contact");
+					break;
+				case STEPS.STEP_THREE_PROCESSING:
+					targetStep = document.getElementById("step_three_processing");
+					break;
 			}
-		}, 1000);
+
+			if (targetStep) {
+				targetStep.classList.add("active");
+				this.currentStep = step;
+				this.updateStepIndicators();
+				if (step === STEPS.STEP_TWO_CONTACT) {
+					this.updatePaginationDots();
+				}
+				console.log("Navigation complete to step:", step);
+			} else {
+				throw new Error("Target step element not found");
+			}
+		} catch (error) {
+			console.error("Error during step navigation:", error);
+			this.showNotification("An error occurred during navigation. Please try again.", NOTIFICATION_TYPES.ERROR);
+		}
 	}
 
-	togglePassword(button) {
-		if (!button) return;
-
-		const targetId = button.dataset.target;
-		const input = document.getElementById(targetId);
-		const icon = button.querySelector("i");
-
-		if (!input || !icon) return;
-
-		const isPassword = input.type === INPUT_TYPES.PASSWORD;
-
-		input.type = isPassword ? INPUT_TYPES.TEXT : INPUT_TYPES.PASSWORD;
-		icon.className = isPassword ? "fas fa-eye" : "fas fa-eye-slash";
+	updateStepIndicators() {
+		const steps = document.querySelectorAll(".step");
+		steps.forEach((step, index) => {
+			const stepNum = index + 1;
+			if (stepNum < this.currentStep) {
+				step.classList.add("completed");
+				step.classList.remove("active");
+			} else if (stepNum === this.currentStep) {
+				step.classList.add("active");
+				step.classList.remove("completed");
+			} else {
+				step.classList.remove("completed", "active");
+			}
+		});
 	}
 
 	showLoadingState(formId) {
@@ -931,7 +922,6 @@ class RegistrationManager {
 			submitBtn.disabled = true;
 		}
 
-		// Disable all form inputs
 		const inputs = form.querySelectorAll("input, button");
 		inputs.forEach((input) => {
 			if (input.type !== "submit") {
@@ -950,136 +940,82 @@ class RegistrationManager {
 			submitBtn.disabled = false;
 		}
 
-		// Re-enable all form inputs
 		const inputs = form.querySelectorAll("input, button");
 		inputs.forEach((input) => {
 			input.disabled = false;
 		});
 	}
 
-	generateAccountNumber() {
-		// Format: 544250000XXX where XXX is a random number
-		const prefix = "54425";  // Fixed prefix
-		const middle = "0000";   // Fixed middle part
-		const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // Random 3 digits
-		return `${prefix}${middle}${random}`; // Will create format like 544250000105
-	}
-
 	showNotification(message, type = NOTIFICATION_TYPES.INFO) {
-		// Remove existing notification
-		const existingNotification = document.querySelector(".notification");
-		if (existingNotification) {
-			existingNotification.remove();
-		}
-
 		// Create notification element
 		const notification = document.createElement("div");
-		notification.className = `notification notification-${type}`;
-		notification.innerHTML = `
-            <div class="notification-content">
-                <i class="fas ${this.getNotificationIcon(type)}"></i>
-                <span>${message}</span>
-                <button class="notification-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>`;
-
-		// Add to DOM
-		document.body.appendChild(notification);
-
-		// Show notification with animation
-		setTimeout(() => {
-			notification.classList.add("show");
-		}, TIMER_SETTINGS.NOTIFICATION_SHOW_DELAY);
-
-		// Auto-hide notification
-		setTimeout(() => {
-			this.hideNotification(notification);
-		}, TIMER_SETTINGS.NOTIFICATION_AUTO_HIDE);
-
-		// Close button event
-		const closeBtn = notification.querySelector(".notification-close");
-		if (closeBtn) {
-			closeBtn.addEventListener("click", () => {
-				this.hideNotification(notification);
-			});
-		}
-	}
-
-	getNotificationIcon(type) {
+		notification.className = `notification ${type}`;
+		
+		// Add icon based on type
+		let icon;
 		switch (type) {
 			case NOTIFICATION_TYPES.SUCCESS:
-				return "fa-check-circle";
+				icon = "fa-check-circle";
+				break;
 			case NOTIFICATION_TYPES.ERROR:
-				return "fa-exclamation-circle";
+				icon = "fa-times-circle";
+				break;
 			case NOTIFICATION_TYPES.WARNING:
-				return "fa-exclamation-triangle";
-			case NOTIFICATION_TYPES.INFO:
+				icon = "fa-exclamation-triangle";
+				break;
 			default:
-				return "fa-info-circle";
+				icon = "fa-info-circle";
 		}
-	}
+		
+		notification.innerHTML = `
+			<i class="fas ${icon}"></i>
+			<span>${message}</span>
+		`;
 
-	hideNotification(notification) {
-		if (!notification) return;
+		// Add to document
+		document.body.appendChild(notification);
 
-		notification.classList.remove("show");
+		// Trigger animation
+		requestAnimationFrame(() => {
+			notification.classList.add("show");
+		});
+
+		// Remove after delay
 		setTimeout(() => {
-			if (notification.parentNode) {
-				notification.parentNode.removeChild(notification);
-			}
-		}, TIMER_SETTINGS.NOTIFICATION_HIDE_DELAY);
-	}
-
-	goToDashboard() {
-		this.showNotification(
-			"Redirecting to dashboard...",
-			NOTIFICATION_TYPES.INFO
-		);
-
-		// Simulate redirect
-		setTimeout(() => {
-			window.location.href = "./user_dashboard.html";
-		}, 1000);
+			notification.classList.remove("show");
+			setTimeout(() => {
+				notification.remove();
+			}, 300); // Match animation duration
+		}, 3000);
 	}
 
 	validatePhoneNumber(input) {
-		console.log("validatePhoneNumber called.");
-		const value = input.value.trim();
-		// Basic validation: starts with +, contains only digits and spaces/hyphens
-		// In a real app, use a more robust regex based on expected formats
-		const phoneRegex = /^\+?\d[\d\s-]{7,}/;
-		const isValid = phoneRegex.test(value);
-
-		const errorMsg =
-			"Please enter a valid phone number (e.g., +1 555 123 4567)";
-		this.setInputValidation(input, isValid, errorMsg);
-		console.log("validatePhoneNumber result:", isValid);
+		const phoneRegex = /^(\+63|0)[0-9]{10}$/;
+		const isValid = phoneRegex.test(input.value);
+		this.setInputValidation(
+			input,
+			isValid,
+			"Please enter a valid Philippine phone number"
+		);
 		return isValid;
 	}
 
 	collectFormData() {
 		const data = {
-			first_name: document.getElementById('first_name')?.value || '',
-			last_name: document.getElementById('last_name')?.value || '',
-			date_of_birth: document.getElementById('date_of_birth')?.value || '',
-			nationality: document.getElementById('nationality')?.value || '',
-			street: document.getElementById('street')?.value || '',
-			city: document.getElementById('city')?.value || '',
-			zip_code: document.getElementById('zip_code')?.value || '',
-			country: document.getElementById('country')?.value || '',
-			email: document.getElementById('email')?.value || '',
-			phone_number: document.getElementById('phone_number')?.value || '',
-			id_type: document.getElementById('id_type')?.value || '',
-			username: document.getElementById('username')?.value || '',
-			password: document.getElementById('password')?.value || '',
-			confirm_password: document.getElementById('confirm_password')?.value || '',
-			security_q1: document.getElementById('security_q1')?.value || '',
-			security_q2: document.getElementById('security_q2')?.value || '',
-			security_q3: document.getElementById('security_q3')?.value || ''
+			id_type: document.getElementById("id_type")?.value || "",
+			email: document.getElementById("email")?.value || "",
+			phone_number: document.getElementById("phone_number")?.value || "",
+			first_name: document.getElementById("first_name")?.value || "",
+			last_name: document.getElementById("last_name")?.value || "",
+			date_of_birth:
+				document.getElementById("date_of_birth")?.value || "",
+			nationality: document.getElementById("nationality")?.value || "",
+			street: document.getElementById("street")?.value || "",
+			city: document.getElementById("city")?.value || "",
+			zip_code: document.getElementById("zip_code")?.value || "",
+			country: document.getElementById("country")?.value || "",
 		};
 
-		// Keep the ID image data if it exists
 		if (this.idImage) {
 			data.id_image = this.idImage;
 		}
@@ -1088,197 +1024,185 @@ class RegistrationManager {
 	}
 
 	saveFormData() {
-		this.formData = this.collectFormData();
+		try {
+			const formData = {
+				// Identification step
+				id_type: document.getElementById("id_type")?.value || "",
+				id_image: this.idImage,
+
+				// Contact info step
+				first_name: document.getElementById("first_name")?.value || "",
+				last_name: document.getElementById("last_name")?.value || "",
+				date_of_birth: document.getElementById("date_of_birth")?.value || "",
+				email: document.getElementById("email")?.value || "",
+				phone_number: document.getElementById("phone_number")?.value || "",
+				nationality: document.getElementById("nationality")?.value || "",
+				street: document.getElementById("street")?.value || "",
+				city: document.getElementById("city")?.value || "",
+				zip_code: document.getElementById("zip_code")?.value || "",
+				country: document.getElementById("country")?.value || "",
+
+				// Current state
+				currentStep: this.currentStep,
+				currentContactPage: this.currentContactPage
+			};
+
+			// Save to sessionStorage
+			sessionStorage.setItem("registrationFormData", JSON.stringify(formData));
+			console.log("Form data saved successfully");
+		} catch (error) {
+			console.error("Error saving form data:", error);
+			throw error; // Re-throw to handle in calling function
+		}
 	}
 
-	restoreFormData() {
-		if (!this.formData) {
-			console.log("No form data to restore");
-			return;
-		}
+	loadFormData() {
+		const savedData = sessionStorage.getItem("registrationFormData");
+		if (!savedData) return;
 
-		console.log("Restoring form data:", this.formData);
+		try {
+			const formData = JSON.parse(savedData);
 
-		const fields = [
-			'first_name',
-			'last_name',
-			'date_of_birth',
-			'nationality',
-			'street',
-			'city',
-			'zip_code',
-			'country',
-			'email',
-			'phone_number',
-			'id_type',
-			'username',
-			'password',
-			'confirm_password',
-			'security_q1',
-			'security_q2',
-			'security_q3'
-		];
+			// Restore form values
+			const fields = [
+				"id_type", "first_name", "last_name", "date_of_birth",
+				"email", "phone_number", "nationality", "street",
+				"city", "zip_code", "country"
+			];
 
-		fields.forEach(field => {
-			const input = document.getElementById(field);
-			if (input && this.formData[field]) {
-				input.value = this.formData[field];
-				
-				// Trigger validation
-				if (field === 'password') {
-					this.validatePassword(input);
-				} else if (field === 'confirm_password') {
-					const passwordInput = document.getElementById('password');
-					if (passwordInput) {
-						this.validatePasswordMatch(passwordInput, input);
-					}
-				} else if (field === 'username') {
-					this.validateUsername(input);
-				} else if (field.includes('name')) {
-					this.validateName(input, field === 'first_name' ? 
-						FORM_VALIDATION.FIRST_NAME_MIN_LENGTH : 
-						FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
-				} else if (field === 'phone_number') {
-					this.validatePhoneNumber(input);
-				} else if (field === 'email') {
-					this.validateEmail(input);
+			fields.forEach(field => {
+				const input = document.getElementById(field);
+				if (input && formData[field]) {
+					input.value = formData[field];
+				}
+			});
+
+			// Restore ID image if exists
+			if (formData.id_image) {
+				this.idImage = formData.id_image;
+				const container = document.getElementById("file_upload_container");
+				const previewInfo = container?.querySelector(".preview-info-compact");
+				const fileNameDisplay = previewInfo?.querySelector(".file-name-display");
+
+				if (container && previewInfo && fileNameDisplay) {
+					fileNameDisplay.textContent = formData.id_image.name;
+					previewInfo.style.display = "flex";
+					container.classList.add("has-file");
 				}
 			}
-		});
 
-		// Restore ID image if it exists
-		if (this.formData.id_image) {
-			this.idImage = this.formData.id_image;
-			const preview = document.getElementById('id_image_preview');
-			if (preview) {
-				preview.style.display = 'block';
-				preview.innerHTML = `
-					<img src="${this.idImage.data}" alt="ID Preview"/>
-					<button type="button" class="remove-image" aria-label="Remove image">
-						<i class="fas fa-times"></i>
-					</button>
-				`;
+			// Restore current step and page
+			if (formData.currentStep) {
+				this.currentStep = formData.currentStep;
+				this.goToStep(formData.currentStep);
+			}
 
-				const removeBtn = preview.querySelector('.remove-image');
-				if (removeBtn) {
-					removeBtn.addEventListener('click', () => this.clearFilePreview());
-				}
-
-				const container = document.querySelector('.file-upload-container');
-				if (container) {
-					container.classList.add('has-file');
+			if (formData.currentContactPage) {
+				this.currentContactPage = formData.currentContactPage;
+				if (this.currentStep === STEPS.STEP_TWO_CONTACT) {
+					this.goToContactPage(formData.currentContactPage);
 				}
 			}
+		} catch (error) {
+			console.error("Error loading form data:", error);
+			sessionStorage.removeItem("registrationFormData");
 		}
 	}
 
 	validateEmail(input) {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		const isValid = emailRegex.test(input.value);
-		this.setInputValidation(input, isValid, "Please enter a valid email address");
+		this.setInputValidation(
+			input,
+			isValid,
+			"Please enter a valid email address"
+		);
 		return isValid;
 	}
 
-	handleFileSelect(event) {
-		const file = event.target.files[0];
-		const container = document.querySelector('.file-upload-container');
-		const preview = document.getElementById('id_image_preview');
-		const maxSize = 5 * 1024 * 1024; // 5MB
-
+	handleFileSelect(e) {
+		const file = e.target.files[0];
+		const container = document.querySelector(".file-upload-container");
+		const previewInfoCompact = container?.querySelector(".preview-info-compact");
+		const fileNameDisplay = previewInfoCompact?.querySelector(".file-name-display");
+		
+		// Clear existing preview if no file selected
 		if (!file) {
 			this.clearFilePreview();
 			return;
 		}
 
-		// If we already have an image, don't allow another upload
-		if (this.idImage) {
-			this.showNotification('Please remove the current image before uploading a new one.', NOTIFICATION_TYPES.WARNING);
-			event.target.value = ''; // Clear the file input
-			return;
-		}
-
 		// Validate file type
-		if (!file.type.startsWith('image/')) {
-			this.showNotification('Please select an image file (JPG, PNG, etc.).', NOTIFICATION_TYPES.ERROR);
+		const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+		if (!allowedTypes.includes(file.type)) {
+			this.showNotification(
+				"Please select a valid image file (JPG, JPEG, or PNG).",
+				NOTIFICATION_TYPES.ERROR
+			);
 			this.clearFilePreview();
 			return;
 		}
 
 		// Validate file size
+		const maxSize = 5 * 1024 * 1024; // 5MB
 		if (file.size > maxSize) {
-			this.showNotification('File size must be less than 5MB. Please choose a smaller file.', NOTIFICATION_TYPES.ERROR);
+			this.showNotification(
+				"File size must be less than 5MB.",
+				NOTIFICATION_TYPES.ERROR
+			);
 			this.clearFilePreview();
 			return;
 		}
 
 		// Show loading state
-		container.classList.add('loading');
-		preview.innerHTML = `
-			<div class="upload-progress">
-				<i class="fas fa-spinner fa-spin"></i>
-				<span>Processing image...</span>
-			</div>
-		`;
+		if (container) {
+			container.classList.add("loading");
+		}
 
-		// Read and preview the file
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			// Create an image element to check dimensions
-			const img = new Image();
-			img.onload = () => {
-				// Store the file data
-				this.idImage = {
-					data: e.target.result,
-					type: file.type,
-					name: file.name,
-					width: img.width,
-					height: img.height
-				};
-
-				// Show preview with enhanced UI
-				preview.style.display = 'block';
-				preview.innerHTML = `
-					<div class="preview-header">
-						<span class="preview-title">
-							<i class="fas fa-id-card"></i>
-							ID Preview
-						</span>
-						<button type="button" class="remove-image" aria-label="Remove image">
-							<i class="fas fa-times"></i>
-						</button>
-					</div>
-					<div class="preview-image">
-						<img src="${e.target.result}" alt="ID Preview"/>
-					</div>
-					<div class="preview-info">
-						<span><i class="fas fa-file"></i> ${file.name}</span>
-						<span><i class="fas fa-ruler"></i> ${img.width}x${img.height}px</span>
-						<span><i class="fas fa-weight"></i> ${(file.size / 1024 / 1024).toFixed(2)}MB</span>
-					</div>
-				`;
-
-				// Add remove button handler
-				const removeBtn = preview.querySelector('.remove-image');
-				if (removeBtn) {
-					removeBtn.addEventListener('click', () => this.clearFilePreview());
-				}
-
-				// Update container state
-				container.classList.remove('loading');
-				container.classList.add('has-file');
-
-				// Disable the file input
-				const fileInput = document.getElementById('id_image');
-				if (fileInput) {
-					fileInput.disabled = true;
-				}
+			// Store file data
+			this.idImage = {
+				data: e.target.result,
+				type: file.type,
+				name: file.name,
 			};
-			img.src = e.target.result;
+
+			// Update UI
+			if (container) {
+				container.classList.remove("loading");
+				container.classList.add("has-file");
+			}
+			
+			if (previewInfoCompact) {
+				previewInfoCompact.style.display = "flex";
+			}
+			
+			if (fileNameDisplay) {
+				fileNameDisplay.innerHTML = `<i class="fas fa-file-image"></i> ${file.name}`;
+			}
+
+			// Setup preview actions
+			const viewBtn = previewInfoCompact?.querySelector(".btn-view-image");
+			const removeBtn = previewInfoCompact?.querySelector(".remove-image");
+
+			if (viewBtn) {
+				viewBtn.onclick = () => this.showImagePreview(this.idImage.data, this.idImage.name);
+			}
+
+			if (removeBtn) {
+				removeBtn.onclick = () => this.clearFilePreview();
+			}
 		};
 
 		reader.onerror = () => {
-			this.showNotification('Error reading file. Please try again.', NOTIFICATION_TYPES.ERROR);
-			container.classList.remove('loading');
+			this.showNotification(
+				"Error reading file. Please try again.",
+				NOTIFICATION_TYPES.ERROR
+			);
+			if (container) {
+				container.classList.remove("loading");
+			}
 			this.clearFilePreview();
 		};
 
@@ -1286,62 +1210,420 @@ class RegistrationManager {
 	}
 
 	clearFilePreview() {
-		const fileInput = document.getElementById('id_image');
-		const preview = document.getElementById('id_image_preview');
-		const container = document.querySelector('.file-upload-container');
+		const fileInput = document.getElementById("id_image");
+		const container = document.querySelector(".file-upload-container");
+		const previewContainer = document.querySelector(".preview-container");
+		const imagePreview = document.getElementById("image_preview");
 
+		// Reset file input
 		if (fileInput) {
-			fileInput.value = '';
-			fileInput.disabled = false;
-		}
-		if (preview) {
-			preview.style.display = 'none';
-			preview.innerHTML = '';
-		}
-		if (container) {
-			container.classList.remove('has-file', 'loading', 'error');
+			fileInput.value = "";
 		}
 
+		// Clear preview
+		if (imagePreview) {
+			imagePreview.src = "";
+		}
+
+		// Reset container state
+		if (container) {
+			container.classList.remove("has-file", "loading");
+		}
+		if (previewContainer) {
+			previewContainer.style.display = "none";
+		}
+
+		// Clear stored file data
 		this.idImage = null;
+		this.hideImageModal();
 	}
 
 	validateAge(input) {
-		const dob = new Date(input.value);
+		if (!input.value) {
+			this.setInputValidation(
+				input,
+				false,
+				"Please enter your date of birth"
+			);
+			return false;
+		}
+
+		const birthDate = new Date(input.value);
 		const today = new Date();
-		const age = today.getFullYear() - dob.getFullYear();
-		const monthDiff = today.getMonth() - dob.getMonth();
-		
-		// If birthday hasn't occurred this year, subtract one year
-		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+		let age = today.getFullYear() - birthDate.getFullYear();
+		const monthDiff = today.getMonth() - birthDate.getMonth();
+
+		if (
+			monthDiff < 0 ||
+			(monthDiff === 0 && today.getDate() < birthDate.getDate())
+		) {
 			age--;
 		}
 
-		const isValid = age >= 18;
+		const isValid = age >= FORM_VALIDATION.MIN_AGE && age <= FORM_VALIDATION.MAX_AGE;
 		this.isUnder18 = !isValid;
 
-		// Show/hide warning message
-		const warningElement = document.getElementById('age_warning');
+		const warningElement = document.getElementById("age_warning");
 		if (warningElement) {
-			warningElement.style.display = isValid ? 'none' : 'flex';
+			warningElement.style.display = isValid ? "none" : "flex";
 		}
 
-		// Add visual feedback
-		input.classList.toggle('invalid', !isValid);
+		this.setInputValidation(
+			input,
+			isValid,
+			"You must be between 18 and 100 years old to register"
+		);
+		return isValid;
+	}
 
-		// Enable/disable other form fields
-		const formGroups = document.querySelectorAll('.form-group:not(:has(#date_of_birth))');
-		formGroups.forEach(group => {
-			const inputs = group.querySelectorAll('input, select, textarea');
-			inputs.forEach(input => {
-				input.disabled = !isValid;
+	showImagePreview(src, filename = '') {
+		const modal = document.getElementById('image_preview_modal');
+		const modalImg = modal.querySelector('img');
+		const modalFilename = modal.querySelector('.modal-filename');
+		const closeBtn = document.getElementById('close_image_preview');
+
+		modalImg.src = src;
+		modalFilename.textContent = filename;
+		modal.classList.add('active');
+
+		// Close modal when clicking the close button
+		closeBtn.onclick = () => this.hideImagePreview();
+
+		// Close modal when clicking outside
+		modal.onclick = (e) => {
+			if (e.target === modal) {
+				this.hideImagePreview();
+			}
+		};
+
+		// Close modal with Escape key
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && modal.classList.contains('active')) {
+				this.hideImagePreview();
+			}
+		});
+	}
+
+	hideImagePreview() {
+		const modal = document.getElementById('image_preview_modal');
+		modal.classList.remove('active');
+	}
+
+	validateZipCode(input) {
+		const zipRegex = /^[0-9]{4,10}$/;
+		const isValid = zipRegex.test(input.value);
+		this.setInputValidation(
+			input,
+			isValid,
+			"Please enter a valid zip code"
+		);
+		return isValid;
+	}
+
+	validateName(input, minLength) {
+		const nameRegex = /^[A-Za-z\s\-]+$/;
+		const isValid =
+			input.value.length >= minLength && nameRegex.test(input.value);
+		this.setInputValidation(
+			input,
+			isValid,
+			`Name must be at least ${minLength} characters and contain only letters, spaces, or hyphens`
+		);
+		return isValid;
+	}
+
+	initializeIdentificationForm() {
+		const form = document.getElementById("identification_form");
+		if (!form) {
+			console.error("Identification form not found");
+			return;
+		}
+
+		// Initialize file upload
+		this.initializeFileUpload();
+
+		// Get the continue button
+		const continueBtn = form.querySelector('button[type="submit"]');
+		if (!continueBtn) {
+			console.error("Continue button not found");
+			return;
+		}
+
+		// Handle form submission
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			console.log("Form submitted");
+
+			// Disable the button and show loading state
+			continueBtn.disabled = true;
+			continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+			// Get form elements
+			const idType = document.getElementById("id_type");
+
+			// Basic validation
+			if (!idType || !idType.value) {
+				this.showNotification("Please select an ID type.", NOTIFICATION_TYPES.ERROR);
+				continueBtn.disabled = false;
+				continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				return;
+			}
+
+			if (!this.idImage) {
+				this.showNotification("Please upload your ID image.", NOTIFICATION_TYPES.ERROR);
+				continueBtn.disabled = false;
+				continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				return;
+			}
+
+			// Use setTimeout to ensure UI updates before navigation
+			setTimeout(() => {
+				try {
+					// Save form data
+					this.saveFormData();
+					console.log("Form data saved");
+
+					// Navigate to next step
+					document.querySelectorAll(".form-step").forEach(step => {
+						step.classList.remove("active");
+					});
+
+					const nextStep = document.getElementById("step_two_contact");
+					if (nextStep) {
+						nextStep.classList.add("active");
+						this.currentStep = STEPS.STEP_TWO_CONTACT;
+						this.updateStepIndicators();
+						console.log("Navigation complete");
+					} else {
+						throw new Error("Next step element not found");
+					}
+				} catch (error) {
+					console.error("Error during form submission:", error);
+					this.showNotification("An error occurred. Please try again.", NOTIFICATION_TYPES.ERROR);
+				} finally {
+					// Reset button state
+					continueBtn.disabled = false;
+					continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right"></i>';
+				}
+			}, 100);
+		});
+	}
+
+	initializeContactForm() {
+		const form = document.getElementById("contact_info_form");
+		if (!form) return;
+
+		// Initialize page navigation buttons
+		const toPage2Btn = document.getElementById("to_contact_page_2");
+		if (toPage2Btn) {
+			toPage2Btn.addEventListener("click", () => {
+				if (this.validateContactPage1()) {
+					this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
+				}
 			});
-			group.classList.toggle('disabled', !isValid);
+		}
+
+		const toPage3Btn = document.getElementById("to_contact_page_3");
+		if (toPage3Btn) {
+			toPage3Btn.addEventListener("click", () => {
+				if (this.validateContactPage2()) {
+					this.goToContactPage(CONTACT_PAGES.PAGE_THREE);
+				}
+			});
+		}
+
+		// Initialize back buttons
+		const backToIdentificationBtn = document.getElementById("back_to_identification");
+		if (backToIdentificationBtn) {
+			backToIdentificationBtn.addEventListener("click", () => {
+				this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
+			});
+		}
+
+		const backToPage1Btn = document.getElementById("back_to_contact_page_1");
+		if (backToPage1Btn) {
+			backToPage1Btn.addEventListener("click", () => {
+				this.goToContactPage(CONTACT_PAGES.PAGE_ONE);
+			});
+		}
+
+		const backToPage2Btn = document.getElementById("back_to_contact_page_2");
+		if (backToPage2Btn) {
+			backToPage2Btn.addEventListener("click", () => {
+				this.goToContactPage(CONTACT_PAGES.PAGE_TWO);
+			});
+		}
+
+		// Initialize pagination dots
+		const paginationDots = document.querySelectorAll(".pagination-dot");
+		paginationDots.forEach((dot) => {
+			dot.addEventListener("click", () => {
+				const page = parseInt(dot.dataset.page);
+				if (!isNaN(page)) {
+					this.handlePaginationDotClick(page);
+				}
+			});
 		});
 
-		return isValid;
+		// Handle form submission
+		form.addEventListener("submit", (e) => this.handleContactInfoSubmit(e));
+	}
+
+	initializeFileUpload() {
+		const fileInput = document.getElementById("id_image");
+		const container = document.getElementById("file_upload_container");
+		const previewInfo = container?.querySelector(".preview-info-compact");
+		const fileNameDisplay = previewInfo?.querySelector(".file-name-display");
+		const viewBtn = previewInfo?.querySelector(".btn-view-image");
+		const removeBtn = previewInfo?.querySelector(".remove-image");
+
+		if (!fileInput || !container || !previewInfo || !fileNameDisplay) {
+			console.error("File upload elements not found");
+			return;
+		}
+
+		const handleFileSelect = (file) => {
+			if (!file.type.match("image.*")) {
+				this.showNotification("Please upload an image file.", NOTIFICATION_TYPES.ERROR);
+				return;
+			}
+
+			// Show loading state
+			container.classList.add("loading");
+			if (fileNameDisplay) fileNameDisplay.textContent = "Processing...";
+
+			const reader = new FileReader();
+			
+			reader.onload = (e) => {
+				try {
+					this.idImage = {
+						data: e.target.result,
+						name: file.name,
+						type: file.type
+					};
+
+					// Update UI
+					fileNameDisplay.textContent = file.name;
+					previewInfo.style.display = "flex";
+					container.classList.add("has-file");
+				} catch (error) {
+					console.error("Error processing file:", error);
+					this.showNotification("Error processing file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				} finally {
+					container.classList.remove("loading");
+				}
+			};
+
+			reader.onerror = (error) => {
+				console.error("Error reading file:", error);
+				this.showNotification("Error reading file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				container.classList.remove("loading");
+			};
+
+			try {
+				reader.readAsDataURL(file);
+			} catch (error) {
+				console.error("Error starting file read:", error);
+				this.showNotification("Error reading file. Please try again.", NOTIFICATION_TYPES.ERROR);
+				container.classList.remove("loading");
+			}
+		};
+
+		// Handle drag and drop
+		container.addEventListener("dragover", (e) => {
+			e.preventDefault();
+			container.classList.add("dragover");
+		});
+
+		container.addEventListener("dragleave", () => {
+			container.classList.remove("dragover");
+		});
+
+		container.addEventListener("drop", (e) => {
+			e.preventDefault();
+			container.classList.remove("dragover");
+			
+			const files = e.dataTransfer.files;
+			if (files.length > 0) {
+				fileInput.files = files;
+				handleFileSelect(files[0]);
+			}
+		});
+
+		// Handle file selection
+		fileInput.addEventListener("change", (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				handleFileSelect(file);
+			}
+		});
+
+		// Handle file preview
+		if (viewBtn) {
+			viewBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (this.idImage) {
+					this.showImagePreview(this.idImage.data, this.idImage.name);
+				}
+			});
+		}
+
+		// Handle file removal
+		if (removeBtn) {
+			removeBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.idImage = null;
+				fileInput.value = "";
+				previewInfo.style.display = "none";
+				container.classList.remove("has-file");
+			});
+		}
+	}
+
+	initializeBackButtons() {
+		const backToIdentificationBtn = document.getElementById("back_to_identification");
+		if (backToIdentificationBtn) {
+			backToIdentificationBtn.addEventListener("click", () => {
+				this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
+			});
+		}
+	}
+
+	setInputValidation(input, isValid, errorMessage = "") {
+		if (!input) return;
+
+		const feedbackElement = input.nextElementSibling;
+		if (feedbackElement && feedbackElement.classList.contains("invalid-feedback")) {
+			feedbackElement.textContent = errorMessage;
+		}
+
+		input.classList.toggle("is-invalid", !isValid);
+		input.classList.toggle("is-valid", isValid);
+
+		// Show error message if not valid
+		if (!isValid) {
+			// Remove existing error message if any
+			const existingError = input.parentElement.querySelector(".error-message");
+			if (existingError) {
+				existingError.remove();
+			}
+
+			// Create and add new error message
+			const errorDiv = document.createElement("div");
+			errorDiv.className = "error-message";
+			errorDiv.textContent = errorMessage;
+			input.parentElement.appendChild(errorDiv);
+		} else {
+			// Remove error message if valid
+			const errorDiv = input.parentElement.querySelector(".error-message");
+			if (errorDiv) {
+				errorDiv.remove();
+			}
+		}
 	}
 }
 
+// Initialize registration manager
 document.addEventListener("DOMContentLoaded", () => {
-	new RegistrationManager();
+	window.registrationManager = new RegistrationManager();
 });

@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Account</title>
+        <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -13,14 +14,91 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <link rel="stylesheet" href="./css/user_dashboard.css" />
-        <!-- Keep some base styles -->
         <link rel="stylesheet" href="./css/account.css" />
-        <!-- New account specific styles -->
+        <style>
+            /* Account List Container */
+            .account-list-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 20px;
+                margin-top: 20px;
+            }
+
+            /* Account Item */
+            .account-item {
+                background-color: #fff;
+                border-radius: 16px;
+                padding: 24px;
+                position: relative;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                transition: all 0.3s ease;
+                overflow: visible;
+            }
+
+            .account-item:hover {
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transform: translateY(-2px);
+            }
+
+            /* Add Account Item */
+            .add-account-item {
+                background-color: transparent;
+                border: 2px dashed rgba(0, 0, 0, 0.1);
+                border-radius: 16px;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                min-height: 200px;
+                transition: all 0.3s ease;
+            }
+
+            .add-account-item:hover {
+                border-color: rgba(0, 0, 0, 0.3);
+                background-color: rgba(255, 255, 255, 0.7);
+                transform: translateY(-2px);
+            }
+
+            .add-account-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.05);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 16px;
+            }
+
+            .add-account-icon i {
+                font-size: 24px;
+                color: #333;
+            }
+
+            .add-account-text {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+            }
+
+            /* Three dots */
+            .three-dots-button {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                z-index: 5;
+            }
+        </style>
     </head>
     <body class="authenticated-page">
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar">
+            <div class="sidebar" style="background-color:#000;">
                 <div class="sidebar-header">
                     <div class="logo">
                         <span class="logo-stack">Stack</span>
@@ -29,7 +107,7 @@
                 </div>
 
                 <div class="user-profile">
-                    <div class="avatar" id="user_avatar_container">
+                    <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
@@ -38,82 +116,65 @@
                     <h3 class="username" id="user_name"></h3>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a
-                                href="./user_dashboard.html"
-                                class="nav-link"
-                                data-page="dashboard">
+                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard" aria-label="Dashboard">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="./transfer.html"
-                                class="nav-link"
-                                data-page="transfer">
+                            <a href="./transfer.html" class="nav-link" data-page="transfer" aria-label="Transfer funds">
+                                <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="./transaction.html"
-                                class="nav-link"
-                                data-page="transaction">
-                                Transaction
+                            <a href="./transaction.html" class="nav-link" data-page="transaction" aria-label="View transactions">
+                                <i class="fas fa-receipt" aria-hidden="true"></i>
+                                Transactions
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <!-- Active class for Account -->
-                            <a
-                                href="./account.html"
-                                class="nav-link"
-                                data-page="account">
+                            <a href="./account.html" class="nav-link" data-page="account" aria-label="Manage accounts">
+                                <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./profile.html" class="nav-link" data-page="profile">
+                            <a href="./profile.html" class="nav-link" data-page="profile" aria-label="User profile">
+                                <i class="fas fa-user-circle" aria-hidden="true"></i>
                                 Profile
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button class="logout-btn" id="logout_btn">
-                        <i class="fas fa-sign-out-alt"></i>
+                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
+                    </button>
                 </div>
             </div>
 
             <div class="main-content">
                 <!-- Header -->
                 <header class="main-header">
-                    <div class="header-actions">
-                        <button
-                            class="icon-btn notification-btn"
-                            id="notification_btn">
-                            <i class="fas fa-bell"></i>
-                        </button>
-                        <button class="icon-btn add-btn" id="add_btn">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="icon-btn help-btn" id="help_btn">
-                            <i class="fas fa-question-circle"></i>
-                        </button>
-                    </div>
                 </header>
 
                 <!-- Account Content -->
                 <div class="account-content">
-                    <h2>View Account</h2>
+                    <div class="account-header">
+                        <h2>View Account</h2>
+                    </div>
                     <div class="account-list-container">
                         <!-- Account items will be dynamically populated -->
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="notification-container"></div>
         
         <!-- Account Type Selection Modal -->
@@ -139,12 +200,14 @@
                         </label>
                     </div>
                 </div>
-                <button id="proceed_account_type_button" class="btn primary-btn" disabled>
-                    Continue
-                </button>
-                <button id="cancel_account_type_button" class="btn secondary-btn">
-                    Cancel
-                </button>
+                <div class="modal-actions">
+                    <button id="proceed_account_type_button" class="btn primary-btn" disabled>
+                        Continue
+                    </button>
+                    <button id="cancel_account_type_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -161,17 +224,14 @@
                     <span class="checkmark"></span>
                     I understand and agree.
                 </label>
-                <button
-                    id="proceed_add_account_button"
-                    class="btn primary-btn"
-                    disabled>
-                    Proceed
-                </button>
-                <button
-                    id="cancel_add_account_button"
-                    class="btn secondary-btn">
-                    Cancel
-                </button>
+                <div class="modal-actions">
+                    <button id="proceed_add_account_button" class="btn primary-btn" disabled>
+                        Proceed
+                    </button>
+                    <button id="cancel_add_account_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -183,16 +243,70 @@
                     An OTP has been sent to your registered phone number. Please
                     enter it below.
                 </p>
-                <input
-                    type="text"
-                    id="otp_input"
-                    placeholder="Enter OTP"
-                    class="form-input"/>
-                <button id="verify_otp_button" class="btn primary-btn">
-                    Verify
+                <input type="text" id="otp_input" placeholder="Enter OTP" class="form-input"/>
+                <div class="modal-actions">
+                    <button id="verify_otp_button" class="btn primary-btn">
+                        Verify
+                    </button>
+                    <button id="cancel_otp_button" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Modal -->
+        <div id="processing_modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="processing-icon">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </div>
+                <h3>Processing Your Request</h3>
+                <p>Please wait while we process your request. This may take a moment.</p>
+                <p class="important-note">
+                    <strong>Important:</strong> Please do not close this window or refresh the page.
+                </p>
+            </div>
+        </div>
+
+        <!-- Processing Notification Modal -->
+        <div id="processing_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Account Request Submitted</h3>
+                <div class="processing-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <p>
+                    Your account addition request has been submitted and is pending approval from our teller.<br>
+                    Please check your registered email for approval status notification.
+                </p>
+                <p class="important-note">
+                    <strong>Important:</strong> Your new account will only appear in your account panel 
+                    after teller verification and approval. This process may take 1-2 business days.
+                </p>
+                <button id="close_processing_button" class="btn primary-btn">
+                    OK
                 </button>
-                <button id="cancel_otp_button" class="btn secondary-btn">
-                    Cancel
+            </div>
+        </div>
+
+        <!-- Processing Notification Modal -->
+        <div id="processing_modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Account Request Submitted</h3>
+                <div class="processing-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <p>
+                    Your account addition request has been submitted and is pending approval from our teller.
+                    Please check your registered email for approval status notification.
+                </p>
+                <p class="important-note">
+                    <strong>Important:</strong> Your new account will only appear in your account panel 
+                    after teller verification and approval. This process may take 1-2 business days.
+                </p>
+                <button id="close_processing_button" class="btn primary-btn">
+                    OK
                 </button>
             </div>
         </div>
@@ -229,7 +343,12 @@
             </div>
         </div>
 
+        <!-- Scripts -->
+        <script src="./js/auth-guard.js"></script>
+        <script src="./js/config.js"></script>
+        <script src="./js/api.js"></script>
         <script src="./js/session-manager.js"></script>
         <script src="./js/account.js"></script>
+        <script src="./js/logout.js"></script>
     </body>
 </html>

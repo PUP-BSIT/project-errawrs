@@ -118,10 +118,12 @@ let totalTransactions = 0;
 let totalPages = 0;
 
 // State
-let user_data = {}; // Add user_data state
+let user_data = null;
+let transactions = [];
 
 // Function to show a notification (Assuming this is a shared function or needs to be added)
 function showNotification(message, type) {
+    const notification_container = document.querySelector('.notification-container');
     if (!notification_container) return;
 
     const notification = document.createElement('div');
@@ -157,7 +159,7 @@ function showNotification(message, type) {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(API.AUTH.SESSION_CHECK);
+        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK);
         const data = await response.json();
 
         if (data.success && data.authenticated) {

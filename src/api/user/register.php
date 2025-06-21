@@ -8,13 +8,70 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
+// For multipart/form-data (when files are uploaded), data comes in $_POST and $_FILES
+// The form fields are sent as a JSON string in the 'data' field
+if (!isset($_POST['data'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Missing data payload']);
+    exit();
+}
 
-// Validate required fields
-if (!isset($data['first_name'], $data['last_name'], $data['username'], $data['password'], $data['phone_number'])) {
+$data = json_decode($_POST['data'], true);
+
+// Validate required fields from the decoded JSON data
+if (!isset($data['first_name'], $data['last_name'], $data['username'], $data['password'], $data['phone_number'],
+            $data['date_of_birth'], $data['nationality'],
+            $data['street'], $data['city'], $data['zip_code'], $data['country'],
+            $data['email'], $data['id_type'],
+            $data['security_questions']
+)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Missing required fields']);
+    exit();
+}
+
+// Validate security questions
+if (!isset($data['security_questions']['security_q1'],
+            $data['security_questions']['security_q2'],
+            $data['security_questions']['security_q3'])
+) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Missing security questions']);
+    exit();
+}
+
+// Add a simple check for empty security question values
+if (empty(trim($data['security_questions']['security_q1'])) ||
+    empty(trim($data['security_questions']['security_q2'])) ||
+    empty(trim($data['security_questions']['security_q3']))
+) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Please answer all security questions']);
+    exit();
+}
+
+// Handle ID image upload
+$id_image_path = null;
+if (isset($_FILES['id_image']) && $_FILES['id_image']['error'] === UPLOAD_ERR_OK) {
+    $target_dir = __DIR__ . "/../../uploads/ids/";
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+    $file_extension = pathinfo($_FILES['id_image']['name'], PATHINFO_EXTENSION);
+    $unique_filename = uniqid('id_') . '.' . $file_extension;
+    $target_file = $target_dir . $unique_filename;
+
+    if (move_uploaded_file($_FILES['id_image']['tmp_name'], $target_file)) {
+        $id_image_path = '/uploads/ids/' . $unique_filename;
+    } else {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'Failed to upload ID image']);
+        exit();
+    }
+} else if (!isset($data['id_type']) || empty($data['id_type'])) {
+    // If no ID type is selected, or if image upload fails, and ID image is generally required
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'ID image is required']);
     exit();
 }
 
@@ -88,6 +145,9 @@ try {
         'username' => $data['username'],
         'password' => $data['password'],
         'phone_number' => $phone,
+        'id_type' => $data['id_type'], // Store ID type
+        'id_image_path' => $id_image_path, // Store ID image path
+        'security_questions' => $data['security_questions'], // Store security questions
         'created_at' => time()
     ];
 

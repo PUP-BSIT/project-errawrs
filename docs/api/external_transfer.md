@@ -64,7 +64,7 @@ ssh -i your-key.pem ec2-user@your-ec2-ip
 
 ### 2. Navigate to Nginx configuration directory
 ```bash
-cd /etc/nginx/conf.d/
+cd /etc/nginx/sites-available
 ```
 
 ### 3. Edit the configuration file
