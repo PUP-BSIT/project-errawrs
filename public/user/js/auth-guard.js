@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401) {
-                window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+                window.location.href = ROUTES.LOGIN;
                 return;
             }
 
