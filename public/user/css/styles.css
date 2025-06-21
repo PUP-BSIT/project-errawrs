@@ -1,23 +1,27 @@
 :root {
-    --color-primary-black: #111111;
-    --color-lime-green: #b6ff4a;
-    --color-bg-gradient-start: #f3ffe1;
-    --color-bg-gradient-end: #d4f3ad;
-    --color-white: #ffffff;
-    --font-main: 'Montserrat', sans-serif;
-    --color-mint: #7ed957;
-    --color-gray: #a3a3a3;
-    --color-login-button: #ee5634;
-    --color-transfer-gradient: linear-gradient(135deg, #fdfcfb, #ffe8d6);
-    --color-deposit-gradient: linear-gradient(135deg, #fde2e4, #e7d5f8);
-    --color-accounts-gradient: linear-gradient(135deg, #e6f0ff, #d3f2f9);
+    --primary-green: #7ED957;
+    --dark-green: #065F46;
+    --medium-green: #047857;
+    --light-green-bg: #F0FDF4;
+    --banner-bg: #D8EAB8;
+    --transfer-card-bg: #FEF6E6;
+    --deposit-card-bg: #F6EFFF;
+    --accounts-card-bg: #EBF9FF;
+
+    --dark-bg: #141414;
+    --light-text: #ffffff;
+    --dark-text: #222;
+    --medium-text: #333;
+
+    --body-bg: #FFFFFF;
+    --body-gradient: radial-gradient(ellipse at 60% 40%, #eaf7d6 60%, #f6f8f3 100%);
 }
 
 body {
     margin: 0;
-    font-family: var(--font-main);
-    background: radial-gradient(ellipse at 60% 40%, #eaf7d6 60%, #f6f8f3 100%);
-    color: var(--color-primary-black);
+    font-family: 'Montserrat', sans-serif;
+    background: var(--body-gradient);
+    color: var(--dark-text);
     min-height: 100vh;
 }
 
@@ -28,8 +32,11 @@ body {
 }
 
 header {
-    background: var(--color-primary-black);
+    background: var(--dark-bg);
     padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .container-nav {
@@ -44,55 +51,51 @@ header {
 .logo {
     font-size: 1.6rem;
     font-weight: 700;
-    font-size: 0; 
 }
 
-.logo span {
-    display: inline-block;
-    font-size: 1.6rem;
+.logo .white {
+    color: var(--light-text);
 }
 
-.white {
-    color: var(--color-white);
-}
-
-.green {
-    color: var(--color-lime-green);
+.logo .green {
+    color: var(--primary-green);
 }
 
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 2rem;
+    gap: 2.5rem;
     margin: 0;
     padding: 0;
 }
 
 .nav-links a {
     text-decoration: none;
-    color: var(--color-white);
+    color: var(--light-text);
     font-weight: 500;
     transition: color 0.3s;
 }
 
+.nav-links a.active,
 .nav-links a:hover {
-    color: var(--color-lime-green);
+    color: var(--primary-green);
 }
 
 .login-btn {
-    background: var(--color-lime-green);
-    color: var(--color-primary-black);
-    padding: 0.6rem 1.3rem;
+    background: var(--primary-green);
+    color: #000;
+    padding: 0.6rem 1.5rem;
     border: none;
-    border-radius: 999px;
-    font-weight: 700;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, color 0.3s;
     text-decoration: none;
 }
 
 .login-btn:hover {
-    background: #d4f3ad;
+    background: #68bf4a;
+    color: var(--light-text);
 }
 
 .container-hero {
@@ -229,8 +232,8 @@ header {
 
 .mint-shape {
     position: absolute;
-    width: 80%;
-    height: 95%;
+    width: 90%;
+    height: 90%;
     background-color: #8eecc1;
     border-radius: 50px;
     bottom: -20px;
@@ -381,7 +384,7 @@ header {
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 3rem;
-    color: var(--color-primary-black);
+    color: var(--dark-text);
 }
 
 .services-grid {
@@ -396,29 +399,28 @@ header {
 .service-card {
     border-radius: 18px;
     overflow: hidden;
-    padding: 2rem 2rem 2rem 2rem;
+    padding: 2rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background: #fff;
 }
 
 .transfer-card {
-    background: var(--color-transfer-gradient);
+    background-color: var(--transfer-card-bg);
     grid-column: 1;
     grid-row: 1;
 }
 
 .deposit-card {
-    background: var(--color-deposit-gradient);
+    background-color: var(--deposit-card-bg);
     grid-column: 1;
     grid-row: 2;
 }
 
 .accounts-card {
-    background: var(--color-accounts-gradient);
+    background-color: var(--accounts-card-bg);
     grid-column: 2;
     grid-row: 1 / span 2;
     display: flex;
@@ -467,7 +469,7 @@ header {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 0.7rem;
-    color: var(--color-primary-black);
+    color: var(--dark-text);
     white-space: normal;
 }
 
@@ -490,75 +492,6 @@ header {
     max-height: 120px;
     height: auto;
     object-fit: contain;
-}
-
-@media (max-width: 900px) {
-    .services-grid {
-        max-width: 98vw;
-        gap: 1rem;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto;
-    }
-    .service-card {
-        padding: 1.2rem 0.7rem;
-    }
-    .accounts-card {
-        padding: 1rem 0.7rem 1rem 1rem;
-    }
-    .accounts-card .service-content {
-        font-size: 1.08rem;
-        padding-right: 0.7rem;
-    }
-    .accounts-card .service-image img {
-        max-height: 140px;
-    }
-}
-
-@media (max-width: 700px) {
-    .services-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: none;
-        max-width: 98vw;
-    }
-    .accounts-card {
-        flex-direction: row;
-        padding: 0.7rem 0.3rem 0.7rem 0.7rem;
-    }
-    .accounts-card .service-content {
-        font-size: 0.98rem;
-        padding-right: 0.5rem;
-    }
-    .accounts-card .service-image img {
-        max-height: 80px;
-    }
-}
-
-@media (max-width: 480px) {
-    .service-content h3 {
-        font-size: 1rem;
-    }
-    .service-card {
-        flex-direction: column;
-        padding: 0.7rem 0.3rem;
-    }
-    .accounts-card {
-        flex-direction: column;
-        align-items: center;
-        padding: 0.7rem 0.3rem;
-    }
-    .accounts-card .service-content {
-        padding-right: 0;
-        margin-bottom: 0.7rem;
-        align-items: center;
-        text-align: center;
-    }
-    .accounts-card .service-image {
-        justify-content: center;
-        margin-top: 0.5rem;
-    }
-    .accounts-card .service-image img {
-        max-height: 60px;
-    }
 }
 
 /* Testimonials Section */
@@ -766,72 +699,103 @@ header {
     }
 }
 
-.footer {
-    background: #111;
-    color: #fff;
-    padding: 2.2rem 0 1.5rem 0;
-    width: 100%;
+/* Footer */
+footer {
+    background: var(--dark-bg);
+    color: var(--light-text);
+    padding: 4rem 0 2rem 0;
+    font-size: 0.95rem;
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    width: 90%;
-}
-
-.footer-left {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 2rem;
 }
 
-.footer-logo {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.footer-location {
-    font-size: 1.1rem;
-    color: #fff;
-    opacity: 0.85;
-}
-
-.footer-right {
+.footer-top {
     display: flex;
-    gap: 3rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-.footer-links-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
+.footer-about {
+    flex: 2;
+    min-width: 250px;
 }
 
-.footer-links-col a {
-    color: #fff;
+.footer-about .logo {
+    margin-bottom: 1rem;
+}
+
+.footer-about p {
+    color: #ccc;
+    line-height: 1.7;
+    max-width: 350px;
+}
+
+.footer-links, .footer-contact {
+    flex: 1;
+    min-width: 150px;
+}
+
+.footer-links h4, .footer-contact h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: var(--primary-green);
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links ul a {
+    color: #ccc;
     text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: color 0.2s;
+    transition: color 0.3s, padding-left 0.3s;
 }
 
-.footer-links-col a:hover {
-    color: var(--color-lime-green);
+.footer-links ul a:hover {
+    color: var(--light-text);
+    padding-left: 5px;
 }
 
-@media (max-width: 700px) {
-    .footer-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2rem;
-    }
-    .footer-right {
-        gap: 2rem;
-    }
+.social-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.social-links a {
+    color: #ccc;
+    font-size: 1.4rem;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.social-links a:hover {
+    color: var(--primary-green);
+    transform: scale(1.1);
+}
+
+.footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 2rem;
+    text-align: center;
+    color: #aaa;
 }
 
 /* FAQ Section */
