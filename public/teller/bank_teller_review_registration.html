@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Teller Review Registration</title>
+    <link 
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
+          rel="stylesheet">
+    <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/review_registrations.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <h1>
+                    <span class="stack">Stack</span>
+                    <span class="overcash">Overcash</span>
+                </h1>
+            </div>
+            
+            <div class="user-profile">
+                <a href="bank_teller_view_profile.html">
+                    <div class="user-avatar dynamic-avatar"></div>
+                </a>
+                <div class="user-name">
+                    <!-- Teller name will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
+                <a href="bank_teller_search_account.html" class="nav-item">Search Account</a>
+                <a href="bank_teller_deposit.html" class="nav-item">Deposit</a>
+                <a href="bank_teller_withdraw.html" class="nav-item">Withdraw</a>
+                <div class="nav-selected">Review Registration</div>
+                <a href="bank_teller_history.html" class="nav-item">Transaction</a>
+            </div>
+            
+            <div class="nav-logout">
+                <a href="./bank_teller_login.html">
+                    Log out <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Review Registration Applications</h1>
+                    <p class="subtitle">Review and process new account applications</p>
+                </div>
+            </div>
+
+            <div class="centered-wrapper">
+                <div id="notification_container" class="notification-container"></div>
+                <div class="registration-container">
+                    <div class="filter-section">
+                        <div class="filter-group">
+                            <label for="status_filter">Status:</label>
+                            <select id="status_filter" class="filter-select">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="all">All Applications</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="search_box">Search:</label>
+                            <input id="search_box" class="filter-search" type="text" placeholder="Account number or name...">
+                        </div>
+                    </div>
+                    <div class="applications-grid">
+                        <!-- Applications will be dynamically inserted here -->
+                    </div>
+                    <div class="pagination-container">
+                        <div class="pagination-left">
+                            <button id="prev-btn" class="pagination-btn" title="Previous Page">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <div id="page-numbers" class="page-numbers">
+                                <!-- Page numbers will be populated by JavaScript -->
+                            </div>
+                            <button id="next-btn" class="pagination-btn" title="Next Page">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Image Zoom Modal (will be created dynamically) -->
+
+    <script src="./js/review_registrations.js"></script>
+</body>
+</html> 

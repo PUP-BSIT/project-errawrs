@@ -1,8 +1,4 @@
-// API Endpoints
-const API_LOGIN = '../../src/api/auth/login.php';
-
-// Routes
-const ROUTE_DASHBOARD = './user_dashboard.html';
+// API Endpoints and Routes are now imported from config.js
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 });
+
+const API_LOGIN = API_ENDPOINTS.AUTH.LOGIN;
 
 async function handleLogin(e) {
     e.preventDefault();
@@ -102,21 +100,34 @@ async function handleLogin(e) {
         const data = await response.json();
 
         if (data.success) {
-            showNotification(TEXT.LOGIN_SUCCESS, NOTIFICATION_TYPE.SUCCESS);
-            // Store user data and account info
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('account', JSON.stringify(data.account));
+            showNotification('Login successful! Redirecting...', 'success');
+            
+            // Store user data in sessionStorage
+            const userInfo = {
+                id: data.user.id,
+                username: data.user.username,
+                name: `${data.user.first_name} ${data.user.last_name}`,
+                phone_number: data.user.phone_number,
+                type: 'user'
+            };
+            
+            if (data.user.account) {
+                userInfo.account = data.user.account;
+            }
+            
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+            
             // Redirect after a short delay
             setTimeout(() => {
-                window.location.href = ROUTE_DASHBOARD;
+                window.location.href = ROUTES.DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
-            showNotification(data.error || TEXT.LOGIN_ERROR, NOTIFICATION_TYPE.ERROR);
-            hideLoadingState();
+            showNotification(data.error || 'An unknown error occurred.', 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
-        showNotification(TEXT.GENERIC_ERROR, NOTIFICATION_TYPE.ERROR);
+        showNotification('Failed to connect to the server.', 'error');
+    } finally {
         hideLoadingState();
     }
 }
@@ -198,66 +209,48 @@ function togglePasswordVisibility(toggleBtn) {
 }
 
 function showNotification(message, type = 'info') {
-    // Notification Types
-    const NOTIFICATION_TYPE = {
-        SUCCESS: 'success',
-        ERROR: 'error',
-        INFO: 'info'
-    };
-    
-    // Icons
-    const ICON = {
-        SUCCESS: 'fa-check-circle',
-        ERROR: 'fa-exclamation-circle',
-        INFO: 'fa-info-circle',
-        CLOSE: 'fas fa-times'
-    };
-    
-    // Timing
-    const TIMING = {
-        NOTIFICATION_HIDE: 5000
-    };
-    
-    // Selectors
-    const SELECTOR = {
-        NOTIFICATION: '.notification'
-    };
-
     // Create notification container if it doesn't exist
-    let container = document.querySelector(SELECTOR.NOTIFICATION);
+    let container = document.querySelector('.notification-container');
     if (!container) {
         container = document.createElement('div');
-        container.className = 'notification';
+        container.className = 'notification-container';
         document.body.appendChild(container);
     }
 
-    // Create notification content
-    container.className = `notification notification-${type}`;
-    container.innerHTML = `
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    
+    // Add icon based on type
+    const icon = type === 'success' ? 'fa-check-circle' : 
+                type === 'error' ? 'fa-exclamation-circle' : 
+                'fa-info-circle';
+    
+    notification.innerHTML = `
         <div class="notification-content">
-            <i class="fas ${
-                type === NOTIFICATION_TYPE.SUCCESS
-                    ? ICON.SUCCESS
-                    : type === NOTIFICATION_TYPE.ERROR
-                    ? ICON.ERROR
-                    : ICON.INFO
-            }"></i>
+            <i class="fas ${icon}"></i>
             <span>${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
-                <i class="${ICON.CLOSE}"></i>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
             </button>
         </div>
     `;
 
-    // Auto-hide after some time
+    // Add to container
+    container.appendChild(notification);
+
+    // Add close button functionality
+    const closeBtn = notification.querySelector('.close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            notification.remove();
+        });
+    }
+
+    // Auto-hide after 5 seconds
     setTimeout(() => {
-        if (container.parentElement) {
-            container.classList.add('hide');
-            setTimeout(() => {
-                if (container.parentElement) {
-                    container.remove();
-                }
-            }, 300); // Animation duration
+        if (notification && notification.parentNode) {
+            notification.remove();
         }
-    }, TIMING.NOTIFICATION_HIDE);
+    }, 5000);
 }

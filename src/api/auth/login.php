@@ -1,51 +1,39 @@
 <?php
-session_start();
-require_once __DIR__ . '/../../config/database.php';
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/error.log');
 
-// Enhanced CORS headers - more flexible for development
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '*';
-
-// Allow common local development origins
-$allowedOrigins = [
-    'http://localhost',
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://localhost:8080',
-    'http://127.0.0.1',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8080'
-];
-
-// Check if the request origin is in allowed list
-$allowOrigin = '*';
-foreach ($allowedOrigins as $allowed) {
-    if (strpos($origin, $allowed) === 0) {
-        $allowOrigin = $origin;
-        break;
-    }
+// Determine environment
+function isLocalEnvironment() {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    return strpos($host, 'localhost') !== false || 
+           strpos($host, '127.0.0.1') !== false ||
+           strpos($host, '[::1]') !== false;
 }
 
+// Set environment-specific settings
+if (isLocalEnvironment()) {
+    ini_set('display_errors', 1); // Show errors in local environment
+    header('Access-Control-Allow-Origin: http://localhost'); // Allow localhost in local env
+} else {
+    ini_set('display_errors', 0); // Hide errors in production
+    header('Access-Control-Allow-Origin: https://dev-teller.stackovercash.site');
+}
+
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+// Common headers for both environments
 header('Content-Type: application/json; charset=utf-8');
-header("Access-Control-Allow-Origin: $allowOrigin");
-header('Access-Control-Allow-Methods: POST, OPTIONS, GET');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization');
 header('Access-Control-Allow-Credentials: true');
 
-// Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+// Ensure no output before headers
+ob_start();
 
-// Guard against non-POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-    exit();
-}
-
-// Enhanced error handling for development
+// Enhanced error handling
 function handleError($message, $code = 400, $logError = true) {
     if ($logError) {
         error_log("Login API Error: " . $message);
@@ -55,70 +43,27 @@ function handleError($message, $code = 400, $logError = true) {
     echo json_encode([
         'success' => false,
         'error' => $message,
-        'timestamp' => date('Y-m-d H:i:s')
+        'timestamp' => date('Y-m-d H:i:s'),
+        'environment' => isLocalEnvironment() ? 'local' : 'production'
     ]);
     exit();
 }
 
-// Parse and validate input
-$input = file_get_contents('php://input');
-if (empty($input)) {
-    handleError('No input data received');
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
 }
 
-$data = json_decode($input, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    handleError('Invalid JSON data: ' . json_last_error_msg());
-}
-
-// Guard against missing required fields
-if (!isset($data['password']) || !isset($data['login_type'])) {
-    handleError('Password and login type are required');
-}
-
-$loginType = strtolower(trim($data['login_type']));
-$password = $data['password'];
-
-// Guard against invalid login type
-$validLoginTypes = ['admin', 'user', 'teller'];
-if (!in_array($loginType, $validLoginTypes)) {
-    handleError('Invalid login type');
-}
-
-// Get identifier based on login type
-$identifier = null;
-if ($loginType === 'teller') {
-    if (!isset($data['teller_number'])) {
-        handleError('Teller number is required');
-    }
-    $identifier = trim($data['teller_number']);
-} else {
-    if (!isset($data['username'])) {
-        handleError('Username is required');
-    }
-    $identifier = trim($data['username']);
-}
-
-// Enhanced validation
-if (empty($identifier)) {
-    handleError($loginType === 'teller' ? 'Teller number cannot be empty' : 'Username cannot be empty');
-}
-
-if ($loginType === 'teller') {
-    // More flexible teller number validation
-    if (strlen($identifier) < 1 || strlen($identifier) > 50) {
-        handleError('Invalid teller number format');
-    }
-} else {
-    // Username validation
-    if (strlen($identifier) < 3 || strlen($identifier) > 50) {
-        handleError('Username must be between 3 and 50 characters');
-    }
-}
-
-// Validate password length
-if (strlen($password) < 8) {
-    handleError('Password must be at least 8 characters long');
+// Guard against non-POST requests for actual login attempts
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Method not allowed',
+        'allowed_methods' => ['POST', 'OPTIONS']
+    ]);
+    exit();
 }
 
 try {
@@ -126,13 +71,72 @@ try {
     $db = db_connect();
     if (!$db) {
         throw new Exception('Database connection failed');
+}
+
+// Parse and validate input
+$input = file_get_contents('php://input');
+if (empty($input)) {
+    handleError('No input data received');
     }
-    
-    // Test database connectivity
-    if (!$db->ping()) {
-        throw new Exception('Database is not responding');
+
+    $data = json_decode($input, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        handleError('Invalid JSON data: ' . json_last_error_msg());
     }
-    
+
+    // Log received data for debugging
+    error_log("Received login data: " . print_r($data, true));
+
+    // Guard against missing required fields
+    if (!isset($data['password']) || !isset($data['login_type'])) {
+        handleError('Password and login type are required');
+    }
+
+    $loginType = strtolower(trim($data['login_type']));
+    $password = $data['password'];
+
+    // Guard against invalid login type
+    $validLoginTypes = ['admin', 'user', 'teller'];
+    if (!in_array($loginType, $validLoginTypes)) {
+        handleError('Invalid login type');
+    }
+
+    // Get identifier based on login type
+    $identifier = null;
+    if ($loginType === 'teller') {
+        if (!isset($data['teller_number'])) {
+            handleError('Teller number is required');
+        }
+        $identifier = trim($data['teller_number']);
+    } else {
+        if (!isset($data['username'])) {
+            handleError('Username is required');
+        }
+        $identifier = trim($data['username']);
+    }
+
+    // Enhanced validation
+    if (empty($identifier)) {
+        handleError($loginType === 'teller' ? 'Teller number cannot be empty' : 'Username cannot be empty');
+    }
+
+    if ($loginType === 'teller') {
+        // More flexible teller number validation
+        if (strlen($identifier) < 1 || strlen($identifier) > 50) {
+            handleError('Invalid teller number format');
+        }
+    } else {
+        // Username validation
+        if (strlen($identifier) < 3 || strlen($identifier) > 50) {
+            handleError('Username must be between 3 and 50 characters');
+        }
+    }
+
+    // Validate password length
+    if (strlen($password) < 8) {
+        handleError('Password must be at least 8 characters long');
+    }
+
     // Prepare query based on login type
     $queries = [
         'admin' => [
@@ -166,7 +170,6 @@ try {
     $result = $stmt->get_result();
     
     if ($result->num_rows === 0) {
-        // Use generic error message for security
         $errorMsg = $loginType === 'teller' ? 'Invalid teller number or password' : 'Invalid username or password';
         handleError($errorMsg, 401, false);
     }
@@ -180,13 +183,9 @@ try {
     
     // Verify password
     if (!password_verify($password, $user['password_hash'])) {
-        error_log("Login failed for user: " . $identifier);
-        error_log("Password verification failed");
         $errorMsg = $loginType === 'teller' ? 'Invalid teller number or password' : 'Invalid username or password';
         handleError($errorMsg, 401, false);
     }
-    
-    error_log("Login successful for user: " . $identifier);
     
     // Get additional data for user type if needed
     $additionalData = [];
@@ -211,57 +210,43 @@ try {
     // Remove sensitive data
     unset($user['password_hash']);
     
-    // Store session data
-    $_SESSION['auth'] = [
-        'id' => $user['id'],
-        'identifier' => $loginType === 'teller' ? $user['teller_number'] : $user['username'],
-        'type' => $loginType,
-        'logged_in_at' => time(),
-        'last_activity' => time(),
-        'first_name' => $user['first_name'] ?? '',
-        'last_name' => $user['last_name'] ?? '',
-        'phone_number' => $user['phone_number'] ?? null,
-        'email' => $user['email'] ?? null
-    ];
+    // Initialize session manager
+    $sessionManager = SessionManager::getInstance();
+
+    // Create new session (this will handle cleanup of old session internally and set $_SESSION['auth'])
+    $sessionManager->createSession($user, $loginType);
     
-    // Add account data to session for users
-    if ($loginType === 'user' && !empty($additionalData['account'])) {
-        $_SESSION['auth']['account'] = [
-            'account_id' => $additionalData['account']['account_id'],
-            'account_number' => $additionalData['account']['account_number'],
-            'balance' => $additionalData['account']['balance']
-        ];
+    // Store user-specific data in session as well (these are for specific info objects beyond 'auth')
+    if ($loginType === 'admin') {
+        $_SESSION['adminInfo'] = $user;
+    } elseif ($loginType === 'teller') {
+        $_SESSION['tellerInfo'] = $user;
+    } elseif ($loginType === 'user') {
+        $_SESSION['userInfo'] = array_merge($user, $additionalData);
     }
-    
-    // Prepare response
-    $response = [
+
+    // Update last activity time (important for session timeout logic)
+    $sessionManager->updateActivity();
+
+    // Prepare success response
+    $responseData = [
         'success' => true,
         'message' => 'Login successful',
-        'type' => $loginType,
-        'user' => $user,
+        'user' => array_merge($user, $additionalData), // Include account data for users
+        'login_type' => $loginType,
         'timestamp' => date('Y-m-d H:i:s')
     ];
-    
-    // Add additional data to response if available
-    if (!empty($additionalData)) {
-        $response = array_merge($response, $additionalData);
-    }
-    
-    // Set proper success status
+
+    // Log the response for debugging
+    error_log("Login successful. Response data: " . print_r($responseData, true));
+    error_log("Session data after login: " . print_r($_SESSION, true));
+
     http_response_code(200);
-    echo json_encode($response);
+    echo json_encode($responseData);
 
 } catch (Exception $e) {
-    error_log("Login error: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
-    
-    // Don't reveal internal errors in production
-    $errorMessage = $e->getMessage();
-    if (strpos($errorMessage, 'Database') !== false || strpos($errorMessage, 'SQL') !== false) {
-        $errorMessage = 'Database connection error. Please contact administrator.';
-    }
-    
-    handleError($errorMessage, 500);
+    error_log("Login Exception: " . $e->getMessage());
+    handleError($e->getMessage(), 500);
 } finally {
     if (isset($stmt)) {
         $stmt->close();
@@ -270,4 +255,7 @@ try {
         $db->close();
     }
 }
+
+// Flush output buffer before exit
+ob_end_flush();
 ?>

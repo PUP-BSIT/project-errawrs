@@ -1,0 +1,344 @@
+/* Reset and Base Styles */
+:root {
+    --color-primary-black: #111111;
+    --color-lime-green: #b6ff4a;
+    --color-bg-gradient-start: #f3ffe1;
+    --color-bg-gradient-end: #d4f3ad;
+    --color-white: #ffffff;
+    --color-mint: #7ed957;
+    --color-gray: #a3a3a3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    background-color: var(--color-primary-black);
+    color: var(--color-white);
+    padding: 32px 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.sidebar-header {
+    margin-bottom: 40px;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.10px;
+}
+
+.logo-stack {
+    color: var(--color-white);
+}
+
+.logo-overcash {
+    color: var(--color-lime-green);
+}
+
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+}
+
+.nav-item {
+    margin-bottom: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: -0.2px;
+    transition: all 0.3s ease;
+}
+
+.nav-link i {
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item.active .nav-link {
+    background-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+}
+
+.nav-link:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    margin: auto;
+}
+
+/* Transaction Content Styles */
+.transactions-content {
+    background-color: var(--color-white);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 720px;
+    margin: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Transaction Filters */
+.transaction-filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.search-filter {
+    display: flex;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px 0 0 8px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.search-btn {
+    padding: 12px 20px;
+    background-color: var(--color-lime-green);
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.status-select {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+/* Transaction List */
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 32px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    color: var(--color-gray);
+}
+
+.transaction-users {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+    font-size: 16px;
+    color: var(--color-primary-black);
+    font-weight: 500;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.transaction-item {
+    background-color: var(--color-bg-gradient-start);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 700px;
+    width: 100%;
+    position: relative;
+}
+
+.transaction-item:hover {
+    transform: translateY(-2px);
+}
+
+.transaction-icon {
+    background-color: var(--color-lime-green);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-black);
+    flex-shrink: 0;
+}
+
+.transaction-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.transaction-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.transaction-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.transaction-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-mint);
+    text-align: right;
+}
+
+.transaction-meta {
+    display: flex;
+    gap: 16px;
+    color: var(--color-primary-black);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.transaction-completed {
+    font-size: 15px;
+    color: var(--color-mint);
+    font-weight: 600;
+}
+
+/* Pagination */
+.transaction-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn.active {
+    background-color: var(--color-lime-green);
+    border-color: var(--color-lime-green);
+    color: var(--color-primary-black);
+    font-weight: 600;
+}
+
+.pagination-btn:hover:not(.active) {
+    background-color: #f8f9fa;
+}
+
+.pagination-dots {
+    padding: 8px;
+    color: var(--color-gray);
+}
+
+/* Error Message Styles */
+.error-message {
+    background-color: #ffe6e6;
+    color: #ff4d4d;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Add logout item styles */
+.logout-item {
+    margin-top: auto;
+}
+
+.logout-item .nav-link {
+    color: #ff4d4d;
+}
+
+.logout-item .nav-link:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        height: 100vh;
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .transaction-filters {
+        flex-direction: column;
+    }
+
+    .search-filter {
+        width: 100%;
+    }
+
+    .transaction-meta {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

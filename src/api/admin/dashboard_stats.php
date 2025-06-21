@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+
+$session = SessionManager::getInstance();
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost');
@@ -14,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Check if user is logged in and is an admin
-if (!isset($_SESSION['admin_id'])) {
+if (!$session->isAuthenticated() || $session->getSessionData()['type'] !== 'admin') {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
@@ -35,13 +37,9 @@ try {
     $result = $conn->query("SELECT COUNT(*) as total FROM teller WHERE status = 'active'");
     $active_tellers = $result ? $result->fetch_assoc()['total'] : 0;
     
-    // Get pending issues count (if table exists)
-    $pending_issues = 0;
-    $result = $conn->query("SHOW TABLES LIKE 'issue'");
-    if ($result && $result->num_rows > 0) {
-        $result = $conn->query("SELECT COUNT(*) as total FROM issue WHERE status = 'pending'");
-        $pending_issues = $result ? $result->fetch_assoc()['total'] : 0;
-    }
+    // Get pending tellers count
+    $result = $conn->query("SELECT COUNT(*) as total FROM teller WHERE status = 'pending'");
+    $pending_tellers = $result ? $result->fetch_assoc()['total'] : 0;
     
     echo json_encode([
         'success' => true,
@@ -49,7 +47,7 @@ try {
             'total_users' => (int)$total_users,
             'total_transactions' => (int)$total_transactions,
             'active_tellers' => (int)$active_tellers,
-            'pending_issues' => (int)$pending_issues
+            'pending_tellers' => (int)$pending_tellers
         ]
     ]);
     

@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Register</title>
+        <link rel="icon" href="data:,">
 
         <!-- Google Fonts -->
         <link
@@ -50,14 +51,15 @@
                     <div class="step-indicators">
                         <div class="step active" data-step="1">
                             <span class="step-number">1</span>
+                            <span class="step-label">Identification</span>
                         </div>
-                        <div class="step-line"></div>
                         <div class="step" data-step="2">
                             <span class="step-number">2</span>
+                            <span class="step-label">Contact Info</span>
                         </div>
-                        <div class="step-line"></div>
                         <div class="step" data-step="3">
                             <span class="step-number">3</span>
+                            <span class="step-label">Processing</span>
                         </div>
                     </div>
 
@@ -71,11 +73,10 @@
 
                             <form class="registration-form" id="identification_form">
                                 <div class="form-section">
-                                    <h3>Identification Documents</h3>
-                                    
+                                    <h3>ID Information</h3>
                                     <div class="form-group">
                                         <label for="id_type">ID Type</label>
-                                        <select id="id_type" required>
+                                        <select id="id_type" name="id_type" required>
                                             <option value="">Select ID Type</option>
                                             <option value="passport">Passport</option>
                                             <option value="national_id">National ID</option>
@@ -83,38 +84,26 @@
                                             <option value="school_id">School ID (for students)</option>
                                         </select>
                                     </div>
-
+                                    
                                     <div class="form-group">
                                         <label for="id_image">Upload ID Image</label>
-                                        <div class="file-upload-container">
-                                            <input
-                                                type="file"
-                                                id="id_image"
-                                                accept="image/*"
-                                                required
-                                                class="file-input"
-                                                aria-describedby="id_image_help"/>
-                                            <label for="id_image" class="file-upload-label">
+                                        <div class="file-upload-container" id="file_upload_container">
+                                            <input type="file" id="id_image" name="id_image" accept="image/jpeg,image/jpg,image/png" class="file-input" required>
+                                            <div class="file-upload-label">
                                                 <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>Choose a file or drag it here</span>
-                                            </label>
-                                            <div id="id_image_preview" class="image-preview" style="display: none;">
-                                                <div class="preview-info-compact">
-                                                    <span class="file-name-display"><i class="fas fa-file-image"></i> No file selected</span>
-                                                    <div class="preview-actions">
-                                                        <button type="button" class="btn-view-image" aria-label="View image">
-                                                            View <i class="fas fa-eye"></i>
-                                                        </button>
-                                                        <button type="button" class="remove-image" aria-label="Remove image">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </div>
+                                                <span>Drag and drop your ID image here or click to browse</span>
+                                            </div>
+                                            <div class="preview-info-compact" style="display: none;">
+                                                <div class="file-name-display"></div>
+                                                <div class="preview-actions">
+                                                    <button type="button" class="btn-view-image">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button type="button" class="remove-image">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div id="id_image_help" class="help-text">
-                                            Upload a clear photo of your selected ID. Make sure all details are visible.
-                                            Accepted formats: JPG, PNG (Max size: 5MB)
                                         </div>
                                     </div>
                                 </div>
@@ -128,7 +117,7 @@
                         </div>
 
                         <!-- Step 2: Contact Information -->
-                        <div class="form-step" id="step_two_contact" style="display: none;">
+                        <div class="form-step" id="step_two_contact">
                             <div class="form-header">
                                 <h2>Contact Information</h2>
                                 <p>Please provide your contact details.</p>
@@ -145,6 +134,7 @@
                                             <input
                                                 type="text"
                                                 id="first_name"
+                                                name="first_name"
                                                 placeholder="Enter your first name"
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
@@ -157,6 +147,7 @@
                                             <input
                                                 type="text"
                                                 id="last_name"
+                                                name="last_name"
                                                 placeholder="Enter your surname"
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
@@ -169,6 +160,7 @@
                                             <input
                                                 type="date"
                                                 id="date_of_birth"
+                                                name="date_of_birth"
                                                 required
                                                 autocomplete="bday"
                                                 max="2006-12-31"/>
@@ -181,7 +173,7 @@
 
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-back" id="back_to_identification">
-                                            Back
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
                                         <button type="button" class="btn btn-continue" id="to_contact_page_2">
                                             Next <i class="fas fa-arrow-right"></i>
@@ -190,7 +182,7 @@
                                 </div>
 
                                 <!-- Page 2: Contact Details -->
-                                <div class="form-page" id="contact_page_2" style="display: none;">
+                                <div class="form-page" id="contact_page_2">
                                     <div class="form-section">
                                         <h3>Contact Details</h3>
                                         
@@ -199,6 +191,7 @@
                                             <input
                                                 type="email"
                                                 id="email"
+                                                name="email"
                                                 placeholder="Enter your email address"
                                                 required
                                                 autocomplete="email"/>
@@ -208,9 +201,10 @@
                                             <label for="phone_number">Phone Number</label>
                                             <div class="phone-input-group">
                                                 <span class="phone-flag"></span>
-                                            <input
+                                                <input
                                                     type="tel"
                                                     id="phone_number"
+                                                    name="phone_number"
                                                     placeholder="+63 XXX XXX XXXX"
                                                     required
                                                     autocomplete="tel"
@@ -221,7 +215,7 @@
                                         
                                         <div class="form-group">
                                             <label for="nationality">Nationality</label>
-                                            <select id="nationality" required>
+                                            <select id="nationality" name="nationality" required>
                                                 <option value="">Select Nationality</option>
                                                 <option value="filipino">Filipino</option>
                                                 <option value="american">American</option>
@@ -235,7 +229,7 @@
 
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-back" id="back_to_contact_page_1">
-                                            Back
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
                                         <button type="button" class="btn btn-continue" id="to_contact_page_3">
                                             Next <i class="fas fa-arrow-right"></i>
@@ -244,7 +238,7 @@
                                 </div>
 
                                 <!-- Page 3: Address Information -->
-                                <div class="form-page" id="contact_page_3" style="display: none;">
+                                <div class="form-page" id="contact_page_3">
                                     <div class="form-section">
                                         <h3>Address Information</h3>
 
@@ -253,6 +247,7 @@
                                             <input
                                                 type="text"
                                                 id="street"
+                                                name="street"
                                                 placeholder="Enter your street address"
                                                 required
                                                 autocomplete="address-line1"/>
@@ -263,6 +258,7 @@
                                             <input
                                                 type="text"
                                                 id="city"
+                                                name="city"
                                                 placeholder="Enter your city"
                                                 required
                                                 autocomplete="address-level2"/>
@@ -273,6 +269,7 @@
                                             <input
                                                 type="text"
                                                 id="zip_code"
+                                                name="zip_code"
                                                 placeholder="Enter your zip code"
                                                 pattern="[0-9]{4,10}"
                                                 title="Please enter a valid zip code"
@@ -282,7 +279,7 @@
 
                                         <div class="form-group">
                                             <label for="country">Country</label>
-                                            <select id="country" required>
+                                            <select id="country" name="country" required>
                                                 <option value="">Select Country</option>
                                                 <option value="philippines">Philippines</option>
                                                 <option value="united_states">United States</option>
@@ -296,7 +293,7 @@
 
                                     <div class="form-actions">
                                         <button type="button" class="btn btn-back" id="back_to_contact_page_2">
-                                            Back
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
                                         <button type="submit" class="btn btn-continue">
                                             Submit <i class="fas fa-arrow-right"></i>
@@ -314,7 +311,7 @@
                         </div>
 
                         <!-- Step 3: Account Under Review -->
-                        <div class="form-step" id="step_three_processing" style="display: none;">
+                        <div class="form-step" id="step_three_processing">
                             <div class="form-header">
                                 <h2>Account Under Review</h2>
                                 <p>Your registration is almost complete!</p>
@@ -331,7 +328,7 @@
                                 </p>
                                 <div class="form-actions">
                                     <a href="./index.html" class="btn btn-secondary">
-                                        Go to Home Page
+                                        <i class="fas fa-home"></i> Go to Home Page
                                     </a>
                                 </div>
                             </div>
@@ -377,32 +374,18 @@
             </div>
         </div>
 
-        <!-- Default Password Notice Modal -->
-        <div id="default_password_modal" class="modal-overlay" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Important Security Notice</h3>
-                    <button type="button" class="modal-close" id="close_password_modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="notice-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <p class="notice-message">
-                        For security reasons, you must update your default password and set a username 
-                        before you can continue using the system. This is required to protect your account.
-                    </p>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-continue" id="acknowledge_password_notice">
-                            I Understand
-                        </button>
-                    </div>
-                </div>
+        <!-- Image Preview Modal -->
+        <div id="image_preview_modal" class="image-modal-overlay">
+            <div class="image-modal-content">
+                <button type="button" class="modal-close-btn" id="close_image_preview">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img src="" alt="ID Preview" />
+                <div class="modal-filename"></div>
             </div>
         </div>
 
+        <script src="./js/config.js"></script>
         <script src="./js/register.js"></script>
     </body>
 </html>

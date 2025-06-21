@@ -4,7 +4,7 @@ const CONFIG = {
         BASE_URL: '/project-errawrs/src/api',
         ENDPOINTS: {
             PROFILE: '/auth/session_check.php',
-            UPDATE: '/user/profile/update.php',
+            UPDATE: '/user/update_profile.php',
             LOGOUT: '/auth/logout.php'
         }
     },
@@ -150,7 +150,7 @@ const FormValidator = {
         return true;
     },
     validateProfileData: (data) => {
-        const required = ['first_name', 'last_name', 'username', 'phone_number'];
+        const required = ['first_name', 'last_name', 'phone_number'];
         const missing = required.filter(field => !data[field]?.trim());
         
         // Reset all form fields to default state
@@ -455,112 +455,46 @@ const ProfileManager = {
     },
 
     handleCancel() {
-        this.fetchProfile();
-        NotificationManager.show(
-            'Changes cancelled.',
-            CONFIG.NOTIFICATION.TYPES.INFO
-        );
+        this.populateForm(); // Restore original data
+        this.clearPasswordFields();
+        StateManager.setState({ isFormDirty: false });
+        NotificationManager.show('Changes discarded', CONFIG.NOTIFICATION.TYPES.INFO);
     },
 
-    async handleLogout() {
-        try {
-            localStorage.clear();
-            await ApiService.logout();
-            window.location.href = '/index.html';
-        } catch (error) {
-            ErrorHandler.handle(error, 'logging out');
-        }
-    }
-};
-
-// Event Handlers
-const EventHandlers = {
     init() {
-        const handlers = {
-            saveProfile: () => ProfileManager.handleSave(),
-            cancelEdit: () => ProfileManager.handleCancel(),
-            logout: () => ProfileManager.handleLogout()
-        };
+        this.fetchProfile();
 
-        Object.entries(handlers).forEach(([action, handler]) => {
-            const element = DOM[`${action}Button`];
-            if (element) {
-                element.addEventListener('click', handler);
-            }
-        });
-
-        // Form input change tracking
-        const formInputs = [
-            DOM.editFirstNameInput,
-            DOM.editLastNameInput,
-            DOM.editUsernameInput,
-            DOM.editPasswordInput,
-            DOM.editConfirmPasswordInput,
-            DOM.editPhoneNumberInput
-        ];
-
+        // Attach event listeners
+        DOM.saveProfileButton.addEventListener('click', this.handleSave.bind(this));
+        DOM.cancelEditButton.addEventListener('click', this.handleCancel.bind(this));
+        
+        // Listen for input changes to enable/disable save button
+        const formInputs = document.querySelectorAll('.form-input');
         formInputs.forEach(input => {
-            if (input) {
-                input.addEventListener('input', () => {
-                    StateManager.setState({ isFormDirty: true });
-                });
-            }
+            input.addEventListener('input', () => StateManager.setState({ isFormDirty: true }));
         });
-
-        // Password visibility toggle
-        document.querySelectorAll('.toggle-password').forEach(icon => {
-            icon.addEventListener('click', (e) => {
-                const targetId = e.target.closest('.toggle-password').dataset.target;
-                const input = document.getElementById(targetId);
-                
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
+        
+        // Password visibility toggles
+        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+        togglePasswordButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetId = e.currentTarget.dataset.target;
+                const passwordInput = document.getElementById(targetId);
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    e.currentTarget.classList.remove('fa-eye');
+                    e.currentTarget.classList.add('fa-eye-slash');
                 } else {
-                    input.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
+                    passwordInput.type = 'password';
+                    e.currentTarget.classList.remove('fa-eye-slash');
+                    e.currentTarget.classList.add('fa-eye');
                 }
             });
         });
-
-        // Password strength real-time validation
-        const passwordInput = DOM.editPasswordInput;
-        if (passwordInput) {
-            passwordInput.addEventListener('input', (e) => {
-                const password = e.target.value;
-                if (password) {
-                    FormValidator.validatePassword(password, password);
-                } else {
-                    // Reset strength indicator if password field is empty
-                    const strengthBar = document.querySelector('.password-strength-bar');
-                    if (strengthBar) {
-                        strengthBar.className = 'password-strength-bar';
-                    }
-                }
-            });
-        }
-
-        // Real-time phone number formatting
-        const phoneInput = DOM.editPhoneNumberInput;
-        if (phoneInput) {
-            phoneInput.addEventListener('input', (e) => {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.slice(0, 11);
-                if (value.length >= 2 && value.slice(0, 2) !== '09') {
-                    value = '09' + value.slice(2);
-                }
-                e.target.value = value;
-            });
-        }
     }
 };
 
-// Initialize
+// Initialize the profile page
 document.addEventListener('DOMContentLoaded', () => {
-    PerformanceMonitor.start('pageLoad');
-    ProfileManager.fetchProfile();
-    EventHandlers.init();
-    PerformanceMonitor.end('pageLoad');
+    ProfileManager.init();
 }); 
