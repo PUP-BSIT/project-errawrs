@@ -1,7 +1,4 @@
-// API Endpoints
-const API = {
-    CONTACT_SUBMIT: '../../src/api/public/contact_mailer.php',
-};
+// Use API_ENDPOINTS from config.js instead of the old API object structure
 
 // Element IDs
 const ELEMENT_ID = {
@@ -191,7 +188,7 @@ class ContactFormHandler {
                 this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value
             );
 
-            const response = await fetch(API.CONTACT_SUBMIT, {
+            const response = await fetch(API_ENDPOINTS.CONTACT_SUBMIT, {
                 method: 'POST',
                 body: formData,
             });

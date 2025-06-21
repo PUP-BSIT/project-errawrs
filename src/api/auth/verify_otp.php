@@ -82,101 +82,77 @@ header('Content-Type: application/json');
         exit();
     }
 
+    if (!isset($input['phone_number']) || empty($input['phone_number'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Phone number is required']);
+        exit();
+    }
+
     error_log("Verify OTP - Input data: " . print_r($input, true));
 
-    if (!isset($_SESSION['otp'])) {
-        error_log("Verify OTP - No OTP session found. Session data: " . print_r($_SESSION, true));
+    // Use SessionManager to verify OTP
+    $purpose = $input['purpose'] ?? 'general';
+    error_log("Verify OTP - Purpose: " . $purpose);
+    error_log("Verify OTP - Session data before verification: " . print_r($_SESSION, true));
+    
+    $verified = $sessionManager->verifyOTP($input['otp'], $input['phone_number'], $purpose);
+    error_log("Verify OTP - SessionManager verifyOTP result: " . ($verified ? 'true' : 'false'));
+    
+    if (!$verified) {
+        // SessionManager's verifyOTP method handles all error cases and clears session data
+        // We just need to return an appropriate error message
+        error_log("Verify OTP - Verification failed. Session data: " . print_r($_SESSION, true));
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'No OTP session found. Please request a new OTP.']);
+        echo json_encode(['success' => false, 'error' => 'Invalid OTP or OTP has expired. Please request a new OTP.']);
         exit();
     }
 
-    // Get OTP data from session
-    $sessionOtp = $_SESSION['otp'];
-    error_log("Verify OTP - Session OTP data: " . print_r($sessionOtp, true));
-    error_log("Verify OTP - Comparing input OTP '" . $input['otp'] . "' with session OTP '" . $sessionOtp['code'] . "'");
-
-    $attempts = $sessionOtp['attempts'] ?? 0;
-    $maxAttempts = 3;
-
-    // Check if too many attempts
-    if ($attempts >= $maxAttempts) {
-        unset($_SESSION['otp']);
-        error_log("Verify OTP - Max attempts reached: " . $attempts);
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Too many attempts. Please request a new OTP.']);
-        exit();
-    }
-
-    // Check if OTP has expired (5 minutes)
-    $expiryTime = 300; // 5 minutes
-    $timeDiff = time() - $sessionOtp['created_at'];
-    error_log("Verify OTP - Time difference: " . $timeDiff . " seconds");
-
-    if ($timeDiff > $expiryTime) {
-        unset($_SESSION['otp']);
-        error_log("Verify OTP - OTP expired. Created at: " . date('Y-m-d H:i:s', $sessionOtp['created_at']));
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'OTP has expired. Please request a new one.']);
-        exit();
-    }
-
-    // Verify OTP
-    if ($input['otp'] !== $sessionOtp['code']) {
-        // Increment attempts
-        $_SESSION['otp']['attempts'] = $attempts + 1;
-        $remainingAttempts = $maxAttempts - ($attempts + 1);
-
-        error_log("Verify OTP - Invalid OTP. Input: " . $input['otp'] . ", Expected: " . $sessionOtp['code']);
-        error_log("Verify OTP - Attempts: " . ($attempts + 1) . ", Remaining: " . $remainingAttempts);
-
-        http_response_code(400);
-        echo json_encode([
-            'success' => false, 
-            'error' => "Invalid OTP. {$remainingAttempts} attempts remaining."
-        ]);
-        exit();
-    }
-
-// OTP is correct
-$_SESSION['otp']['attempts'] = 0; // Reset attempts on success
-$_SESSION['otp_verified'] = true; // Set the flag for other scripts to check
-
-    // OTP is valid - clear it from session
-    $verifiedPhone = $sessionOtp['phone_number'];
-    unset($_SESSION['otp']);
-
-    error_log("Verify OTP - Successful verification for phone: " . $verifiedPhone);
+    error_log("Verify OTP - Successful verification for phone: " . $input['phone_number']);
     error_log("Verify OTP - Final session data: " . print_r($_SESSION, true));
+    error_log("Verify OTP - otp_verified flag: " . (isset($_SESSION['otp_verified']) ? $_SESSION['otp_verified'] : 'NOT SET'));
 
-// OTP is correct, proceed based on purpose
-$purpose = $input['purpose'] ?? null;
-$transfer_payload = $input['transfer_payload'] ?? null;
+    // Proceed based on purpose
+    $transfer_payload = $input['transfer_payload'] ?? null;
 
-if ($purpose === 'fund_transfer' || $purpose === 'external_transfer') {
-    if (empty($transfer_payload)) {
-        throw new Exception("Transfer payload is missing.");
-    }
+    if ($purpose === 'fund_transfer' || $purpose === 'external_transfer') {
+        if (empty($transfer_payload)) {
+            throw new Exception("Transfer payload is missing.");
+        }
 
-    // For now, we only handle internal transfer here
-    if ($purpose === 'fund_transfer') {
-        $result = execute_internal_transfer($transfer_payload);
-        if ($result['success']) {
-    echo json_encode([
-        'success' => true,
-                'message' => 'Transfer completed successfully', 
-                'transaction_id' => $result['transaction_id'],
-                'redirect_url' => $result['redirect_url']
-            ]);
+        // For now, we only handle internal transfer here
+        if ($purpose === 'fund_transfer') {
+            $result = execute_internal_transfer($transfer_payload);
+            if ($result['success']) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Transfer completed successfully', 
+                    'transaction_id' => $result['transaction_id'],
+                    'redirect_url' => $result['redirect_url']
+                ]);
+            } else {
+                throw new Exception($result['error']);
+            }
         } else {
-            throw new Exception($result['error']);
+            // Placeholder for external transfer logic
+            throw new Exception("External transfer not yet implemented in this flow.");
         }
     } else {
-        // Placeholder for external transfer logic
-        throw new Exception("External transfer not yet implemented in this flow.");
+        // Handle other OTP purposes (like registration and account creation)
+        if ($purpose === 'create_account') {
+            echo json_encode([
+                'success' => true, 
+                'message' => 'OTP verified successfully. You can now create your account.'
+            ]);
+        } elseif ($purpose === 'registration') {
+            echo json_encode([
+                'success' => true, 
+                'message' => 'OTP verified successfully. You can now complete your registration.'
+            ]);
+        } else {
+            echo json_encode([
+                'success' => true, 
+                'message' => 'OTP verified successfully'
+            ]);
+        }
     }
-} else {
-    // Handle other OTP purposes if any
-    echo json_encode(['success' => true, 'message' => 'OTP verified successfully']);
-}
 ?>

@@ -106,25 +106,15 @@ try {
 
     error_log("Send OTP - Generated OTP: " . $otp);
 
-    $created_at = time();
-
-    // Store OTP in session
-    $_SESSION['otp'] = [
-        'code' => (string)$otp, // Ensure OTP is stored as string
-        'phone_number' => $phone,
-        'created_at' => $created_at,
-        'attempts' => 0
-    ];
+    // Store OTP using SessionManager
+    $stored = $sessionManager->storeOTP((string)$otp, $phone, $purpose);
+    
+    if (!$stored) {
+        throw new Exception('Failed to store OTP in session. Please try again.');
+    }
 
     // Debug session data after storing OTP
     error_log("Send OTP - Session data after storing OTP: " . print_r($_SESSION, true));
-
-    // Ensure session is written
-    session_write_close();
-    session_start();
-
-    // Verify session data was stored
-    error_log("Send OTP - Session data after write/restart: " . print_r($_SESSION, true));
 
     // Send success response without exposing OTP
     $responseArr = [

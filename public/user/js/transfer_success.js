@@ -1,7 +1,4 @@
-// API Endpoints
-const API = {
-    TRANSFER_SUCCESS: '../../src/api/user/get_transaction_details.php'
-};
+// Use API_ENDPOINTS from config.js instead of the old API object structure
 
 // Element IDs
 const ELEMENT_ID = {
@@ -44,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     if (transactionId) {
-        fetch(`${API.TRANSFER_SUCCESS}?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
+        fetch(`${API_ENDPOINTS.GET_TRANSACTION_DETAILS}?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
             .then(res => res.json())
             .then(data => {
                 console.log('API Response:', data); // Debug log
