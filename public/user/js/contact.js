@@ -1,6 +1,6 @@
 // API Endpoints
 const API = {
-    CONTACT_SUBMIT: '../../src/api/public/contact_submit.php'
+    CONTACT_SUBMIT: '../../src/api/public/contact_mailer.php',
 };
 
 // Element IDs
@@ -9,7 +9,7 @@ const ELEMENT_ID = {
     FULL_NAME: 'full_name',
     EMAIL_ADDRESS: 'email_address',
     MESSAGE_SUBJECT: 'message_subject',
-    MESSAGE_CONTENT: 'message_content'
+    MESSAGE_CONTENT: 'message_content',
 };
 
 // CSS Classes
@@ -24,7 +24,7 @@ const CLASS = {
     NOTIFICATION_CONTENT: 'notification-content',
     NOTIFICATION_CLOSE: 'notification-close',
     SHOW: 'show',
-    ANIMATE_IN: 'animate-in'
+    ANIMATE_IN: 'animate-in',
 };
 
 // Alert Types
@@ -32,7 +32,7 @@ const ALERT_TYPES = {
     SUCCESS: 'success',
     ERROR: 'error',
     WARNING: 'warning',
-    INFO: 'info'
+    INFO: 'info',
 };
 
 // Alert Icons
@@ -43,7 +43,7 @@ const ICON = {
     INFO: 'fa-info-circle',
     SPINNER: 'fa-spinner fa-spin',
     PAPER_PLANE: 'fa-paper-plane',
-    TIMES: 'fa-times'
+    TIMES: 'fa-times',
 };
 
 // Text Content
@@ -56,7 +56,7 @@ const TEXT = {
     NAME_ERROR: 'Name must be at least 2 characters long',
     EMAIL_ERROR: 'Please enter a valid email address',
     SUBJECT_ERROR: 'Subject must be at least 3 characters long',
-    MESSAGE_ERROR: 'Message must be at least 10 characters long'
+    MESSAGE_ERROR: 'Message must be at least 10 characters long',
 };
 
 // Timing (in milliseconds)
@@ -64,7 +64,7 @@ const TIMING = {
     NOTIFICATION_SHOW_DELAY: 100,
     NOTIFICATION_HIDE_DELAY: 300,
     NOTIFICATION_AUTO_HIDE: 5000,
-    FORM_SUBMIT_SIMULATION: 1500
+    FORM_SUBMIT_SIMULATION: 1500,
 };
 
 // Observer Configuration
@@ -91,7 +91,7 @@ class ContactFormHandler {
 
     setupInputValidation() {
         const inputs = this.form.querySelectorAll(`.${CLASS.FORM_INPUT}`);
-        inputs.forEach(input => {
+        inputs.forEach((input) => {
             input.addEventListener('input', () => this.validateInput(input));
             input.addEventListener('blur', () => this.validateInput(input));
         });
@@ -127,7 +127,9 @@ class ContactFormHandler {
 
     setInputValidationState(input, isValid, errorMessage) {
         const formGroup = input.closest(`.${CLASS.FORM_GROUP}`);
-        const existingError = formGroup.querySelector(`.${CLASS.ERROR_MESSAGE}`);
+        const existingError = formGroup.querySelector(
+            `.${CLASS.ERROR_MESSAGE}`
+        );
 
         if (existingError) {
             existingError.remove();
@@ -154,39 +156,61 @@ class ContactFormHandler {
         const inputs = this.form.querySelectorAll(`.${CLASS.FORM_INPUT}`);
         let isFormValid = true;
 
-        inputs.forEach(input => {
+        inputs.forEach((input) => {
             if (!this.validateInput(input)) {
                 isFormValid = false;
             }
         });
 
         if (!isFormValid) {
-            this.showNotification(TEXT.FORM_VALIDATION_ERROR, ALERT_TYPES.WARNING);
+            this.showNotification(
+                TEXT.FORM_VALIDATION_ERROR,
+                ALERT_TYPES.WARNING
+            );
             return;
         }
 
         this.setLoadingState(true);
 
         try {
-            const formData = {
-                name: this.form.querySelector(`#${ELEMENT_ID.FULL_NAME}`).value,
-                email: this.form.querySelector(`#${ELEMENT_ID.EMAIL_ADDRESS}`).value,
-                subject: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_SUBJECT}`).value,
-                message: this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value
-            };
+            const formData = new FormData();
+            formData.append(
+                'name',
+                this.form.querySelector(`#${ELEMENT_ID.FULL_NAME}`).value
+            );
+            formData.append(
+                'email',
+                this.form.querySelector(`#${ELEMENT_ID.EMAIL_ADDRESS}`).value
+            );
+            formData.append(
+                'subject',
+                this.form.querySelector(`#${ELEMENT_ID.MESSAGE_SUBJECT}`).value
+            );
+            formData.append(
+                'message',
+                this.form.querySelector(`#${ELEMENT_ID.MESSAGE_CONTENT}`).value
+            );
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, TIMING.FORM_SUBMIT_SIMULATION));
-            
-            // Simulate successful submission
-            this.showNotification(TEXT.MESSAGE_SENT, ALERT_TYPES.SUCCESS);
-            this.form.reset();
-            
-            // Remove success classes after form reset
-            inputs.forEach(input => {
-                input.classList.remove(CLASS.SUCCESS);
+            const response = await fetch(API.CONTACT_SUBMIT, {
+                method: 'POST',
+                body: formData,
             });
 
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                this.showNotification(TEXT.MESSAGE_SENT, ALERT_TYPES.SUCCESS);
+                this.form.reset();
+                // Remove success classes after form reset
+                inputs.forEach((input) => {
+                    input.classList.remove(CLASS.SUCCESS);
+                });
+            } else {
+                this.showNotification(
+                    result.message || TEXT.SEND_FAILURE,
+                    ALERT_TYPES.ERROR
+                );
+            }
         } catch (error) {
             console.error('Form submission error:', error);
             this.showNotification(TEXT.SEND_FAILURE, ALERT_TYPES.ERROR);
@@ -206,7 +230,9 @@ class ContactFormHandler {
 
     showNotification(message, type = ALERT_TYPES.INFO) {
         // Remove existing notification
-        const existingNotification = document.querySelector(`.${CLASS.NOTIFICATION}`);
+        const existingNotification = document.querySelector(
+            `.${CLASS.NOTIFICATION}`
+        );
         if (existingNotification) {
             existingNotification.remove();
         }
@@ -233,11 +259,16 @@ class ContactFormHandler {
         }, TIMING.NOTIFICATION_SHOW_DELAY);
 
         // Setup close button
-        const closeBtn = notification.querySelector(`.${CLASS.NOTIFICATION_CLOSE}`);
+        const closeBtn = notification.querySelector(
+            `.${CLASS.NOTIFICATION_CLOSE}`
+        );
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
                 notification.classList.remove(CLASS.SHOW);
-                setTimeout(() => notification.remove(), TIMING.NOTIFICATION_HIDE_DELAY);
+                setTimeout(
+                    () => notification.remove(),
+                    TIMING.NOTIFICATION_HIDE_DELAY
+                );
             });
         }
 
@@ -245,7 +276,10 @@ class ContactFormHandler {
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.classList.remove(CLASS.SHOW);
-                setTimeout(() => notification.remove(), TIMING.NOTIFICATION_HIDE_DELAY);
+                setTimeout(
+                    () => notification.remove(),
+                    TIMING.NOTIFICATION_HIDE_DELAY
+                );
             }
         }, TIMING.NOTIFICATION_AUTO_HIDE);
     }

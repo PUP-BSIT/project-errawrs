@@ -168,6 +168,31 @@ class RegistrationManager {
 			formattedPhone = "0" + formattedPhone.substring(2);
 		}
 
+		// OTP Modal handlers
+		const closeOtpModalBtn = document.getElementById("close_otp_modal");
+		const otpVerificationForm = document.getElementById("otp_verification_form");
+		const resendOtpBtn = document.getElementById("resend_otp");
+
+		if (closeOtpModalBtn) {
+			closeOtpModalBtn.addEventListener("click", () => {
+				this.hideOtpModal();
+			});
+		}
+
+		if (otpVerificationForm) {
+			otpVerificationForm.addEventListener("submit", (e) => {
+				e.preventDefault();
+				this.verifyOtp();
+			});
+		}
+
+		if (resendOtpBtn) {
+			resendOtpBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.resendOtp();
+			});
+		}
+
 		// Create the request data
 		const requestData = {
 			phone_number: formattedPhone,
@@ -1210,6 +1235,7 @@ class RegistrationManager {
 
 		// Clear stored file data
 		this.idImage = null;
+		this.hideImageModal();
 	}
 
 	validateAge(input) {

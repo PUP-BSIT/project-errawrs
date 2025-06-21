@@ -9,7 +9,8 @@ const ELEMENT_ID = {
     TRANSACTION_DATE: 'transaction_date',
     TRANSACTION_AMOUNT: 'transaction_amount',
     FROM_ACCOUNT: 'from_account',
-    TO_ACCOUNT: 'to_account'
+    TO_ACCOUNT: 'to_account',
+    BACK_BUTTON: 'back_button'
 };
 
 // URL Parameters
@@ -32,6 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const transactionId = urlParams.get(URL_PARAM.TRANSACTION_ID);
     
+    // Set up the back button to go to dashboard with refresh parameter
+    const backButtons = document.querySelectorAll('.back-button');
+    backButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Redirect to dashboard with refresh parameter
+            window.location.href = './user_dashboard.html?transaction_success=true';
+        });
+    });
+    
     if (transactionId) {
         fetch(`${API.TRANSFER_SUCCESS}?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
             .then(res => res.json())
@@ -49,6 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         `${CURRENCY.SYMBOL} ${parseFloat(t.amount || 0).toLocaleString(CURRENCY.LOCALE, {minimumFractionDigits: 2})}`;
                     document.getElementById(ELEMENT_ID.FROM_ACCOUNT).textContent = t.sender_account_number || 'N/A';
                     document.getElementById(ELEMENT_ID.TO_ACCOUNT).textContent = t.receiver_account_number || t.external_account_number || 'N/A';
+                    
+                    // Store transaction data in localStorage to ensure dashboard refresh
+                    localStorage.setItem('last_transaction', JSON.stringify({
+                        id: t.transaction_id,
+                        amount: t.amount,
+                        timestamp: Date.now()
+                    }));
                 } else {
                     document.getElementById(ELEMENT_ID.TRANSACTION_ID).textContent = 'N/A';
                     document.getElementById(ELEMENT_ID.TRANSACTION_DATE).textContent = 'N/A';

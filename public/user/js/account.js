@@ -443,6 +443,7 @@ async function handleProceedAddAccount() {
             DOM.modals.otp.classList.remove(CLASS.HIDDEN);
             showNotification(TEXT.OTP_SENT, CLASS.SUCCESS);
         } else {
+            console.error('OTP send error:', data.error);
             showNotification(data.error || TEXT.OTP_SEND_ERROR, CLASS.ERROR);
         }
     } catch (error) {
@@ -468,6 +469,11 @@ async function handleVerifyOtp() {
             body: JSON.stringify({ otp, phone_number: state.userData.phone_number, purpose: 'create_account' }),
         });
         const verifyData = await verifyResponse.json();
+        console.log('OTP verification response:', verifyData);
+        
+        // Reset button state
+        verify_otp_button.disabled = false;
+        verify_otp_button.textContent = verifyButtonText;
 
         if (verifyData.success) {
             const createResponse = await fetch(API.USER.CREATE_ACCOUNT, {
@@ -480,9 +486,11 @@ async function handleVerifyOtp() {
                 showNotification(createData.message || TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
                 fetchUserAccounts();
             } else {
+                console.error('Create account error:', createData.error);
                 showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
             }
         } else {
+            console.error('OTP verification error:', verifyData.error);
             showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
         }
     } catch (error) {

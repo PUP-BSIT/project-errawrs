@@ -9,7 +9,16 @@ $session->initSession();
 
 header('Content-Type: application/json');
 
+<<<<<<< HEAD
+// Debug session info
+error_log("Session ID in create_additional_account: " . session_id());
+error_log("Full SESSION data: " . print_r($_SESSION, true));
+
+// Check if user is logged in
+if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
+=======
 if (!$session->isAuthenticated() || !isset($_SESSION['auth']['type']) || $_SESSION['auth']['type'] !== 'user') {
+>>>>>>> origin/dev
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit();
@@ -24,9 +33,41 @@ if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
 $input = json_decode(file_get_contents('php://input'), true);
 $account_type = $input['account_type'] ?? null;
 
+<<<<<<< HEAD
+// Debug input
+error_log("Create account input: " . print_r($input, true));
+
+// Validate account_type
+if (!$account_type) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Account type is required']);
+    exit();
+}
+
+// Validate account_type values
+if (!in_array($account_type, ['savings', 'checking', 'time_deposit', 'credit'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Invalid account type']);
+    exit();
+}
+
+// Verify that OTP has been verified if creating account
+if ($verified !== true) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'OTP verification required']);
+    exit();
+}
+
+// Check if OTP has been verified
+if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
+    error_log("OTP verification check failed: " . (isset($_SESSION['otp_verified']) ? "Set but not true" : "Not set"));
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'No verified OTP found. Please complete verification first']);
+=======
 if (!$account_type || !in_array($account_type, ['savings', 'credit'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Valid account type is required.']);
+>>>>>>> origin/dev
     exit();
 }
 
@@ -65,6 +106,10 @@ try {
     
     $db->commit();
     
+<<<<<<< HEAD
+    // Clear OTP verification flag
+=======
+>>>>>>> origin/dev
     unset($_SESSION['otp_verified']);
     
     // Send email to user (replace with your mailer)
@@ -80,7 +125,16 @@ try {
     ]);
 
 } catch (Exception $e) {
+<<<<<<< HEAD
+    // Rollback transaction on error
+    if (isset($db)) {
+        $db->rollback();
+    }
+    error_log("Create account error: " . $e->getMessage());
+    http_response_code(400);
+=======
     $db->rollback();
     http_response_code(400); // Bad Request for business logic errors
+>>>>>>> origin/dev
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 } 
