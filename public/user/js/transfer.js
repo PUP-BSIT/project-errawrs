@@ -1,13 +1,7 @@
 // Add transfer-specific API endpoints
-Object.assign(API_ENDPOINTS.USER, {
-    INTERNAL_TRANSFER: `${BASE_PATH.API}/user/fund_transfer.php`,
-    EXTERNAL_TRANSFER: `${BASE_PATH.API}/user/external_transfer.php`
-});
-
-// Add transfer-specific routes
-Object.assign(ROUTES, {
-    TRANSFER_SUCCESS: `${BASE_PATH.ROUTES.USER}/transfer_success.html`,
-    TRANSFER_FAILED: `${BASE_PATH.ROUTES.USER}/transfer_failed.html`
+Object.assign(API_ENDPOINTS, {
+    INTERNAL_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`
 });
 
 // Text Constants

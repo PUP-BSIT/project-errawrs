@@ -222,18 +222,18 @@ const ApiService = {
     },
     
     async getProfile() {
-        return ApiService.fetch(CONFIG.API.ENDPOINTS.PROFILE);
+        return ApiService.fetch('/auth/session_check.php');
     },
     
     async updateProfile(data) {
-        return ApiService.fetch(CONFIG.API.ENDPOINTS.UPDATE, {
+        return ApiService.fetch('/user/update_profile.php', {
             method: 'POST',
             body: JSON.stringify(data)
         });
     },
     
     async logout() {
-        return ApiService.fetch(CONFIG.API.ENDPOINTS.LOGOUT, {
+        return ApiService.fetch('/auth/logout.php', {
             method: 'POST'
         });
     }
