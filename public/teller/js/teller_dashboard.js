@@ -221,8 +221,6 @@ async function fetchDashboardSummary() {
 
 // Update dashboard summary in the UI
 function updateDashboardSummary(summary) {
-    const currentTime = formatTime(new Date());
-
     summary.forEach(item => {
         let elementIdPrefix = '';
         let lastKnownValueKey = '';
@@ -263,14 +261,12 @@ function updateDashboardSummary(summary) {
         }
 
         const numberElement = document.getElementById(`total-${elementIdPrefix}`);
-        const updatedElement = document.getElementById(`${elementIdPrefix}-updated`);
 
-        if (numberElement && updatedElement) {
+        if (numberElement) {
             const currentParsedValue = parseValue(item.amount_count);
 
             if (lastKnownValues[lastKnownValueKey] !== currentParsedValue) {
                 numberElement.textContent = item.amount_count; // Always display the original string from PHP
-                updatedElement.textContent = `Last update: ${currentTime}`;
                 lastKnownValues[lastKnownValueKey] = currentParsedValue;
             }
         }
@@ -336,7 +332,6 @@ async function loadRecentRegistrations() {
 
         // Update pending count in summary
         document.getElementById('total-pending').textContent = `${data.registrations.length} Requests`;
-        document.getElementById('pending-updated').textContent = formatTime(new Date());
 
     } catch (error) {
         console.error('Error loading registrations:', error);

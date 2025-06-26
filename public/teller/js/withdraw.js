@@ -101,7 +101,31 @@ function formatCurrency(amount) {
 const accountInput = document.getElementById('account_number_input');
 const suggestionsDiv = document.getElementById('account_suggestions');
 const searchSpinner = document.getElementById('search_spinner');
+const clearSearchBtn = document.getElementById('clear_search_btn');
 let searchTimeout = null;
+
+// Clear search functionality
+function clearSearch() {
+    accountInput.value = '';
+    selectedAccount = null;
+    updateDisplayedBalance();
+    suggestionsDiv.classList.remove('active');
+    clearSearchBtn.style.display = 'none';
+    validateAmount(parseFloat(amountInput.value) || 0);
+}
+
+// Show/hide clear button based on input value
+function toggleClearButton() {
+    if (accountInput.value.trim().length > 0) {
+        clearSearchBtn.style.display = 'flex';
+    } else {
+        clearSearchBtn.style.display = 'none';
+    }
+}
+
+// Add event listeners for clear functionality
+clearSearchBtn.addEventListener('click', clearSearch);
+accountInput.addEventListener('input', toggleClearButton);
 
 accountInput.addEventListener('input', function(e) {
     const searchTerm = e.target.value.trim();
