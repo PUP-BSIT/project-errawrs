@@ -1,21 +1,4 @@
-// Extend the existing API object from session-manager.js
-if (!window.API) {
-    window.API = {};
-}
-if (!API.USER) API.USER = {};
-if (!API.AUTH) API.AUTH = {};
-
-// Add or update USER endpoints
-Object.assign(API.USER, {
-    ACCOUNTS: '../../src/api/user/accounts.php',
-    CREATE_ACCOUNT: '../../src/api/user/create_additional_account.php'
-});
-
-// Add or update AUTH endpoints
-Object.assign(API.AUTH, {
-    SEND_OTP: '../../src/api/auth/send_otp.php',
-    VERIFY_OTP: '../../src/api/auth/verify_otp.php'
-});
+// Use the API_ENDPOINTS from config.js instead of the old API object structure
 
 // Routes
 // No need to redefine ROUTES as it's already declared in session-manager.js
@@ -191,7 +174,7 @@ function displayUserInitial() {
 // Fetch user accounts from API
 async function fetchUserAccounts() {
     try {
-        const response = await fetch(API.USER.ACCOUNTS);
+        const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS);
         const data = await response.json();
 
         if (data.success && data.accounts) {
@@ -432,7 +415,7 @@ async function handleProceedAddAccount() {
     }
 
     try {
-        const response = await fetch(API.AUTH.SEND_OTP, {
+        const response = await fetch(API_ENDPOINTS.AUTH.SEND_OTP, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone_number: phoneNumber, purpose: 'create_account' }),
@@ -443,6 +426,7 @@ async function handleProceedAddAccount() {
             DOM.modals.otp.classList.remove(CLASS.HIDDEN);
             showNotification(TEXT.OTP_SENT, CLASS.SUCCESS);
         } else {
+            console.error('OTP send error:', data.error);
             showNotification(data.error || TEXT.OTP_SEND_ERROR, CLASS.ERROR);
         }
     } catch (error) {
@@ -462,15 +446,20 @@ async function handleVerifyOtp() {
 
     DOM.modals.processing.classList.remove(CLASS.HIDDEN);
     try {
-        const verifyResponse = await fetch(API.AUTH.VERIFY_OTP, {
+        const verifyResponse = await fetch(API_ENDPOINTS.AUTH.VERIFY_OTP, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ otp, phone_number: state.userData.phone_number, purpose: 'create_account' }),
         });
         const verifyData = await verifyResponse.json();
+        console.log('OTP verification response:', verifyData);
+        
+        // Reset button state
+        verify_otp_button.disabled = false;
+        verify_otp_button.textContent = verifyButtonText;
 
         if (verifyData.success) {
-            const createResponse = await fetch(API.USER.CREATE_ACCOUNT, {
+            const createResponse = await fetch(API_ENDPOINTS.USER.CREATE_ACCOUNT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ account_type: accountType }),
@@ -480,9 +469,11 @@ async function handleVerifyOtp() {
                 showNotification(createData.message || TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
                 fetchUserAccounts();
             } else {
+                console.error('Create account error:', createData.error);
                 showNotification(createData.error || TEXT.ACCOUNT_ERROR, CLASS.ERROR);
             }
         } else {
+            console.error('OTP verification error:', verifyData.error);
             showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
         }
     } catch (error) {

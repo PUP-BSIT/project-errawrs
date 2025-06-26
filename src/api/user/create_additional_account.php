@@ -9,7 +9,12 @@ $session->initSession();
 
 header('Content-Type: application/json');
 
-if (!$session->isAuthenticated() || !isset($_SESSION['auth']['type']) || $_SESSION['auth']['type'] !== 'user') {
+// Debug session info
+error_log("Session ID in create_additional_account: " . session_id());
+error_log("Full SESSION data: " . print_r($_SESSION, true));
+
+// Check if user is logged in
+if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit();

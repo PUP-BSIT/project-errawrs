@@ -901,6 +901,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Changed from center to flex-start */
+    justify-content: center;
     width: 100%;
     flex: 1;
 }
@@ -942,6 +943,15 @@ body {
     box-shadow: 0 0 0 2px rgba(182, 255, 74, 0.2);
 }
 
+/* Applications grid: 2 cards per page */
+.applications-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 1000px;
+}
 /* Remove showing-text styles */
 .showing-text {
     display: none;

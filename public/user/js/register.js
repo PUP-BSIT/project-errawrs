@@ -60,6 +60,7 @@ class RegistrationManager {
 		this.formData = null;
 		this.idImage = null;
 		this.isUnder18 = false;
+		this.isVerifyingOtp = false;
 
 		// Initialize forms
 		this.initializeIdentificationForm();
@@ -69,9 +70,22 @@ class RegistrationManager {
 		// Initialize back buttons
 		this.initializeBackButtons();
 
-		// Load saved form data and update UI
-		this.loadFormData();
+		// Check if user is coming back via browser navigation
+		this.checkForBackNavigation();
 		this.updateStepIndicators();
+	}
+
+	checkForBackNavigation() {
+		// Check if this is a back navigation by looking for performance navigation type
+		const isBackNavigation = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+		
+		// Only load form data if it's a back navigation
+		if (isBackNavigation) {
+			this.loadFormData();
+		} else {
+			// Clear any existing form data on fresh page load
+			sessionStorage.removeItem("registrationFormData");
+		}
 	}
 
 	handleIdentificationSubmit(e) {
@@ -168,6 +182,31 @@ class RegistrationManager {
 			formattedPhone = "0" + formattedPhone.substring(2);
 		}
 
+		// OTP Modal handlers
+		const closeOtpModalBtn = document.getElementById("close_otp_modal");
+		const otpVerificationForm = document.getElementById("otp_verification_form");
+		const resendOtpBtn = document.getElementById("resend_otp");
+
+		if (closeOtpModalBtn) {
+			closeOtpModalBtn.addEventListener("click", () => {
+				this.hideOtpModal();
+			});
+		}
+
+		if (otpVerificationForm) {
+			otpVerificationForm.addEventListener("submit", (e) => {
+				e.preventDefault();
+				this.verifyOtp();
+			});
+		}
+
+		if (resendOtpBtn) {
+			resendOtpBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.resendOtp();
+			});
+		}
+
 		// Create the request data
 		const requestData = {
 			phone_number: formattedPhone,
@@ -177,7 +216,7 @@ class RegistrationManager {
 		console.log('Sending OTP request:', requestData);
 
 		// Make API call to request OTP
-		fetch("/project-errawrs/src/api/auth/send_otp.php", {
+		fetch(API_ENDPOINTS.SEND_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -572,6 +611,14 @@ class RegistrationManager {
 	}
 
 	verifyOtp() {
+		// Prevent double submission
+		if (this.isVerifyingOtp) {
+			console.log('OTP verification already in progress, ignoring duplicate request');
+			return;
+		}
+		
+		this.isVerifyingOtp = true;
+		
 		const otpInput = document.getElementById("otp_code");
 		const verifyBtn = document.getElementById("verify_otp_btn");
 		const otp = otpInput?.value || "";
@@ -581,6 +628,7 @@ class RegistrationManager {
 				"Please enter the verification code.",
 				NOTIFICATION_TYPES.ERROR
 			);
+			this.isVerifyingOtp = false;
 			return;
 		}
 
@@ -608,7 +656,7 @@ class RegistrationManager {
 		console.log('Sending OTP verification request:', requestData);
 
 		// Make API call to verify OTP
-		fetch("/project-errawrs/src/api/auth/verify_otp.php", {
+		fetch(API_ENDPOINTS.VERIFY_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -618,7 +666,8 @@ class RegistrationManager {
 		})
 			.then((response) => {
 				console.log('OTP verification response status:', response.status);
-					return response.json().then(data => {
+				console.log('OTP verification response headers:', response.headers);
+				return response.json().then(data => {
 					console.log('OTP verification response data:', data);
 					if (!response.ok) {
 						throw new Error(data.error || `HTTP error! Status: ${response.status}`);
@@ -627,7 +676,9 @@ class RegistrationManager {
 				});
 			})
 			.then((data) => {
+				console.log('OTP verification success branch - data:', data);
 				if (data.success) {
+					console.log('OTP verification successful, calling submitRegistrationData()');
 					this.hideOtpModal();
 
 					// Reset OTP form
@@ -640,6 +691,7 @@ class RegistrationManager {
 					// Submit registration data
 					this.submitRegistrationData();
 				} else {
+					console.log('OTP verification failed - data.success is false');
 					// Show error message
 					this.showNotification(
 						data.error || "Invalid verification code. Please try again.",
@@ -653,6 +705,7 @@ class RegistrationManager {
 			})
 			.catch((error) => {
 				console.error('OTP verification error:', error);
+				console.error('OTP verification error message:', error.message);
 				this.showNotification(
 					error.message || "An error occurred. Please try again.",
 					NOTIFICATION_TYPES.ERROR
@@ -661,6 +714,9 @@ class RegistrationManager {
 					verifyBtn.innerHTML = "Verify";
 					verifyBtn.disabled = false;
 				}
+			})
+			.finally(() => {
+				this.isVerifyingOtp = false;
 			});
 	}
 
@@ -691,7 +747,7 @@ class RegistrationManager {
 		console.log('Sending resend OTP request:', requestData);
 
 		// Make API call to request new OTP
-		fetch("/project-errawrs/src/api/auth/send_otp.php", {
+		fetch(API_ENDPOINTS.SEND_OTP, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -742,6 +798,7 @@ class RegistrationManager {
 	}
 
 	submitRegistrationData() {
+		console.log('submitRegistrationData() called');
 		const submitBtn = document.querySelector(
 			'#contact_info_form button[type="submit"]'
 		);
@@ -765,6 +822,8 @@ class RegistrationManager {
 			country: document.getElementById("country")?.value || "",
 		};
 
+		console.log('Form fields for registration:', formFields);
+
 		formData.append("data", JSON.stringify(formFields));
 
 		if (this.idImage) {
@@ -783,8 +842,9 @@ class RegistrationManager {
 		}
 
 		// Use the submit_registration.php endpoint
-		fetch("/project-errawrs/src/api/user/submit_registration.php", {
+		fetch(API_ENDPOINTS.SUBMIT_REGISTRATION, {
 			method: "POST",
+			credentials: 'include',
 			body: formData,
 		})
 			.then((response) => {
@@ -1066,21 +1126,56 @@ class RegistrationManager {
 				}
 			}
 
-			// Restore current step and page
-			if (formData.currentStep) {
-				this.currentStep = formData.currentStep;
-				this.goToStep(formData.currentStep);
-			}
-
-			if (formData.currentContactPage) {
-				this.currentContactPage = formData.currentContactPage;
-				if (this.currentStep === STEPS.STEP_TWO_CONTACT) {
-					this.goToContactPage(formData.currentContactPage);
-				}
-			}
+			// Don't automatically restore current step and page - always start from step 1
+			// This allows users to start fresh while keeping their data
+			this.currentStep = STEPS.STEP_ONE_IDENTIFICATION;
+			this.currentContactPage = CONTACT_PAGES.PAGE_ONE;
+			this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
 		} catch (error) {
 			console.error("Error loading form data:", error);
 			sessionStorage.removeItem("registrationFormData");
+		}
+	}
+
+	clearFormData() {
+		try {
+			// Clear sessionStorage
+			sessionStorage.removeItem("registrationFormData");
+			
+			// Reset form fields
+			const fields = [
+				"id_type", "first_name", "last_name", "date_of_birth",
+				"email", "phone_number", "nationality", "street",
+				"city", "zip_code", "country"
+			];
+
+			fields.forEach(field => {
+				const input = document.getElementById(field);
+				if (input) {
+					input.value = "";
+					input.classList.remove("is-valid", "is-invalid");
+				}
+			});
+
+			// Clear ID image
+			this.idImage = null;
+			const fileInput = document.getElementById("id_image");
+			if (fileInput) {
+				fileInput.value = "";
+			}
+
+			// Clear file preview
+			this.clearFilePreview();
+
+			// Reset to step 1
+			this.currentStep = STEPS.STEP_ONE_IDENTIFICATION;
+			this.currentContactPage = CONTACT_PAGES.PAGE_ONE;
+			this.goToStep(STEPS.STEP_ONE_IDENTIFICATION);
+
+			this.showNotification("Form cleared. You can start over.", NOTIFICATION_TYPES.SUCCESS);
+		} catch (error) {
+			console.error("Error clearing form data:", error);
+			this.showNotification("Error clearing form. Please refresh the page.", NOTIFICATION_TYPES.ERROR);
 		}
 	}
 
@@ -1210,6 +1305,7 @@ class RegistrationManager {
 
 		// Clear stored file data
 		this.idImage = null;
+		this.hideImageModal();
 	}
 
 	validateAge(input) {

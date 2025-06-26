@@ -316,7 +316,7 @@ body {
 /* Toast Notifications */
 .toast-container {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
     z-index: 1000;
     display: flex;
@@ -357,6 +357,14 @@ body {
 
 .toast-close:hover {
     opacity: 1;
+}
+
+.toast-error {
+    border-left: 4px solid #e74c3c;
+}
+
+.toast-error i {
+    color: #e74c3c;
 }
 
 /* No Results */

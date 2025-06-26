@@ -58,7 +58,8 @@ class SessionManager {
                 'code' => $otp,
                 'phone_number' => $phone,
                 'created_at' => time(),
-                'attempts' => 0
+                'attempts' => 0,
+                'purpose' => $purpose
             ];
 
             // Debug logging
@@ -201,7 +202,7 @@ class SessionManager {
             'last_activity' => time(),
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
-            'phone_number' => $userData['phone_number'] ?? null,
+            'phone_number' => $userData['phone_number'] ?? null, // This line is crucial
             'email' => $userData['email'] ?? null
         ];
 
@@ -245,6 +246,15 @@ class SessionManager {
     }
 
     public function isAuthorizedAdmin() {
-        return $this->isAuthenticated() && isset($_SESSION['auth']['type']) && $_SESSION['auth']['type'] === 'admin';
+        $this->initSession();
+        
+        // Check if user is authenticated and session is not expired
+        if (!$this->isAuthenticated() || $this->isSessionExpired()) {
+            return false;
+        }
+        
+        // Check if user type is admin
+        $sessionData = $this->getSessionData();
+        return $sessionData && isset($sessionData['type']) && $sessionData['type'] === 'admin';
     }
 } 

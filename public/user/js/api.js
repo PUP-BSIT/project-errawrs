@@ -2,23 +2,23 @@
 const API = {
     // Authentication endpoints
     AUTH: {
-        LOGIN: `${BASE_PATH.API}/auth/login.php`,
-        LOGOUT: `${BASE_PATH.API}/auth/logout.php`,
-        SESSION_CHECK: `${BASE_PATH.API}/auth/session_check.php`,
-        VERIFY_OTP: `${BASE_PATH.API}/auth/verify_otp.php`,
-        SEND_OTP: `${BASE_PATH.API}/auth/send_otp.php`,
-        KILL_SESSION: `${BASE_PATH.API}/auth/kill_session.php`
+        LOGIN: API_ENDPOINTS.LOGIN,
+        LOGOUT: API_ENDPOINTS.LOGOUT,
+        SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
+        VERIFY_OTP: API_ENDPOINTS.VERIFY_OTP,
+        SEND_OTP: API_ENDPOINTS.SEND_OTP,
+        KILL_SESSION: `${API_BASE_URL}/auth/kill_session.php`
     },
     
     // User-specific endpoints
     USER: {
-        PROFILE: `${BASE_PATH.API}/user/profile.php`,
-        ACCOUNTS: `${BASE_PATH.API}/user/accounts.php`,
-        TRANSACTIONS: `${BASE_PATH.API}/user/transactions.php`,
-        FINANCIAL_TIPS: `${BASE_PATH.API}/user/financial-tips.php`,
-        TRANSFER: `${BASE_PATH.API}/user/transfer.php`,
-        INTERNAL_TRANSFER: `${BASE_PATH.API}/user/fund_transfer.php`,
-        EXTERNAL_TRANSFER: `${BASE_PATH.API}/user/external_transfer.php`
+        PROFILE: API_ENDPOINTS.UPDATE_PROFILE,
+        ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
+        TRANSACTIONS: API_ENDPOINTS.GET_TRANSACTIONS,
+        FINANCIAL_TIPS: API_ENDPOINTS.FINANCIAL_TIPS,
+        TRANSFER: API_ENDPOINTS.FUND_TRANSFER,
+        INTERNAL_TRANSFER: API_ENDPOINTS.FUND_TRANSFER,
+        EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`
     },
     
     // Content endpoints

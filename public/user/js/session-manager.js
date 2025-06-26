@@ -20,7 +20,7 @@ class SessionManager {
         this.options = {
             checkInterval: DEFAULT_SETTINGS.CHECK_INTERVAL,
             warningThreshold: DEFAULT_SETTINGS.WARNING_THRESHOLD,
-            sessionEndpoint: `${BASE_PATH.API}/auth/session_check.php`,
+            sessionEndpoint: API_ENDPOINTS.SESSION_CHECK,
             loginPage: ROUTES.LOGIN,
             onTimeout: null, // Custom callback for timeout
             onWarning: null, // Custom callback for warning
@@ -381,7 +381,7 @@ class SessionManager {
             // Call the session killer endpoint
             try {
                 // First try the dedicated session killer
-                await fetch(API.AUTH.KILL_SESSION, {
+                await fetch(API_ENDPOINTS.KILL_SESSION, {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -395,12 +395,12 @@ class SessionManager {
                 
                 // Fallback to regular logout if session kill fails
                 try {
-                    await fetch(API.AUTH.LOGOUT, {
+                    await fetch(API_ENDPOINTS.LOGOUT, {
                         method: 'POST',
                         credentials: 'same-origin'
                     });
-                } catch (logoutError) {
-                    this.log('Error during logout fallback:', logoutError);
+                } catch (error) {
+                    console.error('Error killing session:', error);
                 }
             }
             

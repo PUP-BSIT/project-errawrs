@@ -1,76 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, 
+                  initial-scale=1.0"
+        />
+        <title>StackOvercash Landing</title>
+        <link rel="stylesheet" href="../user/css/styles.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, 
-                  initial-scale=1.0" />
-    <title>StackOvercash Landing</title>
-    <link rel="stylesheet" href="../user/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
-</head>
-
-<body>
-    <header>
-        <div class="container-nav">
-            <div class="logo">
-                <span class="white">Stack</span>
-                <span class="green">Overcash</span>
+    <body>
+        <header>
+            <div class="container-nav">
+                <div class="logo">
+                    <span class="white">Stack</span>
+                    <span class="green">Overcash</span>
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="./index.html" class="active">Home</a></li>
+                        <li><a href="./contact_us.html">Contact</a></li>
+                        <li><a href="./about.html">About Us</a></li>
+                    </ul>
+                </nav>
+                <a href="/user/login_account_holder.html" class="login-btn"
+                    >Login</a
+                >
             </div>
-            <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="./contact_us.html">Contact</a></li>
-                <li><a href="#">Support</a></li>
-            </ul>
-            <a href="./login_account_holder.html" class="login-btn">
-                Login</a>
-        </div>
-    </header>
+        </header>
 
-    <section class="container-hero">
-        <div class="hero-content">
-            <h1>Send & receive money in seconds.</h1>
-            <p>
-                Manage your finances smartly and securely with
-                StackOvercash. Join thousands who trust us to move money
-                instantly.
-            </p>
-            <button class="learn-more-btn">Learn more</button>
-        </div>
+        <div class="landing-section">
+            <section class="container-hero">
+                <div class="hero-content">
+                    <h1>Send & receive money in seconds.</h1>
+                    <p>
+                        Manage your finances smartly and securely with
+                        StackOvercash. Join thousands who trust us to move money
+                        instantly.
+                    </p>
+                    <button
+                        class="learn-more-btn"
+                        onclick="location.href='#faq'"
+                    >
+                        Learn more
+                    </button>
+                </div>
 
-        <div class="hero-visual">
-            <div class="card-stack">
-                <div class="card">
-                    <div class="chip"></div>
-                    <div class="top-row">
-                        <span>STACOVERCASH</span>
-                        <span>Visa</span>
+                <div class="hero-visual">
+                    <div class="card-stack">
+                        <div class="card">
+                            <div class="chip"></div>
+                            <div class="top-row">
+                                <span>STACKOVERCASH</span>
+                                <span>Bank</span>
+                            </div>
+                            <div class="number">5442 5000 0100</div>
+                            <div class="bottom-row">
+                                <span>12/29</span>
+                                <span>J. DOE</span>
+                            </div>
+                        </div>
+
+                        <div class="transaction transaction-payment">
+                            <span>Transfer</span>
+                            <span class="amount">- ₱420.00</span>
+                        </div>
+
+                        <div class="transaction transaction-received">
+                            <span>Deposit</span>
+                            <span class="amount">+ ₱8,000.00</span>
+                        </div>
                     </div>
-                    <div class="number">4485 2633 9823 4712</div>
-                    <div class="bottom-row">
-                        <span>12/29</span>
-                        <span>J. DOE</span>
+
+                    <div class="user-profile">
+                        <img
+                            src="../assets/images/user_landingpage.png"
+                            alt="Person using mobile banking app"
+                        />
+                        <div class="mint-shape"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="services-bg">
+            <section class="services-section" id="services">
+                <div class="services-container">
+                    <h2>Your Smarter Way to Stack and Save</h2>
+                    <div class="services-grid">
+                        <div class="service-card transfer-card">
+                            <div class="service-content">
+                                <h3>Transfer Money Instantly</h3>
+                                <p>
+                                    Send funds in seconds anytime, anywhere.
+                                    Whether it's to friends, family, or another
+                                    bank, StackOvercash makes money transfer
+                                    lightning-fast and secure.
+                                </p>
+                            </div>
+                            <div class="service-image">
+                                <img
+                                    src="../assets/images/transfer.png"
+                                    alt="Transfer Money Instantly"
+                                />
+                            </div>
+                        </div>
+                        <div class="service-card deposit-card">
+                            <div class="service-content">
+                                <h3>Easy & Secure Deposits</h3>
+                                <p>
+                                    Top up your account in just a few taps. From
+                                    salary deposits to personal savings, enjoy a
+                                    smooth and reliable deposit process, no
+                                    waiting, no stress.
+                                </p>
+                            </div>
+                            <div class="service-image">
+                                <img
+                                    src="../assets/images/deposit.png"
+                                    alt="Easy & Secure Deposits"
+                                />
+                            </div>
+                        </div>
+                        <div class="service-card accounts-card">
+                            <div class="service-content">
+                                <h3>Open Multiple Accounts with Ease</h3>
+                                <p>
+                                    One app. Multiple goals. Endless control.
+                                    Create separate accounts for savings, bills,
+                                    or business, all in one dashboard, all under
+                                    your control.
+                                </p>
+                            </div>
+                            <div class="service-image">
+                                <img
+                                    src="../assets/images/multi_acc.png"
+                                    alt="Open Multiple Accounts"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="testimonials-section">
+            <div class="testimonials-container">
+                <h2>What Our Users Say</h2>
+                <p class="testimonials-subtitle">
+                    Hear from real users who trust StackOvercash for their
+                    everyday banking needs.
+                </p>
+
+                <div class="testimonials-carousel">
+                    <div class="testimonials-track">
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote-icon">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div class="testimonial-content">
+                                <p>
+                                    StackOvercash made online banking so easy! I
+                                    can transfer funds, pay bills, and check my
+                                    balance anytime. The interface is
+                                    user-friendly and secure. Highly
+                                    recommended!
+                                </p>
+                            </div>
+                            <div class="testimonial-bottom">
+                                <div class="author-image">
+                                    <img
+                                        src="../assets/images/testimonial1.jpg"
+                                        alt="Lara A."
+                                    />
+                                </div>
+                                <div class="author-info">
+                                    <h4>Mara</h4>
+                                    <p>Young Professional</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote-icon">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div class="testimonial-content">
+                                <p>
+                                    I love how StackOvercash lets me manage
+                                    multiple accounts in one place. The customer
+                                    support is responsive and the app is always
+                                    reliable. It's the best online bank I've
+                                    used!
+                                </p>
+                            </div>
+                            <div class="testimonial-bottom">
+                                <div class="author-image">
+                                    <img
+                                        src="../assets/images/testimonial2.jpg"
+                                        alt="Matthew A."
+                                    />
+                                </div>
+                                <div class="author-info">
+                                    <h4>Lorenz</h4>
+                                    <p>Small Business Owner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote-icon">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div class="testimonial-content">
+                                <p>
+                                    Transferring money to my family has never
+                                    been this fast. StackOvercash is secure,
+                                    quick, and I get instant notifications for
+                                    every transaction. I feel safe using it
+                                    every day.
+                                </p>
+                            </div>
+                            <div class="testimonial-bottom">
+                                <div class="author-image">
+                                    <img
+                                        src="../assets/images/testimonial3.jpg"
+                                        alt="Anita D."
+                                    />
+                                </div>
+                                <div class="author-info">
+                                    <h4>Dana</h4>
+                                    <p>Freelancer</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote-icon">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div class="testimonial-content">
+                                <p>
+                                    StackOvercash helped me save and track my
+                                    expenses better. The dashboard is clear and
+                                    the deposit process is seamless. I recommend
+                                    it to all my friends!
+                                </p>
+                            </div>
+                            <div class="testimonial-bottom">
+                                <div class="author-image">
+                                    <img
+                                        src="../assets/images/testimonial4.jpg"
+                                        alt="Janine L."
+                                    />
+                                </div>
+                                <div class="author-info">
+                                    <h4>Jane</h4>
+                                    <p>Parent & Saver</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-card">
+                            <div class="testimonial-quote-icon">
+                                <i class="fa-solid fa-quote-left"></i>
+                            </div>
+                            <div class="testimonial-content">
+                                <p>
+                                    With StackOvercash, I can deposit checks and
+                                    transfer money without ever visiting a
+                                    branch. It's fast, secure, and fits my busy
+                                    lifestyle perfectly!
+                                </p>
+                            </div>
+                            <div class="testimonial-bottom">
+                                <div class="author-image">
+                                    <img
+                                        src="../assets/images/testimonial5.jpg"
+                                        alt="Carlos M."
+                                    />
+                                </div>
+                                <div class="author-info">
+                                    <h4>Kirfloy</h4>
+                                    <p>Remote Worker</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="transaction transaction-payment">
-                    <span>Payment to Jollibee</span>
-                    <span class="amount">- ₱420.00</span>
+                <div class="carousel-controls">
+                    <button class="prev-btn" aria-label="Previous testimonial">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-dots"></div>
+                    <button class="next-btn" aria-label="Next testimonial">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
-
-                <div class="transaction transaction-received">
-                    <span>Salary Received</span>
-                    <span class="amount">+ ₱8,000.00</span>
-                </div>
-            </div>
-
-            <div class="user-profile">
-                <img src="../assets/images/user_landingpage.png" alt="Person using mobile banking app" />
-                <div class="mint-shape"></div>
             </div>
         </div>
-    </section>
-</body>
 
+        <section class="faq-section" id="faq">
+            <div class="faq-container">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span
+                                >What is StackOvercash and how does it
+                                work?</span
+                            >
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                StackOvercash is a modern online banking
+                                platform that lets you manage your money,
+                                transfer funds, pay bills, and open multiple
+                                accounts—all from your device.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How do I open an account?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Simply click the "Login Button" on our homepage
+                                to login or register a Account and follow the
+                                easy registration steps. You'll need a valid ID
+                                and a few minutes to complete the process.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How do I contact customer support?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                You can reach our support team 24/7 via email,
+                                or our Contact Us page. We're always here to
+                                help!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How fast are money transfers?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Most transfers are processed instantly.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Can I open multiple accounts?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Yes! You can open and manage multiple accounts
+                                for savings, bills, or business—all under one
+                                login.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span
+                                >What should I do if I forget my password?</span
+                            >
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Click "Forgot Password" on the login page and
+                                follow the instructions to reset your password
+                                securely.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-container">
+                <div class="footer-top">
+                    <div class="footer-about">
+                        <div class="logo">
+                            <span class="white">Stack</span
+                            ><span class="green">Overcash</span>
+                        </div>
+                        <p>
+                            Your trusted partner in digital banking. Simple,
+                            secure, and seamless transactions at your
+                            fingertips.
+                        </p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="./about.html">About Us</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-contact">
+                        <h4>Contact Us</h4>
+                        <ul class="social-links">
+                            <li>
+                                <a
+                                    href="https://www.facebook.com/profile.php?id=61577818192518"
+                                    target="_blank"
+                                    aria-label="Facebook"
+                                    ><i class="fab fa-facebook-f"></i
+                                ></a>
+                            </li>
+                            <li>
+                                <a
+                                    href="mailto:stackovercash.site@gmail.com"
+                                    aria-label="Email"
+                                    ><i class="fas fa-envelope"></i
+                                ></a>
+                            </li>
+                            <li>
+                                <a href="tel:09504426896" aria-label="Phone"
+                                    ><i class="fas fa-phone"></i
+                                ></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 StackOvercash. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+        <script src="user/js/script.js"></script>
+    </body>
 </html>

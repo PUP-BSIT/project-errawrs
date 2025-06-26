@@ -12,7 +12,8 @@ const CURRENCY = {
 const TIMING = {
     NOTIFICATION_DURATION: 3000,
     REDIRECT_DELAY: 2000,
-    ANIMATION_DELAY: 300
+    ANIMATION_DELAY: 300,
+    REFRESH_INTERVAL: 30000 // Add refresh interval (30 seconds)
 };
 
 // Account Status

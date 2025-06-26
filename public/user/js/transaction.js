@@ -1,11 +1,4 @@
-// Extend the existing API object from session-manager.js
-// Add transaction-specific endpoints
-if (!API.USER) API.USER = {};
-
-// Add or update USER endpoints
-Object.assign(API.USER, {
-    TRANSACTIONS: '../../src/api/user/transactions.php'
-});
+// Use the API_ENDPOINTS from config.js instead of the old API object structure
 
 // No need to redefine ROUTES as it's already declared in session-manager.js
 
@@ -192,7 +185,7 @@ async function fetchTransactions() {
     try {
         // Assuming API endpoint /api/user/transactions that supports pagination
         const response = await fetch(
-            `${API.USER.TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}`
+            `${API_ENDPOINTS.USER.TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}`
         );
         const data = await response.json();
 
@@ -416,7 +409,7 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If you are using tokens
 
         // Call backend logout API
-        await fetch(API.AUTH.LOGOUT, { 
+        await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
             method: 'POST',
             credentials: 'same-origin'
         });
