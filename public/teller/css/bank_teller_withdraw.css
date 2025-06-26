@@ -175,21 +175,18 @@ body {
     margin-left: 250px;
     height: 100vh;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 /* Transaction Steps */
 .transaction-steps {
+    margin-bottom: 40px;
+    border-radius: 15px;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 40px;
-    padding: 0 40px;
     max-width: 700px;
     margin: 0 auto 40px;
     gap: 40px;
-    position: relative;
 }
 
 .step {
@@ -231,15 +228,19 @@ body {
     position: relative;
     z-index: 2;
     box-shadow: 0 0 0 4px var(--color-white);
+    transition: all 0.3s ease;
 }
 
 .step.active .step-number {
     background-color: var(--color-mint);
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px var(--color-white), 0 4px 12px rgba(126, 217, 87, 0.3);
 }
 
 .step.active .step-label {
     color: var(--color-primary-black);
     font-weight: 600;
+    transform: scale(1.05);
 }
 
 .step-label {
@@ -250,6 +251,7 @@ body {
     white-space: nowrap;
     position: relative;
     z-index: 2;
+    transition: all 0.3s ease;
 }
 
 /* Transaction Card */
@@ -729,7 +731,7 @@ input[type="number"]:focus:not([aria-invalid="true"]) {
     background: var(--color-white);
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
     z-index: 1000;
     display: none;
