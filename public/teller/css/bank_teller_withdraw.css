@@ -174,7 +174,6 @@ body {
     padding: 24px 32px;
     margin-left: 250px;
     height: 100vh;
-    overflow-y: auto;
 }
 
 /* Transaction Steps */
