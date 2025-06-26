@@ -8,6 +8,7 @@
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
     --color-login-button: #ee5634;
+    --color-red: #ff4757;
     --color-input-bg: #e5e5e5;
     --color-border: #ddd;
     --color-text-muted: #666;
@@ -169,7 +170,7 @@ body {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    color: var(--color-white);
+    color: var(--color-red);
     font-family: var(--font-main);
     font-weight: 500;
     font-size: 1.2rem;
@@ -179,15 +180,21 @@ body {
 }
 
 .nav-logout:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-red);
+    color: var(--color-white);
 }
 
 .nav-logout a {
-    color: var(--color-white);
+    color: var(--color-red);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: var(--transition-default);
+}
+
+.nav-logout:hover a {
+    color: var(--color-white);
 }
 
 .nav-logout i {

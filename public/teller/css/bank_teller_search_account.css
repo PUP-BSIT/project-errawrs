@@ -125,7 +125,7 @@ body {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    color: var(--color-white);
+    color: var(--color-red);
     font-family: var(--font-main);
     font-weight: 500;
     font-size: 1.2rem;
@@ -135,15 +135,21 @@ body {
 }
 
 .nav-logout:hover {
-    background-color: #333;
+    background-color: var(--color-red);
+    color: var(--color-white);
 }
 
 .nav-logout a {
-    color: var(--color-white);
+    color: var(--color-red);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.nav-logout:hover a {
+    color: var(--color-white);
 }
 
 .nav-logout i {
