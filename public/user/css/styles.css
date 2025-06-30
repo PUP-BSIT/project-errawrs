@@ -1,20 +1,24 @@
 :root {
-    --primary-green: #7ED957;
-    --dark-green: #065F46;
+    --primary-green: #7ed957;
+    --dark-green: #065f46;
     --medium-green: #047857;
-    --light-green-bg: #F0FDF4;
-    --banner-bg: #D8EAB8;
-    --transfer-card-bg: #FEF6E6;
-    --deposit-card-bg: #F6EFFF;
-    --accounts-card-bg: #EBF9FF;
+    --light-green-bg: #f0fdf4;
+    --banner-bg: #d8eab8;
+    --transfer-card-bg: #fef6e6;
+    --deposit-card-bg: #f6efff;
+    --accounts-card-bg: #ebf9ff;
 
     --dark-bg: #141414;
     --light-text: #ffffff;
     --dark-text: #222;
     --medium-text: #333;
 
-    --body-bg: #FFFFFF;
-    --body-gradient: radial-gradient(ellipse at 60% 40%, #eaf7d6 60%, #f6f8f3 100%);
+    --body-bg: #ffffff;
+    --body-gradient: radial-gradient(
+        ellipse at 60% 40%,
+        #eaf7d6 60%,
+        #f6f8f3 100%
+    );
 }
 
 body {
@@ -260,7 +264,7 @@ header {
         position: relative;
         margin-top: 2rem;
     }
-    
+
     .services-grid {
         gap: 1.5rem;
     }
@@ -303,11 +307,11 @@ header {
         width: 90%;
         height: 90%;
     }
-    
+
     .services-container h2 {
         font-size: 1.8rem;
     }
-    
+
     .service-card {
         min-width: 100%;
     }
@@ -330,11 +334,11 @@ header {
     .user-profile img {
         width: 240px;
     }
-    
+
     .services-container h2 {
         font-size: 1.6rem;
     }
-    
+
     .service-content h3 {
         font-size: 1.2rem;
     }
@@ -530,7 +534,7 @@ header {
 
 .testimonials-track {
     display: flex;
-    transition: transform 0.5s cubic-bezier(.77,0,.18,1);
+    transition: transform 0.5s cubic-bezier(0.77, 0, 0.18, 1);
     gap: 1.5rem;
 }
 
@@ -738,12 +742,14 @@ footer {
     max-width: 350px;
 }
 
-.footer-links, .footer-contact {
+.footer-links,
+.footer-contact {
     flex: 1;
     min-width: 150px;
 }
 
-.footer-links h4, .footer-contact h4 {
+.footer-links h4,
+.footer-contact h4 {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 1.2rem;
@@ -823,12 +829,12 @@ footer {
 .faq-item {
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     overflow: hidden;
     transition: box-shadow 0.2s;
 }
 .faq-item.open {
-    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
 }
 .faq-question {
     width: 100%;
@@ -863,7 +869,7 @@ footer {
     color: #444;
     font-size: 1rem;
     padding: 0 1.5rem;
-    transition: max-height 0.35s cubic-bezier(.77,0,.18,1), padding 0.2s;
+    transition: max-height 0.35s cubic-bezier(0.77, 0, 0.18, 1), padding 0.2s;
 }
 .faq-item.open .faq-answer {
     padding: 1rem 1.5rem 1.5rem 1.5rem;
