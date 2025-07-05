@@ -156,7 +156,7 @@ async function fetchUserAccounts() {
     }
 
     try {
-        const response = await fetch(API_ENDPOINTS.USER.ACCOUNTS, {
+        const response = await fetch(API_ENDPOINTS.GET_ACCOUNTS, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -297,7 +297,7 @@ async function init_dashboard() {
 // Check session status
 async function checkSession() {
     try {
-        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
+        const response = await fetch(API_ENDPOINTS.SESSION_CHECK, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -336,7 +336,7 @@ async function checkSession() {
 // Fetch user data from API
 async function fetchUserData() {
     try {
-        const response = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
+        const response = await fetch(API_ENDPOINTS.SESSION_CHECK, {
             method: 'GET',
             credentials: 'include',
             headers: {

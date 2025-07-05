@@ -1,5 +1,9 @@
 const API_BASE_URL = '/project-errawrs/src/api';
 
+const BASE_PATH = {
+    API: API_BASE_URL
+};
+
 const API_ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/auth/login.php`,
     LOGOUT: `${API_BASE_URL}/auth/logout.php`,

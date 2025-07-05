@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-const API_LOGIN = API_ENDPOINTS.AUTH.LOGIN;
+const API_LOGIN = API_ENDPOINTS.LOGIN;
 
 async function handleLogin(e) {
     e.preventDefault();
@@ -119,7 +119,7 @@ async function handleLogin(e) {
             
             // Redirect after a short delay
             setTimeout(() => {
-                window.location.href = ROUTES.DASHBOARD;
+                window.location.href = ROUTES.USER_DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
             showNotification(data.error || 'An unknown error occurred.', 'error');
