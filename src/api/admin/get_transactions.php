@@ -28,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Check if user is logged in and is an admin using SessionManager
-if (!$sessionManager->isAuthorizedAdmin()) {
+if (
+    !$sessionManager->isAuthenticated() ||
+    !isset($_SESSION['auth']['type']) ||
+    $_SESSION['auth']['type'] !== 'admin'
+) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     ob_end_flush(); // Flush buffer before exit

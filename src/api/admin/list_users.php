@@ -8,7 +8,11 @@ $sessionManager = SessionManager::getInstance();
 header('Content-Type: application/json');
 
 // Check if admin is logged in using SessionManager
-if (!$sessionManager->isAuthorizedAdmin()) {
+if (
+    !$sessionManager->isAuthenticated() ||
+    !isset($_SESSION['auth']['type']) ||
+    $_SESSION['auth']['type'] !== 'admin'
+) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
     exit();

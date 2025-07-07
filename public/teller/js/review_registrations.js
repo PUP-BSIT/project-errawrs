@@ -469,7 +469,10 @@ class RegistrationReview {
 
             // Close modals
             this.closeConfirmationModal();
-            document.getElementById('application_modal').style.display = 'none';
+            const appModal = document.getElementById('application_modal');
+            if (appModal) {
+                appModal.style.display = 'none';
+            }
 
             // Show success message
             this.showNotification(
@@ -491,6 +494,7 @@ class RegistrationReview {
             const modal = document.getElementById('confirmation_modal');
             const message = document.getElementById('confirmation_message');
             const confirmBtn = document.getElementById('confirm_action_btn');
+            const cancelBtn = document.getElementById('cancel_action_btn');
             
             // Set message and button style based on action
             message.textContent = action === 'approve' ?
@@ -507,10 +511,18 @@ class RegistrationReview {
             const handleConfirm = () => {
                 modal.classList.remove('active');
                 confirmBtn.removeEventListener('click', handleConfirm);
+                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
                 resolve(true);
             };
-            
+            // Handle cancel button click
+            const handleCancel = () => {
+                modal.classList.remove('active');
+                confirmBtn.removeEventListener('click', handleConfirm);
+                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
+                resolve(false);
+            };
             confirmBtn.addEventListener('click', handleConfirm);
+            if (cancelBtn) cancelBtn.addEventListener('click', handleCancel);
         });
     }
 

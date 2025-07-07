@@ -957,3 +957,92 @@ body {
 #confirmation_modal .modal-content {
     max-width: 400px;
 }
+
+/* Confirmation Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    background: rgba(44, 62, 80, 0.45); /* semi-transparent dark overlay */
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.modal.active {
+    display: flex;
+}
+.modal-content {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    min-width: 320px;
+    max-width: 90vw;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+}
+#confirmation_message {
+    display: block;
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+#confirm_action_btn {
+    flex: 1 1 0;
+    background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.08);
+}
+#confirm_action_btn.btn-approve {
+    background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+}
+#confirm_action_btn.btn-deny {
+    background: linear-gradient(90deg, #f87171 0%, #ef4444 100%);
+}
+#confirm_action_btn:active {
+    filter: brightness(0.95);
+}
+#cancel_action_btn {
+    flex: 1 1 0;
+    background: #f3f4f6;
+    color: #222;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+}
+#cancel_action_btn:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+@media (max-width: 500px) {
+    .modal-content {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        min-width: 0;
+    }
+    #confirmation_message {
+        font-size: 1rem;
+    }
+    .modal-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

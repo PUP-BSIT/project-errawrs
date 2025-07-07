@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderUsers();
             renderPagination();
             updatePageTitle();
-            showToast('Users loaded successfully', 'success');
 
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
@@ -211,7 +210,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="toast-close"><i class="fas fa-times"></i></button>
         `;
 
-        toastContainer.appendChild(toast);
+        // FIX: Only append, do not call showToast recursively
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            // fallback: add to body if container missing
+            document.body.appendChild(toast);
+        }
 
         // Auto-remove after 3 seconds
         setTimeout(() => toast.remove(), 3000);

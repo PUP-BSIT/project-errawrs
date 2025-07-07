@@ -805,20 +805,16 @@ function showOTPVerificationModal(data) {
             
             const verifyData = await verifyResp.json();
             
-            if (!verifyResp.ok || !verifyData.success) {
-                throw new Error(verifyData.error || TEXT.OTP_VERIFICATION_FAILED);
-            }
-            
-            // The backend now handles the transfer and sends the final response
+            if (verifyData.success && verifyData.transaction_id) {
                 otpModal.remove();
-            showNotification(verifyData.message || TEXT.TRANSFER_SUCCESS, 'success');
-            
-            // Construct a full, valid URL for redirection
-            const successUrl = new URL(ROUTES.TRANSFER_SUCCESS, window.location.origin);
-            if (verifyData.transaction_id) {
-                 successUrl.searchParams.append('transaction_id', verifyData.transaction_id);
+                showNotification(verifyData.message || TEXT.TRANSFER_SUCCESS, 'success');
+                const successUrl = new URL(ROUTES.TRANSFER_SUCCESS, window.location.origin);
+                successUrl.searchParams.append('transaction_id', verifyData.transaction_id);
+                window.location.href = successUrl.href;
+            } else {
+                otpError.textContent = verifyData.error || TEXT.TRANSFER_FAILED;
+                otpError.style.display = 'block';
             }
-            window.location.href = successUrl.href;
 
         } catch (error) {
             console.error('Error during verification or transfer:', error);
