@@ -214,32 +214,43 @@ function updateAccountDisplay() {
         a.account_number.localeCompare(b.account_number)
     );
 
-    // Use the first account's balance for the main display
-    const primaryAccount = sortedAccounts[0];
-    const formattedBalance = parseFloat(primaryAccount.balance).toLocaleString(CURRENCY.LOCALE, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-    account_balance_element.textContent = `${CURRENCY.SYMBOL}${formattedBalance}`;
+    // Use the first account as default selected
+    let selectedAccountNumber = window.selectedAccountNumber || sortedAccounts[0].account_number;
+    window.selectedAccountNumber = selectedAccountNumber;
 
     // Display all accounts
     sortedAccounts.forEach(account => {
         const accountElement = document.createElement('div');
         accountElement.className = 'account-item';
-        
+        if (account.account_number === selectedAccountNumber) {
+            accountElement.classList.add('selected');
+        }
+        accountElement.style.cursor = 'pointer';
+        accountElement.addEventListener('click', () => {
+            window.selectedAccountNumber = account.account_number;
+            update_balance_display(account.balance);
+            fetchRecentTransactions(account.account_number);
+            // Re-render to update highlight
+            updateAccountDisplay();
+        });
         const accountType = account.account_type 
             ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
             : 'Savings';
-            
         accountElement.innerHTML = `
             <div class="account-info">
                 <div class="account-type">${accountType} Account</div>
                 <div class="account-number">${maskAccountNumber(account.account_number)}</div>
             </div>
         `;
-        
         account_display_container.appendChild(accountElement);
     });
+
+    // Show balance for selected account
+    const selectedAccount = sortedAccounts.find(a => a.account_number === selectedAccountNumber);
+    if (selectedAccount) {
+        update_balance_display(selectedAccount.balance);
+        fetchRecentTransactions(selectedAccount.account_number);
+    }
 
     // Enable transfer button
     if (transfer_now_btn) {
@@ -410,10 +421,7 @@ async function fetchRecentTransactions(accountNumber) {
     try {
         // Get the current selected account number if not provided
         if (!accountNumber) {
-            const accountNumberElement = document.querySelector('.account-number-text');
-            if (accountNumberElement) {
-                accountNumber = accountNumberElement.getAttribute('data-account-number');
-            }
+            accountNumber = window.selectedAccountNumber;
         }
         
         if (!accountNumber) {
@@ -425,7 +433,7 @@ async function fetchRecentTransactions(accountNumber) {
         }
         
         // Update the API endpoint path with account filter
-        const response = await fetch(`${API_ENDPOINTS.USER.TRANSACTIONS}?account=${accountNumber}&limit=5`);
+        const response = await fetch(`${API_ENDPOINTS.USER.TRANSACTIONS}?account=${accountNumber}&limit=2`);
         
         // Check if the response is OK before trying to parse JSON
         if (!response.ok) {
