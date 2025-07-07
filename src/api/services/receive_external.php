@@ -3,11 +3,15 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-session_start();
+// Use SessionManager for session handling
+require_once __DIR__ . '/../../config/SessionManager.php';
+SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 
 // Ensure output buffer is clean after includes
-ob_clean();
+if (ob_get_level()) {
+    ob_end_clean();
+}
 
 // Set headers to prevent caching and ensure proper JSON encoding
 header('Content-Type: application/json; charset=utf-8');
@@ -17,8 +21,10 @@ header('Expires: 0');
 
 // Custom error handler to ensure we always return JSON
 function handleError($errno, $errstr, $errfile, $errline) {
-    // Clear any previous output buffer before sending error response
-    if (ob_get_level()) ob_end_clean();
+    // Clear all output buffers before sending error response
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     
     // Log the error
     error_log("Error [$errno] $errstr in $errfile on line $errline");
@@ -281,8 +287,10 @@ try {
         $db->rollback();
     }
     
-    // Clear any previous output buffer before sending error response
-    if (ob_get_level()) ob_end_clean();
+    // Clear all output buffers before sending error response
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     http_response_code(400);
     echo json_encode([
         'success' => false, 
