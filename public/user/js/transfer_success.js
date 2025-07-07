@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     if (transactionId) {
-        fetch(`${API_ENDPOINTS.GET_TRANSACTION_DETAILS}?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
+        fetch(`/project-errawrs/src/api/user/transfer_success.php?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
             .then(res => res.json())
             .then(data => {
                 console.log('API Response:', data); // Debug log
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Transaction data:', t); // Debug log
                     console.log('Sender account number:', t.sender_account_number); // Debug sender
                     console.log('Receiver account number:', t.receiver_account_number); // Debug receiver
-                    
                     document.getElementById(ELEMENT_ID.TRANSACTION_ID).textContent = t.transaction_id || 'N/A';
                     document.getElementById(ELEMENT_ID.TRANSACTION_DATE).textContent = t.created_at ? new Date(t.created_at).toLocaleString() : 'N/A';
                     document.getElementById(ELEMENT_ID.TRANSACTION_AMOUNT).textContent = 
@@ -59,8 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ? `${CURRENCY.SYMBOL} ${parseFloat(t.sender_new_balance).toLocaleString(CURRENCY.LOCALE, {minimumFractionDigits: 2})}`
                         : 'N/A';
                     document.getElementById(ELEMENT_ID.FROM_ACCOUNT).textContent = t.sender_account_number || 'N/A';
-                    document.getElementById(ELEMENT_ID.TO_ACCOUNT).textContent = t.receiver_account_number || t.external_account_number || 'N/A';
-                    
+                    document.getElementById(ELEMENT_ID.TO_ACCOUNT).textContent = t.recipient_account || t.receiver_account_number || t.external_account_number || 'N/A';
                     // Store transaction data in localStorage to ensure dashboard refresh
                     localStorage.setItem('last_transaction', JSON.stringify({
                         id: t.transaction_id,

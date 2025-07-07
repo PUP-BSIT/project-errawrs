@@ -1,8 +1,4 @@
 // Add transfer-specific API endpoints
-Object.assign(API_ENDPOINTS, {
-    INTERNAL_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
-    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`
-});
 
 // Text Constants
 const TEXT = {
@@ -488,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transaction_amount: transferAmount,
                 source_account_no: sourceAccount,
                 recipient_account_no: recipientAccount,
-                redirect_url: ROUTES.TRANSFER_SUCCESS
+                redirect_url: window.location.origin + ROUTES.TRANSFER_SUCCESS
             };
 
             if (!isInternal) {
@@ -676,7 +672,7 @@ function showTransferReceipt(data) {
                     </div>
                     <div class="receipt-item">
                         <span class="label">To Account:</span>
-                        <span class="value">${data.recipient_account}</span>
+                        <span class="value">${data.recipient_account || data.external_account_number || 'N/A'}</span>
                     </div>
                     <div class="receipt-item">
                         <span class="label">Amount:</span>
