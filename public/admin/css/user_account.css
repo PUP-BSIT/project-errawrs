@@ -389,6 +389,14 @@ body {
     }
 }
 
+.toast-error {
+    border-left: 4px solid #e74c3c;
+}
+
+.toast-error i {
+    color: #e74c3c;
+}
+
 /* No Results */
 .no-results {
     grid-column: 1 / -1;

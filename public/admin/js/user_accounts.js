@@ -193,7 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showToast(message, type) {
-        const toastContainer = document.querySelector('.toast-container');
+        let toastContainer = document.querySelector('.toast-container.toast-top-right');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container toast-top-right';
+            document.body.appendChild(toastContainer);
+        }
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         

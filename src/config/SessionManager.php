@@ -244,4 +244,17 @@ class SessionManager {
     public function getSessionWarnTime() {
         return $this->sessionWarnTime;
     }
+
+    public function isAuthorizedAdmin() {
+        $this->initSession();
+        
+        // Check if user is authenticated and session is not expired
+        if (!$this->isAuthenticated() || $this->isSessionExpired()) {
+            return false;
+        }
+        
+        // Check if user type is admin
+        $sessionData = $this->getSessionData();
+        return $sessionData && isset($sessionData['type']) && $sessionData['type'] === 'admin';
+    }
 } 

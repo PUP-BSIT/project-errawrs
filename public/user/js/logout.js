@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('/project-errawrs/src/api/auth/logout.php', {
+            const response = await fetch(API_ENDPOINTS.LOGOUT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -13,16 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.success) {
-                window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+                // Clear session storage
+                sessionStorage.clear();
+                // Redirect to login page
+                window.location.href = ROUTES.LOGIN;
             } else {
                 console.error('Logout failed:', result.error);
                 // Even if server-side logout fails, force redirect
-                window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+                sessionStorage.clear();
+                window.location.href = ROUTES.LOGIN;
             }
         } catch (error) {
             console.error('An error occurred during logout:', error);
             // Force redirect on error
-            window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+            sessionStorage.clear();
+            window.location.href = ROUTES.LOGIN;
         }
     };
 

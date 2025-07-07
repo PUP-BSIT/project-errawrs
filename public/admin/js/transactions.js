@@ -211,26 +211,56 @@ function formatDate(dateString) {
     });
 }
 
-function showError(message, debugInfo = null) {
-    // Remove existing error message
-    const existingErrorDiv = document.querySelector('.error-message');
-    if (existingErrorDiv) {
-        existingErrorDiv.remove();
+// Toast notification helpers (copied and adapted from manage_tellers.js)
+function showToast(message, type = 'info') {
+    const container = document.querySelector('.toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <i class="${getToastIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="toast-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    container.appendChild(toast);
+
+    // Add close button functionality
+    const closeBtn = toast.querySelector('.toast-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            toast.remove();
+        });
     }
 
-    // Create error message element
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.innerHTML = `
-        <p>${message}</p>
-        ${debugInfo ? `<pre style="white-space: pre-wrap; word-break: break-all; font-size: 0.8em; color: #a94442;">${debugInfo}</pre>` : ''}
-    `;
-    
-    // Insert at the top of the transactions content
-    transactionContent.insertBefore(errorDiv, transactionContent.firstChild);
-    
-    // Remove after 5 seconds
+    // Auto remove after 5 seconds
     setTimeout(() => {
-        errorDiv.remove();
+        if (toast && toast.parentElement) {
+            toast.remove();
+        }
     }, 5000);
+}
+
+function getToastIcon(type) {
+    switch (type) {
+        case 'success':
+            return 'fas fa-check-circle';
+        case 'error':
+            return 'fas fa-exclamation-circle';
+        case 'warning':
+            return 'fas fa-exclamation-triangle';
+        default:
+            return 'fas fa-info-circle';
+    }
+}
+
+// Replace showError to use toast
+function showError(message, debugInfo = null) {
+    let fullMessage = `${message}`;
+    if (debugInfo) {
+        fullMessage += `<br><span style='font-size:0.95em;color:#a94442;'>${debugInfo}</span>`;
+    }
+    showToast(fullMessage, 'error');
 }
