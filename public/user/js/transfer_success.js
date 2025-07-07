@@ -30,12 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const transactionId = urlParams.get(URL_PARAM.TRANSACTION_ID);
     
-    // Set up the back button to go to dashboard with refresh parameter
-    const backButtons = document.querySelectorAll('.back-button');
-    backButtons.forEach(button => {
+    // Set up the dashboard button to go to dashboard with refresh parameter
+    const dashboardButtons = document.querySelectorAll('.dashboard-button');
+    dashboardButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
-            // Redirect to dashboard with refresh parameter
             window.location.href = './user_dashboard.html?transaction_success=true';
         });
     });
@@ -55,6 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById(ELEMENT_ID.TRANSACTION_DATE).textContent = t.created_at ? new Date(t.created_at).toLocaleString() : 'N/A';
                     document.getElementById(ELEMENT_ID.TRANSACTION_AMOUNT).textContent = 
                         `${CURRENCY.SYMBOL} ${parseFloat(t.amount || 0).toLocaleString(CURRENCY.LOCALE, {minimumFractionDigits: 2})}`;
+                    document.getElementById('remaining_balance').textContent =
+                        t.sender_new_balance !== null && t.sender_new_balance !== undefined
+                        ? `${CURRENCY.SYMBOL} ${parseFloat(t.sender_new_balance).toLocaleString(CURRENCY.LOCALE, {minimumFractionDigits: 2})}`
+                        : 'N/A';
                     document.getElementById(ELEMENT_ID.FROM_ACCOUNT).textContent = t.sender_account_number || 'N/A';
                     document.getElementById(ELEMENT_ID.TO_ACCOUNT).textContent = t.receiver_account_number || t.external_account_number || 'N/A';
                     

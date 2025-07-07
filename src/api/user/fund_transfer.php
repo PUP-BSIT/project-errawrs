@@ -3,8 +3,9 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start session and set JSON content type
-session_start();
+// Use SessionManager for session handling
+require_once __DIR__ . '/../../config/SessionManager.php';
+SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
@@ -45,13 +46,7 @@ if ((isset($input['debug']) && $input['debug']) || (isset($_GET['debug']) && $_G
 $debug_log = [];
 
 // EXECUTION LOGIC: This runs AFTER OTP verification
-if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true) {
-    if (!isset($_SESSION['pending_transfer'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'No pending transfer found in session.']);
-    exit();
-}
-
+if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true && isset($_SESSION['pending_transfer'])) {
     try {
         $transfer = $_SESSION['pending_transfer'];
         $db = db_connect();
@@ -123,6 +118,10 @@ if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true) {
         if ($debug) $response['debug_log'] = $debug_log;
         echo json_encode($response);
     }
+    exit;
+} else if (isset($_SESSION['pending_transfer'])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'OTP verification required.']);
     exit;
 }
 

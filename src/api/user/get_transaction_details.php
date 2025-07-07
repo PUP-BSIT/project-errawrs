@@ -49,6 +49,18 @@ try {
     $result = $stmt->get_result();
     
     if ($transaction = $result->fetch_assoc()) {
+        // Fetch the sender's new balance
+        $sender_balance = null;
+        if (!empty($transaction['sender_account_number'])) {
+            $stmt2 = $db->prepare('SELECT balance FROM account WHERE account_number = ?');
+            $stmt2->bind_param('s', $transaction['sender_account_number']);
+            $stmt2->execute();
+            $balance_result = $stmt2->get_result();
+            if ($row = $balance_result->fetch_assoc()) {
+                $sender_balance = $row['balance'];
+            }
+        }
+        $transaction['sender_new_balance'] = $sender_balance;
         echo json_encode(['success' => true, 'transaction' => $transaction]);
     } else {
         http_response_code(404);

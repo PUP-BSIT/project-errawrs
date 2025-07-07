@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // FIX: Only append, do not call showToast recursively
         if (toastContainer) {
-            toastContainer.appendChild(toast);
+        toastContainer.appendChild(toast);
         } else {
             // fallback: add to body if container missing
             document.body.appendChild(toast);

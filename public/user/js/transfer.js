@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isInternal = bankValue === 'StackOvercash Bank';
 
             current_transfer_payload = {
-                    transaction_amount: transferAmount,
+                transaction_amount: transferAmount,
                 source_account_no: sourceAccount,
                 recipient_account_no: recipientAccount,
                 redirect_url: ROUTES.TRANSFER_SUCCESS
@@ -494,14 +494,30 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isInternal) {
                 current_transfer_payload.recipient_bank_code = getBankCode(bankValue);
             }
-            
+
             try {
                 // Ensure user data with phone number is available
                 if (!user_data || !user_data.phone_number) {
                     throw new Error("User phone number is not available. Please ensure your profile is complete.");
                 }
 
-                // Step 1: Send OTP
+                // Step 1: Initiate transfer (save details, trigger OTP on backend)
+                const transferResp = await fetch(
+                    isInternal ? API_ENDPOINTS.INTERNAL_TRANSFER : API_ENDPOINTS.EXTERNAL_TRANSFER,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify(current_transfer_payload)
+                    }
+                );
+                const transferData = await transferResp.json();
+
+                if (!transferResp.ok || !transferData.success) {
+                    throw new Error(transferData.error || 'Failed to initiate transfer.');
+                }
+
+                // Step 2: Send OTP (frontend triggers, backend should check session)
                 const otpResp = await fetch(API_ENDPOINTS.AUTH.SEND_OTP, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -511,14 +527,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         purpose: isInternal ? 'fund_transfer' : 'external_transfer' 
                     })
                 });
-
                 const otpData = await otpResp.json();
-
                 if (!otpResp.ok || !otpData.success) {
                     throw new Error(otpData.error || 'Failed to send OTP.');
                 }
 
-                // Step 2: Show OTP modal
+                // Step 3: Show OTP modal
                 showOTPVerificationModal({
                     transfer_details: {
                         amount: transferAmount,
@@ -530,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
             } catch (error) {
-                console.error('Error during OTP initiation:', error);
+                console.error('Error during transfer initiation or OTP:', error);
                 showNotification(error.message, 'error');
             } finally {
                 send_money_button.disabled = false;
@@ -775,8 +789,24 @@ function showOTPVerificationModal(data) {
     });
     
     // Close modal on Cancel button click
-    cancelButton.addEventListener('click', () => {
-        otpModal.remove();
+    cancelButton.addEventListener('click', async () => {
+        try {
+            const resp = await fetch(API_ENDPOINTS.INTERNAL_TRANSFER.replace('fund_transfer.php', 'cancel_transfer.php'), {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Accept': 'application/json' }
+            });
+            const data = await resp.json();
+            if (data.success) {
+                showNotification('Transfer cancelled.', 'info');
+            } else {
+                showNotification(data.error || 'Failed to cancel transfer.', 'error');
+            }
+        } catch (err) {
+            showNotification('Failed to cancel transfer.', 'error');
+        } finally {
+            otpModal.remove();
+        }
     });
     
     // Verify OTP button click
@@ -790,7 +820,8 @@ function showOTPVerificationModal(data) {
         try {
             verifyButton.disabled = true;
             verifyButton.textContent = 'Verifying...';
-            
+
+            // Step 1: Verify OTP
             const verifyResp = await fetch(API_ENDPOINTS.AUTH.VERIFY_OTP, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -798,21 +829,43 @@ function showOTPVerificationModal(data) {
                 body: JSON.stringify({ 
                     otp, 
                     phone_number: data.phone_number,
-                    purpose: data.isInternal ? 'fund_transfer' : 'external_transfer',
-                    transfer_payload: current_transfer_payload // Send the entire payload
+                    purpose: data.isInternal ? 'fund_transfer' : 'external_transfer'
                 })
             });
-            
+
             const verifyData = await verifyResp.json();
-            
-            if (verifyData.success && verifyData.transaction_id) {
-                otpModal.remove();
-                showNotification(verifyData.message || TEXT.TRANSFER_SUCCESS, 'success');
-                const successUrl = new URL(ROUTES.TRANSFER_SUCCESS, window.location.origin);
-                successUrl.searchParams.append('transaction_id', verifyData.transaction_id);
-                window.location.href = successUrl.href;
+
+            if (verifyData.success) {
+                // Step 2: Finalize transfer (backend checks session for OTP and pending transfer)
+                const finalizeResp = await fetch(
+                    data.isInternal ? API_ENDPOINTS.INTERNAL_TRANSFER : API_ENDPOINTS.EXTERNAL_TRANSFER,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({}) // No need to send payload again; backend uses session
+                    }
+                );
+                const finalizeData = await finalizeResp.json();
+
+                if (finalizeData.success && finalizeData.transaction_id) {
+                    otpModal.remove();
+                    showNotification(finalizeData.message || TEXT.TRANSFER_SUCCESS, 'success');
+                    // Use redirect_url from backend if provided, else from payload
+                    const redirectUrl = finalizeData.redirect_url || current_transfer_payload.redirect_url;
+                    const url = new URL(redirectUrl, window.location.origin);
+                    url.searchParams.set('fund_transfer_success', 'true');
+                    url.searchParams.set('transaction_id', finalizeData.transaction_id);
+                    window.location.href = url.href;
+                } else {
+                    // On failure, redirect with error_message param
+                    const redirectUrl = (finalizeData && finalizeData.redirect_url) || current_transfer_payload.redirect_url;
+                    const url = new URL(redirectUrl, window.location.origin);
+                    url.searchParams.set('error_message', (finalizeData && finalizeData.error) || TEXT.TRANSFER_FAILED);
+                    window.location.href = url.href;
+                }
             } else {
-                otpError.textContent = verifyData.error || TEXT.TRANSFER_FAILED;
+                otpError.textContent = verifyData.error || TEXT.OTP_VERIFICATION_FAILED;
                 otpError.style.display = 'block';
             }
 

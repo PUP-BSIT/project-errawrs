@@ -134,16 +134,39 @@
     font-weight: 700;
 }
 
-.back-button {
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+.back-button, .dashboard-button {
     display: inline-block;
-    padding: 16px 32px;
-    background-color: var(--color-lime-green);
-    color: var(--color-primary-black);
-    text-decoration: none;
-    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
     font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    background: #b6ff8a;
+    color: #222;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 0.5rem;
+}
+.back-button:hover, .dashboard-button:hover {
+    background: #a0e86d;
+    color: #111;
+}
+.dashboard-button {
+    background: #e8f0fe;
+    color: #222;
+}
+.dashboard-button:hover {
+    background: #c6dafc;
+    color: #111;
 }
 
 .back-button:hover {
