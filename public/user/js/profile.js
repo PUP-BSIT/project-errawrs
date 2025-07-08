@@ -1,8 +1,7 @@
 // Constants and Configuration
 const CONFIG = {
-    BASE_URL: API_BASE_URL,
     ENDPOINTS: {
-        PROFILE: API_ENDPOINTS.SESSION_CHECK,
+        SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
         UPDATE_PROFILE: API_ENDPOINTS.UPDATE_PROFILE,
         GET_ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
         LOGOUT: API_ENDPOINTS.LOGOUT
@@ -198,7 +197,7 @@ const ApiService = {
     async fetch(endpoint, options = {}) {
         PerformanceMonitor.start(`API:${endpoint}`);
         try {
-            const response = await fetch(`${CONFIG.BASE_URL}${endpoint}`, {
+            const response = await fetch(`${endpoint}`, {
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
@@ -221,7 +220,7 @@ const ApiService = {
     },
     
     async getProfile() {
-        return ApiService.fetch(CONFIG.ENDPOINTS.PROFILE);
+        return ApiService.fetch(CONFIG.ENDPOINTS.SESSION_CHECK);
     },
     
     async updateProfile(data) {
