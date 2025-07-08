@@ -74,26 +74,12 @@ API_ENDPOINTS.USER = {
 function getRoutesBasePath() {
     const hostname = window.location.hostname;
     
-    // Check if we're on localhost
+    // Local development
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
         return '/project-errawrs/public/user';
     }
-    
-    // Check if we're on the development site
-    if (hostname === 'dev.stackovercash.site') {
-        return '/public/user'; // Assuming the project is at the root
-    }
-    
-    // For production or other environments, try to detect the path
-    const pathname = window.location.pathname;
-    if (pathname.includes('/project-errawrs/')) {
-        return '/project-errawrs/public/user';
-    } else if (pathname.includes('/public/')) {
-        return '/public/user';
-    } else {
-        // Default fallback
-        return '/public/user';
-    }
+    // Production/dev (e.g., dev.stackovercash.site)
+    return '/user';
 }
 
 const ROUTES_BASE_PATH = getRoutesBasePath();

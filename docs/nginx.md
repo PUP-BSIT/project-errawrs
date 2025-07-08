@@ -1,3 +1,7 @@
+# Nginx Configuration for dev.stackovercash.site
+
+## Full Configuration
+
 server {
     listen 80;
     server_name dev.stackovercash.site;
@@ -27,14 +31,20 @@ server {
     root /var/www/dev/project-errawrs/public;
     index user/index.html;
 
-    # Serve static files directly
-    location / {
+    # Redirect root to /user/index.html
+    location = / {
+        return 302 /user/index.html;
+    }
+
+    # Serve static files for /user/ explicitly to ensure correct MIME types and path resolution
+    location /user/ {
+        alias /var/www/dev/project-errawrs/public/user/;
         try_files $uri $uri/ =404;
     }
 
-    # SPA fallback for /user/ (if using client-side routing)
-    location /user/ {
-        try_files $uri $uri/ /user/index.html;
+    # Serve static files directly
+    location / {
+        try_files $uri $uri/ =404;
     }
 
     # API endpoints (PHP backend)
