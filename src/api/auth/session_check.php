@@ -2,9 +2,24 @@
 require_once __DIR__ . '/../../config/SessionManager.php';
 require_once __DIR__ . '/../../config/Database.php';
 
+// --- DEBUGGING: Show all errors and log to file and output ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+file_put_contents('/tmp/session_check_debug.log', "\n==== session_check.php called at " . date('c') . " ====\n", FILE_APPEND);
+file_put_contents('/tmp/session_check_debug.log', "Request URI: " . $_SERVER['REQUEST_URI'] . "\n", FILE_APPEND);
+file_put_contents('/tmp/session_check_debug.log', "Session ID: " . session_id() . "\n", FILE_APPEND);
+file_put_contents('/tmp/session_check_debug.log', "Cookie: " . print_r($_COOKIE, true) . "\n", FILE_APPEND);
+
 // Initialize session
 $sessionManager = SessionManager::getInstance();
 $sessionManager->initSession();
+
+// Debug logging for session troubleshooting
+error_log('Session ID: ' . session_id());
+error_log('Session file: ' . ini_get('session.save_path') . '/sess_' . session_id());
+error_log('Session data: ' . print_r($_SESSION, true));
+error_log('Cookie data: ' . print_r($_COOKIE, true));
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
