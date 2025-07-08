@@ -497,23 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error("User phone number is not available. Please ensure your profile is complete.");
                 }
 
-                // Step 1: Initiate transfer (save details, trigger OTP on backend)
-                const transferResp = await fetch(
-                    isInternal ? API_ENDPOINTS.INTERNAL_TRANSFER : API_ENDPOINTS.EXTERNAL_TRANSFER,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify(current_transfer_payload)
-                    }
-                );
-                const transferData = await transferResp.json();
-
-                if (!transferResp.ok || !transferData.success) {
-                    throw new Error(transferData.error || 'Failed to initiate transfer.');
-                }
-
-                // Step 2: Send OTP (frontend triggers, backend should check session)
+                // Step 1: Send OTP (frontend triggers, backend should check session)
                 const otpResp = await fetch(API_ENDPOINTS.AUTH.SEND_OTP, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -528,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(otpData.error || 'Failed to send OTP.');
                 }
 
-                // Step 3: Show OTP modal
+                // Step 2: Show OTP modal
                 showOTPVerificationModal({
                     transfer_details: {
                         amount: transferAmount,
@@ -540,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
             } catch (error) {
-                console.error('Error during transfer initiation or OTP:', error);
+                console.error('Error during OTP send:', error);
                 showNotification(error.message, 'error');
             } finally {
                 send_money_button.disabled = false;
