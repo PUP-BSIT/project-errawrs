@@ -117,15 +117,25 @@ async function handleLogin(e) {
             
             sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
             
-            // Redirect after a short delay
-            setTimeout(() => {
-                // Debug: Show login response before redirect
-                console.log('Login successful, redirecting to dashboard. Response:', response);
-                alert('Login successful! You will be redirected to the dashboard. If you see this message, the login API call succeeded.');
-                window.location.href = ROUTES.USER_DASHBOARD;
-            }, TIMING.REDIRECT_DELAY);
+            // Check session validity before redirect
+            try {
+                const sessionResponse = await fetch(API_ENDPOINTS.SESSION_CHECK, { credentials: 'include' });
+                const sessionData = await sessionResponse.json();
+                if (sessionData && sessionData.auth && sessionData.auth.id) {
+                    console.log('Session valid after login:', sessionData);
+                    alert('Login successful! Session is valid. Redirecting to dashboard.');
+                    window.location.href = ROUTES.USER_DASHBOARD;
+                } else {
+                    console.error('Session invalid after login:', sessionData);
+                    alert('Login failed: Session is not valid after login. See console for details.');
+                }
+            } catch (sessionError) {
+                console.error('Error checking session after login:', sessionError);
+                alert('Error checking session after login. See console for details.');
+            }
         } else {
             showNotification(data.error || 'An unknown error occurred.', 'error');
+            console.error('Login failed:', data);
         }
     } catch (error) {
         console.error('Login error:', error);
