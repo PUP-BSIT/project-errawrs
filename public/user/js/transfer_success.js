@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     if (transactionId) {
-        fetch(`/project-errawrs/src/api/user/transfer_success.php?${URL_PARAM.TRANSACTION_ID}=${transactionId}`)
+        const apiUrl = API_ENDPOINTS.TRANSFER_SUCCESS + '?transaction_id=' + transactionId;
+        fetch(apiUrl)
             .then(res => res.json())
             .then(data => {
                 console.log('API Response:', data); // Debug log
