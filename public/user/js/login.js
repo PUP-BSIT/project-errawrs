@@ -121,7 +121,7 @@ async function handleLogin(e) {
             try {
                 const sessionResponse = await fetch(API_ENDPOINTS.SESSION_CHECK, { credentials: 'include' });
                 const sessionData = await sessionResponse.json();
-                if (sessionData && sessionData.auth && sessionData.auth.id) {
+                if (sessionData && sessionData.success && sessionData.authenticated) {
                     console.log('Session valid after login:', sessionData);
                     alert('Login successful! Session is valid. Redirecting to dashboard.');
                     window.location.href = ROUTES.USER_DASHBOARD;

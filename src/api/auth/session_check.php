@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/SessionManager.php';
-require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Initialize session
 $sessionManager = SessionManager::getInstance();
