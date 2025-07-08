@@ -41,6 +41,8 @@ const API_ENDPOINTS = {
     SESSION_CHECK: `${API_BASE_URL}/auth/session_check.php`,
     GET_ACCOUNTS: `${API_BASE_URL}/user/accounts.php`,
     FUND_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    INTERNAL_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`,
     GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions.php`,
     GET_TRANSACTION_DETAILS: `${API_BASE_URL}/user/get_transaction_details.php`,
     UPDATE_PROFILE: `${API_BASE_URL}/user/update_profile.php`,

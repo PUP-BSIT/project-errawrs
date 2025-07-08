@@ -69,7 +69,8 @@ cd /etc/nginx/sites-available
 
 ### 3. Edit the configuration file
 ```bash
-sudo nano dev.stackovercash.site.conf
+sudo nano /etc/nginx/sites-available/dev.stackovercash.site
+cat nano /etc/nginx/sites-available/dev.stackovercash.site
 ```
 
 ### 4. Add or update the configuration

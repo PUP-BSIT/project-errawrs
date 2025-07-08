@@ -31,7 +31,6 @@ class ComposerStaticInitb38850eebac45ea5cbf1ba9b5f8db34c
         'D' => 
         array (
             'Dotenv\\' => 7,
-            'Daniel\\ProjectErrawrs\\' => 22,
         ),
     );
 
@@ -63,10 +62,6 @@ class ComposerStaticInitb38850eebac45ea5cbf1ba9b5f8db34c
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
-        ),
-        'Daniel\\ProjectErrawrs\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 

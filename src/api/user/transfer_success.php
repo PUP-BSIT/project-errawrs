@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
@@ -24,7 +25,8 @@ error_log("Fetching transaction data for ID: " . $transaction_id);
 // Join with account table to get account numbers
 $stmt = $db->prepare("
     SELECT 
-        t.*,
+        t.*, 
+        t.external_account_number, 
         sender.account_number as sender_account_number,
         receiver.account_number as receiver_account_number
     FROM 
@@ -72,7 +74,22 @@ if ($row = $result->fetch_assoc()) {
             error_log("Retrieved receiver account number: " . $row['receiver_account_number']);
         }
     }
-    
+    error_log('Row data: ' . print_r($row, true));
+    $row['recipient_account'] = !empty($row['receiver_account_number'])
+        ? $row['receiver_account_number']
+        : (!empty($row['external_account_number']) ? $row['external_account_number'] : 'N/A');
+    // Fetch sender's new balance
+    $sender_balance = null;
+    if (!empty($row['sender_account_number'])) {
+        $stmt2 = $db->prepare('SELECT balance FROM account WHERE account_number = ?');
+        $stmt2->bind_param('s', $row['sender_account_number']);
+        $stmt2->execute();
+        $balance_result = $stmt2->get_result();
+        if ($bal_row = $balance_result->fetch_assoc()) {
+            $sender_balance = $bal_row['balance'];
+        }
+    }
+    $row['sender_new_balance'] = $sender_balance;
     echo json_encode(['success' => true, 'transaction' => $row]);
 } else {
     error_log("Transaction not found for ID: " . $transaction_id);
