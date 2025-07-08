@@ -119,6 +119,9 @@ async function handleLogin(e) {
             
             // Redirect after a short delay
             setTimeout(() => {
+                // Debug: Show login response before redirect
+                console.log('Login successful, redirecting to dashboard. Response:', response);
+                alert('Login successful! You will be redirected to the dashboard. If you see this message, the login API call succeeded.');
                 window.location.href = ROUTES.USER_DASHBOARD;
             }, TIMING.REDIRECT_DELAY);
         } else {
