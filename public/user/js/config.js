@@ -73,31 +73,25 @@ API_ENDPOINTS.USER = {
 // Function to get the correct base path for routes
 function getRoutesBasePath() {
     const hostname = window.location.hostname;
-    
-    // Check if we're on localhost
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return '/project-errawrs/public/user';
-    }
-    
-    // Check if we're on the development site
-    if (hostname === 'dev.stackovercash.site') {
-        return '/public/user'; // Assuming the project is at the root
-    }
-    
-    // For production or other environments, try to detect the path
     const pathname = window.location.pathname;
-    if (pathname.includes('/project-errawrs/')) {
+
+    // Localhost (XAMPP, WAMP, etc.)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // Try to detect the project folder
+        if (pathname.includes('/project-errawrs/public/user/')) {
+            return '/project-errawrs/public/user';
+        } else if (pathname.includes('/project-errawrs/user/')) {
+            return '/project-errawrs/user';
+        }
+        // fallback
         return '/project-errawrs/public/user';
-    } else if (pathname.includes('/public/')) {
-        return '/public/user';
-    } else {
-        // Default fallback
-        return '/public/user';
     }
+
+    // Production (Nginx)
+    return '/user';
 }
 
 const ROUTES_BASE_PATH = getRoutesBasePath();
-
 const ROUTES = {
     USER_DASHBOARD: `${ROUTES_BASE_PATH}/user_dashboard.html`,
     LOGIN: `${ROUTES_BASE_PATH}/login_account_holder.html`,
