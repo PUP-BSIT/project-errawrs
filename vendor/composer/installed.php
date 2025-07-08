@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
+        'name' => 'daniel/project-errawrs',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b8b5e58e027aba2d6ed833d41c6f60da90c5b058',
+        'reference' => '2930de6d452d2e4812a73f093c2db539325d3bec',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        '__root__' => array(
+        'daniel/project-errawrs' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b8b5e58e027aba2d6ed833d41c6f60da90c5b058',
+            'reference' => '2930de6d452d2e4812a73f093c2db539325d3bec',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_ENDPOINT = '/project-errawrs/src/api/auth/session_check.php';
+    const API_ENDPOINT = API_ENDPOINTS.SESSION_CHECK;
 
     const sessionCheck = async () => {
         try {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401) {
-                window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+                window.location.href = ROUTES.LOGIN;
                 return;
             }
 
@@ -21,13 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('userData', JSON.stringify(data.user));
                 updateSidebar(data.user);
             } else {
-                 sessionStorage.removeItem('userData');
-                 window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+                console.log('Session check failed, redirecting to login');
+                window.location.href = ROUTES.LOGIN;
+                return;
             }
         } catch (error) {
-            console.error('Session check failed:', error);
+            console.error('Session check error:', error);
             sessionStorage.removeItem('userData');
-            window.location.href = '/project-errawrs/public/user/login_account_holder.html';
+            window.location.href = ROUTES.LOGIN;
         }
     };
 

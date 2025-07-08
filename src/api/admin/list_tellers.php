@@ -41,7 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 error_log("Session data: " . print_r($_SESSION, true));
 
 // Check if user is logged in and is an admin using SessionManager
-if (!$sessionManager->isAuthorizedAdmin()) {
+if (
+    !$sessionManager->isAuthenticated() ||
+    !isset($_SESSION['auth']['type']) ||
+    $_SESSION['auth']['type'] !== 'admin'
+) {
     sendError('Unauthorized access', 401);
 }
 

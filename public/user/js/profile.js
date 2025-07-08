@@ -1,12 +1,10 @@
 // Constants and Configuration
 const CONFIG = {
-    API: {
-        BASE_URL: '/project-errawrs/src/api',
-        ENDPOINTS: {
-            PROFILE: '/auth/session_check.php',
-            UPDATE: '/user/update_profile.php',
-            LOGOUT: '/auth/logout.php'
-        }
+    ENDPOINTS: {
+        SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
+        UPDATE_PROFILE: API_ENDPOINTS.UPDATE_PROFILE,
+        GET_ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
+        LOGOUT: API_ENDPOINTS.LOGOUT
     },
     NOTIFICATION: {
         TIMEOUT: 3000,
@@ -199,7 +197,7 @@ const ApiService = {
     async fetch(endpoint, options = {}) {
         PerformanceMonitor.start(`API:${endpoint}`);
         try {
-            const response = await fetch(`${CONFIG.API.BASE_URL}${endpoint}`, {
+            const response = await fetch(`${endpoint}`, {
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,18 +220,18 @@ const ApiService = {
     },
     
     async getProfile() {
-        return ApiService.fetch('/auth/session_check.php');
+        return ApiService.fetch(CONFIG.ENDPOINTS.SESSION_CHECK);
     },
     
     async updateProfile(data) {
-        return ApiService.fetch('/user/update_profile.php', {
+        return ApiService.fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
             method: 'POST',
             body: JSON.stringify(data)
         });
     },
     
     async logout() {
-        return ApiService.fetch('/auth/logout.php', {
+        return ApiService.fetch(CONFIG.ENDPOINTS.LOGOUT, {
             method: 'POST'
         });
     }
@@ -306,7 +304,7 @@ const ProfileManager = {
                 );
                 // Redirect to login after a short delay
                 setTimeout(() => {
-                    window.location.href = './login_account_holder.html';
+                    window.location.href = ROUTES.LOGIN;
                 }, 2000);
             }
         } catch (error) {

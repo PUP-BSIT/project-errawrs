@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/SessionManager.php';
-require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 // Initialize session
 $sessionManager = SessionManager::getInstance();
@@ -21,6 +21,22 @@ header('Access-Control-Allow-Origin: http://localhost');  // Change this to matc
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// Add catch-all error and exception handlers for debugging
+set_exception_handler(function($e) {
+    error_log('Uncaught exception: ' . $e->getMessage());
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Internal Server Error', 'details' => $e->getMessage()]);
+    exit;
+});
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    error_log("Error [$errno] $errstr in $errfile on line $errline");
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Internal Server Error', 'details' => $errstr]);
+    exit;
+});
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
