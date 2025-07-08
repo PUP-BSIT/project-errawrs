@@ -53,6 +53,7 @@ const API_ENDPOINTS = {
     RESET_PASSWORD: `${API_BASE_URL}/user/reset_password.php`,
     FINANCIAL_TIPS: `${API_BASE_URL}/user/financial-tips.php`,
     CONTACT_SUBMIT: `${API_BASE_URL}/public/contact_mailer.php`,
+    TRANSFER_SUCCESS: `${API_BASE_URL}/user/transfer_success.php`,
 };
 
 // Backward compatibility - keep the old nested structure
