@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderUsers();
             renderPagination();
             updatePageTitle();
-            showToast('Users loaded successfully', 'success');
 
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
@@ -194,7 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showToast(message, type) {
-        const toastContainer = document.querySelector('.toast-container');
+        let toastContainer = document.querySelector('.toast-container.toast-top-right');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container toast-top-right';
+            document.body.appendChild(toastContainer);
+        }
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         
@@ -211,7 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="toast-close"><i class="fas fa-times"></i></button>
         `;
 
+        // FIX: Only append, do not call showToast recursively
+        if (toastContainer) {
         toastContainer.appendChild(toast);
+        } else {
+            // fallback: add to body if container missing
+            document.body.appendChild(toast);
+        }
 
         // Auto-remove after 3 seconds
         setTimeout(() => toast.remove(), 3000);

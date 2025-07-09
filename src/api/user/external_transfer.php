@@ -4,7 +4,8 @@ ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 // Start session and set JSON content type
-session_start();
+require_once __DIR__ . '/../../config/SessionManager.php';
+SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 

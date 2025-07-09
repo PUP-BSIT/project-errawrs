@@ -1,6 +1,19 @@
 <?php
 use Dotenv\Dotenv;
 
+set_exception_handler(function($e) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Fatal error', 'details' => $e->getMessage()]);
+    exit;
+});
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Fatal error', 'details' => $errstr]);
+    exit;
+});
+
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/SessionManager.php';

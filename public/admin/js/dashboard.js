@@ -157,12 +157,14 @@ class AdminDashboard {
                 }
             } else {
                 console.error('Failed to load admin info:', data.message);
+                this.showNotification('Unauthorized: Please log in again.', 'error');
             }
         } catch (error) {
             console.error('Error loading admin info:', error);
-            // Redirect to login if unauthorized
-            if (error.message.includes('unauthorized')) {
-                window.location.href = 'login.html';
+            if (error.message.toLowerCase().includes('unauthorized')) {
+                this.showNotification('Unauthorized: Please log in again.', 'error');
+            } else {
+                this.showNotification('Error loading admin info', 'error');
             }
         }
     }
@@ -239,13 +241,16 @@ class AdminDashboard {
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
+        if (type === 'error') {
+            notification.classList.add('notification-error');
+        }
         notification.innerHTML = `
             <div class="notification-content">
                 <i class="fas ${this.getNotificationIcon(type)}"></i>
                 <span>${message}</span>
             </div>`;
 
-        // Add to DOM
+        // Add to DOM (top right)
         document.body.appendChild(notification);
 
         // Show notification with animation

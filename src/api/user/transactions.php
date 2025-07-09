@@ -70,6 +70,10 @@ try {
                 t.description, 
                 t.created_at as transaction_date, 
                 t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
                 a.account_number,
                 CASE 
                     WHEN t.sender_account_id = a.account_id THEN -t.amount
@@ -77,6 +81,8 @@ try {
                 END as adjusted_amount
               FROM transaction t
               JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
               WHERE $whereClause
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?";
