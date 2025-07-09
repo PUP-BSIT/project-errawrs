@@ -100,12 +100,14 @@ function setupSearch() {
 
             // Hide results if search term is empty
             if (searchTerm.length === 0) {
-                searchResults.style.display = 'none';
+                searchResults.classList.add('hidden');
+                searchResults.classList.remove('block');
                 return;
             }
 
             // Show loading state
-            searchResults.style.display = 'block';
+            searchResults.classList.remove('hidden');
+            searchResults.classList.add('block');
             searchResults.innerHTML = `
                 <div class="loading-results">
                     <i class="fas fa-spinner fa-spin"></i>
@@ -121,7 +123,8 @@ function setupSearch() {
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.style.display = 'none';
+                searchResults.classList.add('hidden');
+                searchResults.classList.remove('block');
             }
         });
     }
@@ -166,7 +169,8 @@ async function performSearch(searchTerm) {
         `).join('');
 
         searchResults.innerHTML = resultsHtml;
-        searchResults.style.display = 'block';
+        searchResults.classList.remove('hidden');
+        searchResults.classList.add('block');
 
     } catch (error) {
         console.error('Error searching accounts:', error);

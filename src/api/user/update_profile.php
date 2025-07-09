@@ -35,6 +35,7 @@ $first_name = $data['first_name'] ?? null;
 $last_name = $data['last_name'] ?? null;
 $phone_number = $data['phone_number'] ?? null;
 $password = $data['password'] ?? null;
+$current_password = $data['current_password'] ?? null;
 
 if (empty($first_name) || empty($last_name) || empty($phone_number)) {
     http_response_code(400);
@@ -42,9 +43,29 @@ if (empty($first_name) || empty($last_name) || empty($phone_number)) {
     exit();
 }
 
+if (empty($current_password)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Current password is required for confirmation.']);
+    exit();
+}
+
 try {
     $conn = db_connect();
-    
+
+    // Fetch the current password hash from the database
+    $stmt = $conn->prepare('SELECT password_hash FROM user WHERE user_id = ?');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $stmt->bind_result($password_hash_db);
+    $stmt->fetch();
+    $stmt->close();
+
+    if (!$password_hash_db || !password_verify($current_password, $password_hash_db)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Current password is incorrect.']);
+        exit();
+    }
+
     $fields_to_update = [
         'first_name' => $first_name,
         'last_name' => $last_name,

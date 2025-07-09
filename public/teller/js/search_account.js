@@ -175,7 +175,7 @@ function updateAccountDetails(accounts) {
         function toggleMenu(e) {
             if (!e.target.closest('.card-action-btn')) {
                 const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.style.transform = chevron.style.transform === 'rotate(90deg)' ? 'rotate(0deg)' : 'rotate(90deg)';
+                chevron.classList.toggle('rotate-90');
                 cardActions.classList.toggle('visible');
             }
         }
@@ -192,7 +192,7 @@ function updateAccountDetails(accounts) {
             if (!newCard.contains(e.target)) {
                 cardActions.classList.remove('visible');
                 const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.style.transform = 'rotate(0deg)';
+                chevron.classList.remove('rotate-90');
             }
         });
 
@@ -203,7 +203,7 @@ function updateAccountDetails(accounts) {
                 e.stopPropagation();
                 cardActions.classList.remove('visible');
                 const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.style.transform = 'rotate(0deg)';
+                chevron.classList.remove('rotate-90');
                 
                 if (button.classList.contains('deposit')) {
                     sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));

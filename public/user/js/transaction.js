@@ -25,7 +25,9 @@ const CLASS = {
     POSITIVE: 'positive',
     NEGATIVE: 'negative',
     PAGE_NUMBER: 'page-number',
-    ACTIVE: 'active'
+    ACTIVE: 'active',
+    CENTERED: 'centered',
+    PADDED: 'padded'
 };
 
 // Icons
@@ -229,7 +231,7 @@ function renderTransactions(transactions) {
     if (transactions.length === 0) {
         transaction_table_body.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; padding: 20px;">${TEXT.NO_TRANSACTIONS}</td>
+                <td colspan="5" class="centered padded">${TEXT.NO_TRANSACTIONS}</td>
             </tr>
         `;
         return;
@@ -392,7 +394,7 @@ if (go_button) {
         });
     } else {
         // If no input field for GO, remove or disable GO button functionality
-        go_button.style.display = 'none';
+        go_button.classList.add(CLASS.HIDDEN); // Assuming a class for hidden
     }
 }
 

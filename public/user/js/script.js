@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxOffset = Math.max(0, track.scrollWidth - track.parentElement.offsetWidth);
         if (offset > maxOffset) offset = maxOffset;
 
-        track.style.transform = `translateX(-${offset}px)`;
+        track.classList.add('slide-x');
         updateDots();
     }
     

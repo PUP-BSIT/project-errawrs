@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.innerHTML = '<div class="error">Invalid or missing set password link. Please check your email or contact support.</div>';
     } else {
         emailInput.value = teller_email;
-        form.style.display = 'block';
+        form.classList.remove('hidden');
+        form.classList.add('block');
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const password = document.getElementById('password').value;
@@ -36,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await res.json();
                 if (data.success) {
                     messageDiv.innerHTML = '<div class="success">Your password has been set! You can now <a href="/project-errawrs/public/teller/bank_teller_login.html">log in</a>.</div>';
-                    form.style.display = 'none';
+                    form.classList.remove('block');
+                    form.classList.add('hidden');
                 } else {
                     messageDiv.innerHTML = `<div class="error">${data.message || 'Failed to set password.'}</div>`;
                 }

@@ -243,39 +243,6 @@ class SessionManager {
             CONTINUE_SESSION: 'Continue Session'
         };
         
-        // CSS Styles
-        const STYLES = {
-            WARNING_CONTAINER: `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.7);
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `,
-            WARNING_CONTENT: `
-                background: white;
-                padding: 20px;
-                border-radius: 5px;
-                max-width: 400px;
-                text-align: center;
-            `,
-            CONTINUE_BUTTON: `
-                background: #4CAF50;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                margin-top: 15px;
-            `
-        };
-        
         // If custom warning handler provided, use it
         if (typeof this.options.onWarning === 'function') {
             this.options.onWarning(timeLeft);
@@ -289,18 +256,17 @@ class SessionManager {
         // Create warning element
         const warningElement = document.createElement('div');
         warningElement.id = ELEMENT_ID.SESSION_WARNING;
-        warningElement.style.cssText = STYLES.WARNING_CONTAINER;
+        warningElement.className = 'session-warning-container';
         
         // Create warning content
         const warningContent = document.createElement('div');
-        warningContent.className = CLASS.SESSION_WARNING_CONTENT;
-        warningContent.style.cssText = STYLES.WARNING_CONTENT;
+        warningContent.className = CLASS.SESSION_WARNING_CONTENT + ' session-warning-content';
         
         // Set HTML content
         warningContent.innerHTML = `
             <h3>${TEXT.SESSION_EXPIRING}</h3>
             <p>${TEXT.LOGOUT_WARNING.replace('{timeLeft}', timeLeft)}</p>
-            <button id="${ELEMENT_ID.SESSION_CONTINUE}" style="${STYLES.CONTINUE_BUTTON}">
+            <button id="${ELEMENT_ID.SESSION_CONTINUE}" class="session-continue-btn">
                 ${TEXT.CONTINUE_SESSION}
             </button>
         `;
@@ -516,7 +482,7 @@ if (window.location.href.includes('login_account_holder.html') && window.locatio
 
 // Inactivity session killer logic
 let inactivityTimeout;
-const INACTIVITY_LIMIT = 1 * 60 * 1000; // 5 minutes in ms
+const INACTIVITY_LIMIT = 1 * 10 * 1000; // 5 minutes in ms
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimeout);

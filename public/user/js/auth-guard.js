@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userAvatarEl) {
             const initial = (first_name || 'U').charAt(0).toUpperCase();
             userAvatarEl.textContent = initial;
-            userAvatarEl.style.backgroundColor = '#FFFFFF';
-            userAvatarEl.style.color = '#000000';
+            userAvatarEl.classList.add('bg-white');
+            userAvatarEl.classList.add('text-dark');
         }
     };
 

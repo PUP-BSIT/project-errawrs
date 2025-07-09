@@ -311,3 +311,50 @@
 .notification i {
     font-size: 20px;
 } 
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.modal.hidden { display: none !important; }
+.modal-content {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    padding: 32px 28px 24px 28px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    font-family: var(--font-main);
+}
+.modal-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--color-primary-black);
+}
+.modal-content p {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    margin-bottom: 18px;
+    font-weight: 500;
+}
+.text-error {
+    color: var(--color-error, #dc3545);
+    font-size: 0.98rem;
+    margin-top: 6px;
+}
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 18px;
+} 

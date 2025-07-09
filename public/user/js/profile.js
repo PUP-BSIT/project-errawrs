@@ -171,16 +171,28 @@ const FormValidator = {
         }
 
         // Phone number validation
+        // Accepts +639XXXXXXXXX, 09XXXXXXXXX, or 639XXXXXXXXX
+        let normalizedPhone = data.phone_number.trim();
+        // Remove all non-digit except leading +
+        normalizedPhone = normalizedPhone.replace(/[^\d+]/g, '');
+        if (normalizedPhone.startsWith('+63')) {
+            normalizedPhone = '0' + normalizedPhone.substring(3);
+        } else if (normalizedPhone.startsWith('63')) {
+            normalizedPhone = '0' + normalizedPhone.substring(2);
+        }
+        // Now normalizedPhone should be 09XXXXXXXXX
         const phoneRegex = /^09\d{9}$/;
-        if (!phoneRegex.test(data.phone_number)) {
+        if (!phoneRegex.test(normalizedPhone)) {
             const phoneInput = document.getElementById('edit_phone_number');
             if (phoneInput) phoneInput.classList.add('error');
             NotificationManager.show(
-                'Please enter a valid 11-digit phone number starting with 09',
+                'Please enter a valid Philippine phone number (e.g. 09XXXXXXXXX, +639XXXXXXXXX, or 639XXXXXXXXX)',
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
         }
+        // Use normalizedPhone for sending to backend
+        data.phone_number = normalizedPhone;
 
         // Mark all fields as success
         required.forEach(field => {
@@ -274,7 +286,7 @@ const DOM = {
     editConfirmPasswordInput: document.getElementById('edit_confirm_password'),
     editPhoneNumberInput: document.getElementById('edit_phone_number'),
     saveProfileButton: document.getElementById('save_profile_button'),
-    cancelEditButton: document.getElementById('cancel_edit_button'),
+    resetProfileButton: document.getElementById('reset_profile_button'),
     notificationContainer: document.querySelector('.notification-container'),
     logoutButton: document.getElementById('logout_btn')
 };
@@ -381,7 +393,7 @@ const ProfileManager = {
             DOM.editConfirmPasswordInput,
             DOM.editPhoneNumberInput,
             DOM.saveProfileButton,
-            DOM.cancelEditButton
+            DOM.resetProfileButton
         ];
 
         formElements.forEach(element => {
@@ -425,14 +437,71 @@ const ProfileManager = {
             return;
         }
 
+        // Show confirmation modal before submitting
+        const modal = document.getElementById('profile-confirm-modal');
+        const passwordInput = document.getElementById('profile_confirm_password');
+        const errorDiv = document.getElementById('profile-confirm-error');
+        const confirmBtn = document.getElementById('profile_confirm_btn');
+        const cancelBtn = document.getElementById('profile_cancel_btn');
+        if (!modal || !passwordInput || !confirmBtn || !cancelBtn) {
+            NotificationManager.show('Confirmation modal not found.', CONFIG.NOTIFICATION.TYPES.ERROR);
+            return;
+        }
+        passwordInput.value = '';
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+        modal.classList.remove('hidden');
+        passwordInput.focus();
+
+        // Handler for confirm
+        const onConfirm = async () => {
+            const currentPassword = passwordInput.value.trim();
+            if (!currentPassword) {
+                errorDiv.textContent = 'Please enter your current password.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            // Attach current password to payload
+            updatedProfileData.current_password = currentPassword;
+            modal.classList.add('hidden');
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+            await ProfileManager.submitProfileUpdate(updatedProfileData);
+        };
+        // Handler for cancel
+        const onCancel = () => {
+            modal.classList.add('hidden');
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+        };
+        confirmBtn.addEventListener('click', onConfirm);
+        cancelBtn.addEventListener('click', onCancel);
+    },
+
+    async submitProfileUpdate(updatedProfileData) {
+        // Compare with old data for feedback
+        const oldData = StateManager.state.userData || {};
+        const changedFields = [];
+        if (updatedProfileData.phone_number !== oldData.phone_number) changedFields.push('Phone number');
+        if (updatedProfileData.password) changedFields.push('Password');
+
         StateManager.setState({ isLoading: true });
         try {
             const response = await ApiService.updateProfile(updatedProfileData);
             if (response.success) {
-                NotificationManager.show(
-                    'Profile updated successfully!',
-                    CONFIG.NOTIFICATION.TYPES.SUCCESS
-                );
+                if (changedFields.length > 0) {
+                    changedFields.forEach(field => {
+                        NotificationManager.show(
+                            `${field} updated successfully!`,
+                            CONFIG.NOTIFICATION.TYPES.SUCCESS
+                        );
+                    });
+                } else {
+                    NotificationManager.show(
+                        'No changes were made.',
+                        CONFIG.NOTIFICATION.TYPES.INFO
+                    );
+                }
                 StateManager.setState({
                     userData: { ...StateManager.state.userData, ...response.user },
                     isFormDirty: false
@@ -464,7 +533,7 @@ const ProfileManager = {
 
         // Attach event listeners
         DOM.saveProfileButton.addEventListener('click', this.handleSave.bind(this));
-        DOM.cancelEditButton.addEventListener('click', this.handleCancel.bind(this));
+        DOM.resetProfileButton.addEventListener('click', this.handleCancel.bind(this));
         
         // Listen for input changes to enable/disable save button
         const formInputs = document.querySelectorAll('.form-input');
