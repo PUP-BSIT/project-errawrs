@@ -1,5 +1,0 @@
-.hidden { display: none !important; }
-.block { display: block !important; }
-.flex { display: flex !important; }
-.border-error { border-color: var(--color-error, #dc3545) !important; }
-.border-normal { border-color: initial !important; } 

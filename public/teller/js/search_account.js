@@ -29,6 +29,18 @@ const accountActionsDropdown = document.getElementById(
 );
 const searchHistoryContainer = document.getElementById("search_history");
 const historyBody = document.getElementById("history_body");
+const clearBtn = document.getElementById('clear_search_btn');
+
+if (searchInput && clearBtn) {
+    searchInput.addEventListener('input', () => {
+        clearBtn.style.display = searchInput.value ? 'flex' : 'none';
+    });
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        updateAccountDetails([]); // Clear results and show history
+    });
+}
 
 // Initialize search history
 let searchHistory = [];
@@ -75,11 +87,20 @@ function showNotification(message, isError = false) {
 
 // Update account details in the UI
 function updateAccountDetails(accounts) {
-    // Clear any existing account cards
     const accountContainer = document.querySelector(".account-container");
+    const searchInput = document.getElementById("search_input");
+    const searchTerm = searchInput ? searchInput.value.trim() : '';
     accountContainer.innerHTML = "";
 
-    // Always hide search history when showing search results
+    // Only show results if there is a search term
+    if (!searchTerm) {
+        // Show search history if no search term
+        searchHistoryContainer.classList.remove("hidden");
+        searchHistoryContainer.style.display = "block";
+        return;
+    }
+
+    // Hide search history when showing search results
     searchHistoryContainer.classList.add("hidden");
     searchHistoryContainer.style.display = "none";
 
@@ -119,91 +140,40 @@ function updateAccountDetails(accounts) {
         newCard.innerHTML = `
             <div class="account-info">
                 ${statusIndicator}
-                
                 <div class="account-field">
                     <div class="account-label">Account No.</div>
                     <div class="account-value account-number">${account.account_number}</div>
                 </div>
-                
                 <div class="account-field">
                     <div class="account-label">Account Name</div>
                     <div class="account-value">${account.user.name}</div>
                 </div>
-                
                 <div class="account-field">
                     <div class="account-label">Balance</div>
                     <div class="account-value balance">${formatCurrency(balance)}</div>
                 </div>
-                
                 <div class="account-field">
                     <div class="account-label">Type</div>
-                    <div class="account-type-badge ${accountType}">
-                        ${displayAccountType}
-                    </div>
+                    <div class="account-type-badge ${accountType}">${displayAccountType}</div>
                 </div>
             </div>
-            <div class="more-options">
-                <i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card-actions">
+            <div class="card-actions always-visible">
                 ${account.status === "active" ? `
-                    <button class="card-action-btn deposit">
-                        <i class="fas fa-plus"></i>
-                        Deposit
-                    </button>
-                    <button class="card-action-btn withdraw">
-                        <i class="fas fa-minus"></i>
-                        Withdraw
-                    </button>
-                    <button class="card-action-btn close">
-                        <i class="fas fa-times"></i>
-                        Close Account
-                    </button>
+                    <button class="card-action-btn deposit"><i class="fas fa-plus"></i> Deposit</button>
+                    <button class="card-action-btn withdraw"><i class="fas fa-minus"></i> Withdraw</button>
+                    <button class="card-action-btn close"><i class="fas fa-times"></i> Close Account</button>
                 ` : `
-                    <button class="card-action-btn reopen">
-                        <i class="fas fa-redo"></i>
-                        Reopen Account
-                    </button>
+                    <button class="card-action-btn reopen"><i class="fas fa-redo"></i> Reopen Account</button>
                 `}
             </div>
         `;
-
-        // Add click event for the entire card and more options icon
-        const moreOptions = newCard.querySelector('.more-options');
-        const cardActions = newCard.querySelector('.card-actions');
-        
-        function toggleMenu(e) {
-            if (!e.target.closest('.card-action-btn')) {
-                const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.classList.toggle('rotate-90');
-                cardActions.classList.toggle('visible');
-            }
-        }
-
-        // Add click handlers to both card and more options
-        newCard.addEventListener('click', toggleMenu);
-        moreOptions.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent double-triggering
-            toggleMenu(e);
-        });
-
-        // Close actions menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!newCard.contains(e.target)) {
-                cardActions.classList.remove('visible');
-                const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.classList.remove('rotate-90');
-            }
-        });
+        // Remove chevron/more button logic and event listeners
 
         // Add event listeners to action buttons
-        const actionButtons = cardActions.getElementsByClassName('card-action-btn');
+        const actionButtons = newCard.getElementsByClassName('card-action-btn');
         Array.from(actionButtons).forEach((button) => {
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
-                cardActions.classList.remove('visible');
-                const chevron = moreOptions.querySelector('.fa-chevron-right');
-                chevron.classList.remove('rotate-90');
                 
                 if (button.classList.contains('deposit')) {
                     sessionStorage.setItem("selectedAccount", JSON.stringify({...account, balance: balance}));
@@ -373,7 +343,8 @@ async function searchAccount() {
         if (data.success && data.accounts && data.accounts.length > 0) {
             // Filter accounts that match the search term
             const matchingAccounts = data.accounts.filter((account) =>
-                account.account_number.toLowerCase().includes(searchTerm.toLowerCase())
+                account.account_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                account.user.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
             if (matchingAccounts.length > 0) {
@@ -754,6 +725,12 @@ window.addEventListener("storage", (e) => {
     }
 });
 
+// Utility to get query param
+function getQueryParam(name) {
+    const url = new URL(window.location.href);
+    return url.searchParams.get(name);
+}
+
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
     // Update user profile if available
@@ -786,6 +763,18 @@ document.addEventListener("DOMContentLoaded", () => {
             updateSearchHistory();
         }
     });
+
+    const accountParam = getQueryParam('account');
+    if (accountParam) {
+        const searchInput = document.getElementById('search_input');
+        const clearBtn = document.getElementById('clear_search_btn');
+        if (searchInput) {
+            searchInput.value = accountParam;
+            if (clearBtn) clearBtn.style.display = 'flex';
+            // Trigger the search logic (call the function that runs on input)
+            searchAccount();
+        }
+    }
 
     // Add search input event listeners
     searchInput.addEventListener("input", () => {
@@ -825,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = wrapper.querySelector(".account-card");
             const actions = wrapper.querySelector(".card-actions");
             if (!card.contains(e.target) && !actions.contains(e.target)) {
-                actions.classList.remove("visible");
+                // No need to remove "visible" class here as it's always visible
             }
         });
     });

@@ -120,6 +120,24 @@ function setupSearch() {
             }, 300);
         });
 
+        // Show results again on focus if input is not empty
+        searchInput.addEventListener('focus', () => {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm.length > 0) {
+                performSearch(searchTerm);
+            }
+        });
+
+        // Show results on Enter
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm.length > 0) {
+                    performSearch(searchTerm);
+                }
+            }
+        });
+
         // Close search results when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
@@ -156,22 +174,27 @@ async function performSearch(searchTerm) {
             return;
         }
 
-        // Display results
-        const resultsHtml = data.accounts.map(account => `
-            <div class="search-result-item">
-                <div class="result-name">${account.user.name}</div>
-                <div class="result-account">
-                    <div>Account: ${account.account_number}</div>
-                    <div>Balance: ₱${account.balance}</div>
-                    <div>Status: <span class="status-text ${account.status}">${account.status}</span></div>
+        // Render compact clickable results
+        searchResults.innerHTML = data.accounts.map(account => {
+            return `
+                <div class='search-result-item' style='cursor:pointer; padding:10px; border-bottom:1px solid #eee;' data-account='${account.account_number}'>
+                    <div><strong>${account.user.name}</strong></div>
+                    <div>Account No: ${account.account_number}</div>
+                    <div>Balance: ₱${Number(account.balance.toString().replace(/,/g, '')).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                    <div>Status: <span class='status-text ${account.status}'>${account.status}</span></div>
                 </div>
-            </div>
-        `).join('');
-
-        searchResults.innerHTML = resultsHtml;
+            `;
+        }).join('');
         searchResults.classList.remove('hidden');
         searchResults.classList.add('block');
 
+        // Add click event to each result
+        searchResults.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const accountNumber = item.getAttribute('data-account');
+                window.location.href = `bank_teller_search_account.html?account=${encodeURIComponent(accountNumber)}`;
+            });
+        });
     } catch (error) {
         console.error('Error searching accounts:', error);
         const searchResults = document.getElementById('search_results');
