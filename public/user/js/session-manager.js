@@ -1,8 +1,3 @@
-// Extend existing ROUTES object
-if (!ROUTES.LOGIN) {
-    ROUTES.LOGIN = './login_account_holder.html';
-}
-
 /**
  * Session Manager
  * Handles session tracking, timeout, and auto-refresh
@@ -518,3 +513,36 @@ if (window.location.href.includes('login_account_holder.html') && window.locatio
         }, 5000);
     });
 } 
+
+// Inactivity session killer logic
+let inactivityTimeout;
+const INACTIVITY_LIMIT = 1 * 60 * 1000; // 5 minutes in ms
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimeout);
+    inactivityTimeout = setTimeout(killSession, INACTIVITY_LIMIT);
+}
+
+function killSession() {
+    let loginUrl = (window.ROUTES && window.ROUTES.LOGIN) ? window.ROUTES.LOGIN : null;
+    console.log('killSession: ROUTES.LOGIN =', window.ROUTES && window.ROUTES.LOGIN, 'loginUrl =', loginUrl);
+    if (loginUrl) {
+        if (window.API_ENDPOINTS && window.API_ENDPOINTS.AUTH && window.API_ENDPOINTS.AUTH.KILL_SESSION) {
+            fetch(window.API_ENDPOINTS.AUTH.KILL_SESSION, {
+                method: 'POST',
+                credentials: 'include'
+            }).then(() => {
+                window.location.href = loginUrl + '?expired=true';
+            });
+        } else {
+            window.location.href = loginUrl + '?expired=true';
+        }
+    } else {
+        alert('ROUTES.LOGIN is not defined! Please check config.js loading order.');
+    }
+}
+
+['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(event => {
+    window.addEventListener(event, resetInactivityTimer, true);
+});
+window.addEventListener('load', resetInactivityTimer); 

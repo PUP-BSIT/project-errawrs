@@ -26,7 +26,7 @@
                 </div>
                 <button type="submit" class="login-button">Recover Username</button>
                 <div class="forgot-links">
-                    <a href="./login_account_holder.html" class="forgot-link">Back to Login</a>
+                    <a id="back-to-login-link" class="forgot-link">Back to Login</a>
                 </div>
             </form>
         </div>
@@ -45,6 +45,9 @@
         </div>
     </div>
     <script src="./js/config.js"></script>
+    <script>
+document.getElementById('back-to-login-link').href = ROUTES.LOGIN;
+</script>
     <script src="./js/forgot_username.js"></script>
 </body>
 </html> 
