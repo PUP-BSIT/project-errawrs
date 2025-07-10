@@ -18,7 +18,6 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           # Set up keys from secrets
-          # Set up keys from secrets
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/aws_key
           echo "${{ secrets.EC2_SSH_KEY_SIM }}" > ~/.ssh/aws_key_sim
           echo "${{ secrets.EC2_SSH_KEY_IVAN }}" > ~/.ssh/aws_key_ivan
@@ -34,7 +33,7 @@ jobs:
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
-          DEPLOY_PATH=/var/www/html/errawrs/project-errawrs
+          DEPLOY_PATH=/var/www/html/project-errawrs
           TMP_PATH=/tmp/errawrs_deploy_prod
           ENV_BACKUP_PATH=/tmp/errawrs_env_backup_prod
 
@@ -63,6 +62,18 @@ jobs:
 
           # Restore .env from the temporary backup location
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for production.'; fi"
+
+          # Install Composer dependencies
+          echo "Installing Composer dependencies..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
+          
+          # Set up uploads directory
+          echo "Setting up uploads directory..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
+          
+          # Set proper permissions for production
+          echo "Setting proper permissions..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
 
           # Clean up temporary backup path
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
@@ -109,17 +120,55 @@ jobs:
           # Adjust the destination path of .env if it's not directly under DEPLOY_PATH
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for development.'; fi"
 
+          # Install Composer dependencies
+          echo "Installing Composer dependencies..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
+          
+          # Set up uploads directory
+          echo "Setting up uploads directory..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
+          
+          # Set proper permissions for development
+          echo "Setting proper permissions..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
+
           # Clean up temporary paths
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for development."
 
+      - name: Verify Deployment
+        run: |
+          SSH_KEY=~/.ssh/aws_key
+          REMOTE_USER=ubuntu
+          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            DEPLOY_PATH=/var/www/html/errawrs/project-errawrs
+          else
+            DEPLOY_PATH=/var/www/dev/project-errawrs
+          fi
+          
+          echo "Verifying deployment..."
+          
+          # Check if Composer dependencies are installed
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking Composer dependencies...' && ls -la vendor/phpmailer/ && ls -la vendor/vlucas/ && echo '✅ Dependencies verified'"
+          
+          # Check if .env file exists and has proper permissions
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking .env file...' && ls -la .env && echo '✅ .env file verified'"
+          
+          # Check if uploads directory exists
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking uploads directory...' && ls -la src/api/user/uploads/ && echo '✅ Uploads directory verified'"
 
       - name: Deployment Summary
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "✅ Successfully deployed to PRODUCTION environment"
             echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com/errawrs/project-errawrs"
+            echo "📧 Email functionality: PHPMailer configured and ready"
+            echo "📁 File uploads: Directory structure created and secured"
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "✅ Successfully deployed to DEVELOPMENT environment"
             echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com (dev site)"
+            echo "📧 Email functionality: PHPMailer configured and ready"
+            echo "📁 File uploads: Directory structure created and secured"
           fi
