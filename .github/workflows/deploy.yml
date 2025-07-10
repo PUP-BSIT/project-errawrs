@@ -65,7 +65,7 @@ jobs:
 
           # Install Composer dependencies
           echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && sudo -u www-data composer install --no-dev --optimize-autoloader"
           
           # Set up uploads directory
           echo "Setting up uploads directory..."
@@ -121,7 +121,7 @@ jobs:
 
           # Install Composer dependencies
           echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && sudo -u www-data composer install --no-dev --optimize-autoloader"
           
           # Set up uploads directory
           echo "Setting up uploads directory..."
