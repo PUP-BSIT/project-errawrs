@@ -149,6 +149,7 @@ class RegistrationReview {
                  data-country="${reg.country || ''}"
                  data-zip-code="${reg.zip_code || ''}"
                  data-id-image="${reg.id_image || ''}"
+                 data-request-type="${reg.request_type || ''}"
             >
                 <div class="card-left">
                 <div class="registration-header">
@@ -162,6 +163,10 @@ class RegistrationReview {
                                 <span class="application-id" title="Application ID">
                                     <i class="fas fa-hashtag"></i>
                                     ${reg.registration_id}
+                                </span>
+                                <span class="request-type-badge" title="Request Type">
+                                    <i class="fas fa-info-circle"></i>
+                                    ${reg.request_type ? reg.request_type.replace('_', ' ').toUpperCase() : 'N/A'}
                                 </span>
                             </div>
                         </div>
@@ -277,7 +282,8 @@ class RegistrationReview {
                 nationality: card.querySelector('.nationality span')?.textContent || 'N/A',
                 status: card.querySelector('.status-badge')?.textContent?.toLowerCase().trim() || 'pending',
                 createdAt: card.querySelector('.application-date')?.textContent?.trim() || 'N/A',
-                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet'
+                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet',
+                requestType: card.dataset.requestType ? card.dataset.requestType.replace('_', ' ').toUpperCase() : 'N/A'
             };
 
             detailsContainer.innerHTML = `
@@ -324,6 +330,16 @@ class RegistrationReview {
                         </div>
 
                         <div class="section">
+                            <h2>Request Type</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-info-circle"></i> Request Type</label>
+                                    <span>${details.requestType}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
                             <h2>Address Information</h2>
                             <div class="info-grid">
                                 <div class="info-item">
@@ -362,10 +378,10 @@ class RegistrationReview {
                             <div class="section">
                                 <h2>Actions</h2>
                                 <div class="details-actions">
-                                    <button class="btn btn-approve" onclick="registrationReview.approveRegistration('${details.id}')">
+                                    <button class="btn btn-approve" onclick="registrationReview.handleAction('${details.id}', 'approve')">
                                         <i class="fas fa-check"></i> Approve Application
                                     </button>
-                                    <button class="btn btn-deny" onclick="registrationReview.rejectRegistration('${details.id}')">
+                                    <button class="btn btn-deny" onclick="registrationReview.handleAction('${details.id}', 'deny')">
                                         <i class="fas fa-times"></i> Reject Application
                                     </button>
                                 </div>

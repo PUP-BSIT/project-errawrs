@@ -41,6 +41,7 @@ try {
     // Get registrations with pagination
     $query = "SELECT 
                 registration_id,
+                request_type,
                 first_name,
                 last_name,
                 phone_number,
