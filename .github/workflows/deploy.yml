@@ -42,17 +42,12 @@ jobs:
           # Ensure temporary paths exist
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
 
-<<<<<<< HEAD
           # Backup necessary files and directories
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/vendor ]; then sudo cp -r ${DEPLOY_PATH}/vendor ${ENV_BACKUP_PATH}/vendor.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.json ]; then sudo cp ${DEPLOY_PATH}/composer.json ${ENV_BACKUP_PATH}/composer.json.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
-=======
-          # Safely backup .env to a separate temporary location
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from production.'; else echo 'No .env file found at production path ${DEPLOY_PATH}/.env to backup.'; fi"
->>>>>>> dev
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*"
@@ -69,7 +64,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
           echo "Moved files to deployment path and set permissions."
 
-<<<<<<< HEAD
           # Restore backups
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/vendor.bak ]; then sudo mv ${ENV_BACKUP_PATH}/vendor.bak ${DEPLOY_PATH}/vendor; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env; fi"
@@ -81,31 +75,6 @@ jobs:
           echo "Setting up uploads directory..."
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
 
-=======
-          # Restore .env from the temporary backup location
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && sudo chown www-data:www-data ${DEPLOY_PATH}/.env && sudo chmod 600 ${DEPLOY_PATH}/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for production.'; fi"
-
-          # Install Composer dependencies
-          echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
-          
-          # Set up uploads directory
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
-          
-          # Set proper permissions for production
-          echo "Setting proper permissions..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
-
-          # Install Composer dependencies
-          echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
-          
-          # Set up uploads directory
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
-          
->>>>>>> dev
           # Set proper permissions for production
           echo "Setting proper permissions..."
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
@@ -131,18 +100,12 @@ jobs:
           # Ensure temporary paths exist and have correct permissions for the ubuntu user
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chown -R ${REMOTE_USER}:${REMOTE_USER} ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chmod -R 700 ${TMP_PATH} ${ENV_BACKUP_PATH}"
 
-<<<<<<< HEAD
           # Backup necessary files and directories
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/vendor ]; then sudo cp -r ${DEPLOY_PATH}/vendor ${ENV_BACKUP_PATH}/vendor.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.json ]; then sudo cp ${DEPLOY_PATH}/composer.json ${ENV_BACKUP_PATH}/composer.json.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
-=======
-          # Safely backup .env to a separate temporary location
-          # Ensure the backup is done AS the ubuntu user
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from development.'; else echo 'No .env file found at development path ${DEPLOY_PATH}/.env to backup.'; fi"
->>>>>>> dev
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* && sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R www-data:www-data ${DEPLOY_PATH}"
@@ -158,7 +121,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
           echo "Moved files to deployment path and set permissions."
 
-<<<<<<< HEAD
           # Restore backups
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/vendor.bak ]; then sudo mv ${ENV_BACKUP_PATH}/vendor.bak ${DEPLOY_PATH}/vendor; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env; fi"
@@ -170,31 +132,6 @@ jobs:
           echo "Setting up uploads directory..."
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
 
-=======
-          # Restore .env from the temporary backup location - requires sudo to move into www-data owned dir
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && sudo chown www-data:www-data ${DEPLOY_PATH}/.env && sudo chmod 600 ${DEPLOY_PATH}/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for development.'; fi"
-
-          # Install Composer dependencies
-          echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
-          
-          # Set up uploads directory
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
-          
-          # Set proper permissions for development
-          echo "Setting proper permissions..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
-
-          # Install Composer dependencies
-          echo "Installing Composer dependencies..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && composer install --no-dev --optimize-autoloader"
-          
-          # Set up uploads directory
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
-          
->>>>>>> dev
           # Set proper permissions for development
           echo "Setting proper permissions..."
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
@@ -210,11 +147,7 @@ jobs:
           REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
           
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-<<<<<<< HEAD
             DEPLOY_PATH=/var/www/html/project-errawrs
-=======
-            DEPLOY_PATH=/var/www/html/errawrs/project-errawrs
->>>>>>> dev
           else
             DEPLOY_PATH=/var/www/dev/project-errawrs
           fi
@@ -234,11 +167,7 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "✅ Successfully deployed to PRODUCTION environment"
-<<<<<<< HEAD
             echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com/project-errawrs"
-=======
-            echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com/errawrs/project-errawrs"
->>>>>>> dev
             echo "📧 Email functionality: PHPMailer configured and ready"
             echo "📁 File uploads: Directory structure created and secured"
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
