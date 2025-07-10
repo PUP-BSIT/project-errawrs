@@ -254,7 +254,8 @@ const StateManager = {
     state: {
         userData: {},
         isFormDirty: false,
-        isLoading: false
+        isLoading: false,
+        idImageFile: null // Added for file upload
     },
     
     setState(newState) {
@@ -288,7 +289,22 @@ const DOM = {
     saveProfileButton: document.getElementById('save_profile_button'),
     resetProfileButton: document.getElementById('reset_profile_button'),
     notificationContainer: document.querySelector('.notification-container'),
-    logoutButton: document.getElementById('logout_btn')
+    logoutButton: document.getElementById('logout_btn'),
+    editEmailInput: document.getElementById('edit_email'),
+    editDateOfBirthInput: document.getElementById('edit_date_of_birth'),
+    editNationalityInput: document.getElementById('edit_nationality'),
+    editStreetInput: document.getElementById('edit_street'),
+    editCityInput: document.getElementById('edit_city'),
+    editZipCodeInput: document.getElementById('edit_zip_code'),
+    editCountryInput: document.getElementById('edit_country'),
+    editIdTypeInput: document.getElementById('edit_id_type'),
+    editIdImageInput: document.getElementById('edit_id_image'),
+    viewIdImageBtn: document.getElementById('view_id_image_btn'),
+    updateIdImageBtn: document.getElementById('update_id_image_btn'),
+    updateIdImageInput: document.getElementById('update_id_image_input'),
+    idImageModal: document.getElementById('id-image-modal'),
+    idImagePreview: document.getElementById('id-image-preview'),
+    closeIdImageModal: document.getElementById('close-id-image-modal')
 };
 
 // Profile Management
@@ -363,7 +379,15 @@ const ProfileManager = {
             editUsernameInput,
             editPhoneNumberInput,
             editPasswordInput,
-            editConfirmPasswordInput
+            editConfirmPasswordInput,
+            editEmailInput,
+            editDateOfBirthInput,
+            editNationalityInput,
+            editStreetInput,
+            editCityInput,
+            editZipCodeInput,
+            editCountryInput
+            // Removed: editIdTypeInput, editIdImageInput
         } = DOM;
 
         if (!editFirstNameInput || !editLastNameInput || !editUsernameInput || 
@@ -374,10 +398,19 @@ const ProfileManager = {
 
         console.log('User data for form population:', userData);
 
+        editUsernameInput.value = userData.username || '';
         editFirstNameInput.value = userData.first_name || '';
         editLastNameInput.value = userData.last_name || '';
-        editUsernameInput.value = userData.username || '';
+        editDateOfBirthInput.value = userData.date_of_birth || '';
+        editNationalityInput.value = userData.nationality || '';
+        // Removed: editIdTypeInput.value = userData.id_type || '';
+        // Removed: editIdImageInput.value = userData.id_image || '';
+        editEmailInput.value = userData.email || '';
         editPhoneNumberInput.value = userData.phone_number || '';
+        editStreetInput.value = userData.street || '';
+        editCityInput.value = userData.city || '';
+        editZipCodeInput.value = userData.zip_code || '';
+        editCountryInput.value = userData.country || '';
         
         if (editPasswordInput) editPasswordInput.value = '';
         if (editConfirmPasswordInput) editConfirmPasswordInput.value = '';
@@ -413,16 +446,27 @@ const ProfileManager = {
             editUsernameInput,
             editPasswordInput,
             editConfirmPasswordInput,
-            editPhoneNumberInput
+            editPhoneNumberInput,
+            editEmailInput,
+            editDateOfBirthInput,
+            editNationalityInput,
+            editStreetInput,
+            editCityInput,
+            editZipCodeInput,
+            editCountryInput,
+            editIdTypeInput,
+            editIdImageInput
         } = DOM;
 
         const updatedProfileData = {
-            first_name: editFirstNameInput?.value.trim() || '',
-            last_name: editLastNameInput?.value.trim() || '',
-            username: editUsernameInput?.value.trim() || '',
-            password: editPasswordInput?.value.trim() || null,
-            confirm_password: editConfirmPasswordInput?.value.trim() || null,
-            phone_number: editPhoneNumberInput?.value.trim() || ''
+            email: DOM.editEmailInput?.value.trim() || '',
+            phone_number: DOM.editPhoneNumberInput?.value.trim() || '',
+            street: DOM.editStreetInput?.value.trim() || '',
+            city: DOM.editCityInput?.value.trim() || '',
+            zip_code: DOM.editZipCodeInput?.value.trim() || '',
+            country: DOM.editCountryInput?.value.trim() || '',
+            password: DOM.editPasswordInput?.value.trim() || null,
+            confirm_password: DOM.editConfirmPasswordInput?.value.trim() || null
         };
 
         if (!FormValidator.validateProfileData(updatedProfileData)) {
@@ -479,16 +523,33 @@ const ProfileManager = {
     },
 
     async submitProfileUpdate(updatedProfileData) {
-        // Compare with old data for feedback
-        const oldData = StateManager.state.userData || {};
-        const changedFields = [];
-        if (updatedProfileData.phone_number !== oldData.phone_number) changedFields.push('Phone number');
-        if (updatedProfileData.password) changedFields.push('Password');
-
         StateManager.setState({ isLoading: true });
         try {
-            const response = await ApiService.updateProfile(updatedProfileData);
-            if (response.success) {
+            let response;
+            if (StateManager.state.idImageFile) {
+                // Use FormData for file upload
+                const formData = new FormData();
+                for (const key in updatedProfileData) {
+                    formData.append(key, updatedProfileData[key]);
+                }
+                formData.append('id_image', StateManager.state.idImageFile);
+                response = await fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+            } else {
+                // Use JSON for normal update
+                response = await fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
+                    method: 'POST',
+                    body: JSON.stringify(updatedProfileData),
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+            }
+            const data = await response.json();
+            StateManager.state.idImageFile = null; // Reset after upload
+            if (data.success) {
                 if (changedFields.length > 0) {
                     changedFields.forEach(field => {
                         NotificationManager.show(
@@ -510,7 +571,7 @@ const ProfileManager = {
                 this.clearPasswordFields();
             } else {
                 NotificationManager.show(
-                    response.error || 'Failed to update profile',
+                    data.error || 'Failed to update profile',
                     CONFIG.NOTIFICATION.TYPES.ERROR
                 );
             }
@@ -558,8 +619,184 @@ const ProfileManager = {
                 }
             });
         });
+
+        // ID Image View button logic
+        if (DOM.viewIdImageBtn) {
+            DOM.viewIdImageBtn.onclick = function() {
+                const userData = StateManager.state.userData;
+                if (userData && userData.id_image) {
+                    DOM.idImagePreview.src = `/src/api/user/uploads/registration/${userData.id_image}`;
+                    DOM.idImageModal.classList.remove('hidden');
+                } else {
+                    NotificationManager.show('No ID image uploaded.', CONFIG.NOTIFICATION.TYPES.INFO);
+                }
+            };
+        }
+        if (DOM.closeIdImageModal) {
+            DOM.closeIdImageModal.onclick = function() {
+                DOM.idImageModal.classList.add('hidden');
+                DOM.idImagePreview.src = '';
+            };
+        }
+        // ID Image Update button logic
+        if (DOM.updateIdImageBtn && DOM.updateIdImageInput) {
+            DOM.updateIdImageBtn.onclick = function() {
+                DOM.updateIdImageInput.click();
+            };
+            DOM.updateIdImageInput.onchange = function() {
+                const file = DOM.updateIdImageInput.files[0];
+                if (file) {
+                    StateManager.state.idImageFile = file;
+                    NotificationManager.show('ID image selected. Click Save Changes to upload.', CONFIG.NOTIFICATION.TYPES.INFO);
+                }
+            };
+        }
     }
 };
+
+// Modal DOM elements for Update My ID
+const UpdateIdModal = {
+    modal: document.getElementById('update-id-modal'),
+    idType: document.getElementById('modal_id_type'),
+    fileInput: document.getElementById('modal_id_image_input'),
+    uploadBtn: document.getElementById('modal_upload_id_btn'),
+    confirmBtn: document.getElementById('modal_confirm_id_btn'),
+    cancelBtn: document.getElementById('modal_cancel_id_btn'),
+    previewImg: document.getElementById('modal_id_image_preview'),
+    passwordGroup: document.getElementById('modal_password_group'),
+    passwordInput: document.getElementById('modal_current_password'),
+    errorDiv: document.getElementById('modal_id_error'),
+    selectedFile: null
+};
+
+// On open, reset modal state
+if (DOM.updateIdImageBtn) {
+    DOM.updateIdImageBtn.onclick = function() {
+        const userData = StateManager.state.userData;
+        if (userData && userData.id_type) {
+            UpdateIdModal.idType.value = userData.id_type;
+        } else {
+            UpdateIdModal.idType.value = 'passport';
+        }
+        UpdateIdModal.fileInput.value = '';
+        UpdateIdModal.previewImg.classList.add('hide');
+        UpdateIdModal.previewImg.classList.remove('show');
+        UpdateIdModal.selectedFile = null;
+        UpdateIdModal.passwordGroup.classList.add('hide');
+        UpdateIdModal.passwordGroup.classList.remove('show');
+        UpdateIdModal.passwordInput.value = '';
+        UpdateIdModal.uploadBtn.classList.remove('hide');
+        UpdateIdModal.confirmBtn.classList.add('hide');
+        UpdateIdModal.errorDiv.classList.add('hide');
+        UpdateIdModal.errorDiv.textContent = '';
+        UpdateIdModal.modal.classList.remove('hidden');
+    };
+}
+
+// Cancel button closes modal
+if (UpdateIdModal.cancelBtn) {
+    UpdateIdModal.cancelBtn.onclick = function() {
+        UpdateIdModal.modal.classList.add('hidden');
+        UpdateIdModal.fileInput.value = '';
+        UpdateIdModal.previewImg.classList.add('hide');
+        UpdateIdModal.previewImg.classList.remove('show');
+        UpdateIdModal.selectedFile = null;
+        UpdateIdModal.passwordGroup.classList.add('hide');
+        UpdateIdModal.passwordGroup.classList.remove('show');
+        UpdateIdModal.passwordInput.value = '';
+        UpdateIdModal.uploadBtn.classList.remove('hide');
+        UpdateIdModal.confirmBtn.classList.add('hide');
+        UpdateIdModal.errorDiv.classList.add('hide');
+        UpdateIdModal.errorDiv.textContent = '';
+    };
+}
+
+// File input change: store file and show preview
+if (UpdateIdModal.fileInput) {
+    UpdateIdModal.fileInput.onchange = function() {
+        const file = UpdateIdModal.fileInput.files[0];
+        if (file) {
+            UpdateIdModal.selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                UpdateIdModal.previewImg.src = e.target.result;
+                UpdateIdModal.previewImg.classList.remove('hide');
+                UpdateIdModal.previewImg.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            UpdateIdModal.previewImg.classList.add('hide');
+            UpdateIdModal.previewImg.classList.remove('show');
+            UpdateIdModal.previewImg.src = '';
+            UpdateIdModal.selectedFile = null;
+        }
+    };
+}
+
+// Upload button: show password field and confirm button
+if (UpdateIdModal.uploadBtn) {
+    UpdateIdModal.uploadBtn.onclick = function() {
+        const idType = UpdateIdModal.idType.value;
+        const file = UpdateIdModal.selectedFile;
+        UpdateIdModal.errorDiv.classList.add('hide');
+        UpdateIdModal.errorDiv.textContent = '';
+        if (!idType) {
+            UpdateIdModal.errorDiv.textContent = 'Please select an ID type.';
+            UpdateIdModal.errorDiv.classList.remove('hide');
+            return;
+        }
+        if (!file) {
+            UpdateIdModal.errorDiv.textContent = 'Please select an ID image to upload.';
+            UpdateIdModal.errorDiv.classList.remove('hide');
+            return;
+        }
+        UpdateIdModal.passwordGroup.classList.remove('hide');
+        UpdateIdModal.passwordGroup.classList.add('show');
+        UpdateIdModal.confirmBtn.classList.remove('hide');
+        UpdateIdModal.uploadBtn.classList.add('hide');
+    };
+}
+
+// Confirm button: submit to backend
+if (UpdateIdModal.confirmBtn) {
+    UpdateIdModal.confirmBtn.onclick = async function() {
+        const idType = UpdateIdModal.idType.value;
+        const file = UpdateIdModal.selectedFile;
+        const password = UpdateIdModal.passwordInput.value.trim();
+        UpdateIdModal.errorDiv.classList.add('hide');
+        UpdateIdModal.errorDiv.textContent = '';
+        if (!password) {
+            UpdateIdModal.errorDiv.textContent = 'Current password is required.';
+            UpdateIdModal.errorDiv.classList.remove('hide');
+            return;
+        }
+        const formData = new FormData();
+        formData.append('id_type', idType);
+        formData.append('id_image', file);
+        formData.append('current_password', password);
+        try {
+            StateManager.setState({ isLoading: true });
+            const response = await fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (data.success) {
+                NotificationManager.show('ID updated successfully!', CONFIG.NOTIFICATION.TYPES.SUCCESS);
+                UpdateIdModal.modal.classList.add('hidden');
+                await ProfileManager.fetchProfile();
+            } else {
+                UpdateIdModal.errorDiv.textContent = data.error || 'Failed to update ID.';
+                UpdateIdModal.errorDiv.classList.remove('hide');
+            }
+        } catch (error) {
+            ErrorHandler.handle(error, 'updating ID');
+        } finally {
+            StateManager.setState({ isLoading: false });
+        }
+    };
+}
 
 // Initialize the profile page
 document.addEventListener('DOMContentLoaded', () => {

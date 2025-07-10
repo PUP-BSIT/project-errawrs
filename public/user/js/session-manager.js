@@ -482,7 +482,7 @@ if (window.location.href.includes('login_account_holder.html') && window.locatio
 
 // Inactivity session killer logic
 let inactivityTimeout;
-const INACTIVITY_LIMIT = 1 * 10 * 1000; // 5 minutes in ms
+const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes in ms
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimeout);
