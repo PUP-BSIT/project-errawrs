@@ -42,6 +42,7 @@ try {
     $query = "SELECT 
                 registration_id,
                 request_type,
+                account_type,
                 first_name,
                 last_name,
                 phone_number,

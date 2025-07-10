@@ -1069,3 +1069,23 @@ body {
   color: #7ed957;
   font-size: 1rem;
 }
+
+/* Account Type Badge Styling */
+.account-type-badge {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+}
+.account-type-badge i {
+  color: #10b981;
+  font-size: 1rem;
+}

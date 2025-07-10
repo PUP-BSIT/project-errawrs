@@ -150,6 +150,7 @@ class RegistrationReview {
                  data-zip-code="${reg.zip_code || ''}"
                  data-id-image="${reg.id_image || ''}"
                  data-request-type="${reg.request_type || ''}"
+                 data-account-type="${reg.account_type || ''}"
             >
                 <div class="card-left">
                 <div class="registration-header">
@@ -168,6 +169,12 @@ class RegistrationReview {
                                     <i class="fas fa-info-circle"></i>
                                     ${reg.request_type ? reg.request_type.replace('_', ' ').toUpperCase() : 'N/A'}
                                 </span>
+                                ${reg.request_type === 'add_account' ? `
+                                <span class="account-type-badge" title="Account Type">
+                                    <i class="fas fa-university"></i>
+                                    ${reg.account_type ? reg.account_type.charAt(0).toUpperCase() + reg.account_type.slice(1) : 'N/A'}
+                                </span>
+                                ` : ''}
                             </div>
                         </div>
                 </div>
@@ -283,7 +290,8 @@ class RegistrationReview {
                 status: card.querySelector('.status-badge')?.textContent?.toLowerCase().trim() || 'pending',
                 createdAt: card.querySelector('.application-date')?.textContent?.trim() || 'N/A',
                 updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet',
-                requestType: card.dataset.requestType ? card.dataset.requestType.replace('_', ' ').toUpperCase() : 'N/A'
+                requestType: card.dataset.requestType ? card.dataset.requestType.replace('_', ' ').toUpperCase() : 'N/A',
+                accountType: card.dataset.accountType ? card.dataset.accountType.charAt(0).toUpperCase() + card.dataset.accountType.slice(1) : 'N/A'
             };
 
             detailsContainer.innerHTML = `
@@ -338,6 +346,18 @@ class RegistrationReview {
                                 </div>
                             </div>
                         </div>
+
+                        ${details.requestType === 'ADD ACCOUNT' ? `
+                        <div class="section">
+                            <h2>Account Type</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-university"></i> Account Type</label>
+                                    <span>${details.accountType}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
 
                         <div class="section">
                             <h2>Address Information</h2>

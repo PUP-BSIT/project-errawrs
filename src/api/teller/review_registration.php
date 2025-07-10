@@ -146,12 +146,25 @@ try {
             if ($registration['request_type'] === 'add_account') {
                 // Only add a new account for the existing user
                 $user_id = $registration['user_id'];
+                
+                // Get user details for email
+                $userStmt = $db->prepare('SELECT first_name, last_name, email FROM user WHERE user_id = ?');
+                $userStmt->bind_param('i', $user_id);
+                $userStmt->execute();
+                $userResult = $userStmt->get_result();
+                $userData = $userResult->fetch_assoc();
+                
+                if (!$userData) {
+                    throw new Exception('User not found for add account request');
+                }
+                
                 // Generate account number
                 $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
                 $seqRow = $seqResult->fetch_assoc();
                 $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
                 $year = date('y');
                 $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
+                
                 // Insert into account table
                 $insertAccount = $db->prepare('
                     INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
@@ -161,8 +174,50 @@ try {
                 if (!$insertAccount->execute()) {
                     throw new Exception('Failed to create bank account: ' . $insertAccount->error);
                 }
-                // Optionally send email to user about new account
-                $message = "Account added for user ID: $user_id and account number: $accountNumber";
+                
+                // Send email notification about new account
+                error_log("Sending add account approval email to: {$userData['email']}");
+                
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+                $dotenv->load();
+
+                $mail = new PHPMailer(true);
+                $mail->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    ]
+                ];
+                $mail->isSMTP();
+                $mail->Host = $_ENV['GMAIL_HOST'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $_ENV['GMAIL_USERNAME'];
+                $mail->Password = $_ENV['GMAIL_PASSWORD'];
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = (int)$_ENV['GMAIL_PORT'];
+
+                $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+                $mail->addAddress($userData['email']);
+                $mail->Subject = 'Additional Account Approved';
+                $mail->Body = "Hello {$userData['first_name']},\n\n"
+                    . "Your request for an additional account has been approved!\n\n"
+                    . "New Account Details:\n"
+                    . "Account Number: $accountNumber\n"
+                    . "Account Type: " . ucfirst($registration['account_type']) . "\n"
+                    . "Status: Active\n\n"
+                    . "You can view your new account in your dashboard at: https://dev.stackovercash.site/user/account.html\n\n"
+                    . "Thank you for choosing our bank!";
+
+                try {
+                    $mail->send();
+                    error_log("Add account approval email sent successfully");
+                } catch (Exception $e) {
+                    error_log("Failed to send add account approval email: " . $e->getMessage());
+                    // Don't throw here, we want to complete the transaction even if email fails
+                }
+                
+                $message = "Additional account approved. Account created with number: $accountNumber";
             } else {
                 // Existing logic for new registration (create user, then account)
                 // Generate a unique username
@@ -291,12 +346,9 @@ try {
                 $message = "Registration approved. Account created with ID: $user_id and account number: $accountNumber";
             }
         } else {
-            // Deny: just delete the registration request
-            $deleteReg = $db->prepare('DELETE FROM registration_request WHERE registration_id = ?');
-            $deleteReg->bind_param('i', $registration_id);
-            if (!$deleteReg->execute()) {
-                throw new Exception('Failed to delete registration request: ' . $deleteReg->error);
-            }
+            // Deny: update status to rejected (don't delete the record)
+            // The status is already updated above in the common update section
+            // No additional action needed here for denial
 
             // Send email
             $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
@@ -334,7 +386,7 @@ try {
                 // Don't throw here, we want to complete the transaction even if email fails
             }
 
-            $message = "Registration denied and deleted.";
+            $message = "Registration denied.";
         }
 
         $db->commit();
