@@ -225,7 +225,7 @@ function updateAccountDisplay() {
         if (account.account_number === selectedAccountNumber) {
             accountElement.classList.add('selected');
         }
-        accountElement.style.cursor = 'pointer';
+        accountElement.classList.add('pointer');
         accountElement.addEventListener('click', () => {
             window.selectedAccountNumber = account.account_number;
             update_balance_display(account.balance);

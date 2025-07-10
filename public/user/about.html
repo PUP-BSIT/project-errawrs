@@ -34,9 +34,7 @@
                         </li>
                     </ul>
                 </nav>
-                <a href="./login_account_holder.html" class="login-btn"
-                    >Log In</a
-                >
+                <a id="login-link" class="login-btn">Log In</a>
             </div>
         </header>
         <main class="container">
@@ -141,6 +139,11 @@
                 </div>
             </div>
         </footer>
-        <script src="./js/about.js"></script>
+        <script src="./js/config.js"></script>
+        <script>
+            document.getElementById('login-link').href = ROUTES.LOGIN;
+        </script>
+        <script src="./js/session-manager.js"></script>
+        <!-- <script src="./js/about.js"></script> -->
     </body>
 </html>

@@ -42,7 +42,7 @@ try {
     $user_id = $_SESSION['auth']['id'];
     
     // Check account limits
-    $stmt = $db->prepare('SELECT type, status FROM account WHERE user_id = ?');
+    $stmt = $db->prepare('SELECT account_type, status FROM account WHERE user_id = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $accounts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -53,8 +53,8 @@ try {
         throw new Exception('You have reached the maximum number of active accounts (3).');
     }
 
-    $savings_count = count(array_filter($active_accounts, fn($acc) => $acc['type'] === 'savings'));
-    $credit_count = count(array_filter($active_accounts, fn($acc) => $acc['type'] === 'credit'));
+    $savings_count = count(array_filter($active_accounts, fn($acc) => $acc['account_type'] === 'savings'));
+    $credit_count = count(array_filter($active_accounts, fn($acc) => $acc['account_type'] === 'credit'));
 
     if ($account_type === 'savings' && $savings_count >= 2) {
         throw new Exception('You can only have a maximum of 2 savings accounts.');
@@ -64,8 +64,24 @@ try {
         throw new Exception('You can only have a maximum of 1 credit account.');
     }
     
-    $requestStmt = $db->prepare('INSERT INTO registration_request (user_id, request_type, account_type, status, created_at) VALUES (?, "add_account", ?, "pending", NOW())');
-    $requestStmt->bind_param('is', $user_id, $account_type);
+    // Fetch user profile details from the user table, including id_type and id_image
+    $profileStmt = $db->prepare('SELECT first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image FROM user WHERE user_id = ?');
+    $profileStmt->bind_param('i', $user_id);
+    $profileStmt->execute();
+    $profileStmt->bind_result($first_name, $last_name, $phone_number, $date_of_birth, $nationality, $street, $city, $zip_code, $country, $email, $id_type, $id_image);
+    $profileStmt->fetch();
+    $profileStmt->close();
+    
+    // Insert add account request into registration_request
+    $requestStmt = $db->prepare('INSERT INTO registration_request (
+        user_id, request_type, account_type, first_name, last_name, phone_number, date_of_birth, nationality,
+        street, city, zip_code, country, email, id_type, id_image, status, created_at
+    ) VALUES (?, "add_account", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())');
+    $requestStmt->bind_param(
+        'isssssssssssss',
+        $user_id, $account_type, $first_name, $last_name, $phone_number,
+        $date_of_birth, $nationality, $street, $city, $zip_code, $country, $email, $id_type, $id_image
+    );
     $requestStmt->execute();
     
     $db->commit();

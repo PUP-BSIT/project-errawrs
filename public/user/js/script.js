@@ -43,14 +43,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function goToIndex(index) {
         const cardWidth = cards[0].offsetWidth;
-        const gap = parseInt(getComputedStyle(track).gap) || 32;
-        currentIndex = Math.max(0, Math.min(index, cards.length - 1));
-        let offset = currentIndex * (cardWidth + gap);
+        const gap = parseInt(getComputedStyle(track).gap) || 24;
+        const containerWidth = track.parentElement.offsetWidth;
+        const trackWidth = track.scrollWidth;
 
-        const maxOffset = Math.max(0, track.scrollWidth - track.parentElement.offsetWidth);
-        if (offset > maxOffset) offset = maxOffset;
+        // Calculate the maximum offset so the last card is flush with the right edge
+        const maxOffset = Math.max(0, trackWidth - containerWidth);
 
+        // Calculate the offset for the current index
+        let offset = index * (cardWidth + gap);
+
+        // Clamp offset so you never scroll past the last card
+        offset = Math.min(offset, maxOffset);
+
+        // Move the track
         track.style.transform = `translateX(-${offset}px)`;
+
+        // Update currentIndex to match the actual offset (for dots/buttons)
+        currentIndex = Math.round(offset / (cardWidth + gap));
         updateDots();
     }
     

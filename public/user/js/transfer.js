@@ -233,9 +233,11 @@ function is_info_correct() {
 function update_default_label() {
     if (stackovercash_bank_radio && default_bank_label) {
         if (stackovercash_bank_radio.checked) {
-            default_bank_label.style.display = 'block';
+            default_bank_label.classList.remove('hidden');
+            default_bank_label.classList.add('block');
         } else {
-            default_bank_label.style.display = 'none';
+            default_bank_label.classList.remove('block');
+            default_bank_label.classList.add('hidden');
         }
     }
 }
@@ -431,19 +433,23 @@ document.addEventListener('DOMContentLoaded', () => {
         next_button.addEventListener('click', () => {
             if (is_bank_selected()) {
                 // Animate transition
-                select_bank_panel.style.opacity = '0';
-                select_bank_panel.style.transform = 'translateX(-20px)';
+                select_bank_panel.classList.add('fade-out');
+                select_bank_panel.classList.remove('fade-in');
                 
                 setTimeout(() => {
-                    select_bank_panel.style.display = 'none';
-                    account_details_panel.style.display = 'block';
+                    select_bank_panel.classList.remove('block');
+                    select_bank_panel.classList.add('hidden');
+                    account_details_panel.classList.remove('hidden');
+                    account_details_panel.classList.add('block');
                     
                     // Trigger reflow
                     account_details_panel.offsetHeight;
                     
                     // Reset and animate account details panel
-                    account_details_panel.style.opacity = '1';
-                    account_details_panel.style.transform = 'translateX(0)';
+                    account_details_panel.classList.remove('fade-out');
+                    account_details_panel.classList.add('fade-in');
+                    account_details_panel.classList.remove('slide-left');
+                    account_details_panel.classList.add('slide-right');
                 }, 200);
             }
         });
@@ -565,19 +571,25 @@ document.addEventListener('DOMContentLoaded', () => {
             amount_input.classList.remove('invalid');
             
             // Switch panels with animation
-            account_details_panel.style.opacity = '0';
-            account_details_panel.style.transform = 'translateX(20px)';
+            account_details_panel.classList.remove('fade-in');
+            account_details_panel.classList.add('fade-out');
+            account_details_panel.classList.add('slide-left');
+            account_details_panel.classList.remove('slide-right');
             
             setTimeout(() => {
-                account_details_panel.style.display = 'none';
-                select_bank_panel.style.display = 'block';
+                account_details_panel.classList.remove('block');
+                account_details_panel.classList.add('hidden');
+                select_bank_panel.classList.remove('hidden');
+                select_bank_panel.classList.add('block');
                 
                 // Trigger reflow
                 select_bank_panel.offsetHeight;
                 
                 // Animate select bank panel
-                select_bank_panel.style.opacity = '1';
-                select_bank_panel.style.transform = 'translateX(0)';
+                select_bank_panel.classList.remove('fade-out');
+                select_bank_panel.classList.add('fade-in');
+                select_bank_panel.classList.remove('slide-left');
+                select_bank_panel.classList.add('slide-right');
             }, 200);
         });
     }
@@ -627,8 +639,10 @@ function resetTransferForm() {
     send_money_button.disabled = true;
     
     // Go back to first panel
-    account_details_panel.style.display = 'none';
-    select_bank_panel.style.display = 'block';
+    account_details_panel.classList.remove('block');
+    account_details_panel.classList.add('hidden');
+    select_bank_panel.classList.remove('hidden');
+    select_bank_panel.classList.add('block');
 }
 
 // Show transfer receipt

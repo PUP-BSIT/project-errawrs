@@ -62,13 +62,15 @@ API_ENDPOINTS.AUTH = {
     LOGOUT: API_ENDPOINTS.LOGOUT,
     SEND_OTP: API_ENDPOINTS.SEND_OTP,
     VERIFY_OTP: API_ENDPOINTS.VERIFY_OTP,
-    SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK
+    SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
+    KILL_SESSION: `${API_BASE_URL}/auth/kill_session.php`,
 };
 
 // Backward compatibility - keep the old USER structure
 API_ENDPOINTS.USER = {
     TRANSACTIONS: API_ENDPOINTS.GET_TRANSACTIONS,
-    ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS
+    ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
+    CREATE_ADDITIONAL_ACCOUNT: API_ENDPOINTS.CREATE_ADDITIONAL_ACCOUNT
 };
 
 // Function to get the correct base path for routes
@@ -115,3 +117,7 @@ function createNotification(message, type = 'info', duration = 5000) {
     container.appendChild(notification);
     setTimeout(() => notification.remove(), duration);
 } 
+window.ROUTES = ROUTES;
+window.API_ENDPOINTS = API_ENDPOINTS;
+window.API_BASE_URL = API_BASE_URL;
+console.log('config.js loaded, ROUTES =', window.ROUTES); 

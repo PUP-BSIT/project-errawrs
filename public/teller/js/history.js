@@ -8,13 +8,11 @@ if (!tellerInfo || !tellerInfo.teller_number) {
 // Configuration - Dynamic base URL detection
 function getBaseURL() {
     const host = window.location.hostname;
-    
-    // Check if we're on the EC2 server
-    if (host === 'dev-teller.stackovercash.site') {
+    // Use /api for both dev and main teller domains
+    if (host === 'dev-teller.stackovercash.site' || host === 'teller.stackovercash.site') {
         return '/api';
     }
-    
-    // Local XAMPP environment
+    // Local XAMPP or fallback
     return '/project-errawrs/src/api';
 }
 

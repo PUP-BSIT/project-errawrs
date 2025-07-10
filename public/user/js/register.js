@@ -435,12 +435,12 @@ class RegistrationManager {
 			currentPageElement.classList.add(direction === "right" ? "slide-left" : "slide-right");
 			currentPageElement.addEventListener("transitionend", () => {
 				currentPageElement.classList.remove("active", "slide-left", "slide-right");
-				currentPageElement.style.display = "none";
+				currentPageElement.classList.add('hidden');
 			}, { once: true });
 
 			// Show and animate new page
-			newPageElement.style.display = "block";
-			newPageElement.classList.add(direction === "right" ? "slide-in-right" : "slide-in-left");
+			newPageElement.classList.remove('hidden');
+			newPageElement.classList.add('block');
 
 			// Force reflow
 			newPageElement.offsetHeight;
@@ -454,7 +454,8 @@ class RegistrationManager {
 			}, { once: true });
 		} else {
 			// If no current page, just show the new page
-			newPageElement.style.display = "block";
+			newPageElement.classList.remove('hidden');
+			newPageElement.classList.add('block');
 			newPageElement.classList.add("active");
 		}
 
@@ -515,7 +516,7 @@ class RegistrationManager {
 		if (resendBtn) {
 			resendBtn.addEventListener("click", (e) => {
 				e.preventDefault();
-				if (resendBtn.style.pointerEvents !== "none") {
+				if (resendBtn.classList.contains('pointer')) {
 					this.handleContactInfoSubmit(e);
 				}
 			});
@@ -535,10 +536,7 @@ class RegistrationManager {
 		otpInput.value = "";
 
 		// Show modal with animation
-		otpModal.style.display = "flex";
-		requestAnimationFrame(() => {
-			otpModal.classList.add("active");
-		});
+		otpModal.classList.add("active");
 
 		// Focus on OTP input
 		otpInput.focus();
@@ -579,7 +577,7 @@ class RegistrationManager {
 
 		// Hide modal after animation
 		setTimeout(() => {
-			otpModal.style.display = "none";
+			otpModal.classList.add('hidden');
 			// Reset OTP input
 			const otpInput = document.getElementById("otp_code");
 			if (otpInput) {
@@ -594,16 +592,20 @@ class RegistrationManager {
 
 		let countdown = TIMER_SETTINGS.RESEND_COUNTDOWN;
 		resendBtn.textContent = `Resend code in ${countdown}s`;
-		resendBtn.style.pointerEvents = "none";
-		resendBtn.style.opacity = "0.5";
+		resendBtn.classList.remove('pointer');
+		resendBtn.classList.add('no-pointer');
+		resendBtn.classList.remove('fade-in');
+		resendBtn.classList.add('fade-out');
 
 		const countdownInterval = setInterval(() => {
 			countdown--;
 			if (countdown <= 0) {
 				clearInterval(countdownInterval);
 				resendBtn.textContent = "Resend code";
-				resendBtn.style.pointerEvents = "auto";
-				resendBtn.style.opacity = "1";
+				resendBtn.classList.remove('no-pointer');
+				resendBtn.classList.add('pointer');
+				resendBtn.classList.remove('fade-out');
+				resendBtn.classList.add('fade-in');
 			} else {
 				resendBtn.textContent = `Resend code in ${countdown}s`;
 			}
@@ -725,8 +727,10 @@ class RegistrationManager {
 		const resendBtn = document.getElementById("resend_otp");
 		if (resendBtn) {
 			resendBtn.textContent = "Sending...";
-			resendBtn.style.pointerEvents = "none";
-			resendBtn.style.opacity = "0.5";
+			resendBtn.classList.remove('pointer');
+			resendBtn.classList.add('no-pointer');
+			resendBtn.classList.remove('fade-in');
+			resendBtn.classList.add('fade-out');
 		}
 
 		// Get the phone number from the form
@@ -778,8 +782,10 @@ class RegistrationManager {
 					);
 					if (resendBtn) {
 						resendBtn.textContent = "Resend code";
-						resendBtn.style.pointerEvents = "auto";
-						resendBtn.style.opacity = "1";
+						resendBtn.classList.remove('no-pointer');
+						resendBtn.classList.add('pointer');
+						resendBtn.classList.remove('fade-out');
+						resendBtn.classList.add('fade-in');
 					}
 				}
 			})
@@ -791,8 +797,10 @@ class RegistrationManager {
 				);
 				if (resendBtn) {
 					resendBtn.textContent = "Resend code";
-					resendBtn.style.pointerEvents = "auto";
-					resendBtn.style.opacity = "1";
+					resendBtn.classList.remove('no-pointer');
+					resendBtn.classList.add('pointer');
+					resendBtn.classList.remove('fade-out');
+					resendBtn.classList.add('fade-in');
 				}
 			});
 	}
@@ -1121,7 +1129,8 @@ class RegistrationManager {
 
 				if (container && previewInfo && fileNameDisplay) {
 					fileNameDisplay.textContent = formData.id_image.name;
-					previewInfo.style.display = "flex";
+					previewInfo.classList.remove('hidden');
+					previewInfo.classList.add('block');
 					container.classList.add("has-file");
 				}
 			}
@@ -1245,7 +1254,8 @@ class RegistrationManager {
 			}
 			
 			if (previewInfoCompact) {
-				previewInfoCompact.style.display = "flex";
+				previewInfoCompact.classList.remove('hidden');
+				previewInfoCompact.classList.add('block');
 			}
 			
 			if (fileNameDisplay) {
@@ -1300,7 +1310,8 @@ class RegistrationManager {
 			container.classList.remove("has-file", "loading");
 		}
 		if (previewContainer) {
-			previewContainer.style.display = "none";
+			previewContainer.classList.add('hidden');
+			previewContainer.classList.remove('block');
 		}
 
 		// Clear stored file data
@@ -1335,7 +1346,8 @@ class RegistrationManager {
 
 		const warningElement = document.getElementById("age_warning");
 		if (warningElement) {
-			warningElement.style.display = isValid ? "none" : "flex";
+			warningElement.classList.toggle("flex", !isValid);
+			warningElement.classList.toggle("none", isValid);
 		}
 
 		this.setInputValidation(
@@ -1574,8 +1586,8 @@ class RegistrationManager {
 
 					// Update UI
 					fileNameDisplay.textContent = file.name;
-					previewInfo.style.display = "flex";
-					container.classList.add("has-file");
+					previewInfo.classList.remove('hidden');
+					previewInfo.classList.add('block');
 				} catch (error) {
 					console.error("Error processing file:", error);
 					this.showNotification("Error processing file. Please try again.", NOTIFICATION_TYPES.ERROR);
@@ -1644,8 +1656,8 @@ class RegistrationManager {
 				e.preventDefault();
 				this.idImage = null;
 				fileInput.value = "";
-				previewInfo.style.display = "none";
-				container.classList.remove("has-file");
+				previewInfo.classList.add('hidden');
+				previewInfo.classList.remove('block');
 			});
 		}
 	}
