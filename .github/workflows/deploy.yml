@@ -43,7 +43,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
 
           # Safely backup .env to a separate temporary location
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from production.'; else echo 'No .env file found at production path ${DEPLOY_PATH}/.env to backup.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from production.'; else echo 'No .env file found at production path ${DEPLOY_PATH}/.env to backup.'; fi"
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*" # Remove all contents
@@ -61,7 +61,7 @@ jobs:
           echo "Moved files to deployment path and set permissions."
 
           # Restore .env from the temporary backup location
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for production.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && sudo chown www-data:www-data ${DEPLOY_PATH}/.env && sudo chmod 600 ${DEPLOY_PATH}/.env && echo '.env restored successfully to production.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for production.'; fi"
 
           # Install Composer dependencies
           echo "Installing Composer dependencies..."
@@ -76,7 +76,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
 
           # Clean up temporary backup path
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${ENV_BACKUP_PATH}"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for production."
 
       - name: Deploy to Development (dev branch)
@@ -98,7 +98,7 @@ jobs:
 
           # Safely backup .env to a separate temporary location
           # Ensure the backup is done AS the ubuntu user
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from development.'; else echo 'No .env file found at development path ${DEPLOY_PATH}/.env to backup.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak && echo '.env backed up successfully from development.'; else echo 'No .env file found at development path ${DEPLOY_PATH}/.env to backup.'; fi"
 
           # Clean the deployment directory (remove all files/folders) - requires sudo
           # Ensure the directory exists after cleanup
@@ -117,8 +117,7 @@ jobs:
           echo "Moved files to deployment path and set permissions."
 
           # Restore .env from the temporary backup location - requires sudo to move into www-data owned dir
-          # Adjust the destination path of .env if it's not directly under DEPLOY_PATH
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for development.'; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env && sudo chown www-data:www-data ${DEPLOY_PATH}/.env && sudo chmod 600 ${DEPLOY_PATH}/.env && echo '.env restored successfully to development.'; else echo 'No .env backup found to restore to ${DEPLOY_PATH}/.env for development.'; fi"
 
           # Install Composer dependencies
           echo "Installing Composer dependencies..."
@@ -133,7 +132,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
 
           # Clean up temporary paths
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for development."
 
       - name: Verify Deployment
