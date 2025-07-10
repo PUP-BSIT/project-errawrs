@@ -358,3 +358,215 @@
     justify-content: center;
     margin-top: 18px;
 } 
+
+/* Update ID Modal Styling */
+#update-id-modal.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+}
+#update-id-modal .modal-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 36px 40px 28px 40px;
+  min-width: 380px;
+  max-width: 440px;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+#update-id-modal h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  text-align: center;
+}
+#update-id-modal .form-group {
+  margin-bottom: 18px;
+}
+#update-id-modal label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+#update-id-modal .form-input, #update-id-modal select, #update-id-modal input[type="file"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+#update-id-modal .button-group {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+#update-id-modal .btn {
+  min-width: 90px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+#update-id-modal .btn.primary-btn {
+  background: #b6ff4d;
+  color: #222;
+}
+#update-id-modal .btn.secondary-btn {
+  background: #e5e7eb;
+  color: #222;
+}
+#update-id-modal .btn.primary-btn:hover {
+  background: #a0e63b;
+}
+#update-id-modal .btn.secondary-btn:hover {
+  background: #d1d5db;
+}
+#update-id-modal #modal_id_image_preview {
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fafbfc;
+  max-width: 320px;
+  max-height: 220px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 600px) {
+  #update-id-modal .modal-content {
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+} 
+
+/* Update ID Modal Back Button Styling */
+#update-id-modal .modal-back-btn {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  font-size: 2rem;
+  color: #222;
+  background: #e5e7eb;
+  border-radius: 50%;
+  padding: 4px 14px 4px 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: background 0.18s, color 0.18s, transform 0.12s;
+  z-index: 10;
+  text-align: center;
+  font-weight: bold;
+  line-height: 1;
+}
+#update-id-modal .modal-back-btn:hover {
+  background: #b6ff4d;
+  color: #111;
+  transform: scale(1.12);
+}
+
+/* ID Image Preview Modal Styling */
+#id-image-modal.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+}
+#id-image-modal .modal-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 36px 40px 28px 40px;
+  min-width: 340px;
+  max-width: 420px;
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+#id-image-modal h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  text-align: center;
+}
+#id-image-modal img {
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fafbfc;
+  max-width: 320px;
+  max-height: 220px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#close-id-image-modal {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 2rem;
+  color: #e53935;
+  font-weight: bold;
+  background: rgba(229,57,53,0.08);
+  border-radius: 50%;
+  padding: 4px 12px 4px 12px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.12s;
+  line-height: 1;
+  z-index: 10;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+#close-id-image-modal:hover {
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.12);
+}
+@media (max-width: 600px) {
+  #id-image-modal .modal-content {
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  #id-image-modal img {
+    max-width: 90vw;
+    max-height: 40vw;
+  }
+} 
+
+/* Utility classes for JS visibility toggling */
+.show {
+  display: block !important;
+}
+.hide {
+  display: none !important;
+} 

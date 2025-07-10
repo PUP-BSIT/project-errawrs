@@ -24,22 +24,27 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
-if (!$data) {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Invalid JSON data']);
-    exit();
+$isMultipart = strpos($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data') !== false;
+if ($isMultipart) {
+    $data = $_POST;
+    $id_image = $_FILES['id_image'] ?? null;
+} else {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id_image = null;
 }
 
-$first_name = $data['first_name'] ?? null;
-$last_name = $data['last_name'] ?? null;
+$email = $data['email'] ?? null;
+$street = $data['street'] ?? null;
+$city = $data['city'] ?? null;
+$zip_code = $data['zip_code'] ?? null;
+$country = $data['country'] ?? null;
 $phone_number = $data['phone_number'] ?? null;
 $password = $data['password'] ?? null;
 $current_password = $data['current_password'] ?? null;
 
-if (empty($first_name) || empty($last_name) || empty($phone_number)) {
+if (empty($phone_number)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'First name, last name, and phone number are required.']);
+    echo json_encode(['success' => false, 'error' => 'Phone number is required.']);
     exit();
 }
 
@@ -67,28 +72,59 @@ try {
     }
 
     $fields_to_update = [
-        'first_name' => $first_name,
-        'last_name' => $last_name,
-        'phone_number' => $phone_number
+        'email' => $email,
+        'phone_number' => $phone_number,
+        'street' => $street,
+        'city' => $city,
+        'zip_code' => $zip_code,
+        'country' => $country
     ];
-    
-    $types = 'sss'; 
-    $params = [$first_name, $last_name, $phone_number];
+    $types = '';
+    $params = [];
+    foreach ($fields_to_update as $field => $value) {
+        if ($value !== null) {
+            $types .= 's';
+            $params[] = $value;
+        } else {
+            unset($fields_to_update[$field]);
+        }
+    }
 
     if (!empty($password)) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $fields_to_update['password_hash'] = $password_hash;
-        $types = 'ssss';
-        $params = [$first_name, $last_name, $phone_number, $password_hash];
+        $types .= 's';
+        $params[] = $password_hash;
     }
-    
+
+    // Handle ID image upload
+    if ($id_image && $id_image['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/uploads/registration/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $ext = pathinfo($id_image['name'], PATHINFO_EXTENSION);
+        $filename = 'id_' . $user_id . '_' . time() . '.' . $ext;
+        $targetPath = $uploadDir . $filename;
+        if (move_uploaded_file($id_image['tmp_name'], $targetPath)) {
+            $fields_to_update['id_image'] = $filename;
+            $types .= 's';
+            $params[] = $filename;
+        } else {
+            throw new Exception('Failed to upload ID image.');
+        }
+    }
+
+    if (empty($fields_to_update)) {
+        echo json_encode(['success' => false, 'error' => 'No fields to update.']);
+        exit();
+    }
+
     $query_parts = [];
     foreach ($fields_to_update as $field => $value) {
         $query_parts[] = "{$field} = ?";
     }
-
     $query = "UPDATE user SET " . implode(', ', $query_parts) . " WHERE user_id = ?";
-    
     $params[] = $user_id;
     $types .= 'i';
 
@@ -96,16 +132,10 @@ try {
     $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {
-        $_SESSION['auth']['first_name'] = $first_name;
-        $_SESSION['auth']['last_name'] = $last_name;
         $_SESSION['auth']['phone_number'] = $phone_number;
-
         if(isset($_SESSION['userInfo'])) {
-            $_SESSION['userInfo']['first_name'] = $first_name;
-            $_SESSION['userInfo']['last_name'] = $last_name;
             $_SESSION['userInfo']['phone_number'] = $phone_number;
         }
-
         echo json_encode([
             'success' => true,
             'message' => 'Profile updated successfully'
