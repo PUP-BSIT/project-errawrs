@@ -26,6 +26,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
+// Logout logic
+const logoutBtn = document.getElementById('logout_btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await fetch('/project-errawrs/src/api/auth/logout.php', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (err) {}
+        sessionStorage.clear();
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    });
+}
+// Session check on page load
+(async function() {
+    try {
+        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) {
+            window.location.href = '/project-errawrs/public/admin/login.html';
+        }
+    } catch (e) {
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    }
+})();
+
 // Load transactions from the API
 async function loadTransactions() {
     try {
