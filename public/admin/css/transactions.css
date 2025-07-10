@@ -22,59 +22,45 @@ body {
     min-height: 100vh;
 }
 
-/* Sidebar Styles */
+/* Sidebar Styles (Unified with manage_tellers.css) */
 .sidebar {
     width: 260px;
-    background-color: var(--color-primary-black);
-    color: var(--color-white);
+    background-color: #111111;
+    color: #ffffff;
     padding: 32px 24px;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
-
 .sidebar-header {
     margin-bottom: 40px;
 }
-
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.10px;
 }
-
 .logo-stack {
-    color: var(--color-white);
+    color: #ffffff;
 }
-
 .logo-overcash {
-    color: var(--color-lime-green);
+    color: #b6ff4a;
 }
-
-.sidebar-nav {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
 .nav-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    height: 100%;
 }
-
 .nav-item {
     margin-bottom: 0;
 }
-
 .nav-link {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    color: var(--color-white);
+    color: #ffffff;
     text-decoration: none;
     border-radius: 25px;
     font-weight: 500;
@@ -82,20 +68,26 @@ body {
     letter-spacing: -0.2px;
     transition: all 0.3s ease;
 }
-
 .nav-link i {
     margin-right: 12px;
     width: 20px;
     text-align: center;
 }
-
 .nav-item.active .nav-link {
-    background-color: var(--color-lime-green);
-    color: var(--color-primary-black);
+    background-color: #b6ff4a;
+    color: #111111;
 }
-
 .nav-link:hover:not(.active) {
     background-color: rgba(255, 255, 255, 0.1);
+}
+.sidebar-nav {
+    flex: 1;
+}
+.logout-item .nav-link {
+    color: #ff4d4d;
+}
+.logout-item .nav-link:hover {
+    background-color: rgba(255, 77, 77, 0.1);
 }
 
 /* Main Content Styles */
@@ -397,19 +389,6 @@ body {
         transform: translateX(100%);
         opacity: 0;
     }
-}
-
-/* Add logout item styles */
-.logout-item {
-    margin-top: auto;
-}
-
-.logout-item .nav-link {
-    color: #ff4d4d;
-}
-
-.logout-item .nav-link:hover {
-    background-color: rgba(255, 77, 77, 0.1);
 }
 
 /* Responsive Design */

@@ -1,7 +1,34 @@
+// Admin session check
+const adminInfo = JSON.parse(localStorage.getItem('admin'));
+if (!adminInfo || !adminInfo.username) {
+    window.location.href = '/project-errawrs/public/admin/login.html';
+}
+
+// Global fetch wrapper to handle 401 Unauthorized
+async function fetchWithAuth(url, options) {
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        localStorage.removeItem('admin');
+        window.location.href = '/project-errawrs/public/admin/login.html';
+        return null;
+    }
+    return response;
+}
+
 const ITEMS_PER_PAGE = 6;
 let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];
+
+async function handleLogout(e) {
+    e.preventDefault();
+    try {
+        await fetchWithAuth('/project-errawrs/src/api/auth/logout.php', { method: 'POST', credentials: 'include' });
+    } catch (err) { /* ignore */ }
+    sessionStorage.clear();
+    localStorage.removeItem('admin');
+    window.location.href = '/project-errawrs/public/admin/login.html';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
@@ -20,25 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', handleSearch);
         
         // Logout
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showToast('Logging out...', 'info');
-            // Implement actual logout logic here
-            setTimeout(() => window.location.href = 'login.html', 1000);
-        });
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
     }
 
     async function fetchUsers() {
         userCardsContainer.classList.add('loading');
         
         try {
-            const response = await fetch('/project-errawrs/src/api/admin/list_users.php', {
+            const response = await fetchWithAuth('/project-errawrs/src/api/admin/list_users.php', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include'
             });
+
+            if (!response) return; // Exit if fetchWithAuth returned null
 
             const data = await response.json();
 

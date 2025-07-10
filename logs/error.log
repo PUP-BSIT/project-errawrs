@@ -5,3 +5,6 @@
 [21-Jun-2025 02:58:30 Asia/Manila] Database Error: Field 'password_hash' doesn't have a default value
 [21-Jun-2025 02:58:30 Asia/Manila] Create Teller Error: Database error: Field 'password_hash' doesn't have a default value
 [21-Jun-2025 03:10:59 Asia/Manila] Raw input: {"first_name":"Kirfloy","last_name":"Bugoy","email":"juliemaelumawag@gmail.com"}
+[11-Jul-2025 03:47:00 Asia/Manila] Raw input: {"first_name":"ban","last_name":"tex","email":"delumenivan990@gmail.com"}
+[11-Jul-2025 04:27:54 Asia/Manila] Raw input: {"first_name":"ivan","last_name":"delmen","email":"ivandelumen05@gmail.com"}
+[11-Jul-2025 04:28:38 Asia/Manila] Raw input: {"first_name":"ivan delumen","last_name":"delumen","email":"ivandelumen62@gmail.com"}

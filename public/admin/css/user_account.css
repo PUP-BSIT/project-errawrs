@@ -440,3 +440,11 @@ body {
     font-size: 2rem;
     font-weight: 700;
 }
+
+/* Sidebar Logout Button (Unified Red Style) */
+.logout-item .nav-link {
+    color: #ff4d4d;
+}
+.logout-item .nav-link:hover {
+    background-color: rgba(255,77,77,0.1);
+}

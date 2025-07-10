@@ -1,3 +1,20 @@
+// Admin session check
+const adminInfo = JSON.parse(localStorage.getItem('admin'));
+if (!adminInfo || !adminInfo.username) {
+    window.location.href = '/project-errawrs/public/admin/login.html';
+}
+
+// Global fetch wrapper to handle 401 Unauthorized
+async function fetchWithAuth(url, options) {
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        localStorage.removeItem('admin');
+        window.location.href = '/project-errawrs/public/admin/login.html';
+        return null;
+    }
+    return response;
+}
+
 // State management for transactions
 let currentPage = 1;
 const itemsPerPage = 10;
@@ -10,6 +27,16 @@ const searchBtn = document.querySelector('.search-btn');
 const paginationContainer = document.querySelector('.transaction-pagination');
 
 // Event Listeners
+async function handleLogout(e) {
+    e.preventDefault();
+    try {
+        await fetchWithAuth('/project-errawrs/src/api/auth/logout.php', { method: 'POST', credentials: 'include' });
+    } catch (err) { /* ignore */ }
+    sessionStorage.clear();
+    localStorage.removeItem('admin');
+    window.location.href = '/project-errawrs/public/admin/login.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     loadTransactions();
     
@@ -24,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
         }
     });
+
+    const logoutBtn = document.getElementById('logout_btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
 });
 
 // Load transactions from the API
@@ -33,9 +65,11 @@ async function loadTransactions() {
         const statusFilter = '';
         const url = `/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
         console.log('Fetching transactions from:', url);
-        const response = await fetch(url, {
+        const response = await fetchWithAuth(url, {
             credentials: 'include'
         });
+
+        if (response === null) return;
 
         const data = await response.json();
         

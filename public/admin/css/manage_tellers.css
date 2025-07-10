@@ -8,6 +8,7 @@
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
     --color-red: #ff4d4d;
+    --color-orange: #ef6c00;
 }
 
 * {
@@ -271,6 +272,14 @@ body {
     background-color: #b91c1c;
 }
 
+.btn-orange {
+    background-color: var(--color-orange);
+    border-radius: 5px;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
 /* Teller Cards Container */
 .teller-cards {
     display: grid;
@@ -520,11 +529,6 @@ body {
     color: #111827;
 }
 
-.modal-header.warning {
-    background-color: var(--color-mint);
-    color: var(--color-primary-black);
-}
-
 .close-btn {
     background: none;
     border: none;
@@ -546,7 +550,7 @@ body {
 
 .warning-icon {
     font-size: 3rem;
-    color: var(--color-mint);
+    color: var(--color-orange);
     margin-bottom: 1.5rem;
 }
 
@@ -786,7 +790,6 @@ body {
 
 /* Status Change Modal Specific Styles */
 .modal-header.warning.deactivate {
-    background-color: #fee2e2;
     color: #dc2626;
 }
 

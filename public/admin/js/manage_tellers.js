@@ -1,3 +1,20 @@
+// Admin session check
+const adminInfo = JSON.parse(localStorage.getItem('admin'));
+if (!adminInfo || !adminInfo.username) {
+    window.location.href = '/project-errawrs/public/admin/login.html';
+}
+
+// Global fetch wrapper to handle 401 Unauthorized
+async function fetchWithAuth(url, options) {
+    const response = await fetch(url, options);
+    if (response.status === 401) {
+        localStorage.removeItem('admin');
+        window.location.href = '/project-errawrs/public/admin/login.html';
+        return null;
+    }
+    return response;
+}
+
 class TellerManager {
     constructor() {
         this.currentPage = 1;
@@ -103,9 +120,11 @@ class TellerManager {
                 search: this.searchTerm
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+            const response = await fetchWithAuth(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
                 credentials: 'include'
             });
+
+            if (response === null) return;
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch tellers: ${response.status}`);
@@ -301,9 +320,11 @@ class TellerManager {
 
     async editTeller(tellerId) {
         try {
-            const response = await fetch(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
+            const response = await fetchWithAuth(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
                 credentials: 'include'
             });
+
+            if (response === null) return;
 
             if (!response.ok) {
                 throw new Error('Failed to fetch teller details');
@@ -338,6 +359,14 @@ class TellerManager {
     }
 
     async saveTeller() {
+        const saveBtn = document.getElementById('save_btn');
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            const originalText = saveBtn.innerHTML;
+            const tellerId = document.getElementById('teller_id').value;
+            const isEdit = !!tellerId;
+            saveBtn.innerHTML = isEdit ? '<i class="fas fa-spinner fa-spin"></i> Saving changes...' : '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        }
         try {
             const form = document.getElementById('teller_form');
             if (!form) return;
@@ -354,6 +383,10 @@ class TellerManager {
             // Basic validation
             if (!formData.first_name || !formData.last_name || !formData.email) {
                 this.showToast('Please fill in all fields', 'error');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = isEdit ? 'Save Changes' : 'Create Teller';
+                }
                 return;
             }
 
@@ -361,6 +394,10 @@ class TellerManager {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
                 this.showToast('Please enter a valid email address', 'error');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = isEdit ? 'Save Changes' : 'Create Teller';
+                }
                 return;
             }
 
@@ -375,7 +412,7 @@ class TellerManager {
                 body: formData
             });
 
-            const response = await fetch(isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php', {
+            const response = await fetchWithAuth(isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php', {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -393,29 +430,32 @@ class TellerManager {
                 data = JSON.parse(responseText);
                 console.log('Parsed response:', data);
             } catch (e) {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = isEdit ? 'Save Changes' : 'Create Teller';
+                }
                 throw new Error(`Failed to parse response: ${responseText}`);
             }
             
             if (data.success) {
                 // Close teller modal
                 this.closeModal(document.getElementById('teller_modal'));
-
-                // Show success message
                 this.showSuccessModal(data.teller, isEdit);
-
-                // Show email notification message if new teller
-                if (!isEdit) {
-                    this.showToast('A password setup link has been sent to the teller\'s email address', 'success');
-                }
-
-                // Refresh teller list
                 this.loadTellers();
             } else {
-                throw new Error(data.message || `Failed to ${isEdit ? 'update' : 'create'} teller`);
+                this.showToast(data.message || 'Failed to save teller', 'error');
             }
         } catch (error) {
             console.error('Error saving teller:', error);
             this.showToast(error.message, 'error');
+        } finally {
+            const saveBtn = document.getElementById('save_btn');
+            if (saveBtn) {
+                const tellerId = document.getElementById('teller_id').value;
+                const isEdit = !!tellerId;
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = isEdit ? 'Save Changes' : 'Create Teller';
+            }
         }
     }
 
@@ -434,11 +474,30 @@ class TellerManager {
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
             const handleConfirm = async () => {
+                // Show loading modal
+                let loadingModal = document.getElementById('loading_modal');
+                if (!loadingModal) {
+                    loadingModal = document.createElement('div');
+                    loadingModal.id = 'loading_modal';
+                    loadingModal.className = 'modal show';
+                    loadingModal.innerHTML = `
+                        <div class="modal-content" style="text-align:center; padding:2rem;">
+                            <div class="loading-spinner" style="margin-bottom:1rem;">
+                                <i class="fas fa-spinner fa-spin" style="font-size:2rem;color:#ff9800;"></i>
+                            </div>
+                            <div>Sending reset email...</div>
+                        </div>
+                    `;
+                    document.body.appendChild(loadingModal);
+                } else {
+                    loadingModal.classList.add('show');
+                }
+
                 try {
-                    // Close the modal first
+                    // Close the reset modal first
                     this.closeModal(modal);
 
-                    const response = await fetch('/project-errawrs/src/api/admin/send_teller_reset_email.php', {
+                    const response = await fetchWithAuth('/project-errawrs/src/api/admin/send_teller_reset_email.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -447,18 +506,46 @@ class TellerManager {
                         body: JSON.stringify({ teller_id: tellerId })
                     });
 
+                    if (response === null) return;
+
                     if (!response.ok) {
                         throw new Error('Failed to send reset email');
                     }
 
                     const data = await response.json();
-                    
+                    // Hide loading modal
+                    loadingModal.classList.remove('show');
+
                     if (data.success) {
-                        this.showToast('A password reset link has been sent to the teller\'s email address', 'success');
+                        // Show success modal
+                        let successModal = document.getElementById('reset_success_modal');
+                        if (!successModal) {
+                            successModal = document.createElement('div');
+                            successModal.id = 'reset_success_modal';
+                            successModal.className = 'modal show';
+                            successModal.innerHTML = `
+                                <div class="modal-content" style="text-align:center; padding:2rem;">
+                                    <div style="font-size:2rem; color:#4caf50; margin-bottom:1rem;"><i class="fas fa-check-circle"></i></div>
+                                    <div style="font-size:1.2rem; font-weight:500; margin-bottom:1rem;">Successfully sent through your email</div>
+                                    <button class="btn-primary" id="close_reset_success_btn">OK</button>
+                                </div>
+                            `;
+                            document.body.appendChild(successModal);
+                        } else {
+                            successModal.classList.add('show');
+                        }
+                        // Add close handler
+                        const closeBtn = document.getElementById('close_reset_success_btn');
+                        if (closeBtn) {
+                            closeBtn.onclick = () => successModal.classList.remove('show');
+                        }
                     } else {
                         throw new Error(data.message || 'Failed to send reset email');
                     }
                 } catch (error) {
+                    // Hide loading modal
+                    let loadingModal = document.getElementById('loading_modal');
+                    if (loadingModal) loadingModal.classList.remove('show');
                     console.error('Error resetting password:', error);
                     this.showToast(error.message, 'error');
                 }
@@ -501,7 +588,7 @@ class TellerManager {
                 // Close the modal first
                 this.closeModal(modal);
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                const response = await fetchWithAuth('/project-errawrs/src/api/admin/toggle_teller_status.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -509,6 +596,8 @@ class TellerManager {
                     credentials: 'include',
                     body: JSON.stringify({ teller_id: tellerId })
                 });
+
+                if (response === null) return;
 
                 if (!response.ok) {
                     throw new Error(`Failed to update status: ${response.status}`);
@@ -638,11 +727,11 @@ class TellerManager {
 
     async handleLogout(e) {
         e.preventDefault();
-        
-        // Clear session storage
+        try {
+            await fetchWithAuth('/project-errawrs/src/api/auth/logout.php', { method: 'POST', credentials: 'include' });
+        } catch (err) { /* ignore */ }
         sessionStorage.clear();
-        
-        // Redirect to login page
+        localStorage.removeItem('admin');
         window.location.href = '/project-errawrs/public/admin/login.html';
     }
 
