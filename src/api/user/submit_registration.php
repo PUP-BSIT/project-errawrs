@@ -50,6 +50,15 @@
       }
   }
 
+  // Validate phone number: must start with +639 and be 13 characters
+  $raw_phone = $input['phone_number'];
+  if (!preg_match('/^\+639\d{9}$/', $raw_phone)) {
+      http_response_code(400);
+      echo json_encode(['success' => false, 'error' => 'Invalid phone number format. Must start with +639 and be 13 characters.']);
+      exit();
+  }
+  $input['phone_number'] = $raw_phone;
+
   try {
       $db = db_connect();
       $db->begin_transaction();
@@ -131,10 +140,27 @@
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
+      // Read the email template
+      $emailTemplate = file_get_contents(__DIR__ . '/email-templates/registration-email.html');
+      $emailCSS = file_get_contents(__DIR__ . '/email-templates/registration-email.css');
+      
+      // Replace placeholders in the template
+      $emailTemplate = str_replace('{{FIRST_NAME}}', $input['first_name'], $emailTemplate);
+      $emailTemplate = str_replace('{{LAST_NAME}}', $input['last_name'], $emailTemplate);
+      $emailTemplate = str_replace('{{REGISTRATION_ID}}', $registration_id, $emailTemplate);
+      
+      // Embed CSS inline for email compatibility
+      $emailTemplate = str_replace(
+          '<link rel="stylesheet" href="registration-email.css">',
+          '<style>' . $emailCSS . '</style>',
+          $emailTemplate
+      );
+
       $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
       $mail->addAddress($input['email']);
-      $mail->Subject = 'Registration Pending - Review';
-      $mail->Body = "Hello {$input['first_name']},\n\nYour registration (ID: $registration_id) is pending for review.\n\nYou will be notified when your account is approved.\n\nThank you!";
+      $mail->Subject = 'Registration Submitted Successfully - Eris Banking';
+      $mail->isHTML(true);
+      $mail->Body = $emailTemplate;
 
       $mail->send();
 

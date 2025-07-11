@@ -43,9 +43,6 @@
                     <a href="./login_account_holder.html" class="breadcrumb-link">Login</a>
                     <span class="breadcrumb-separator">&gt;</span>
                     <span class="breadcrumb-current">Register to StackOvercash</span>
-                    <button type="button" id="start_over_btn" class="btn-start-over" title="Clear form and start over">
-                        <i class="fas fa-refresh"></i> Start Over
-                    </button>
                 </div>
 
                 <!-- Registration Form -->
@@ -91,20 +88,17 @@
                                     <div class="form-group">
                                         <label for="id_image">Upload ID Image</label>
                                         <div class="file-upload-container" id="file_upload_container">
-                                            <input type="file" id="id_image" name="id_image" accept="image/jpeg,image/jpg,image/png" class="file-input" required>
-                                            <div class="file-upload-label">
+                                            <label class="file-upload-label" for="id_image">
                                                 <i class="fas fa-cloud-upload-alt"></i>
-                                                <span>Drag and drop your ID image here or click to browse</span>
-                                            </div>
-                                            <div class="preview-info-compact" style="display: none;">
-                                                <div class="file-name-display"></div>
+                                                Drag and drop your ID image here or click to browse
+                                            </label>
+                                            <input type="file" class="file-input" id="id_image" name="id_image" accept="image/*" />
+                                            <div class="preview-info-compact hidden">
+                                                <span class="file-name-display"></span>
                                                 <div class="preview-actions">
-                                                    <button type="button" class="btn-view-image">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button type="button" class="remove-image">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    <button type="button" class="btn-icon btn-view-image" title="Preview"><i class="fas fa-eye"></i></button>
+                                                    <button type="button" class="btn-icon btn-upload-again" title="Upload Again"><i class="fas fa-sync-alt"></i></button>
+                                                    <button type="button" class="btn-icon btn-remove-image" title="Remove"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,7 +106,7 @@
                                 </div>
 
                                 <div class="form-actions">
-                                    <button type="submit" class="btn btn-continue">
+                                    <button type="button" class="btn btn-continue">
                                         Next <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
@@ -202,17 +196,18 @@
 
                                         <div class="form-group">
                                             <label for="phone_number">Phone Number</label>
-                                            <div class="phone-input-group">
-                                                <span class="phone-flag"></span>
+                                            <div class="phone-input-wrapper">
+                                                <span class="country-code">+63</span>
                                                 <input
                                                     type="tel"
                                                     id="phone_number"
                                                     name="phone_number"
-                                                    placeholder="+63 XXX XXX XXXX"
+                                                    maxlength="10"
+                                                    pattern="9[0-9]{9}"
+                                                    placeholder="9XX-XXX-XXXX"
                                                     required
                                                     autocomplete="tel"
-                                                    pattern="(\+63|0)[0-9]{10}"
-                                                    title="Please enter a valid Philippine phone number"/>
+                                                />
                                             </div>
                                         </div>
                                         
@@ -316,24 +311,81 @@
                         <!-- Step 3: Account Under Review -->
                         <div class="form-step" id="step_three_processing">
                             <div class="form-header">
-                                <h2>Account Under Review</h2>
-                                <p>Your registration is almost complete!</p>
+                                <div class="success-icon" style="width: 80px; height: 80px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+                                    <i class="fas fa-check" style="color: white; font-size: 40px;"></i>
+                                </div>
+                                <h2 style="color: #2c3e50; font-size: 28px; font-weight: 700; margin-bottom: 10px;">Registration Submitted Successfully!</h2>
+                                <p style="color: #7f8c8d; font-size: 16px; margin-bottom: 30px;">Thank you for choosing Eris Banking</p>
+                                <div style="background: #f8f9fa; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 4px solid #3498db;">
+                                    <div style="font-size: 18px; color: #2c3e50; margin-bottom: 10px;">
+                                        Registration ID: <span class="registration-id-value">#</span>
+                                    </div>
+                                    <div style="display: inline-block; background: #f39c12; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                                        <i class="fas fa-clock"></i> Under Review
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="processing-container">
-                                <div class="processing-icon">
-                                    <i class="fas fa-hourglass-half"></i>
+                            <div class="timeline" style="text-align: left; margin-bottom: 30px;">
+                                <h3 style="color: #2c3e50; font-size: 18px; margin-bottom: 20px; text-align: center;">What happens next?</h3>
+                                <div class="timeline-item" style="display: flex; align-items: flex-start; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #3498db;">
+                                    <div class="timeline-icon" style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                        <i class="fas fa-search" style="color: white; font-size: 14px;"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title" style="color: #2c3e50; font-weight: 600; margin-bottom: 5px;">Application Review</div>
+                                        <div class="timeline-description" style="color: #7f8c8d; font-size: 14px; line-height: 1.5;">Our team will review your application within <strong>2-3 business days</strong></div>
+                                    </div>
                                 </div>
-                                <p class="processing-message">
-                                    Your account is currently under review for approval.
-                                    This process may take 1-2 business days.
-                                    Please check your registered email for updates on your account status.
+                                <div class="timeline-item" style="display: flex; align-items: flex-start; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #3498db;">
+                                    <div class="timeline-icon" style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                        <i class="fas fa-shield-alt" style="color: white; font-size: 14px;"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title" style="color: #2c3e50; font-weight: 600; margin-bottom: 5px;">Document Verification</div>
+                                        <div class="timeline-description" style="color: #7f8c8d; font-size: 14px; line-height: 1.5;">We will verify all submitted information and documents for accuracy</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item" style="display: flex; align-items: flex-start; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #3498db;">
+                                    <div class="timeline-icon" style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                        <i class="fas fa-envelope" style="color: white; font-size: 14px;"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title" style="color: #2c3e50; font-weight: 600; margin-bottom: 5px;">Email Notification</div>
+                                        <div class="timeline-description" style="color: #7f8c8d; font-size: 14px; line-height: 1.5;">You will receive an email notification once your account is approved</div>
+                                    </div>
+                                </div>
+                                <div class="timeline-item" style="display: flex; align-items: flex-start; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #3498db;">
+                                    <div class="timeline-icon" style="width: 30px; height: 30px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                                        <i class="fas fa-sign-in-alt" style="color: white; font-size: 14px;"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title" style="color: #2c3e50; font-weight: 600; margin-bottom: 5px;">Account Access</div>
+                                        <div class="timeline-description" style="color: #7f8c8d; font-size: 14px; line-height: 1.5;">Upon approval, you can log in to your account and start banking</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="important-note" style="background: #e8f5e8; border: 1px solid #27ae60; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                                <h4 style="color: #27ae60; margin: 0 0 10px 0; font-size: 16px;"><i class="fas fa-info-circle"></i> Important Information</h4>
+                                <p style="color: #2c3e50; margin: 0; font-size: 14px; line-height: 1.5;">
+                                    Please ensure all information provided is accurate and up-to-date. 
+                                    Any discrepancies may delay the approval process. You can check your 
+                                    registration status using your Registration ID.
                                 </p>
-                                <div class="form-actions">
-                                    <a href="./index.html" class="btn btn-secondary">
-                                        <i class="fas fa-home"></i> Go to Home Page
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="form-actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                                <a href="index.html" class="btn btn-primary">
+                                    <i class="fas fa-home"></i>
+                                    Return to Home
+                                </a>
+                                <a href="login.html" class="btn btn-secondary">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Go to Login
+                                </a>
+                            </div>
+                            <div class="contact-info" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                                <p style="color: #7f8c8d; margin: 5px 0; font-size: 14px;">Need help? Contact our support team</p>
+                                <p style="color: #3498db; margin: 0; font-size: 14px;"><i class="fas fa-envelope"></i> <a href="mailto:support@erisbanking.com">support@erisbanking.com</a></p>
+                                <p style="color: #3498db; margin: 0; font-size: 14px;"><i class="fas fa-phone"></i> <a href="tel:+639123456789">+63 912 345 6789</a></p>
                             </div>
                         </div>
                     </div>
@@ -389,6 +441,13 @@
         </div>
 
         <script src="./js/config.js"></script>
-        <script src="./js/register.js"></script>
+        <script type="module" src="./js/register-validation.js"></script>
+        <script type="module" src="./js/register-navigation.js"></script>
+        <script type="module" src="./js/register-otp-modal.js"></script>
+        <script type="module" src="./js/register-file-upload.js"></script>
+        <script type="module" src="./js/register-form-data.js"></script>
+        <script type="module" src="./js/register-notifications.js"></script>
+        <script type="module" src="./js/register-submit.js"></script>
+        <script type="module" src="./js/register.js"></script>
     </body>
 </html>
