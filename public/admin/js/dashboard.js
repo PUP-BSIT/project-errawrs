@@ -1,3 +1,22 @@
+// Session/auth check for admin dashboard
+function checkAdminSession() {
+    // Option 1: Use localStorage (as in manage_tellers.js)
+    const adminInfo = JSON.parse(localStorage.getItem('admin'));
+    if (!adminInfo || !adminInfo.username) {
+        window.location.replace('/project-errawrs/public/admin/login.html');
+    }
+}
+
+checkAdminSession();
+
+// Prevent back navigation to dashboard after logout (handle bfcache)
+window.addEventListener('pageshow', function(event) {
+    checkAdminSession();
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
 class AdminDashboard {
     constructor() {
         this.init();
@@ -223,12 +242,11 @@ class AdminDashboard {
 
     async handleLogout(e) {
         e.preventDefault();
-        
-        // Clear session storage
+        // Clear both session and local storage
         sessionStorage.clear();
-        
-        // Redirect to login page
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        localStorage.clear();
+        // Redirect to login page using replace to prevent back navigation
+        window.location.replace('/project-errawrs/public/admin/login.html');
     }
 
     showNotification(message, type = 'info') {

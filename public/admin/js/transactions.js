@@ -1,8 +1,19 @@
-// Admin session check
-const adminInfo = JSON.parse(localStorage.getItem('admin'));
-if (!adminInfo || !adminInfo.username) {
-    window.location.href = '/project-errawrs/public/admin/login.html';
+// Session/auth check for admin transactions
+function checkAdminSession() {
+    const adminInfo = JSON.parse(localStorage.getItem('admin'));
+    if (!adminInfo || !adminInfo.username) {
+        window.location.replace('/project-errawrs/public/admin/login.html');
+    }
 }
+
+checkAdminSession();
+
+window.addEventListener('pageshow', function(event) {
+    checkAdminSession();
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
 
 // Global fetch wrapper to handle 401 Unauthorized
 async function fetchWithAuth(url, options) {
