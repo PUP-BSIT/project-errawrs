@@ -158,7 +158,7 @@
 
       $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
       $mail->addAddress($input['email']);
-      $mail->Subject = 'Registration Submitted Successfully - Eris Banking';
+      $mail->Subject = 'Registration Submitted Successfully';
       $mail->isHTML(true);
       $mail->Body = $emailTemplate;
 
