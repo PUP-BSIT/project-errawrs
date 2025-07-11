@@ -1,6 +1,3 @@
-// Use API_ENDPOINTS from config.js instead of the old API object structure
-
-// Element IDs
 const ELEMENT_ID = {
     CONTACT_FORM: 'contact_form',
     FULL_NAME: 'full_name',

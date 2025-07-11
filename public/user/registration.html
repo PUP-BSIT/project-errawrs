@@ -17,6 +17,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
         <!-- Custom CSS -->
+        <link rel="stylesheet" href="./css/styles.css" />
         <link rel="stylesheet" href="./css/register.css" />
     </head>
     <body>
@@ -24,14 +25,39 @@
         <header>
             <div class="container-nav">
                 <div class="logo">
-                    <span class="white">Stack</span>
-                    <span class="green">Overcash</span>
+                    <span class="logo-text"><span class="white">Stack</span><span class="green">Overcash</span></span>
                 </div>
-                <ul class="nav-links">
-                    <li><a href="./index.html">Home</a></li>
-                    <li><a href="./contact_us.html">Contact Us</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./contact_us.html">Contact Us</a></li>
+                        <li><a href="./about.html">About Us</a></li>
+                    </ul>
+                </nav>
+                <a href="./login_account_holder.html" class="login-btn">Join Now</a>
+                <!-- Hamburger Icon (Font Awesome) -->
+                <button class="hamburger" aria-label="Open menu">
+                  <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu-overlay">
+              <div class="mobile-menu">
+                <div class="mobile-menu-header">
+                  <span class="logo">
+                    <span class="white">Stack</span><span class="green">Overcash</span>
+                  </span>
+                  <button class="close-menu" aria-label="Close menu">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+                <ul>
+                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./contact_us.html">Contact Us</a></li>
+                  <li><a href="./about.html">About Us</a></li>
                 </ul>
+                <a href="./login_account_holder.html" class="join-btn">Join Now</a>
+              </div>
             </div>
         </header>
 
@@ -39,11 +65,15 @@
         <main class="main">
             <div class="container">
                 <!-- Breadcrumb -->
+                <!-- REMOVE THIS BLOCK: <div class="breadcrumb"> ... </div> -->
+
+              
                 <div class="breadcrumb">
                     <a href="./login_account_holder.html" class="breadcrumb-link">Login</a>
                     <span class="breadcrumb-separator">&gt;</span>
                     <span class="breadcrumb-current">Register to StackOvercash</span>
                 </div>
+
 
                 <!-- Registration Form -->
                 <div class="registration-container">
@@ -379,6 +409,10 @@
         </div>
 
         <script src="./js/config.js"></script>
+
+        <script src="./js/register.js"></script>
+        <script src="./js/script.js"></script>
+
         <script type="module" src="./js/register-validation.js"></script>
         <script type="module" src="./js/register-navigation.js"></script>
         <script type="module" src="./js/register-otp-modal.js"></script>
