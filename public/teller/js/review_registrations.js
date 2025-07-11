@@ -141,19 +141,17 @@ class RegistrationReview {
             return;
         }
         const html = registrations.map(reg => `
-            <div class="registration-card" 
-                 data-registration-id="${reg.registration_id}"
-                 data-dob="${reg.date_of_birth}"
-                 data-street="${reg.street_address || ''}"
-                 data-city="${reg.city || ''}"
-                 data-country="${reg.country || ''}"
-                 data-zip-code="${reg.zip_code || ''}"
-                 data-id-image="${reg.id_image || ''}"
-                 data-request-type="${reg.request_type || ''}"
-                 data-account-type="${reg.account_type || ''}"
-            >
+            <div class="registration-card">
+                <div class="status-badge status-badge-absolute ${reg.status}" title="Application Status">
+                    <i class="fas ${
+                        reg.status === 'pending' ? 'fa-clock' :
+                        reg.status === 'approved' ? 'fa-check-circle' :
+                        'fa-times-circle'
+                    }"></i>
+                    ${reg.status.charAt(0).toUpperCase() + reg.status.slice(1)}
+                </div>
                 <div class="card-left">
-                <div class="registration-header">
+                    <div class="registration-header">
                         <div class="applicant-info">
                             <h3 class="applicant-name">${reg.first_name} ${reg.last_name}</h3>
                             <div class="meta-info">
@@ -177,9 +175,8 @@ class RegistrationReview {
                                 ` : ''}
                             </div>
                         </div>
-                </div>
-
-                <div class="registration-details">
+                    </div>
+                    <div class="registration-details">
                         <div class="detail-row">
                             <div class="detail-item email">
                                 <i class="far fa-envelope"></i>
@@ -206,37 +203,20 @@ class RegistrationReview {
                                 Last updated ${this.getTimeAgo(new Date(reg.updated_at))}
                             </div>
                         ` : ''}
-                </div>
-
-                    <button class="btn btn-view" onclick="registrationReview.viewDetails(${reg.registration_id})">
+                    </div>
+                    ${reg.status === 'pending' ? `
+                    <div class="action-buttons-row">
+                        <button class="btn btn-approve" onclick="registrationReview.handleAction(${reg.registration_id}, 'approve')" title="Approve Application">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')" title="Deny Application">
+                            <i class="fas fa-times"></i> Deny
+                        </button>
+                    </div>
+                    ` : ''}
+                    <button class="btn btn-view btn-view-details" onclick="registrationReview.viewDetails(${reg.registration_id})">
                         <i class="fas fa-eye"></i> View Details
                     </button>
-                </div>
-
-                <div class="card-right">
-                    <div class="status-section">
-                        <div class="status-badge ${reg.status}" title="Application Status">
-                            <i class="fas ${
-                                reg.status === 'pending' ? 'fa-clock' :
-                                reg.status === 'approved' ? 'fa-check-circle' :
-                                'fa-times-circle'
-                            }"></i>
-                            ${reg.status.charAt(0).toUpperCase() + reg.status.slice(1)}
-                        </div>
-                        
-                        ${reg.status === 'pending' ? `
-                            <div class="action-buttons">
-                                <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')"
-                                        title="Deny Application">
-                        <i class="fas fa-times"></i> Deny
-                    </button>
-                                <button class="btn btn-approve" onclick="registrationReview.handleAction(${reg.registration_id}, 'approve')"
-                                        title="Approve Application">
-                                    <i class="fas fa-check"></i> Approve
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
                 </div>
             </div>
         `).join('');

@@ -260,13 +260,94 @@ body {
     box-shadow: 0 0 0 2px rgba(182, 255, 74, 0.2);
 }
 
+/* Responsive styles for filter section */
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    
+    .filter-select,
+    .filter-search {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
 /* Applications Grid */
+/* Ensure grid layout is respected */
 .applications-grid {
-    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     width: 100%;
     max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 32px auto;
+}
+
+/* Make each card fill its grid cell and remove margin-bottom */
+.registration-card {
+    height: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+/* Responsive: 1 column on small screens */
+@media (max-width: 768px) {
+    .applications-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile M (min-width: 321px and max-width: 375px) */
+@media (min-width: 321px) and (max-width: 375px) {
+    .applications-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* Mobile L (min-width: 376px and max-width: 425px) */
+@media (min-width: 376px) and (max-width: 425px) {
+    .applications-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+
+/* Tablet (min-width: 426px and max-width: 768px) */
+@media (min-width: 426px) and (max-width: 768px) {
+    .applications-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Laptop (min-width: 769px and max-width: 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .applications-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+/* Above (min-width: 1025px) */
+@media (min-width: 1025px) {
+    .applications-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
 }
 
 /* Registration Card */
@@ -280,12 +361,38 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 20px;
 }
 
 .registration-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+}
+
+/* Responsive styles for registration cards */
+@media (max-width: 768px) {
+    .registration-card {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+    }
+    
+    .card-right {
+        align-items: stretch;
+        min-width: auto;
+    }
+    
+    .status-section {
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        flex-direction: row;
+        gap: 12px;
+    }
+    
+    .action-buttons .btn {
+        flex: 1;
+    }
 }
 
 .card-left {
@@ -354,12 +461,35 @@ body {
     font-weight: 500;
 }
 
-.status-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 16px;
+/* Status badge absolute at top right */
+.status-badge-absolute {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+
+/* Side-by-side action buttons */
+.action-buttons-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.action-buttons-row .btn {
+    flex: 1 1 0;
+    width: 100%;
+}
+
+/* Full-width View Details button at bottom */
+.btn-view-details {
+    width: 100%;
+    margin-top: auto;
+}
+
+/* Remove old .status-section and .card-right if not needed */
+.status-section, .card-right { display: none !important; }
 
 .status-badge {
     display: inline-flex;
@@ -509,6 +639,37 @@ body {
 
 .page-number:hover:not(.active) {
     background-color: var(--color-bg-gradient-start);
+}
+
+/* Responsive styles for pagination */
+@media (max-width: 768px) {
+    .pagination-container {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+    
+    .pagination-left {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    .page-numbers {
+        order: -1;
+        margin-bottom: 8px;
+    }
+    
+    .pagination-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .page-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
 }
 
 .showing-text {
@@ -951,15 +1112,7 @@ body {
     box-shadow: 0 0 0 2px rgba(182, 255, 74, 0.2);
 }
 
-/* Applications grid: 2 cards per page */
-.applications-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 32px;
-    width: 100%;
-    max-width: 1000px;
-}
+/* Applications grid: 2 cards per page - removed duplicate */
 /* Remove showing-text styles */
 .showing-text {
     display: none;
