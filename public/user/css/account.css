@@ -30,9 +30,27 @@
     --transition-default: 0.3s ease;
 }
 
-/* Existing base styles from user-dashboard.css might be included via the link tag */
+.sidebar {
+    background-color: #000;
+}
 
-/* Specific styles for Account page */
+.sidebar-logo {
+    margin: 32px 0 24px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.logo-overcash {
+    color: #b6ff4a;
+}
+
 .account-content {
     padding: 32px;
     background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
@@ -41,7 +59,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     max-width: 1400px;
     margin: 16px auto;
-    min-height: auto; /* Remove fixed height */
+    min-height: auto; 
     border: 1px solid rgba(255, 255, 255, 0.4);
 }
 

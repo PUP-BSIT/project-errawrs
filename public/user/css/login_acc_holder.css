@@ -538,3 +538,30 @@ header {
         padding: 2rem 2rem;
     }
 }
+
+@media (min-width: 426px) {
+  .login-form-container {
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 425px) {
+  .login-form-container {
+    max-width: 98vw;
+    min-width: 0;
+    margin: 0 auto;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+  .login-form {
+    width: 100%;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+  .login-input {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+}

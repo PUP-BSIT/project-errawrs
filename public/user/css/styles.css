@@ -545,6 +545,7 @@ nav {
     background: #f6f8f3;
     padding: 5rem 0;
     width: 100%;
+    margin-bottom: 3rem;
 }
 
 .testimonials-container {
@@ -868,6 +869,7 @@ footer {
 .faq-section {
     background: #f6f8f3;
     padding: 4rem 0 3rem 0;
+    margin-bottom: 3rem;
 }
 .faq-container {
     max-width: 800px;
