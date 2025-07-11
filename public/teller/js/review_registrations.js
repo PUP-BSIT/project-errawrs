@@ -141,7 +141,17 @@ class RegistrationReview {
             return;
         }
         const html = registrations.map(reg => `
-            <div class="registration-card">
+            <div class="registration-card"
+                data-registration-id="${reg.registration_id}"
+                data-dob="${reg.date_of_birth}"
+                data-street="${reg.street_address || ''}"
+                data-city="${reg.city || ''}"
+                data-country="${reg.country || ''}"
+                data-zip-code="${reg.zip_code || ''}"
+                data-id-image="${reg.id_image || ''}"
+                data-request-type="${reg.request_type || ''}"
+                data-account-type="${reg.account_type || ''}"
+            >
                 <div class="status-badge status-badge-absolute ${reg.status}" title="Application Status">
                     <i class="fas ${
                         reg.status === 'pending' ? 'fa-clock' :
@@ -446,9 +456,39 @@ class RegistrationReview {
     }
 
     async handleAction(registrationId, action) {
+        let approveBtn, denyBtn, originalApproveHTML, originalDenyHTML;
+        // Detect if in details view
+        const detailsView = document.querySelector('.registration-details-view');
+        if (detailsView) {
+            approveBtn = detailsView.querySelector('.btn-approve');
+            denyBtn = detailsView.querySelector('.btn-deny');
+        } else {
+            const card = document.querySelector(`[data-registration-id="${registrationId}"]`);
+            if (card) {
+                approveBtn = card.querySelector('.btn-approve');
+                denyBtn = card.querySelector('.btn-deny');
+            }
+        }
+        if (approveBtn) originalApproveHTML = approveBtn.innerHTML;
+        if (denyBtn) originalDenyHTML = denyBtn.innerHTML;
         try {
+            // Disable both buttons
+            if (approveBtn) approveBtn.disabled = true;
+            if (denyBtn) denyBtn.disabled = true;
+            // Show loading state on clicked button
+            if (action === 'approve' && approveBtn) {
+                approveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            } else if (action === 'deny' && denyBtn) {
+                denyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            }
+
             const confirmed = await this.confirmAction(action);
-            if (!confirmed) return;
+            if (!confirmed) {
+                // Restore buttons if cancelled
+                if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = originalApproveHTML; }
+                if (denyBtn) { denyBtn.disabled = false; denyBtn.innerHTML = originalDenyHTML; }
+                return;
+            }
 
             console.log(`Processing ${action} for registration ${registrationId}`);
 
@@ -496,12 +536,25 @@ class RegistrationReview {
                 'success'
             );
 
+            // If in details view, close it and show main list
+            if (detailsView) {
+                detailsView.remove();
+                // Show the filter section and applications grid
+                document.querySelector('.filter-section').style.display = 'flex';
+                document.querySelector('.applications-grid').style.display = 'grid';
+                document.querySelector('.pagination-container').style.display = 'flex';
+            }
+
             // Reload registrations
             await this.loadRegistrations();
 
         } catch (error) {
             console.error('Error in handleAction:', error);
             this.showNotification(error.message, 'error');
+        } finally {
+            // Restore buttons if still present
+            if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = originalApproveHTML; }
+            if (denyBtn) { denyBtn.disabled = false; denyBtn.innerHTML = originalDenyHTML; }
         }
     }
 
