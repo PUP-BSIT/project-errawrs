@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>StackOvercash - Transaction History</title>
+        <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
+        <title>StackOvercash - Transaction</title>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -19,11 +20,10 @@
         <div class="dashboard-container">
             <!-- Sidebar -->
             <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-header">
-                    <div class="logo">
-                        <span class="logo-stack">Stack</span>
-                        <span class="logo-overcash">Overcash</span>
-                    </div>
+                <div class="sidebar-logo" style="margin: 32px 0 24px 0; display: flex; justify-content: center; align-items: center;">
+                    <span class="logo" style="font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">
+                        Stack<span class="logo-overcash" style="color: #b6ff4a;">Overcash</span>
+                    </span>
                 </div>
                 <div class="user-profile">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
@@ -32,7 +32,7 @@
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name"></h3>
+                    <!-- Removed username from sidebar -->
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
