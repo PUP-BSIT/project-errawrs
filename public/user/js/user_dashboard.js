@@ -199,6 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sidebarOverlay) sidebarOverlay.style.display = 'none';
         document.body.classList.remove('sidebar-open');
         if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
+        sidebar.classList.remove('open');
+        sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        closeSidebarBtn.style.display = 'none';
     }
     if (hamburgerBtn && sidebar) {
         hamburgerBtn.addEventListener('click', () => {
@@ -754,7 +758,7 @@ function displayFinancialTip() {
     
     tipContainer.innerHTML = `
         <div class="tip-header">
-            <i class="fas ${tip.icon}"></i>
+            <i class="fas fa-lightbulb"></i>
             <h3>Financial Tip</h3>
         </div>
         <div class="tip-content">
