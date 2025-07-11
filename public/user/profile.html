@@ -103,22 +103,55 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="edit_first_name">First Name</label>
-                                <input type="text" id="edit_first_name" class="form-input" placeholder="Enter your first name" readonly style="background:#f5f5f5; cursor:not-allowed;">
-                                <div class="helper-text">Your given name as it appears on official documents</div>
+                                <label for="edit_username">Username</label>
+                                <input type="text" id="edit_username" class="form-input" readonly>
                             </div>
-
+                            <div class="form-group">
+                                <label for="edit_first_name">First Name</label>
+                                <input type="text" id="edit_first_name" class="form-input" readonly>
+                            </div>
                             <div class="form-group">
                                 <label for="edit_last_name">Last Name</label>
-                                <input type="text" id="edit_last_name" class="form-input" placeholder="Enter your last name" readonly style="background:#f5f5f5; cursor:not-allowed;">
-                                <div class="helper-text">Your family name as it appears on official documents</div>
+                                <input type="text" id="edit_last_name" class="form-input" readonly>
                             </div>
-
+                            <div class="form-group">
+                                <label for="edit_date_of_birth">Date of Birth</label>
+                                <input type="date" id="edit_date_of_birth" class="form-input" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_nationality">Nationality</label>
+                                <input type="text" id="edit_nationality" class="form-input" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_id">ID</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <button type="button" id="view_id_image_btn" class="btn secondary-btn" style="padding: 4px 8px;">View My ID</button>
+                                    <button type="button" id="update_id_image_btn" class="btn secondary-btn" style="padding: 4px 8px;">Update My ID</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_email">Email</label>
+                                <input type="email" id="edit_email" class="form-input">
+                            </div>
                             <div class="form-group">
                                 <label for="edit_phone_number">Phone Number</label>
-                                <input type="tel" id="edit_phone_number" class="form-input" placeholder="e.g., 09123456789">
-                                <i class="fas fa-phone input-icon"></i>
-                                <div class="helper-text">Used for account security and notifications</div>
+                                <input type="tel" id="edit_phone_number" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_street">Street Address</label>
+                                <input type="text" id="edit_street" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_city">City</label>
+                                <input type="text" id="edit_city" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_zip_code">ZIP Code</label>
+                                <input type="text" id="edit_zip_code" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_country">Country</label>
+                                <input type="text" id="edit_country" class="form-input">
                             </div>
                         </div>
 
@@ -132,13 +165,6 @@
                                     <h3>Account Settings</h3>
                                     <p>Manage your login credentials</p>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_username">Username</label>
-                                <input type="text" id="edit_username" class="form-input" placeholder="" readonly>
-                                <i class="fas fa-at input-icon"></i>
-                                <div class="helper-text">This will be your unique identifier for login</div>
                             </div>
 
                             <div class="form-group">
@@ -185,6 +211,51 @@
             <div class="button-group" style="margin-top: 18px;">
               <button id="profile_confirm_btn" class="btn primary-btn">Confirm</button>
               <button id="profile_cancel_btn" class="btn secondary-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ID Image Modal -->
+        <div id="id-image-modal" class="modal hidden">
+          <div class="modal-content">
+            <span id="close-id-image-modal" style="float:right;cursor:pointer;">&times;</span>
+            <h3>ID Image Preview</h3>
+            <img id="id-image-preview" src="" alt="ID Image" style="max-width:100%;max-height:400px;display:block;margin:auto;">
+          </div>
+        </div>
+
+        <!-- Update ID Modal -->
+        <div id="update-id-modal" class="modal hidden">
+          <div class="modal-content">
+            <h3>Update My ID</h3>
+            <div class="form-group">
+              <label for="modal_id_type">ID Type</label>
+              <select id="modal_id_type" class="form-input">
+                <option value="passport">Passport</option>
+                <option value="driver_license">Driver's License</option>
+                <option value="national_id">National ID</option>
+                <option value="sss">SSS</option>
+                <option value="gsis">GSIS</option>
+                <option value="prc">PRC</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="modal_id_image_input">Upload ID Image</label>
+              <input type="file" id="modal_id_image_input" accept="image/*">
+            </div>
+            <div class="form-group hide" id="modal_password_group">
+              <label for="modal_current_password">Current Password</label>
+              <input type="password" id="modal_current_password" class="form-input" placeholder="Enter your current password" autocomplete="current-password">
+            </div>
+            <div id="modal_id_error" class="hide" style="color: #e53935; margin-bottom: 10px; text-align: center;"></div>
+            <div class="button-group" style="margin-top: 18px; display: flex; gap: 8px;">
+              <button id="modal_upload_id_btn" class="btn primary-btn" type="button">Upload</button>
+              <button id="modal_confirm_id_btn" class="btn primary-btn hide" type="button">Confirm</button>
+              <button id="modal_cancel_id_btn" class="btn secondary-btn" type="button">Cancel</button>
+            </div>
+            <div style="margin-top: 12px; text-align: center;">
+              <img id="modal_id_image_preview" src="" alt="ID Preview" class="hide" style="max-width: 100%; max-height: 300px; margin: auto;" />
             </div>
           </div>
         </div>
