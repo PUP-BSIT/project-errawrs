@@ -3,8 +3,9 @@
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Start session and set JSON content type
-session_start();
+// Use SessionManager for session handling
+require_once __DIR__ . '/../../config/SessionManager.php';
+SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
@@ -38,71 +39,89 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-// EXECUTION LOGIC: This runs AFTER OTP verification
-if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true) {
-    if (!isset($_SESSION['pending_transfer'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'No pending transfer found in session.']);
-    exit();
+$debug = false;
+if ((isset($input['debug']) && $input['debug']) || (isset($_GET['debug']) && $_GET['debug'])) {
+    $debug = true;
 }
+$debug_log = [];
 
+// EXECUTION LOGIC: This runs AFTER OTP verification
+if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true && isset($_SESSION['pending_transfer'])) {
     try {
         $transfer = $_SESSION['pending_transfer'];
         $db = db_connect();
         $db->begin_transaction();
+        error_log('DB transaction started');
 
         // Re-verify source account and balance
         $stmt = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND status = 'active'");
+        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
         $stmt->bind_param('s', $transfer['source_account_no']);
-        $stmt->execute();
+        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
         $source = $stmt->get_result()->fetch_assoc();
         if (!$source) throw new Exception('Source account not found or inactive');
         if ($source['balance'] < $transfer['amount']) throw new Exception('Insufficient balance');
+        error_log('Source account verified');
 
         // Re-verify recipient
         $stmt = $db->prepare("SELECT account_id FROM account WHERE account_number = ? AND status = 'active'");
+        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
         $stmt->bind_param('s', $transfer['recipient_account_no']);
-        $stmt->execute();
+        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
         $recipient = $stmt->get_result()->fetch_assoc();
         if (!$recipient) throw new Exception('Recipient account not found or inactive');
+        error_log('Recipient account verified');
 
         // Deduct from source
         $stmt = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ?");
+        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
         $stmt->bind_param('di', $transfer['amount'], $source['account_id']);
-        $stmt->execute();
+        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
         if ($stmt->affected_rows !== 1) throw new Exception('Failed to update source account balance');
+        error_log('Source account debited');
 
         // Credit recipient
         $stmt = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_id = ?");
+        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
         $stmt->bind_param('di', $transfer['amount'], $recipient['account_id']);
-        $stmt->execute();
+        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
         if ($stmt->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
+        error_log('Recipient account credited');
 
         // Record transaction
         $stmt = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW())");
+        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
         $description = "Transfer to account {$transfer['recipient_account_no']}";
         $stmt->bind_param('diis', $transfer['amount'], $source['account_id'], $recipient['account_id'], $description);
-        $stmt->execute();
+        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
         $transaction_id = $db->insert_id;
+        error_log('Transaction record inserted, ID: ' . $transaction_id);
 
         $db->commit();
-        
+        error_log('DB transaction committed');
         unset($_SESSION['pending_transfer']);
         unset($_SESSION['otp_verified']);
 
-        echo json_encode([
+        $response = [
             'success' => true,
             'message' => 'Transfer completed successfully',
             'transaction_id' => $transaction_id,
             'redirect_url' => $transfer['redirect_url']
-        ]);
+        ];
+        if ($debug) $response['debug_log'] = $debug_log;
+        echo json_encode($response);
 
     } catch (Exception $e) {
         if (isset($db) && $db->connect_errno === 0) $db->rollback();
-        unset($_SESSION['pending_transfer']);
-        unset($_SESSION['otp_verified']);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        error_log('Exception: ' . $e->getMessage());
+        $response = ['success' => false, 'error' => $e->getMessage()];
+        if ($debug) $response['debug_log'] = $debug_log;
+        echo json_encode($response);
     }
+    exit;
+} else if (isset($_SESSION['pending_transfer'])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'OTP verification required.']);
     exit;
 }
 

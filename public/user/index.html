@@ -7,8 +7,10 @@
             content="width=device-width, 
                   initial-scale=1.0"
         />
+        <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
         <title>StackOvercash Landing</title>
-        <link rel="stylesheet" href="../user/css/styles.css" />
+        <link rel="stylesheet" href="./css/styles.css" />
+        <link rel="stylesheet" href="./css/contact.css" />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
             rel="stylesheet"
@@ -23,8 +25,7 @@
         <header>
             <div class="container-nav">
                 <div class="logo">
-                    <span class="white">Stack</span>
-                    <span class="green">Overcash</span>
+                    <span class="logo-text"><span class="white">Stack</span><span class="green">Overcash</span></span>
                 </div>
                 <nav>
                     <ul class="nav-links">
@@ -33,63 +34,64 @@
                         <li><a href="./about.html">About Us</a></li>
                     </ul>
                 </nav>
-                <a href="/user/login_account_holder.html" class="login-btn"
-                    >Login</a
-                >
+                <a href="./login_account_holder.html" class="login-btn">Join Now</a>
+                <!-- Hamburger Icon (Font Awesome) -->
+                <button class="hamburger" aria-label="Open menu">
+                  <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu-overlay">
+              <div class="mobile-menu">
+                <div class="mobile-menu-header">
+                  <span class="logo">
+                    <span class="white">Stack</span><span class="green">Overcash</span>
+                  </span>
+                  <button class="close-menu" aria-label="Close menu">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </div>
+                <ul>
+                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./contact_us.html">Contact Us</a></li>
+                  <li><a href="./about.html">About Us</a></li>
+                </ul>
+                <a href="./login_account_holder.html" class="join-btn">Join Now</a>
+              </div>
             </div>
         </header>
 
         <div class="landing-section">
             <section class="container-hero">
                 <div class="hero-content">
-                    <h1>Send & receive money in seconds.</h1>
+                  <div class="hero-text">
+                    <h1 style="color: #111; font-weight: 700;">
+                        Banking<br />
+                        that works for you
+                    </h1>
                     <p>
-                        Manage your finances smartly and securely with
-                        StackOvercash. Join thousands who trust us to move money
-                        instantly.
+                        The smarter banking experience<br />
+                        that puts you in control of every<br />
+                        transaction, anytime, anywhere
                     </p>
+                  </div>
                     <button
-                        class="learn-more-btn"
+                        class="learn-more-btn desktop-only"
                         onclick="location.href='#faq'"
                     >
                         Learn more
                     </button>
                 </div>
-
                 <div class="hero-visual">
-                    <div class="card-stack">
-                        <div class="card">
-                            <div class="chip"></div>
-                            <div class="top-row">
-                                <span>STACKOVERCASH</span>
-                                <span>Bank</span>
-                            </div>
-                            <div class="number">5442 5000 0100</div>
-                            <div class="bottom-row">
-                                <span>12/29</span>
-                                <span>J. DOE</span>
-                            </div>
-                        </div>
-
-                        <div class="transaction transaction-payment">
-                            <span>Transfer</span>
-                            <span class="amount">- ₱420.00</span>
-                        </div>
-
-                        <div class="transaction transaction-received">
-                            <span>Deposit</span>
-                            <span class="amount">+ ₱8,000.00</span>
-                        </div>
-                    </div>
-
-                    <div class="user-profile">
-                        <img
-                            src="../assets/images/user_landingpage.png"
-                            alt="Person using mobile banking app"
-                        />
-                        <div class="mint-shape"></div>
-                    </div>
+                    <img src="../assets/images/landing-vector.png" alt="Banking vector" class="landing-vector-img" />
                 </div>
+                <button
+                    class="learn-more-btn mobile-only"
+                    onclick="location.href='#faq'"
+                >
+                    Learn more
+                </button>
+
             </section>
         </div>
 
@@ -454,6 +456,10 @@
                 </div>
             </div>
         </footer>
-        <script src="user/js/script.js"></script>
+        <script src="./js/config.js"></script>
+        <script>
+        document.getElementById('login-link').href = ROUTES.LOGIN;
+        </script>
+        <script src="./js/script.js"></script>
     </body>
 </html>

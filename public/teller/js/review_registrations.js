@@ -149,6 +149,8 @@ class RegistrationReview {
                  data-country="${reg.country || ''}"
                  data-zip-code="${reg.zip_code || ''}"
                  data-id-image="${reg.id_image || ''}"
+                 data-request-type="${reg.request_type || ''}"
+                 data-account-type="${reg.account_type || ''}"
             >
                 <div class="card-left">
                 <div class="registration-header">
@@ -163,6 +165,16 @@ class RegistrationReview {
                                     <i class="fas fa-hashtag"></i>
                                     ${reg.registration_id}
                                 </span>
+                                <span class="request-type-badge" title="Request Type">
+                                    <i class="fas fa-info-circle"></i>
+                                    ${reg.request_type ? reg.request_type.replace('_', ' ').toUpperCase() : 'N/A'}
+                                </span>
+                                ${reg.request_type === 'add_account' ? `
+                                <span class="account-type-badge" title="Account Type">
+                                    <i class="fas fa-university"></i>
+                                    ${reg.account_type ? reg.account_type.charAt(0).toUpperCase() + reg.account_type.slice(1) : 'N/A'}
+                                </span>
+                                ` : ''}
                             </div>
                         </div>
                 </div>
@@ -277,7 +289,9 @@ class RegistrationReview {
                 nationality: card.querySelector('.nationality span')?.textContent || 'N/A',
                 status: card.querySelector('.status-badge')?.textContent?.toLowerCase().trim() || 'pending',
                 createdAt: card.querySelector('.application-date')?.textContent?.trim() || 'N/A',
-                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet'
+                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet',
+                requestType: card.dataset.requestType ? card.dataset.requestType.replace('_', ' ').toUpperCase() : 'N/A',
+                accountType: card.dataset.accountType ? card.dataset.accountType.charAt(0).toUpperCase() + card.dataset.accountType.slice(1) : 'N/A'
             };
 
             detailsContainer.innerHTML = `
@@ -324,6 +338,28 @@ class RegistrationReview {
                         </div>
 
                         <div class="section">
+                            <h2>Request Type</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-info-circle"></i> Request Type</label>
+                                    <span>${details.requestType}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${details.requestType === 'ADD ACCOUNT' ? `
+                        <div class="section">
+                            <h2>Account Type</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label><i class="fas fa-university"></i> Account Type</label>
+                                    <span>${details.accountType}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <div class="section">
                             <h2>Address Information</h2>
                             <div class="info-grid">
                                 <div class="info-item">
@@ -362,10 +398,10 @@ class RegistrationReview {
                             <div class="section">
                                 <h2>Actions</h2>
                                 <div class="details-actions">
-                                    <button class="btn btn-approve" onclick="registrationReview.approveRegistration('${details.id}')">
+                                    <button class="btn btn-approve" onclick="registrationReview.handleAction('${details.id}', 'approve')">
                                         <i class="fas fa-check"></i> Approve Application
                                     </button>
-                                    <button class="btn btn-deny" onclick="registrationReview.rejectRegistration('${details.id}')">
+                                    <button class="btn btn-deny" onclick="registrationReview.handleAction('${details.id}', 'deny')">
                                         <i class="fas fa-times"></i> Reject Application
                                     </button>
                                 </div>
@@ -469,7 +505,10 @@ class RegistrationReview {
 
             // Close modals
             this.closeConfirmationModal();
-            document.getElementById('application_modal').style.display = 'none';
+            const appModal = document.getElementById('application_modal');
+            if (appModal) {
+                appModal.style.display = 'none';
+            }
 
             // Show success message
             this.showNotification(
@@ -491,6 +530,7 @@ class RegistrationReview {
             const modal = document.getElementById('confirmation_modal');
             const message = document.getElementById('confirmation_message');
             const confirmBtn = document.getElementById('confirm_action_btn');
+            const cancelBtn = document.getElementById('cancel_action_btn');
             
             // Set message and button style based on action
             message.textContent = action === 'approve' ?
@@ -507,10 +547,18 @@ class RegistrationReview {
             const handleConfirm = () => {
                 modal.classList.remove('active');
                 confirmBtn.removeEventListener('click', handleConfirm);
+                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
                 resolve(true);
             };
-            
+            // Handle cancel button click
+            const handleCancel = () => {
+                modal.classList.remove('active');
+                confirmBtn.removeEventListener('click', handleConfirm);
+                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
+                resolve(false);
+            };
             confirmBtn.addEventListener('click', handleConfirm);
+            if (cancelBtn) cancelBtn.addEventListener('click', handleCancel);
         });
     }
 

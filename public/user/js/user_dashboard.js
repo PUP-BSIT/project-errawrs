@@ -139,13 +139,192 @@ function maskAccountNumber(accountNumber) {
     return masked + visible;
 }
 
+// Store mask state per account
+let accountMaskState = {};
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Hamburger/Sidebar logic (declare once for both desktop and mobile)
+    const hamburgerBtn = document.getElementById('hamburger_btn');
+    const sidebar = document.getElementById('sidebar_nav');
+    const closeSidebarBtn = document.getElementById('close_sidebar_btn');
+    const sidebarOverlay = document.getElementById('sidebar_overlay');
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.style.display = 'block';
+    }
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
+        sidebar.classList.remove('open');
+        sidebarOverlay.style.display = 'none';
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.style.display = '';
+        hamburgerBtn.addEventListener('click', openSidebar);
+    }
+    if (closeSidebarBtn) {
+        closeSidebarBtn.style.display = '';
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+    }
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
     init_dashboard().catch(error => {
         console.error('Failed to initialize dashboard:', error);
         show_notification('Failed to initialize dashboard', 'error');
     });
     displayFinancialTip(); // Display initial tip
+
+    // --- MOBILE NOTICE + TIP FLEX ROW LOGIC ---
+    function moveNoticeAndTipForMobile() {
+        const notice = document.getElementById('notice_banner');
+        const tip = document.getElementById('financial_tip_container');
+        const mobileRow = document.getElementById('mobile_top_row');
+        const rightSection = document.querySelector('.right-section');
+        const dashboardContent = document.querySelector('.dashboard-content');
+        const welcomeSection = document.querySelector('.welcome-section');
+        const leftSection = document.querySelector('.left-section');
+        if (!notice || !tip || !mobileRow || !rightSection || !dashboardContent || !welcomeSection || !leftSection) return;
+        if (window.innerWidth <= 768) {
+            if (!mobileRow.contains(notice)) mobileRow.appendChild(notice);
+            if (!mobileRow.contains(tip)) mobileRow.appendChild(tip);
+            if (!mobileRow.contains(welcomeSection)) mobileRow.appendChild(welcomeSection);
+            mobileRow.style.display = 'flex';
+            mobileRow.style.flexDirection = 'column';
+        } else {
+            if (!rightSection.contains(tip)) rightSection.insertBefore(tip, rightSection.firstChild);
+            if (dashboardContent && !dashboardContent.contains(notice)) dashboardContent.parentNode.insertBefore(notice, dashboardContent);
+            if (!leftSection.contains(welcomeSection)) leftSection.insertBefore(welcomeSection, leftSection.firstChild);
+            mobileRow.style.display = 'none';
+        }
+    }
+    moveNoticeAndTipForMobile();
+    window.addEventListener('resize', moveNoticeAndTipForMobile);
+
+    // --- MOBILE NAVIGATION LOGIC ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    function openSidebar() {
+        if (window.innerWidth > 768) return;
+        sidebar.classList.add('open');
+        sidebarOverlay.style.display = 'block';
+        document.body.classList.add('sidebar-open');
+        closeSidebarBtn.style.display = 'flex';
+        // Focus trap: focus first nav link
+        setTimeout(() => {
+            if (navLinks[0]) navLinks[0].focus();
+        }, 100);
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        closeSidebarBtn.style.display = 'none';
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', openSidebar);
+    }
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', closeSidebar);
+    }
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) closeSidebar();
+        });
+    });
+    // ESC key closes sidebar
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+    });
+    // Hide sidebar on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
+    });
+
+    // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
+    let originalSidebarParent = sidebar.parentNode;
+    let originalSidebarNext = sidebar.nextSibling;
+
+    function showSidebarPopup() {
+        if (window.innerWidth > 768) return;
+        // Move sidebar to body
+        document.body.appendChild(sidebar);
+        // Show overlay
+        sidebarOverlay.style.display = 'block';
+        sidebarOverlay.style.zIndex = 9998;
+        // Style sidebar as popup
+        Object.assign(sidebar.style, {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            zIndex: 99999,
+            width: '92vw',
+            maxWidth: '350px',
+            height: 'auto',
+            maxHeight: '95vh',
+            transform: 'translate(-50%, -50%) scale(1)',
+            borderRadius: '24px',
+            boxShadow: '0 12px 48px 0 rgba(0,0,0,0.35)',
+            background: '#111',
+            paddingTop: '0',
+            marginTop: '0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            opacity: 1,
+            pointerEvents: 'auto',
+            overflow: 'visible',
+            transition: 'opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1)'
+        });
+        sidebar.classList.add('open');
+    }
+    function hideSidebarPopup() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.style.display = 'none';
+        // Hide and move back to original parent
+        if (window.innerWidth <= 768) {
+            sidebar.style.opacity = 0;
+            sidebar.style.pointerEvents = 'none';
+            // Optionally move back to original parent
+            if (originalSidebarParent && originalSidebarNext) {
+                originalSidebarParent.insertBefore(sidebar, originalSidebarNext);
+            } else if (originalSidebarParent) {
+                originalSidebarParent.appendChild(sidebar);
+            }
+        }
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', showSidebarPopup);
+    }
+    if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', hideSidebarPopup);
+    }
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', hideSidebarPopup);
+    }
+    // ESC key closes sidebar
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            hideSidebarPopup();
+        }
+    });
+    // On resize, hide popup and restore sidebar
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            hideSidebarPopup();
+        }
+    });
 });
 
 // Update the fetchUserAccounts function
@@ -214,32 +393,62 @@ function updateAccountDisplay() {
         a.account_number.localeCompare(b.account_number)
     );
 
-    // Use the first account's balance for the main display
-    const primaryAccount = sortedAccounts[0];
-    const formattedBalance = parseFloat(primaryAccount.balance).toLocaleString(CURRENCY.LOCALE, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-    account_balance_element.textContent = `${CURRENCY.SYMBOL}${formattedBalance}`;
+    // Use the first account as default selected
+    let selectedAccountNumber = window.selectedAccountNumber || sortedAccounts[0].account_number;
+    window.selectedAccountNumber = selectedAccountNumber;
 
     // Display all accounts
     sortedAccounts.forEach(account => {
         const accountElement = document.createElement('div');
         accountElement.className = 'account-item';
-        
+        if (account.account_number === selectedAccountNumber) {
+            accountElement.classList.add('selected');
+        }
+        accountElement.style.cursor = 'pointer';
+        accountElement.addEventListener('click', (e) => {
+            // Prevent toggling mask when clicking the eye icon
+            if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
+            window.selectedAccountNumber = account.account_number;
+            update_balance_display(account.balance);
+            fetchRecentTransactions(account.account_number);
+            updateAccountDisplay();
+        });
         const accountType = account.account_type 
             ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
             : 'Savings';
-            
+        // Mask state for this account
+        const isMasked = accountMaskState[account.account_number] !== false;
+        const displayNumber = isMasked ? maskAccountNumber(account.account_number) : account.account_number;
+        const eyeIconClass = isMasked ? 'fa-eye' : 'fa-eye-slash';
         accountElement.innerHTML = `
             <div class="account-info">
-                <div class="account-type">${accountType} Account</div>
-                <div class="account-number">${maskAccountNumber(account.account_number)}</div>
+                <div class="account-type account-type-large">${accountType} Account</div>
+                <div class="account-number account-number-large">
+                    <span class="account-number-text" data-account-number="${account.account_number}">${displayNumber}</span>
+                    <span class="account-eye-icon" style="margin-left:12px; cursor:pointer; vertical-align:middle;" title="Show/Hide Account Number">
+                        <i class="fas ${eyeIconClass}"></i>
+                    </span>
+                </div>
             </div>
         `;
-        
+        // Add event listener for eye icon
+        const eyeIcon = accountElement.querySelector('.account-eye-icon');
+        if (eyeIcon) {
+            eyeIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                accountMaskState[account.account_number] = !isMasked;
+                updateAccountDisplay();
+            });
+        }
         account_display_container.appendChild(accountElement);
     });
+
+    // Show balance for selected account
+    const selectedAccount = sortedAccounts.find(a => a.account_number === selectedAccountNumber);
+    if (selectedAccount) {
+        update_balance_display(selectedAccount.balance);
+        fetchRecentTransactions(selectedAccount.account_number);
+    }
 
     // Enable transfer button
     if (transfer_now_btn) {
@@ -348,13 +557,10 @@ async function fetchUserData() {
 
         if (data.success && data.authenticated) {
             user_data = data.user; // Store user data in state
-            if (user_name_element) {
-                user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
-            }
             // Update welcome message
             const welcome_user_name_element = document.getElementById('welcome_user_name');
             if (welcome_user_name_element) {
-                welcome_user_name_element.textContent = user_data.first_name;
+                welcome_user_name_element.textContent = (user_data.first_name ? user_data.first_name : '') + (user_data.last_name ? ' ' + user_data.last_name : '') + '!';
             }
 
             display_user_initial(); // Update the initial
@@ -410,10 +616,7 @@ async function fetchRecentTransactions(accountNumber) {
     try {
         // Get the current selected account number if not provided
         if (!accountNumber) {
-            const accountNumberElement = document.querySelector('.account-number-text');
-            if (accountNumberElement) {
-                accountNumber = accountNumberElement.getAttribute('data-account-number');
-            }
+            accountNumber = window.selectedAccountNumber;
         }
         
         if (!accountNumber) {
@@ -425,7 +628,7 @@ async function fetchRecentTransactions(accountNumber) {
         }
         
         // Update the API endpoint path with account filter
-        const response = await fetch(`${API_ENDPOINTS.USER.TRANSACTIONS}?account=${accountNumber}&limit=5`);
+        const response = await fetch(`${API_ENDPOINTS.USER.TRANSACTIONS}?account=${accountNumber}&limit=2`);
         
         // Check if the response is OK before trying to parse JSON
         if (!response.ok) {

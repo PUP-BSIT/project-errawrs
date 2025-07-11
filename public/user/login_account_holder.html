@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StackOvercash - Login Account Holder</title>
-    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
     <link rel="stylesheet" href="./css/login_acc_holder.css" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
@@ -38,8 +38,6 @@
 
                 <div class="forgot-links">
                     <span>Forgot</span>
-                    <a href="./forgot_username.html" class="forgot-link">Username</a>
-                    <span>or</span>
                     <a href="./forgot_password.html" class="forgot-link">Password</a>
                 </div>
 
@@ -59,7 +57,7 @@
                     <ul class="nav-links">
                         <li><a href="./index.html">Home</a></li>
                         <li><a href="./contact_us.html">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="./privacy_policy.html">Privacy Policy</a></li>
                     </ul>
                 </nav>
             </header>
@@ -70,8 +68,34 @@
     <!-- Add notification styles -->
     <!-- Styles moved to css/login_acc_holder.css -->
 
+    <!-- Session Expired Modal -->
+    <div id="session-expired-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3>Session Expired</h3>
+        <p>You were logged out due to inactivity. Please log in again to continue.</p>
+        <button id="session-expired-ok" class="primary-btn" style="margin-top: 20px;">Okay</button>
+      </div>
+    </div>
+
     <script src="./js/config.js"></script>
     <script src="./js/login.js"></script>
+    <script>
+    // Show session expired modal if redirected with ?expired=true
+    if (window.location.search.includes('expired=true')) {
+      document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById('session-expired-modal');
+        var okBtn = document.getElementById('session-expired-ok');
+        if (modal) {
+          modal.style.display = 'flex';
+          if (okBtn) {
+            okBtn.onclick = function() {
+              modal.style.display = 'none';
+            };
+          }
+        }
+      });
+    }
+    </script>
 </body>
 
 </html>

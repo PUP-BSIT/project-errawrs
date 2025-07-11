@@ -1131,3 +1131,69 @@ body {
 .user-profile a {
     text-decoration: none;
 }
+
+.card-actions,
+.card-actions.always-visible {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    position: static;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    opacity: 1;
+    transform: none;
+    min-width: 0;
+    z-index: auto;
+    overflow: visible;
+}
+
+.clear-search-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #aaa;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.clear-search-btn:hover {
+    color: #ff4757;
+}
+.search-input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 44px 14px 44px; /* right for clear btn, left for icon */
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    outline: none;
+    box-sizing: border-box;
+    height: 48px;
+    line-height: 1.2;
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 1.3rem;
+    pointer-events: none;
+    z-index: 2;
+}

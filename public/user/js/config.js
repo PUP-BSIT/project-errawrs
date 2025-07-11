@@ -41,6 +41,8 @@ const API_ENDPOINTS = {
     SESSION_CHECK: `${API_BASE_URL}/auth/session_check.php`,
     GET_ACCOUNTS: `${API_BASE_URL}/user/accounts.php`,
     FUND_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    INTERNAL_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
+    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`,
     GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions.php`,
     GET_TRANSACTION_DETAILS: `${API_BASE_URL}/user/get_transaction_details.php`,
     UPDATE_PROFILE: `${API_BASE_URL}/user/update_profile.php`,
@@ -51,6 +53,7 @@ const API_ENDPOINTS = {
     RESET_PASSWORD: `${API_BASE_URL}/user/reset_password.php`,
     FINANCIAL_TIPS: `${API_BASE_URL}/user/financial-tips.php`,
     CONTACT_SUBMIT: `${API_BASE_URL}/public/contact_mailer.php`,
+    TRANSFER_SUCCESS: `${API_BASE_URL}/user/transfer_success.php`,
 };
 
 // Backward compatibility - keep the old nested structure
@@ -59,43 +62,39 @@ API_ENDPOINTS.AUTH = {
     LOGOUT: API_ENDPOINTS.LOGOUT,
     SEND_OTP: API_ENDPOINTS.SEND_OTP,
     VERIFY_OTP: API_ENDPOINTS.VERIFY_OTP,
-    SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK
+    SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
+    KILL_SESSION: `${API_BASE_URL}/auth/kill_session.php`,
 };
 
 // Backward compatibility - keep the old USER structure
 API_ENDPOINTS.USER = {
     TRANSACTIONS: API_ENDPOINTS.GET_TRANSACTIONS,
-    ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS
+    ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
+    CREATE_ADDITIONAL_ACCOUNT: API_ENDPOINTS.CREATE_ADDITIONAL_ACCOUNT
 };
 
 // Function to get the correct base path for routes
 function getRoutesBasePath() {
     const hostname = window.location.hostname;
-    
-    // Check if we're on localhost
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return '/project-errawrs/public/user';
-    }
-    
-    // Check if we're on the development site
-    if (hostname === 'dev.stackovercash.site') {
-        return '/public/user'; // Assuming the project is at the root
-    }
-    
-    // For production or other environments, try to detect the path
     const pathname = window.location.pathname;
-    if (pathname.includes('/project-errawrs/')) {
+
+    // Localhost (XAMPP, WAMP, etc.)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        // Try to detect the project folder
+        if (pathname.includes('/project-errawrs/public/user/')) {
+            return '/project-errawrs/public/user';
+        } else if (pathname.includes('/project-errawrs/user/')) {
+            return '/project-errawrs/user';
+        }
+        // fallback
         return '/project-errawrs/public/user';
-    } else if (pathname.includes('/public/')) {
-        return '/public/user';
-    } else {
-        // Default fallback
-        return '/public/user';
     }
+
+    // Production (Nginx)
+    return '/user';
 }
 
 const ROUTES_BASE_PATH = getRoutesBasePath();
-
 const ROUTES = {
     USER_DASHBOARD: `${ROUTES_BASE_PATH}/user_dashboard.html`,
     LOGIN: `${ROUTES_BASE_PATH}/login_account_holder.html`,
@@ -118,3 +117,7 @@ function createNotification(message, type = 'info', duration = 5000) {
     container.appendChild(notification);
     setTimeout(() => notification.remove(), duration);
 } 
+window.ROUTES = ROUTES;
+window.API_ENDPOINTS = API_ENDPOINTS;
+window.API_BASE_URL = API_BASE_URL;
+console.log('config.js loaded, ROUTES =', window.ROUTES); 

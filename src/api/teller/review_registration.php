@@ -1,108 +1,4 @@
 <?php
-<<<<<<< HEAD
-  session_start();
-  require_once __DIR__ . '/../../../vendor/autoload.php'; // Adjusted path
-  require_once __DIR__ . '/../../config/database.php';
-  use Dotenv\Dotenv;
-  use PHPMailer\PHPMailer\PHPMailer;
-  use PHPMailer\PHPMailer\Exception;
-
-  header('Content-Type: application/json');
-
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      http_response_code(405);
-      echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-      exit();
-  }
-
-  if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'teller') {
-      http_response_code(403);
-      echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-      exit();
-  }
-
-  $input = json_decode(file_get_contents('php://input'), true);
-  if (!isset($input['user_id']) || !isset($input['status']) || !in_array($input['status'], ['approved', 'denied'])) {
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'Invalid input']);
-      exit();
-  }
-
-  $user_id = $input['user_id'];
-  $status = $input['status'];
-
-  try {
-      $db = db_connect();
-      $db->begin_transaction();
-
-      $userStmt = $db->prepare('SELECT * FROM user WHERE user_id = ? AND is_pending = 1');
-      $userStmt->bind_param('i', $user_id);
-      $userStmt->execute();
-      $result = $userStmt->get_result();
-      $user_data = $result->fetch_assoc();
-
-      if (!$user_data) {
-          throw new Exception('No pending registration found or already processed');
-      }
-
-      if ($status === 'approved') {
-          $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
-          $seqRow = $seqResult->fetch_assoc();
-          $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
-          $year = date('y');
-          $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
-
-          $accountStmt = $db->prepare('INSERT INTO account (user_id, account_number, balance, status) VALUES (?, ?, 0.00, "active")');
-          $accountStmt->bind_param('is', $user_id, $accountNumber);
-          $accountStmt->execute();
-          $account_id = $db->insert_id;
-
-          $updateStmt = $db->prepare('UPDATE user SET is_pending = 0 WHERE user_id = ?');
-          $updateStmt->bind_param('i', $user_id);
-          $updateStmt->execute();
-      } else {
-          $updateStmt = $db->prepare('UPDATE user SET is_pending = 0 WHERE user_id = ?');
-          $updateStmt->bind_param('i', $user_id);
-          $updateStmt->execute();
-      }
-
-      $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../')->load(); // Adjusted path
-
-      $mail = new PHPMailer(true);
-      $mail->isSMTP();
-      $mail->Host = $_ENV['GMAIL_HOST'];
-      $mail->SMTPAuth = true;
-      $mail->Username = $_ENV['GMAIL_USERNAME'];
-      $mail->Password = $_ENV['GMAIL_PASSWORD'];
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = (int)$_ENV['GMAIL_PORT'];
-
-      $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
-      $mail->addAddress($user_data['email']);
-      $mail->Subject = "Registration $status";
-      $mail->Body = "Hello,\nYour registration (User ID: $user_id) has been $status.\n" . ($status === 'approved' ? "Account Number: $accountNumber" : '');
-
-      $mail->send();
-
-      $db->commit();
-      $message = 'Registration ' . $status;
-      if ($status === 'approved') {
-          $message .= ". Account created with ID: $account_id and number: $accountNumber";
-      }
-      echo json_encode(['success' => true, 'message' => $message]);
-  } catch (Exception $e) {
-      if (isset($db)) $db->rollback();
-      error_log("Review Error: " . $e->getMessage());
-      http_response_code(500);
-      echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-  } finally {
-      if (isset($updateStmt)) $updateStmt->close();
-      if (isset($accountStmt)) $accountStmt->close();
-      if (isset($userStmt)) $userStmt->close();
-      if (isset($db)) db_close($db);
-  }
-  ?>
-=======
 use Dotenv\Dotenv;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
@@ -243,182 +139,257 @@ try {
 
         error_log("Updated registration status to: $status");
 
-    if ($action === 'approve') {
+        if ($action === 'approve') {
             // Log approval process start
             error_log("Starting approval process for registration $registration_id");
 
-        // Generate a unique username
-        $base_username = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $registration['first_name'] . $registration['last_name']));
-        $username = $base_username;
-        $i = 1;
-        $checkUser = $db->prepare('SELECT COUNT(*) as cnt FROM user WHERE username = ?');
-        while (true) {
-            $checkUser->bind_param('s', $username);
-            $checkUser->execute();
-            $res = $checkUser->get_result()->fetch_assoc();
-            if ($res['cnt'] == 0) break;
-            $username = $base_username . $i;
-            $i++;
-        }
-        $checkUser->close();
+            if ($registration['request_type'] === 'add_account') {
+                // Only add a new account for the existing user
+                $user_id = $registration['user_id'];
+                
+                // Get user details for email
+                $userStmt = $db->prepare('SELECT first_name, last_name, email FROM user WHERE user_id = ?');
+                $userStmt->bind_param('i', $user_id);
+                $userStmt->execute();
+                $userResult = $userStmt->get_result();
+                $userData = $userResult->fetch_assoc();
+                
+                if (!$userData) {
+                    throw new Exception('User not found for add account request');
+                }
+                
+                // Generate account number
+                $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
+                $seqRow = $seqResult->fetch_assoc();
+                $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
+                $year = date('y');
+                $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
+                
+                // Insert into account table
+                $insertAccount = $db->prepare('
+                    INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
+                    VALUES (?, ?, 0.00, "active", ?, NOW())
+                ');
+                $insertAccount->bind_param('iss', $user_id, $accountNumber, $registration['account_type']);
+                if (!$insertAccount->execute()) {
+                    throw new Exception('Failed to create bank account: ' . $insertAccount->error);
+                }
+                
+                // Send email notification about new account
+                error_log("Sending add account approval email to: {$userData['email']}");
+                
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+                $dotenv->load();
 
-            // Generate password with mixed case
-            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $password = '';
-            // Ensure at least one lowercase and one uppercase
-            $password .= $chars[random_int(0, 25)]; // lowercase
-            $password .= $chars[random_int(26, 51)]; // uppercase
-            // Fill the rest randomly
-            for($i = 0; $i < 14; $i++) {
-                $password .= $chars[random_int(0, strlen($chars) - 1)];
+                $mail = new PHPMailer(true);
+                $mail->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    ]
+                ];
+                $mail->isSMTP();
+                $mail->Host = $_ENV['GMAIL_HOST'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $_ENV['GMAIL_USERNAME'];
+                $mail->Password = $_ENV['GMAIL_PASSWORD'];
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = (int)$_ENV['GMAIL_PORT'];
+
+                $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+                $mail->addAddress($userData['email']);
+                $mail->Subject = 'Additional Account Approved';
+                $mail->Body = "Hello {$userData['first_name']},\n\n"
+                    . "Your request for an additional account has been approved!\n\n"
+                    . "New Account Details:\n"
+                    . "Account Number: $accountNumber\n"
+                    . "Account Type: " . ucfirst($registration['account_type']) . "\n"
+                    . "Status: Active\n\n"
+                    . "You can view your new account in your dashboard at: https://dev.stackovercash.site/user/account.html\n\n"
+                    . "Thank you for choosing our bank!";
+
+                try {
+                    $mail->send();
+                    error_log("Add account approval email sent successfully");
+                } catch (Exception $e) {
+                    error_log("Failed to send add account approval email: " . $e->getMessage());
+                    // Don't throw here, we want to complete the transaction even if email fails
+                }
+                
+                $message = "Additional account approved. Account created with number: $accountNumber";
+            } else {
+                // Existing logic for new registration (create user, then account)
+                // Generate a unique username
+                $base_username = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $registration['first_name'] . $registration['last_name']));
+                $username = $base_username;
+                $i = 1;
+                $checkUser = $db->prepare('SELECT COUNT(*) as cnt FROM user WHERE username = ?');
+                while (true) {
+                    $checkUser->bind_param('s', $username);
+                    $checkUser->execute();
+                    $res = $checkUser->get_result()->fetch_assoc();
+                    if ($res['cnt'] == 0) break;
+                    $username = $base_username . $i;
+                    $i++;
+                }
+                $checkUser->close();
+
+                // Generate password with mixed case
+                $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $password = '';
+                // Ensure at least one lowercase and one uppercase
+                $password .= $chars[random_int(0, 25)]; // lowercase
+                $password .= $chars[random_int(26, 51)]; // uppercase
+                // Fill the rest randomly
+                for($i = 0; $i < 14; $i++) {
+                    $password .= $chars[random_int(0, strlen($chars) - 1)];
+                }
+                // Shuffle the password to mix the guaranteed cases
+                $password = str_shuffle($password);
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+                // Log user creation
+                error_log("Creating user account with username: $username");
+
+                // Insert into user table
+                $insertUser = $db->prepare('
+                    INSERT INTO user (
+                        username, password_hash, first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ');
+                $insertUser->bind_param(
+                    'ssssssssssssss',
+                    $username,
+                    $password_hash,
+                    $registration['first_name'],
+                    $registration['last_name'],
+                    $registration['phone_number'],
+                    $registration['date_of_birth'],
+                    $registration['nationality'],
+                    $registration['street'],
+                    $registration['city'],
+                    $registration['zip_code'],
+                    $registration['country'],
+                    $registration['email'],
+                    $registration['id_type'],
+                    $registration['id_image']
+                );
+                    if (!$insertUser->execute()) {
+                        throw new Exception('Failed to create user account: ' . $insertUser->error);
+                    }
+                $user_id = $db->insert_id;
+
+                // Log account creation
+                error_log("Creating bank account for user ID: $user_id");
+
+                // Generate account number
+                $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
+                $seqRow = $seqResult->fetch_assoc();
+                $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
+                $year = date('y');
+                $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
+
+                // Insert into account table
+                $insertAccount = $db->prepare('
+                    INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
+                    VALUES (?, ?, 0.00, "active", "savings", NOW())
+                ');
+                $insertAccount->bind_param('is', $user_id, $accountNumber);
+                    if (!$insertAccount->execute()) {
+                        throw new Exception('Failed to create bank account: ' . $insertAccount->error);
+                    }
+
+                    // Log email sending
+                    error_log("Sending approval email to: {$registration['email']}");
+
+                // Send email
+                $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+                $dotenv->load();
+
+                $mail = new PHPMailer(true);
+                $mail->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    ]
+                ];
+                $mail->isSMTP();
+                $mail->Host = $_ENV['GMAIL_HOST'];
+                $mail->SMTPAuth = true;
+                $mail->Username = $_ENV['GMAIL_USERNAME'];
+                $mail->Password = $_ENV['GMAIL_PASSWORD'];
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = (int)$_ENV['GMAIL_PORT'];
+
+                $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+                $mail->addAddress($registration['email']);
+                $mail->Subject = 'Registration Approved - Your Account Details';
+                $mail->Body = "Hello {$registration['first_name']},\n\n"
+                    . "Your registration has been approved! Here are your account details:\n\n"
+                    . "Username: $username\n"
+                    . "Password: $password\n"
+                    . "Account Number: $accountNumber\n\n"
+                        . "You can login to your account at: https://dev.stackovercash.site/login\n\n"
+                    . "Please change your password after your first login.\n\n"
+                    . "Thank you for choosing our bank!";
+
+                    try {
+                $mail->send();
+                        error_log("Approval email sent successfully");
+                    } catch (Exception $e) {
+                        error_log("Failed to send approval email: " . $e->getMessage());
+                        // Don't throw here, we want to complete the transaction even if email fails
+                    }
+
+                $message = "Registration approved. Account created with ID: $user_id and account number: $accountNumber";
             }
-            // Shuffle the password to mix the guaranteed cases
-            $password = str_shuffle($password);
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            // Deny: update status to rejected (don't delete the record)
+            // The status is already updated above in the common update section
+            // No additional action needed here for denial
 
-            // Log user creation
-            error_log("Creating user account with username: $username");
+            // Send email
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+            $dotenv->load();
 
-        // Insert into user table
-        $insertUser = $db->prepare('
-            INSERT INTO user (
-                username, password_hash, first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ');
-        $insertUser->bind_param(
-            'ssssssssssssss',
-            $username,
-            $password_hash,
-            $registration['first_name'],
-            $registration['last_name'],
-            $registration['phone_number'],
-            $registration['date_of_birth'],
-            $registration['nationality'],
-            $registration['street'],
-            $registration['city'],
-            $registration['zip_code'],
-            $registration['country'],
-            $registration['email'],
-            $registration['id_type'],
-            $registration['id_image']
-        );
-            if (!$insertUser->execute()) {
-                throw new Exception('Failed to create user account: ' . $insertUser->error);
-            }
-        $user_id = $db->insert_id;
+            $mail = new PHPMailer(true);
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ];
+            $mail->isSMTP();
+            $mail->Host = $_ENV['GMAIL_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['GMAIL_USERNAME'];
+            $mail->Password = $_ENV['GMAIL_PASSWORD'];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
-            // Log account creation
-            error_log("Creating bank account for user ID: $user_id");
-
-        // Generate account number
-        $seqResult = $db->query('SELECT MAX(CAST(SUBSTRING(account_number, 9) AS UNSIGNED)) as last_seq FROM account');
-        $seqRow = $seqResult->fetch_assoc();
-        $nextSeq = ($seqRow['last_seq'] ?? 0) + 1;
-        $year = date('y');
-        $accountNumber = sprintf('544%s0%06d', $year, $nextSeq);
-
-        // Insert into account table
-        $insertAccount = $db->prepare('
-            INSERT INTO account (user_id, account_number, balance, status, account_type, created_at)
-            VALUES (?, ?, 0.00, "active", "savings", NOW())
-        ');
-        $insertAccount->bind_param('is', $user_id, $accountNumber);
-            if (!$insertAccount->execute()) {
-                throw new Exception('Failed to create bank account: ' . $insertAccount->error);
-            }
-
-            // Log email sending
-            error_log("Sending approval email to: {$registration['email']}");
-
-        // Send email
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-        $dotenv->load();
-
-        $mail = new PHPMailer(true);
-        $mail->SMTPOptions = [
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            ]
-        ];
-        $mail->isSMTP();
-        $mail->Host = $_ENV['GMAIL_HOST'];
-        $mail->SMTPAuth = true;
-        $mail->Username = $_ENV['GMAIL_USERNAME'];
-        $mail->Password = $_ENV['GMAIL_PASSWORD'];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = (int)$_ENV['GMAIL_PORT'];
-
-        $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
-        $mail->addAddress($registration['email']);
-        $mail->Subject = 'Registration Approved - Your Account Details';
-        $mail->Body = "Hello {$registration['first_name']},\n\n"
-            . "Your registration has been approved! Here are your account details:\n\n"
-            . "Username: $username\n"
-            . "Password: $password\n"
-            . "Account Number: $accountNumber\n\n"
-                . "You can login to your account at: https://dev.stackovercash.site/login\n\n"
-            . "Please change your password after your first login.\n\n"
-            . "Thank you for choosing our bank!";
+            $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+            $mail->addAddress($registration['email']);
+            $mail->Subject = 'Registration Denied';
+            $mail->Body = "Hello {$registration['first_name']},\n\n"
+                . "We regret to inform you that your registration has been denied.\n"
+                . "Please contact our support team for more information.\n\n"
+                . "Thank you for your interest in our bank.";
 
             try {
-        $mail->send();
-                error_log("Approval email sent successfully");
-            } catch (Exception $e) {
-                error_log("Failed to send approval email: " . $e->getMessage());
-                // Don't throw here, we want to complete the transaction even if email fails
-            }
-
-        $message = "Registration approved. Account created with ID: $user_id and account number: $accountNumber";
-    } else {
-        // Deny: just delete the registration request
-        $deleteReg = $db->prepare('DELETE FROM registration_request WHERE registration_id = ?');
-        $deleteReg->bind_param('i', $registration_id);
-            if (!$deleteReg->execute()) {
-                throw new Exception('Failed to delete registration request: ' . $deleteReg->error);
-            }
-
-        // Send email
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-        $dotenv->load();
-
-        $mail = new PHPMailer(true);
-        $mail->SMTPOptions = [
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            ]
-        ];
-        $mail->isSMTP();
-        $mail->Host = $_ENV['GMAIL_HOST'];
-        $mail->SMTPAuth = true;
-        $mail->Username = $_ENV['GMAIL_USERNAME'];
-        $mail->Password = $_ENV['GMAIL_PASSWORD'];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = (int)$_ENV['GMAIL_PORT'];
-
-        $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
-        $mail->addAddress($registration['email']);
-        $mail->Subject = 'Registration Denied';
-        $mail->Body = "Hello {$registration['first_name']},\n\n"
-            . "We regret to inform you that your registration has been denied.\n"
-            . "Please contact our support team for more information.\n\n"
-            . "Thank you for your interest in our bank.";
-
-            try {
-        $mail->send();
+                $mail->send();
                 error_log("Denial email sent successfully");
             } catch (Exception $e) {
                 error_log("Failed to send denial email: " . $e->getMessage());
                 // Don't throw here, we want to complete the transaction even if email fails
             }
 
-        $message = "Registration denied and deleted.";
-    }
+            $message = "Registration denied.";
+        }
 
-    $db->commit();
+        $db->commit();
         error_log("Transaction committed successfully");
 
         echo json_encode([
@@ -451,4 +422,3 @@ try {
     error_log("Review process completed");
 }
 ?>
->>>>>>> origin/dev

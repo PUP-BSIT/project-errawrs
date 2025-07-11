@@ -25,7 +25,9 @@ const CLASS = {
     POSITIVE: 'positive',
     NEGATIVE: 'negative',
     PAGE_NUMBER: 'page-number',
-    ACTIVE: 'active'
+    ACTIVE: 'active',
+    CENTERED: 'centered',
+    PADDED: 'padded'
 };
 
 // Icons
@@ -229,7 +231,7 @@ function renderTransactions(transactions) {
     if (transactions.length === 0) {
         transaction_table_body.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; padding: 20px;">${TEXT.NO_TRANSACTIONS}</td>
+                <td colspan="5" class="centered padded">${TEXT.NO_TRANSACTIONS}</td>
             </tr>
         `;
         return;
@@ -237,21 +239,39 @@ function renderTransactions(transactions) {
 
     transactions.forEach((transaction) => {
         const row = document.createElement('tr');
-        // Assuming transaction object has properties like date, account_number, amount, description, status
         const amount = parseFloat(transaction.amount);
         const amountClass = amount >= 0 ? CLASS.POSITIVE : CLASS.NEGATIVE;
-
+        let description = transaction.description || TEXT.NA;
+        // Determine transaction type and description
+        if (transaction.type === 'transfer_internal') {
+            if (amount > 0) {
+                description = `Received money from ${transaction.sender_account_number}`;
+            } else {
+                description = `Sent money to ${transaction.receiver_account_number}`;
+            }
+        } else if (transaction.type === 'transfer_external_out') {
+            let bank = 'StackOvercash Bank';
+            if (transaction.external_bank_code === 'Blinders') bank = 'Techy Blinders Bank';
+            else if (transaction.external_bank_code === 'Dragon') bank = 'Dragon Fly Bank';
+            description = `Sent money to ${transaction.external_account_number || transaction.receiver_account_number} (${bank})`;
+        } else if (transaction.type === 'transfer_external_in') {
+            description = `Received money from ${transaction.external_account_number || transaction.sender_account_number}`;
+        } else if (transaction.type === 'deposit') {
+            description = `Deposit`;
+        } else if (transaction.type === 'withdrawal') {
+            description = `Withdraw`;
+        }
+        // Always show the user's own account number in the Account Number column
+        const userAccount = transaction.account_number || TEXT.NA;
         row.innerHTML = `
             <td>${transaction.date || TEXT.NA}</td>
-            <td>${transaction.account_number || TEXT.NA}</td>
+            <td>${userAccount}</td>
             <td class="${amountClass}">${CURRENCY.SYMBOL} ${amount.toLocaleString(CURRENCY.LOCALE, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}</td>
-            <td>${transaction.description || TEXT.NA}</td>
-            <td><span class="status-${(
-                transaction.status || TEXT.UNKNOWN.toLowerCase()
-            ).toLowerCase()}">${transaction.status || TEXT.UNKNOWN}</span></td>
+            <td>${description}</td>
+            <td>${transaction.transaction_id || TEXT.NA}</td>
         `;
         transaction_table_body.appendChild(row);
     });
@@ -374,7 +394,7 @@ if (go_button) {
         });
     } else {
         // If no input field for GO, remove or disable GO button functionality
-        go_button.style.display = 'none';
+        go_button.classList.add(CLASS.HIDDEN); // Assuming a class for hidden
     }
 }
 

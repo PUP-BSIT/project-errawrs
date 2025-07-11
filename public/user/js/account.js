@@ -1,8 +1,3 @@
-// Use the API_ENDPOINTS from config.js instead of the old API object structure
-
-// Routes
-// No need to redefine ROUTES as it's already declared in session-manager.js
-
 // DOM Elements
 const DOM = {
     accountList: document.querySelector('.account-list-container'),
@@ -454,17 +449,21 @@ async function handleVerifyOtp() {
         const verifyData = await verifyResponse.json();
         console.log('OTP verification response:', verifyData);
         
-        // Reset button state
-        verify_otp_button.disabled = false;
-        verify_otp_button.textContent = verifyButtonText;
+        if (DOM.buttons.verifyOtp) {
+            DOM.buttons.verifyOtp.disabled = false;
+            DOM.buttons.verifyOtp.textContent = 'Verify';
+        }
 
         if (verifyData.success) {
-            const createResponse = await fetch(API_ENDPOINTS.USER.CREATE_ACCOUNT, {
+            console.log('OTP verified, about to call:', API_ENDPOINTS.USER.CREATE_ADDITIONAL_ACCOUNT, accountType);
+            const createResponse = await fetch(API_ENDPOINTS.USER.CREATE_ADDITIONAL_ACCOUNT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ account_type: accountType }),
             });
+            console.log('createResponse:', createResponse);
             const createData = await createResponse.json();
+            console.log('Create account response:', createData);
             if (createData.success) {
                 showNotification(createData.message || TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
                 fetchUserAccounts();
@@ -477,6 +476,7 @@ async function handleVerifyOtp() {
             showNotification(verifyData.error || TEXT.INVALID_OTP, CLASS.ERROR);
         }
     } catch (error) {
+        console.error('Error in handleVerifyOtp:', error);
         showNotification('An unexpected error occurred.', CLASS.ERROR);
     } finally {
         DOM.modals.otp.classList.add(CLASS.HIDDEN);

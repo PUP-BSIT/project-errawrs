@@ -29,7 +29,9 @@ class SessionManager {
             // Session configuration
             ini_set('session.cookie_httponly', 1);
             ini_set('session.use_only_cookies', 1);
-            ini_set('session.cookie_secure', 0); // Allow non-HTTPS for localhost
+            // Set cookie_secure dynamically: 1 for HTTPS, 0 for HTTP (localhost)
+            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+            ini_set('session.cookie_secure', $secure ? 1 : 0);
             ini_set('session.cookie_samesite', 'Lax');
             ini_set('session.gc_maxlifetime', 3600); // 1 hour
             ini_set('session.cookie_lifetime', 0); // Until browser closes
