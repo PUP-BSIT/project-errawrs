@@ -154,6 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarOverlay.style.display = 'block';
     }
     function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
         sidebar.classList.remove('open');
         sidebarOverlay.style.display = 'none';
     }
