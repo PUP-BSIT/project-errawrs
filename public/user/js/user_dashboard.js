@@ -360,10 +360,14 @@ function updateAccountDisplay() {
         if (account.account_number === selectedAccountNumber) {
             accountElement.classList.add('selected');
         }
-        accountElement.classList.add('pointer');
+        accountElement.style.cursor = 'pointer';
         accountElement.addEventListener('click', (e) => {
             // Prevent toggling mask when clicking the eye icon
             if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
+
+        accountElement.classList.add('pointer');
+        accountElement.addEventListener('click', () => {
+
             window.selectedAccountNumber = account.account_number;
             update_balance_display(account.balance);
             fetchRecentTransactions(account.account_number);
@@ -754,7 +758,7 @@ function displayFinancialTip() {
     
     tipContainer.innerHTML = `
         <div class="tip-header">
-            <i class="fas fa-lightbulb"></i>
+            <i class="fas ${tip.icon}"></i>
             <h3>Financial Tip</h3>
         </div>
         <div class="tip-content">
