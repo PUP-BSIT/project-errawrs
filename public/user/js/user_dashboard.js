@@ -364,6 +364,10 @@ function updateAccountDisplay() {
         accountElement.addEventListener('click', (e) => {
             // Prevent toggling mask when clicking the eye icon
             if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
+
+        accountElement.classList.add('pointer');
+        accountElement.addEventListener('click', () => {
+
             window.selectedAccountNumber = account.account_number;
             update_balance_display(account.balance);
             fetchRecentTransactions(account.account_number);

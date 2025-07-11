@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             const result = await response.json();
             if (result.success) {
-                form.style.display = 'block';
+                form.classList.remove('hidden');
+                form.classList.add('block');
             } else {
                 showMessage(result.error || 'Invalid or expired token.', 'error');
             }
@@ -64,7 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.success) {
-                form.style.display = 'none';
+                form.classList.remove('block');
+                form.classList.add('hidden');
                 showMessage(result.message + ' You will be redirected to the login page shortly.', 'success');
                 setTimeout(() => {
                     window.location.href = ROUTES.LOGIN;

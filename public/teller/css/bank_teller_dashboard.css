@@ -358,6 +358,7 @@ body {
 }
 
 .search-results {
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
@@ -369,7 +370,9 @@ body {
     border-radius: var(--border-radius-small);
     box-shadow: var(--box-shadow-heavy);
     z-index: 1000;
-    display: none;
+}
+.search-results.block {
+    display: block;
 }
 
 .search-results::-webkit-scrollbar {
@@ -383,10 +386,6 @@ body {
 .search-results::-webkit-scrollbar-thumb {
     background: var(--color-gray);
     border-radius: 4px;
-}
-
-.search-results.show {
-    display: block;
 }
 
 .search-result-item {
@@ -792,4 +791,20 @@ body {
     align-items: flex-start;
     gap: 32px;
     margin-bottom: 24px;
+}
+
+.card-actions,
+.card-actions.always-visible {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    position: static;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    opacity: 1;
+    transform: none;
+    min-width: 0;
+    z-index: auto;
+    overflow: visible;
 }

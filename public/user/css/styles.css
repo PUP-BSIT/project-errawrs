@@ -2290,3 +2290,6 @@ footer {
     margin-top: -80px !important;
   }
 }
+
+.slide-x { transform: translateX(var(--slide-x, 0)); transition: transform 0.2s; }
+

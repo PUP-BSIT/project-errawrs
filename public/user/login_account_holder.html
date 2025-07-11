@@ -70,8 +70,34 @@
     <!-- Add notification styles -->
     <!-- Styles moved to css/login_acc_holder.css -->
 
+    <!-- Session Expired Modal -->
+    <div id="session-expired-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h3>Session Expired</h3>
+        <p>You were logged out due to inactivity. Please log in again to continue.</p>
+        <button id="session-expired-ok" class="primary-btn" style="margin-top: 20px;">Okay</button>
+      </div>
+    </div>
+
     <script src="./js/config.js"></script>
     <script src="./js/login.js"></script>
+    <script>
+    // Show session expired modal if redirected with ?expired=true
+    if (window.location.search.includes('expired=true')) {
+      document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById('session-expired-modal');
+        var okBtn = document.getElementById('session-expired-ok');
+        if (modal) {
+          modal.style.display = 'flex';
+          if (okBtn) {
+            okBtn.onclick = function() {
+              modal.style.display = 'none';
+            };
+          }
+        }
+      });
+    }
+    </script>
 </body>
 
 </html>
