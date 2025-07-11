@@ -28,4 +28,4 @@ tmp/*
 # Dependencies
 /vendor/
 
-.vscode
+.vscode/

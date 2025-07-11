@@ -10,30 +10,21 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/database.php';
 
-/**
- * Normalize Philippine phone number to +639XXXXXXXXX format
- * Accepts: 09XXXXXXXXX, 639XXXXXXXXX, +639XXXXXXXXX
- */
 function normalizePhoneNumber($phone) {
-    // Remove all non-digit characters except +
     $phone = preg_replace('/[^\d+]/', '', $phone);
     
-    // If it starts with 09, replace with +639
     if (preg_match('/^09(\d{9})$/', $phone, $matches)) {
         return '+639' . $matches[1];
     }
     
-    // If it starts with 639, add +
     if (preg_match('/^639(\d{9})$/', $phone, $matches)) {
         return '+639' . $matches[1];
     }
     
-    // If it already starts with +639, validate format
     if (preg_match('/^\+639(\d{9})$/', $phone, $matches)) {
         return $phone;
     }
     
-    // Invalid format
     return false;
 }
 
@@ -53,7 +44,6 @@ try {
         exit();
     }
 
-    // Normalize phone number format to +639XXXXXXXXX
     $normalized_phone = normalizePhoneNumber($phone_number);
 
     if (!$normalized_phone) {

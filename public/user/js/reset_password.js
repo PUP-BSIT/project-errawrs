@@ -1,45 +1,41 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('reset_password_form');
-    const messageContainer = document.getElementById('message_container');
     const notificationContainer = document.querySelector('.notification-container');
-    const tokenInput = document.getElementById('token');
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
     if (!token) {
-        showMessage('No reset token found. Please request a new reset link.', 'error');
+        showNotification('No reset token found. Please request a new reset link.', 'error');
         return;
     }
-
-    tokenInput.value = token;
 
     // Verify the token on page load
     verifyToken(token);
 
     async function verifyToken(token) {
         try {
-            const response = await fetch(API_ENDPOINTS.VERIFY_RESET_TOKEN, {
+            const response = await fetch('../../src/api/user/verify_reset_token.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: token })
             });
             const result = await response.json();
             if (result.success) {
-                form.classList.remove('hidden');
-                form.classList.add('block');
+                // Form is already visible by default, no need to change classes
+                console.log('Token verified successfully');
             } else {
-                showMessage(result.error || 'Invalid or expired token.', 'error');
+                showNotification(result.error || 'Invalid or expired token.', 'error');
             }
         } catch (error) {
-            showMessage('An error occurred while verifying your request. Please try again.', 'error');
+            showNotification('An error occurred while verifying your request. Please try again.', 'error');
         }
     }
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm_password').value;
+        const password = document.getElementById('reset_username').value;
+        const confirmPassword = document.getElementById('reset_password').value;
         const submitButton = form.querySelector('button[type="submit"]');
 
         if (password.length < 8) {
@@ -56,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.textContent = 'Resetting...';
 
         try {
-            const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
+            const response = await fetch('../../src/api/user/reset_password.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: token, password: password })
@@ -65,11 +61,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.success) {
-                form.classList.remove('block');
-                form.classList.add('hidden');
-                showMessage(result.message + ' You will be redirected to the login page shortly.', 'success');
+                // Hide form after successful reset
+                form.style.display = 'none';
+                showNotification(result.message + ' You will be redirected to the login page shortly.', 'success');
                 setTimeout(() => {
-                    window.location.href = ROUTES.LOGIN;
+                    window.location.href = './login_account_holder.html';
                 }, 5000);
             } else {
                 showNotification(result.error || 'An unexpected error occurred.', 'error');
@@ -78,14 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
             showNotification('A network error occurred. Please try again.', 'error');
         } finally {
             submitButton.disabled = false;
-            submitButton.textContent = 'Reset Password';
+            submitButton.textContent = 'Confirm Reset';
         }
     });
 
-    function showMessage(message, type) {
-        messageContainer.innerHTML = `<div class="notification notification-${type}">${message}</div>`;
-    }
-    
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;

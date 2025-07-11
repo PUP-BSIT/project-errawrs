@@ -69,8 +69,10 @@ try {
     $db = db_connect();
 
     // Find user by phone number to get their email
-    $stmt = $db->prepare('SELECT user_id, first_name, last_name, email FROM user WHERE phone_number = ?');
-    $stmt->bind_param('s', $normalized_phone);
+    // Search for both +639 and 09 formats
+    $stmt = $db->prepare('SELECT user_id, first_name, last_name, email FROM user WHERE phone_number = ? OR phone_number = ?');
+    $original_phone = $phone_number; // Keep original input for 09 format search
+    $stmt->bind_param('ss', $normalized_phone, $original_phone);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
