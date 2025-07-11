@@ -17,14 +17,28 @@
             href="./css/user_dashboard.css?v=1.1"/>
     </head>
     <body class="authenticated-page">
+        <!-- Mobile Header -->
+        <header class="main-header mobile-header" style="display: none;">
+            <div class="mobile-logo" id="mobile_logo">
+                <span class="logo-stack">Stack</span>
+                <span class="logo-overcash">Overcash</span>
+            </div>
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        <!-- Mobile flex row container, will be filled by JS only on mobile -->
+        <div class="mobile-top-row" id="mobile_top_row" style="display:none;"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-header">
-                    <div class="logo">
-                        <span class="logo-stack">Stack</span>
-                        <span class="logo-overcash">Overcash</span>
-                    </div>
+            <div class="sidebar" id="sidebar_nav" style="background-color:#000;">
+                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 0 24px; min-height: 64px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <span class="logo" style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 auto 0 0;">
+                        Stack<span class="logo-overcash" style="color: #b6ff4a;">Overcash</span>
+                    </span>
+                    <button class="close-sidebar-btn" id="close_sidebar_btn" aria-label="Close navigation" style="margin-left: 32px; margin-right: 0; font-size: 2rem; color: #fff; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="user-profile">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
@@ -33,7 +47,7 @@
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name"></h3>
+                    <!-- Removed username from sidebar -->
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
@@ -79,12 +93,13 @@
 
             <!-- Main Content -->
             <div class="main-content">
-                <!-- Header -->
-                <header class="main-header">
+                <!-- Header (desktop only) -->
+                <header class="main-header desktop-header">
+                    <!-- Empty for now, can add desktop-specific actions here -->
                 </header>
 
-                <!-- Notice Banner -->
-                <div class="notice-banner">
+                <!-- Notice Banner (for desktop, always visible) -->
+                <div class="notice-banner" id="notice_banner">
                     <div class="notice-content">
                         <i class="fas fa-exclamation-triangle notice-icon"></i>
                         <span class="notice-text">
@@ -100,7 +115,7 @@
                 <div class="dashboard-content">
                     <div class="left-section">
                         <div class="welcome-section">
-                            <h1 class="welcome-title">Hello, <span id="welcome_user_name"></span>!</h1>
+                            <h1 class="welcome-title">Hello,<br><span id="welcome_user_name"></span></h1>
                         </div>
 
                         <div class="balance-card">
@@ -142,6 +157,9 @@
             </div>
         </div>
         <div class="notification-container"></div>
+
+        <!-- Overlay for mobile nav -->
+        <div id="sidebar_overlay" class="sidebar-overlay" style="display:none;"></div>
 
         <!-- Load configuration first -->
         <script src="./js/config.js"></script>
