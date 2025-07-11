@@ -36,6 +36,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body {
     font-family: var(--font-main);
     background: linear-gradient(135deg, 
@@ -52,9 +62,10 @@ body {
     display: flex;
     height: 100vh;
     overflow-x: hidden;
-    max-width: 100vw;
-    width: 100vw;
+    /* max-width: 100vw; */
+    /* width: 100vw; */
     box-sizing: border-box;
+    flex-direction: row;
 }
 
 /* Sidebar Styles */
@@ -309,10 +320,11 @@ body {
 
 /* Main Content Styles */
 .main-content {
-    flex: 1;
+    flex: 1 1 0%;
     padding: 24px 32px;
     overflow-y: auto;
     transition: opacity 0.5s ease;
+    min-width: 0;
 }
 
 /* Header Styles */
@@ -360,7 +372,9 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
-    height: calc(100vh - 200px);
+    height: auto;
+    width: 100%;
+    min-width: 0;
 }
 
 .left-section {
@@ -386,22 +400,25 @@ body {
 /* Balance Card - SIGNIFICANTLY ENHANCED - Much Wider, Bigger */
 .balance-card {
     background: linear-gradient(135deg, #7ed957 0%, #5fb83d 100%);
-    padding: 48px 60px 60px 60px; /* Increase vertical and horizontal padding */
+    padding: 48px 5vw 60px 5vw;
     border-radius: 24px;
     color: var(--color-white);
     margin-bottom: 40px;
-    margin-top: 48px; /* Add top margin to push it lower */
+    margin-top: 48px;
     box-shadow: 0 12px 36px rgba(126, 217, 87, 0.4);
     width: 100%;
-    max-width: 650px; /* Make it wider */
-    min-width: 520px; /* Make it wider */
+    /* max-width: 650px; */
+    /* min-width: 520px; */
     position: relative;
     overflow: hidden;
     transform: translateY(-20px);
+    min-width: 0;
 }
 
 .account-display-container {
     margin-bottom: 20px;
+    width: 100%;
+    min-width: 0;
 }
 
 .account-item {
@@ -539,7 +556,7 @@ body {
     background-color: #666666;
     color: var(--color-white);
     border: none;
-    padding: 24px 48px;
+    padding: 24px 0;
     border-radius: 16px;
     font-family: var(--font-main);
     font-weight: 600;
@@ -547,8 +564,8 @@ body {
     cursor: pointer;
     transition: var(--transition-default);
     width: 100%;
-    max-width: 560px;
-    min-width: 480px;
+    /* max-width: 560px; */
+    /* min-width: 480px; */
     letter-spacing: -0.2px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
     text-decoration: none;
@@ -1195,4 +1212,218 @@ select#dashboard_account_select option {
 }
 .logo-stackovercash, .logo-stack, .logo-overcash {
     text-align: left;
+}
+
+@media (max-width: 1024px) {
+  /* Hide sidebar, show top nav */
+  .sidebar {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+  .main-header.mobile-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: #181818;
+    padding: 0 16px;
+    min-height: 56px;
+    z-index: 1200;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .dashboard-container {
+    padding-top: 56px;
+  }
+  .sidebar-overlay {
+    z-index: 1199;
+  }
+  /* Hamburger always visible */
+  .hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 2.2rem;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 0;
+    z-index: 1201;
+  }
+  /* Slide-down nav menu */
+  .topnav-dropdown {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100vw;
+    background: #181818;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    z-index: 1202;
+    transition: max-height 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    border-radius: 0 0 18px 18px;
+  }
+  .topnav-dropdown.open {
+    display: flex;
+    max-height: 500px;
+    opacity: 1;
+  }
+  .topnav-dropdown .nav-link, .topnav-dropdown .logout-btn {
+    width: 100%;
+    padding: 18px 24px;
+    font-size: 1.1rem;
+    color: #fff;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: none;
+    text-align: left;
+    justify-content: flex-start;
+    gap: 12px;
+    font-weight: 600;
+    background: transparent;
+    transition: background 0.18s, color 0.18s;
+  }
+  .topnav-dropdown .nav-link:last-child, .topnav-dropdown .logout-btn {
+    border-bottom: none;
+  }
+  .topnav-dropdown .nav-link.active, .topnav-dropdown .nav-link:hover, .topnav-dropdown .logout-btn:hover {
+    background: rgba(182,255,74,0.10);
+    color: #b6ff4a;
+  }
+  .topnav-dropdown .logout-btn {
+    color: #b6ff4a;
+    background: #222;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border-radius: 0 0 18px 18px;
+    border: none;
+    margin: 0;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 20px 24px;
+    box-shadow: none;
+  }
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .main-content {
+    padding: 16px 4vw;
+  }
+  .balance-card {
+    padding: 32px 3vw 40px 3vw;
+  }
+  .topnav-dropdown {
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+@media (min-width: 1025px) {
+  .topnav-dropdown {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+    height: auto;
+  }
+  .main-content {
+    padding: 8px 2vw;
+  }
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .left-section, .right-section, .balance-card, .account-display-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .balance-card {
+    padding: 20px 2vw 24px 2vw;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  .transfer-btn {
+    padding: 16px 0;
+  }
+  .main-header.mobile-header {
+    min-height: 48px;
+    padding: 0 8px;
+  }
+  .dashboard-container {
+    padding-top: 48px;
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: auto !important;
+  }
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto !important;
+  }
+  .dashboard-content, .left-section, .right-section, .balance-card, .account-display-container, .transactions-card, .financial-tip {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    word-break: break-word;
+  }
+  .welcome-title {
+    font-size: 2rem;
+    line-height: 1.1;
+    padding: 0 4vw;
+    word-break: break-word;
+  }
+  .balance-amount {
+    font-size: 2rem;
+    padding: 0 2vw;
+    word-break: break-word;
+  }
+  .transactions-title {
+    font-size: 1.1rem;
+    padding: 0 2vw;
+    word-break: break-word;
+  }
+  .tip-header h3, .tip-content h4, .tip-content p {
+    font-size: 1rem;
+    word-break: break-word;
+  }
+  .balance-card {
+    padding: 12px 2vw 16px 2vw;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  .transfer-btn {
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+  .account-type-large, .account-number-large, .account-number-text {
+    font-size: 1rem !important;
+    word-break: break-word;
+  }
 }

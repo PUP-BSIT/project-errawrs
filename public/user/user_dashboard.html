@@ -26,6 +26,15 @@
                 <i class="fas fa-bars"></i>
             </button>
         </header>
+        <!-- Mobile/Tablet Dropdown Nav -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
         <!-- Mobile flex row container, will be filled by JS only on mobile -->
         <div class="mobile-top-row" id="mobile_top_row" style="display:none;"></div>
         <div class="dashboard-container">
@@ -35,9 +44,6 @@
                     <span class="logo" style="font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 auto 0 0;">
                         <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
-                    <button class="close-sidebar-btn" id="close_sidebar_btn" aria-label="Close navigation" style="margin-left: 32px; margin-right: 0; font-size: 2rem; color: #fff; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
                 <div class="user-profile">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">

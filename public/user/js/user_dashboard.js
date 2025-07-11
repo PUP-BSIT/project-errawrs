@@ -144,30 +144,90 @@ let accountMaskState = {};
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Hamburger/Sidebar logic (declare once for both desktop and mobile)
+    // Declare all shared DOM variables ONCE
     const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
     const sidebar = document.getElementById('sidebar_nav');
     const closeSidebarBtn = document.getElementById('close_sidebar_btn');
     const sidebarOverlay = document.getElementById('sidebar_overlay');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Only toggle dropdown if sidebar is hidden (mobile/tablet)
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    // Mobile logout button uses same handler
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
+    // Sidebar logic for desktop only
     function openSidebar() {
-        sidebar.classList.add('open');
-        sidebarOverlay.style.display = 'block';
+        if (window.innerWidth > 1024) {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+            document.body.classList.add('sidebar-open');
+            closeSidebarBtn.style.display = 'flex';
+            setTimeout(() => {
+                if (navLinks[0]) navLinks[0].focus();
+            }, 100);
+        }
     }
     function closeSidebar() {
         sidebar.classList.remove('open');
         sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        closeSidebarBtn.style.display = 'none';
     }
-    if (hamburgerBtn) {
-        hamburgerBtn.style.display = '';
-        hamburgerBtn.addEventListener('click', openSidebar);
+    if (hamburgerBtn && sidebar) {
+        hamburgerBtn.addEventListener('click', () => {
+            if (window.innerWidth > 1024) openSidebar();
+        });
     }
     if (closeSidebarBtn) {
-        closeSidebarBtn.style.display = '';
         closeSidebarBtn.addEventListener('click', closeSidebar);
     }
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth > 1024) closeSidebar();
+        });
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+            closeSidebar();
+        } else {
+            if (topnavDropdown) topnavDropdown.classList.remove('open');
+        }
+    });
     init_dashboard().catch(error => {
         console.error('Failed to initialize dashboard:', error);
         show_notification('Failed to initialize dashboard', 'error');
@@ -201,126 +261,24 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', moveNoticeAndTipForMobile);
 
     // --- MOBILE NAVIGATION LOGIC ---
-    const navLinks = document.querySelectorAll('.nav-link');
-    function openSidebar() {
-        if (window.innerWidth > 768) return;
-        sidebar.classList.add('open');
-        sidebarOverlay.style.display = 'block';
-        document.body.classList.add('sidebar-open');
-        closeSidebarBtn.style.display = 'flex';
-        // Focus trap: focus first nav link
-        setTimeout(() => {
-            if (navLinks[0]) navLinks[0].focus();
-        }, 100);
-    }
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
-        document.body.classList.remove('sidebar-open');
-        closeSidebarBtn.style.display = 'none';
-    }
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', openSidebar);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', closeSidebar);
-    }
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', closeSidebar);
-    }
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) closeSidebar();
-        });
-    });
-    // ESC key closes sidebar
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            closeSidebar();
-        }
-    });
-    // Hide sidebar on resize to desktop
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            closeSidebar();
-        }
-    });
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 
     // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
-    let originalSidebarParent = sidebar.parentNode;
-    let originalSidebarNext = sidebar.nextSibling;
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 
-    function showSidebarPopup() {
-        if (window.innerWidth > 768) return;
-        // Move sidebar to body
-        document.body.appendChild(sidebar);
-        // Show overlay
-        sidebarOverlay.style.display = 'block';
-        sidebarOverlay.style.zIndex = 9998;
-        // Style sidebar as popup
-        Object.assign(sidebar.style, {
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            zIndex: 99999,
-            width: '92vw',
-            maxWidth: '350px',
-            height: 'auto',
-            maxHeight: '95vh',
-            transform: 'translate(-50%, -50%) scale(1)',
-            borderRadius: '24px',
-            boxShadow: '0 12px 48px 0 rgba(0,0,0,0.35)',
-            background: '#111',
-            paddingTop: '0',
-            marginTop: '0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            opacity: 1,
-            pointerEvents: 'auto',
-            overflow: 'visible',
-            transition: 'opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1)'
-        });
-        sidebar.classList.add('open');
-    }
-    function hideSidebarPopup() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
-        // Hide and move back to original parent
-        if (window.innerWidth <= 768) {
-            sidebar.style.opacity = 0;
-            sidebar.style.pointerEvents = 'none';
-            // Optionally move back to original parent
-            if (originalSidebarParent && originalSidebarNext) {
-                originalSidebarParent.insertBefore(sidebar, originalSidebarNext);
-            } else if (originalSidebarParent) {
-                originalSidebarParent.appendChild(sidebar);
-            }
-        }
-    }
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', showSidebarPopup);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', hideSidebarPopup);
-    }
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', hideSidebarPopup);
-    }
-    // ESC key closes sidebar
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            hideSidebarPopup();
-        }
-    });
-    // On resize, hide popup and restore sidebar
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            hideSidebarPopup();
-        }
-    });
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
+
+    // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 });
 
 // Update the fetchUserAccounts function
