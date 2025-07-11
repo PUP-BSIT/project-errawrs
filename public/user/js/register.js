@@ -7,6 +7,7 @@ import * as formDataUtils from './register-form-data.js';
 import * as notifications from './register-notifications.js';
 import { submitRegistrationData } from './register-submit.js';
 import { initFileUpload, setOnFileChangeCallback } from './register-file-upload.js';
+import { hideLoading, hideOtpModal } from './register-otp-modal.js';
 
 const FORM_VALIDATION = {
 	FIRST_NAME_MIN_LENGTH: 2,
@@ -313,7 +314,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Callback to submit registration after OTP is verified
     async function onOtpVerifiedSubmitRegistration() {
         if (pendingFormData) {
-            await submitRegistrationData(pendingFormData, API_ENDPOINT, showSuccessStep);
+            const success = await submitRegistrationData(pendingFormData, API_ENDPOINT, showSuccessStep);
+            if (success) {
+                // Hide loading animation and close OTP modal after successful registration
+                hideLoading();
+                hideOtpModal();
+            } else {
+                // If registration failed, hide loading but keep modal open for retry
+                hideLoading();
+            }
             pendingFormData = null;
         }
     }
