@@ -195,10 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     function closeSidebar() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.style.display = 'none';
         document.body.classList.remove('sidebar-open');
-        closeSidebarBtn.style.display = 'none';
+        if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
     }
     if (hamburgerBtn && sidebar) {
         hamburgerBtn.addEventListener('click', () => {
@@ -360,14 +360,10 @@ function updateAccountDisplay() {
         if (account.account_number === selectedAccountNumber) {
             accountElement.classList.add('selected');
         }
-        accountElement.style.cursor = 'pointer';
+        accountElement.classList.add('pointer');
         accountElement.addEventListener('click', (e) => {
             // Prevent toggling mask when clicking the eye icon
             if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
-
-        accountElement.classList.add('pointer');
-        accountElement.addEventListener('click', () => {
-
             window.selectedAccountNumber = account.account_number;
             update_balance_display(account.balance);
             fetchRecentTransactions(account.account_number);
