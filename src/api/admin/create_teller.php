@@ -87,6 +87,15 @@
       sendError('Invalid email format');
   }
 
+  // Helper to get base URL
+  function getBaseUrl() {
+      $host = $_SERVER['HTTP_HOST'] ?? '';
+      if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+          return 'http://localhost/project-errawrs/public';
+      }
+      return 'https://dev.stackovercash.site';
+  }
+
   try {
       $db = db_connect();
       $db->begin_transaction();
@@ -136,6 +145,24 @@
       $teller_id = $db->insert_id;
 
       // Send verification email
+      $templatePath = PROJECT_ROOT . '/src/api/user/email-templates/teller-account-setup-email.html';
+      $template = file_get_contents($templatePath);
+      $cssPath = PROJECT_ROOT . '/src/api/user/email-templates/registration-email.css';
+      $css = file_get_contents($cssPath);
+      $set_password_link = getBaseUrl() . '/teller/set_password.html?teller_email=' . urlencode($data['email']);
+      $htmlBody = str_replace([
+        '{{FIRST_NAME}}',
+        '{{LAST_NAME}}',
+        '{{TELLER_NUMBER}}',
+        '{{SET_PASSWORD_LINK}}',
+        '<link rel="stylesheet" href="registration-email.css">'
+      ], [
+        htmlspecialchars($data['first_name']),
+        htmlspecialchars($data['last_name']),
+        htmlspecialchars($teller_number),
+        $set_password_link,
+        '<style>' . $css . '</style>'
+      ], $template);
       $mail = new PHPMailer\PHPMailer\PHPMailer(true);
       $mail->isSMTP();
       $mail->Host = $_ENV['GMAIL_HOST'];
@@ -147,13 +174,9 @@
       $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
       $mail->addAddress($data['email'], "{$data['first_name']} {$data['last_name']}");
       $mail->Subject = 'Complete Your Teller Account Setup';
-      $mail->Body = "Dear {$data['first_name']} {$data['last_name']},\n\n"
-          . "An account has been created for you as a teller at StackOvercash. Here are your account details:\n\n"
-          . "Teller Number: {$teller_number}\n\n"
-          . "Please click the link below to set your password and complete your setup:\n"
-          . "http://localhost/project-errawrs/public/teller/set_password.html?teller_email=" . urlencode($data['email']) . "\n\n"
-          . "If you did not request this account, please ignore this email.\n\n"
-          . "Best regards,\nStackOvercash Team";
+      $mail->isHTML(true);
+      $mail->Body = $htmlBody;
+      $mail->AltBody = "Dear {$data['first_name']} {$data['last_name']},\n\nPlease set your password using the following link: $set_password_link\n\nIf you did not request this account, please ignore this email.\n\nBest regards,\nStackOvercash Team";
       $mail->send();
 
       $db->commit();
