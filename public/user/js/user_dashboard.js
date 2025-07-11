@@ -139,148 +139,13 @@ function maskAccountNumber(accountNumber) {
     return masked + visible;
 }
 
-// Store mask state per account
-let accountMaskState = {};
-
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Declare all shared DOM variables ONCE
-    const hamburgerBtn = document.getElementById('hamburger_btn');
-    const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
-    const sidebar = document.getElementById('sidebar_nav');
-    const closeSidebarBtn = document.getElementById('close_sidebar_btn');
-    const sidebarOverlay = document.getElementById('sidebar_overlay');
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
-    if (hamburgerBtn && topnavDropdown) {
-        hamburgerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // Only toggle dropdown if sidebar is hidden (mobile/tablet)
-            if (window.innerWidth <= 1024) {
-                topnavDropdown.classList.toggle('open');
-            }
-        });
-        // Close dropdown when clicking a nav link or logout
-        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
-            el.addEventListener('click', () => {
-                topnavDropdown.classList.remove('open');
-            });
-        });
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
-                topnavDropdown.classList.remove('open');
-            }
-        });
-    }
-    // Mobile logout button uses same handler
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            handleLogout();
-        });
-    }
-    // Sidebar logic for desktop only
-    function openSidebar() {
-        if (window.innerWidth > 1024) {
-            sidebar.classList.add('open');
-            sidebarOverlay.style.display = 'block';
-            document.body.classList.add('sidebar-open');
-            closeSidebarBtn.style.display = 'flex';
-            setTimeout(() => {
-                if (navLinks[0]) navLinks[0].focus();
-            }, 100);
-        }
-    }
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
-        document.body.classList.remove('sidebar-open');
-        closeSidebarBtn.style.display = 'none';
-    }
-    if (hamburgerBtn && sidebar) {
-        hamburgerBtn.addEventListener('click', () => {
-            if (window.innerWidth > 1024) openSidebar();
-        });
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', closeSidebar);
-    }
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', closeSidebar);
-    }
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth > 1024) closeSidebar();
-        });
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            closeSidebar();
-        }
-    });
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-            closeSidebar();
-        } else {
-            if (topnavDropdown) topnavDropdown.classList.remove('open');
-        }
-    });
     init_dashboard().catch(error => {
         console.error('Failed to initialize dashboard:', error);
         show_notification('Failed to initialize dashboard', 'error');
     });
     displayFinancialTip(); // Display initial tip
-
-    // --- MOBILE NOTICE + TIP FLEX ROW LOGIC ---
-    function moveNoticeAndTipForMobile() {
-        const notice = document.getElementById('notice_banner');
-        const tip = document.getElementById('financial_tip_container');
-        const mobileRow = document.getElementById('mobile_top_row');
-        const rightSection = document.querySelector('.right-section');
-        const dashboardContent = document.querySelector('.dashboard-content');
-        const welcomeSection = document.querySelector('.welcome-section');
-        const leftSection = document.querySelector('.left-section');
-        if (!notice || !tip || !mobileRow || !rightSection || !dashboardContent || !welcomeSection || !leftSection) return;
-        if (window.innerWidth <= 768) {
-            if (!mobileRow.contains(notice)) mobileRow.appendChild(notice);
-            if (!mobileRow.contains(tip)) mobileRow.appendChild(tip);
-            if (!mobileRow.contains(welcomeSection)) mobileRow.appendChild(welcomeSection);
-            mobileRow.style.display = 'flex';
-            mobileRow.style.flexDirection = 'column';
-            mobileRow.classList.remove('hidden');
-        } else {
-            if (!rightSection.contains(tip)) rightSection.insertBefore(tip, rightSection.firstChild);
-            if (dashboardContent && !dashboardContent.contains(notice)) dashboardContent.parentNode.insertBefore(notice, dashboardContent);
-            if (!leftSection.contains(welcomeSection)) leftSection.insertBefore(welcomeSection, leftSection.firstChild);
-            mobileRow.style.display = 'none';
-            mobileRow.classList.add('hidden');
-        }
-    }
-    moveNoticeAndTipForMobile();
-    window.addEventListener('resize', moveNoticeAndTipForMobile);
-
-    // --- MOBILE NAVIGATION LOGIC ---
-    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
-    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
-    // The original logic for mobile sidebar popup is removed.
-
-    // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
-    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
-    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
-    // The original logic for mobile sidebar popup is removed.
-
-    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
-    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
-    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
-    // The original logic for mobile sidebar popup is removed.
-
-    // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
-    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
-    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
-    // The original logic for mobile sidebar popup is removed.
 });
 
 // Update the fetchUserAccounts function
@@ -361,41 +226,22 @@ function updateAccountDisplay() {
             accountElement.classList.add('selected');
         }
         accountElement.classList.add('pointer');
-        accountElement.addEventListener('click', (e) => {
-            // Prevent toggling mask when clicking the eye icon
-            if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
+        accountElement.addEventListener('click', () => {
             window.selectedAccountNumber = account.account_number;
             update_balance_display(account.balance);
             fetchRecentTransactions(account.account_number);
+            // Re-render to update highlight
             updateAccountDisplay();
         });
         const accountType = account.account_type 
             ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
             : 'Savings';
-        // Mask state for this account
-        const isMasked = accountMaskState[account.account_number] !== false;
-        const displayNumber = isMasked ? maskAccountNumber(account.account_number) : account.account_number;
-        const eyeIconClass = isMasked ? 'fa-eye' : 'fa-eye-slash';
         accountElement.innerHTML = `
             <div class="account-info">
-                <div class="account-type account-type-large">${accountType} Account</div>
-                <div class="account-number account-number-large">
-                    <span class="account-number-text" data-account-number="${account.account_number}">${displayNumber}</span>
-                    <span class="account-eye-icon" style="margin-left:12px; cursor:pointer; vertical-align:middle;" title="Show/Hide Account Number">
-                        <i class="fas ${eyeIconClass}"></i>
-                    </span>
-                </div>
+                <div class="account-type">${accountType} Account</div>
+                <div class="account-number">${maskAccountNumber(account.account_number)}</div>
             </div>
         `;
-        // Add event listener for eye icon
-        const eyeIcon = accountElement.querySelector('.account-eye-icon');
-        if (eyeIcon) {
-            eyeIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                accountMaskState[account.account_number] = !isMasked;
-                updateAccountDisplay();
-            });
-        }
         account_display_container.appendChild(accountElement);
     });
 
@@ -513,10 +359,13 @@ async function fetchUserData() {
 
         if (data.success && data.authenticated) {
             user_data = data.user; // Store user data in state
+            if (user_name_element) {
+                user_name_element.textContent = `${user_data.first_name} ${user_data.last_name}`.trim();
+            }
             // Update welcome message
             const welcome_user_name_element = document.getElementById('welcome_user_name');
             if (welcome_user_name_element) {
-                welcome_user_name_element.textContent = (user_data.first_name ? user_data.first_name : '') + (user_data.last_name ? ' ' + user_data.last_name : '') + '!';
+                welcome_user_name_element.textContent = user_data.first_name;
             }
 
             display_user_initial(); // Update the initial
@@ -754,7 +603,7 @@ function displayFinancialTip() {
     
     tipContainer.innerHTML = `
         <div class="tip-header">
-            <i class="fas fa-lightbulb"></i>
+            <i class="fas ${tip.icon}"></i>
             <h3>Financial Tip</h3>
         </div>
         <div class="tip-content">
