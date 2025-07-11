@@ -20,11 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', handleSearch);
         
         // Logout
-        logoutBtn.addEventListener('click', (e) => {
+        logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            showToast('Logging out...', 'info');
-            // Implement actual logout logic here
-            setTimeout(() => window.location.href = 'login.html', 1000);
+            try {
+                await fetch('/project-errawrs/src/api/auth/logout.php', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (err) {}
+            sessionStorage.clear();
+            window.location.href = 'login.html';
         });
     }
 
@@ -228,5 +233,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Manual close
         toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
+    }
+});
+
+// Session check on page load
+(async function() {
+    try {
+        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) {
+            window.location.href = 'login.html';
+        }
+    } catch (e) {
+        window.location.href = 'login.html';
+    }
+})();
+
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        window.location.reload();
     }
 });

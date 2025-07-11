@@ -316,8 +316,8 @@ body {
 /* Toast Notification Styles */
 .toast-container {
     position: fixed;
-    top: 24px;
-    right: 24px;
+    top: 20px;
+    right: 20px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -387,6 +387,14 @@ body {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.toast-error {
+    border-left: 4px solid #e74c3c;
+}
+
+.toast-error i {
+    color: #e74c3c;
 }
 
 .toast-error {
