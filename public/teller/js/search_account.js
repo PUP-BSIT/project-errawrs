@@ -33,11 +33,18 @@ const clearBtn = document.getElementById('clear_search_btn');
 
 if (searchInput && clearBtn) {
     searchInput.addEventListener('input', () => {
-        clearBtn.style.display = searchInput.value ? 'flex' : 'none';
+        if (searchInput.value) {
+            clearBtn.classList.remove('clear-search-btn-hidden');
+            clearBtn.classList.add('clear-search-btn-visible');
+        } else {
+            clearBtn.classList.remove('clear-search-btn-visible');
+            clearBtn.classList.add('clear-search-btn-hidden');
+        }
     });
     clearBtn.addEventListener('click', () => {
         searchInput.value = '';
-        clearBtn.style.display = 'none';
+        clearBtn.classList.remove('clear-search-btn-visible');
+        clearBtn.classList.add('clear-search-btn-hidden');
         updateAccountDetails([]); // Clear results and show history
     });
 }
@@ -96,13 +103,15 @@ function updateAccountDetails(accounts) {
     if (!searchTerm) {
         // Show search history if no search term
         searchHistoryContainer.classList.remove("hidden");
-        searchHistoryContainer.style.display = "block";
+        searchHistoryContainer.classList.add("search-history-visible");
+        searchHistoryContainer.classList.remove("search-history-hidden");
         return;
     }
 
     // Hide search history when showing search results
     searchHistoryContainer.classList.add("hidden");
-    searchHistoryContainer.style.display = "none";
+    searchHistoryContainer.classList.add("search-history-hidden");
+    searchHistoryContainer.classList.remove("search-history-visible");
 
     // Set single card layout if only one account
     if (accounts.length === 1) {
@@ -305,7 +314,8 @@ async function searchAccount() {
 
     // Always hide search history when searching
     searchHistoryContainer.classList.add("hidden");
-    searchHistoryContainer.style.display = "none";
+    searchHistoryContainer.classList.add("search-history-hidden");
+    searchHistoryContainer.classList.remove("search-history-visible");
 
     // Clear account container when search is empty
     if (!searchTerm) {
@@ -314,7 +324,8 @@ async function searchAccount() {
         // Show search history when search is empty
         if (searchHistory.length > 0) {
             searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
+            searchHistoryContainer.classList.add("search-history-visible");
+            searchHistoryContainer.classList.remove("search-history-hidden");
         }
         hideLoadingIndicator();
         // Remove scrollbar when no search
@@ -355,7 +366,8 @@ async function searchAccount() {
                 
                 // Keep search history hidden and show results
                 searchHistoryContainer.classList.add("hidden");
-                searchHistoryContainer.style.display = "none";
+                searchHistoryContainer.classList.add("search-history-hidden");
+                searchHistoryContainer.classList.remove("search-history-visible");
                 
                 // Show scrollbar when we have search results
                 contentArea.classList.add("has-search-results");
@@ -368,7 +380,8 @@ async function searchAccount() {
                 // Show search history when no matches found
                 if (searchHistory.length > 0) {
                     searchHistoryContainer.classList.remove("hidden");
-                    searchHistoryContainer.style.display = "block";
+                    searchHistoryContainer.classList.add("search-history-visible");
+                    searchHistoryContainer.classList.remove("search-history-hidden");
                 }
                 // Remove scrollbar when no results
                 contentArea.classList.remove("has-search-results");
@@ -380,7 +393,8 @@ async function searchAccount() {
             // Show search history when no accounts found
             if (searchHistory.length > 0) {
                 searchHistoryContainer.classList.remove("hidden");
-                searchHistoryContainer.style.display = "block";
+                searchHistoryContainer.classList.add("search-history-visible");
+                searchHistoryContainer.classList.remove("search-history-hidden");
             }
             // Remove scrollbar when no results
             contentArea.classList.remove("has-search-results");
@@ -394,7 +408,8 @@ async function searchAccount() {
         // Show search history on error
         if (searchHistory.length > 0) {
             searchHistoryContainer.classList.remove("hidden");
-            searchHistoryContainer.style.display = "block";
+            searchHistoryContainer.classList.add("search-history-visible");
+            searchHistoryContainer.classList.remove("search-history-hidden");
         }
         // Remove scrollbar on error
         contentArea.classList.remove("has-search-results");
@@ -415,14 +430,16 @@ function showLoadingIndicator() {
         searchContainer.appendChild(loadingIndicator);
     }
 
-    loadingIndicator.style.display = "flex";
+    loadingIndicator.classList.remove("loading-indicator-hidden");
+    loadingIndicator.classList.add("loading-indicator-visible");
 }
 
 // Hide loading indicator
 function hideLoadingIndicator() {
     const loadingIndicator = document.getElementById("loading_indicator");
     if (loadingIndicator) {
-        loadingIndicator.style.display = "none";
+        loadingIndicator.classList.remove("loading-indicator-visible");
+        loadingIndicator.classList.add("loading-indicator-hidden");
     }
 }
 
@@ -458,14 +475,16 @@ function showTransactionForm(type) {
         </div>
     `;
 
-    transactionModal.style.display = "flex";
+    transactionModal.classList.remove("transaction-modal-hidden");
+    transactionModal.classList.add("transaction-modal-visible");
     document.getElementById("transaction_amount").focus();
 }
 
 // Hide transaction form
 function hideTransactionForm() {
     const transactionModal = document.getElementById("transaction_form");
-    transactionModal.style.display = "none";
+    transactionModal.classList.remove("transaction-modal-visible");
+    transactionModal.classList.add("transaction-modal-hidden");
 }
 
 // Process transaction
@@ -770,7 +789,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const clearBtn = document.getElementById('clear_search_btn');
         if (searchInput) {
             searchInput.value = accountParam;
-            if (clearBtn) clearBtn.style.display = 'flex';
+            if (clearBtn) {
+            clearBtn.classList.remove('clear-search-btn-hidden');
+            clearBtn.classList.add('clear-search-btn-visible');
+        }
             // Trigger the search logic (call the function that runs on input)
             searchAccount();
         }
@@ -782,7 +804,8 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Always hide search history when typing
         searchHistoryContainer.classList.add("hidden");
-        searchHistoryContainer.style.display = "none";
+        searchHistoryContainer.classList.add("search-history-hidden");
+        searchHistoryContainer.classList.remove("search-history-visible");
 
         if (!searchTerm) {
             // Clear account container when empty
@@ -791,7 +814,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Show search history when search is cleared
             if (searchHistory.length > 0) {
                 searchHistoryContainer.classList.remove("hidden");
-                searchHistoryContainer.style.display = "block";
+                searchHistoryContainer.classList.add("search-history-visible");
+                searchHistoryContainer.classList.remove("search-history-hidden");
             }
             hideLoadingIndicator();
             contentArea.classList.remove("has-search-results");
