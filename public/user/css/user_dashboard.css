@@ -6,19 +6,28 @@
     --color-white: #ffffff;
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
+    --color-mint-dark: #5fb83d;
     --color-gray: #a3a3a3;
     --color-login-button: #ee5634;
-    --color-input-bg: #e5e5e5;
-    --color-border: #ddd;
     --color-text-muted: #666;
     --color-success: #28a745;
     --color-error: #dc3545;
-    --color-warning: #ffc107;
-    --color-info: #17a2b8;
-    --color-success-bg: #d4edda;
-    --color-error-bg: #f8d7da;
-    --color-warning-bg: #fff3cd;
-    --color-info-bg: #d1ecf1;
+    --color-border: #ddd;
+    --color-input-bg: #e5e5e5;
+    --color-dark-gray: #666666;
+    --color-darker-gray: #5a5a5a;
+    --color-light-gray: #f0f0f0;
+    --color-light-bg: #f8f9fa;
+    --color-dark-bg: #181818;
+    --color-black: #000000;
+    --color-orange: #ff6b35;
+    --color-dark-text: #222;
+    --color-medium-text: #333;
+    --color-light-text: #444;
+    --color-mobile-bg: #e5faca;
+    --color-sidebar-bg: #111;
+    --color-sidebar-dark: #181818;
+    --color-hover-bg: #333;
     --border-radius-small: 8px;
     --border-radius-medium: 20px;
     --spacing-small: 0.5rem;
@@ -60,7 +69,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 280px;
-    background-color: #000;
+    background-color: var(--color-black);
     color: var(--color-white);
     display: flex;
     flex-direction: column;
@@ -180,7 +189,7 @@ body {
 .username {
     font-size: 28px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: -0.3px;
     margin-top: 4px;
     text-align: center;
@@ -215,7 +224,7 @@ body {
     display: flex;
     align-items: center;
     padding: 24px 24px;
-    color: #fff;
+    color: var(--color-white);
     text-decoration: none;
     border-radius: 12px;
     transition: all 0.3s ease;
@@ -245,7 +254,7 @@ body {
 }
 
 .nav-item.active .nav-link {
-    color: #fff;
+    color: var(--color-white);
     background-color: rgba(182, 255, 74, 0.08);
 }
 
@@ -297,7 +306,7 @@ body {
     padding: 24px 24px;
     background-color: transparent;
     border: none;
-    color: #fff;
+    color: var(--color-white);
     cursor: pointer;
     border-radius: 12px;
     transition: all 0.3s ease;
@@ -309,7 +318,7 @@ body {
 
 .logout-btn:hover {
     background-color: rgba(220, 53, 69, 0.12); /* faded red */
-    color: #fff;
+    color: var(--color-white);
 }
 
 /* Main Content Styles */
@@ -334,7 +343,7 @@ body {
     padding: 16px 20px;
     margin-bottom: 32px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #ff6b35;
+    border-left: 4px solid var(--color-orange);
 }
 
 .notice-content {
@@ -344,13 +353,13 @@ body {
 }
 
 .notice-icon {
-    color: #ff6b35;
+    color: var(--color-orange);
     margin-top: 2px;
     font-size: 14px;
 }
 
 .notice-text {
-    color: #333;
+    color: var(--color-medium-text);
     line-height: 1.5;
     font-size: 14px;
     font-weight: 400;
@@ -392,7 +401,7 @@ body {
 
 /* Balance Card - SIGNIFICANTLY ENHANCED - Much Wider, Bigger */
 .balance-card {
-    background: linear-gradient(135deg, #7ed957 0%, #5fb83d 100%);
+    background: linear-gradient(135deg, var(--color-mint) 0%, var(--color-mint-dark) 100%);
     padding: 48px 60px 60px 60px; /* Increase vertical and horizontal padding */
     border-radius: 24px;
     color: var(--color-white);
@@ -502,7 +511,7 @@ body {
     left: 0;
     top: calc(100% + 8px);
     width: 100%;
-    background: #FFFFFF;
+    background: var(--color-white);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 20;
@@ -522,7 +531,7 @@ body {
     font-size: 20px;
     font-weight: 600;
     color: var(--color-primary-black);
-    background: #FFFFFF;
+    background: var(--color-white);
     cursor: pointer;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
@@ -543,7 +552,7 @@ body {
 
 /* Transfer Button Styles */
 .transfer-btn {
-    background-color: #666666;
+    background-color: var(--color-dark-gray);
     color: var(--color-white);
     border: none;
     padding: 24px 48px;
@@ -567,7 +576,7 @@ body {
 }
 
 .transfer-btn:hover {
-    background-color: #5a5a5a;
+    background-color: var(--color-darker-gray);
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
 }
@@ -586,7 +595,7 @@ body {
 }
 
 .financial-tip {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-bg) 100%);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 32px;
@@ -782,7 +791,7 @@ body {
         font-weight: 800;
         text-align: left;
         margin-bottom: 0;
-        color: #111;
+        color: var(--color-primary-black);
         letter-spacing: -0.5px;
     }
     .balance-card {
@@ -803,13 +812,13 @@ body {
     .account-type-large {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #222;
+        color: var(--color-dark-text);
         margin-bottom: 2px;
     }
     .account-number-large, .account-number-text {
         font-size: 1.25rem;
         font-weight: 800;
-        color: #222;
+        color: var(--color-dark-text);
         letter-spacing: 1.1px;
         background: rgba(255,255,255,0.45);
         border-radius: 2vw;
@@ -819,7 +828,7 @@ body {
     }
     .account-eye-icon {
         font-size: 1.2rem;
-        color: #222;
+        color: var(--color-dark-text);
         background: rgba(255,255,255,0.7);
         width: 28px;
         height: 28px;
@@ -832,7 +841,7 @@ body {
     .balance-amount {
         font-size: 2.2rem;
         font-weight: 900;
-        color: #222;
+        color: var(--color-dark-text);
         margin-top: 3vw;
         text-shadow: 0 2px 8px rgba(126,217,87,0.08);
         letter-spacing: -1px;
@@ -851,8 +860,8 @@ body {
         padding-right: 0;
     }
     .transfer-btn:hover {
-        background: linear-gradient(90deg, #5fb83d 0%, #7ed957 100%);
-        color: #fff;
+        background: linear-gradient(90deg, var(--color-mint-dark) 0%, var(--color-mint) 100%);
+        color: var(--color-white);
     }
     .financial-tip {
         margin: 0 4vw 4vw 4vw;
@@ -878,7 +887,7 @@ body {
         font-size: 1.1rem;
         font-weight: 700;
         margin-bottom: 10px;
-        color: #222;
+        color: var(--color-dark-text);
     }
     .transaction-header {
         margin-bottom: 10px;
@@ -906,7 +915,7 @@ body {
     }
     .transaction-date {
         font-size: 1rem;
-        color: #444;
+        color: var(--color-light-text);
         font-weight: 600;
     }
     .transaction-amount {
@@ -1038,7 +1047,7 @@ body {
 }
 
 .modal-content .secondary-btn:hover {
-    background-color: #888;
+    background-color: var(--color-gray);
 }
 
 .modal-content .primary-btn:disabled {
@@ -1311,14 +1320,14 @@ select#dashboard_account_select option {
 .account-type-large {
     font-size: 1.35rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: 0.5px;
     margin-bottom: 2px;
 }
 .account-number-large {
     font-size: 2.1rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--color-white);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1332,7 +1341,7 @@ select#dashboard_account_select option {
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
-    color: #fff;
+    color: var(--color-white);
     background: rgba(0,0,0,0.12);
     border-radius: 50%;
     width: 32px;
@@ -1342,8 +1351,8 @@ select#dashboard_account_select option {
     transition: background 0.2s, color 0.2s;
 }
 .account-eye-icon:hover {
-    background: #b6ff4a;
-    color: #222;
+    background: var(--color-lime-green);
+    color: var(--color-dark-text);
 }
 
 /* Ensure .account-number-text is bold and readable */
@@ -1351,7 +1360,7 @@ select#dashboard_account_select option {
     font-family: 'Montserrat', monospace;
     font-weight: 800;
     font-size: 2.1rem;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: 1.2px;
 }
 
@@ -1361,7 +1370,7 @@ select#dashboard_account_select option {
     background: none;
     border: none;
     font-size: 2.2rem;
-    color: #111;
+    color: var(--color-primary-black);
     cursor: pointer;
     margin-right: 16px;
     z-index: 120;
@@ -1371,7 +1380,7 @@ select#dashboard_account_select option {
     background: none;
     border: none;
     font-size: 2.2rem;
-    color: #fff;
+    color: var(--color-white);
     position: absolute;
     top: 18px;
     right: 18px;
@@ -1416,7 +1425,7 @@ select#dashboard_account_select option {
     transform: translate(-50%, -50%) scale(0.92) !important;
     border-radius: 24px !important;
     box-shadow: 0 12px 48px 0 rgba(0,0,0,0.35) !important;
-    background: #111 !important;
+    background: var(--color-sidebar-bg) !important;
     padding-top: 0 !important;
     margin-top: 0 !important;
     display: flex !important;
@@ -1458,18 +1467,18 @@ select#dashboard_account_select option {
     padding-right: 32px;
   }
   .sidebar .popup-header .logo-stack {
-    color: #fff;
+    color: var(--color-white);
     margin-right: 4px;
   }
   .sidebar .popup-header .logo-overcash {
-    color: #b6ff4a;
+    color: var(--color-lime-green);
   }
   .sidebar .close-sidebar-btn {
     display: flex !important;
     background: none;
     border: none;
     font-size: 2rem;
-    color: #fff;
+    color: var(--color-white);
     margin-left: 32px;
     margin-right: 12px;
     align-items: center;
@@ -1491,7 +1500,7 @@ select#dashboard_account_select option {
     height: 48px !important;
     font-size: 1.3rem !important;
     margin: 0 auto 0 auto;
-    border: 2px solid #b6ff4a;
+    border: 2px solid var(--color-lime-green);
   }
   .sidebar-nav, .sidebar-footer {
     width: 100%;
@@ -1541,7 +1550,7 @@ select#dashboard_account_select option {
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
-    background: #e5faca !important;
+    background: var(--color-mobile-bg) !important;
   }
   .dashboard-container {
     width: 100%;
@@ -1554,7 +1563,7 @@ select#dashboard_account_select option {
   .notice-banner {
     width: 100%;
     max-width: 100%;
-    background: #fff;
+    background: var(--color-white);
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     margin-bottom: 18px;
@@ -1585,12 +1594,12 @@ select#dashboard_account_select option {
     font-size: 1.2rem;
     font-weight: 700;
     margin: 0 0 8px 0;
-    color: #111;
+    color: var(--color-primary-black);
     line-height: 1.2;
   }
   .financial-tip {
     flex: 1 1 40%;
-    background: #fff;
+    background: var(--color-white);
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     padding: 12px 10px;
@@ -1607,7 +1616,7 @@ select#dashboard_account_select option {
   .balance-card {
     width: 100%;
     max-width: 100%;
-    background: #7ed957;
+    background: var(--color-mint);
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(126,217,87,0.13);
     margin: 0 auto 18px auto;
@@ -1621,14 +1630,14 @@ select#dashboard_account_select option {
   .balance-label {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-white);
     margin-bottom: 6px;
     letter-spacing: 0.5px;
   }
   .balance-amount {
     font-size: 1.7rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--color-white);
     margin: 0;
     letter-spacing: 1px;
   }
@@ -1642,8 +1651,8 @@ select#dashboard_account_select option {
     padding: 10px 0;
     box-shadow: 0 2px 8px rgba(126,217,87,0.13);
     z-index: 200;
-    background: #444;
-    color: #fff;
+    background: var(--color-light-text);
+    color: var(--color-white);
     text-align: center;
     font-weight: 700;
     border: none;
@@ -1651,7 +1660,7 @@ select#dashboard_account_select option {
   .transactions-card {
     width: 100%;
     max-width: 100%;
-    background: #fff;
+    background: var(--color-white);
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     margin-bottom: 18px;
@@ -1675,8 +1684,8 @@ select#dashboard_account_select option {
     font-size: 0.95rem;
     padding: 6px 18px;
     border-radius: 12px;
-    background: #222;
-    color: #fff;
+    background: var(--color-dark-text);
+    color: var(--color-white);
     font-weight: 600;
     letter-spacing: 0.5px;
   }
@@ -1691,13 +1700,13 @@ select#dashboard_account_select option {
     align-items: center;
     padding: 8px 0;
     font-size: 0.98rem;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--color-light-gray);
   }
   .transaction-item:last-child {
     border-bottom: none;
   }
   .transaction-date {
-    color: #222;
+    color: var(--color-dark-text);
     font-weight: 500;
     font-size: 0.98rem;
   }
@@ -1745,7 +1754,7 @@ select#dashboard_account_select option {
   align-items: center !important;
   justify-content: flex-start !important;
   position: relative !important;
-  background: #181818 !important;
+  background: var(--color-dark-bg) !important;
   border-radius: 0 24px 24px 0 !important;
   box-shadow: 2px 0 24px rgba(0,0,0,0.18);
 }
@@ -1772,24 +1781,24 @@ select#dashboard_account_select option {
   margin-bottom: clamp(12px, 2vh, 24px) !important;
   padding-bottom: clamp(8px, 1vh, 16px) !important;
 }
-.avatar {
-  width: clamp(44px, 8vw, 64px) !important;
-  height: clamp(44px, 8vw, 64px) !important;
-  font-size: clamp(1.3rem, 3vw, 2.2rem) !important;
-  margin-bottom: 8px;
-  border: 2.5px solid #b6ff4a;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.username {
-  font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-  margin-top: 2px !important;
-  font-weight: 700;
-  color: #fff;
-  text-align: center;
-}
+  .avatar {
+    width: clamp(44px, 8vw, 64px) !important;
+    height: clamp(44px, 8vw, 64px) !important;
+    font-size: clamp(1.3rem, 3vw, 2.2rem) !important;
+    margin-bottom: 8px;
+    border: 2.5px solid var(--color-lime-green);
+    background: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .username {
+    font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
+    margin-top: 2px !important;
+    font-weight: 700;
+    color: var(--color-white);
+    text-align: center;
+  }
 .sidebar-nav {
   flex: 1 1 auto !important;
   display: flex !important;
@@ -1828,7 +1837,7 @@ select#dashboard_account_select option {
 }
 .nav-link.active, .nav-link:hover {
   background: rgba(182,255,74,0.10) !important;
-  color: #b6ff4a !important;
+  color: var(--color-lime-green) !important;
 }
 .sidebar-footer {
   display: flex;
@@ -1850,8 +1859,8 @@ select#dashboard_account_select option {
   border-radius: 18px !important;
 }
 .logout-btn:hover {
-  background: #333 !important;
-  color: #b6ff4a !important;
+  background: var(--color-hover-bg) !important;
+  color: var(--color-lime-green) !important;
 }
 .logout-btn i {
   margin-right: 8px !important;
@@ -1947,7 +1956,7 @@ select#dashboard_account_select option {
     justify-content: space-between;
     width: 100vw;
     height: 54px;
-    background: #111;
+    background: var(--color-sidebar-bg);
     padding: 0 18px;
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -1962,18 +1971,18 @@ select#dashboard_account_select option {
     letter-spacing: -0.5px;
   }
   .mobile-logo .logo-stack {
-    color: #fff;
+    color: var(--color-white);
     margin-right: 4px;
   }
   .mobile-logo .logo-overcash {
-    color: #b6ff4a;
+    color: var(--color-lime-green);
   }
   .hamburger-btn {
     display: flex !important;
     background: none;
     border: none;
     font-size: 2rem;
-    color: #fff;
+    color: var(--color-white);
     cursor: pointer;
     align-items: center;
     justify-content: center;
@@ -1996,7 +2005,7 @@ select#dashboard_account_select option {
     box-shadow: 0 0 40px rgba(0,0,0,0.25);
     border-radius: 0 16px 16px 0;
     padding-top: 54px;
-    background: #111;
+    background: var(--color-sidebar-bg);
     box-sizing: border-box;
     display: flex !important;
     flex-direction: column;
@@ -2020,7 +2029,7 @@ select#dashboard_account_select option {
     background: none;
     border: none;
     font-size: 2rem;
-    color: #fff;
+    color: var(--color-white);
     position: absolute;
     top: 12px;
     right: 16px;
@@ -2174,29 +2183,29 @@ select#dashboard_account_select option {
     width: 86vw;
     max-width: 370px;
     min-width: 0;
-    background: #fff;
+    background: var(--color-white);
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     padding: 18px 16px 18px 18px;
     margin: 0 0 18px 0;
     display: block;
     font-size: 1.08rem;
-    color: #222;
+    color: var(--color-dark-text);
     min-height: 80px;
     word-break: break-word;
   }
   .mobile-top-row .notice-banner {
-    border-left: 4px solid #ee5634;
+    border-left: 4px solid var(--color-login-button);
     margin-bottom: 22px;
   }
   .mobile-top-row .financial-tip {
-    border-left: 4px solid #7ed957;
+    border-left: 4px solid var(--color-mint);
     margin-bottom: 0;
   }
   .mobile-top-row .notice-content,
   .mobile-top-row .tip-header,
   .mobile-top-row .tip-content {
-    color: #222;
+    color: var(--color-dark-text);
     font-size: 1.05rem;
     font-weight: 500;
     margin-bottom: 4px;
