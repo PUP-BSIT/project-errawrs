@@ -17,23 +17,43 @@
             href="./css/user_dashboard.css?v=1.1"/>
     </head>
     <body class="authenticated-page">
+        <!-- Mobile Header -->
+        <header class="main-header mobile-header hidden">
+            <div class="mobile-logo" id="mobile_logo">
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+            </div>
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        <!-- Move nav here: Topnav Dropdown Nav (now block, not floating) -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
+        <!-- Mobile/Tablet Dropdown Nav moved above -->
+        <!-- Mobile flex row container, will be filled by JS only on mobile -->
+        <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-header">
-                    <div class="logo">
-                        <span class="logo-stack">Stack</span>
-                        <span class="logo-overcash">Overcash</span>
-                    </div>
+            <div class="sidebar sidebar-black" id="sidebar_nav">
+                <div class="popup-header popup-header-style">
+                    <span class="logo logo-large">
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+                    </span>
                 </div>
-                <div class="user-profile">
+                <div class="user-profile flex-center">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name"></h3>
+                    <!-- Removed username from sidebar -->
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
@@ -79,12 +99,13 @@
 
             <!-- Main Content -->
             <div class="main-content">
-                <!-- Header -->
-                <header class="main-header">
+                <!-- Header (desktop only) -->
+                <header class="main-header desktop-header">
+                    <!-- Empty for now, can add desktop-specific actions here -->
                 </header>
 
-                <!-- Notice Banner -->
-                <div class="notice-banner">
+                <!-- Notice Banner (for desktop, always visible) -->
+                <div class="notice-banner" id="notice_banner">
                     <div class="notice-content">
                         <i class="fas fa-exclamation-triangle notice-icon"></i>
                         <span class="notice-text">
@@ -100,7 +121,7 @@
                 <div class="dashboard-content">
                     <div class="left-section">
                         <div class="welcome-section">
-                            <h1 class="welcome-title">Hello, <span id="welcome_user_name"></span>!</h1>
+                            <h1 class="welcome-title">Hello,<br><span id="welcome_user_name"></span></h1>
                         </div>
 
                         <div class="balance-card">
@@ -142,6 +163,9 @@
             </div>
         </div>
         <div class="notification-container"></div>
+
+        <!-- Overlay for mobile nav -->
+        <div id="sidebar_overlay" class="sidebar-overlay hidden"></div>
 
         <!-- Load configuration first -->
         <script src="./js/config.js"></script>
