@@ -250,11 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!mobileRow.contains(welcomeSection)) mobileRow.appendChild(welcomeSection);
             mobileRow.style.display = 'flex';
             mobileRow.style.flexDirection = 'column';
+            mobileRow.classList.remove('hidden');
         } else {
             if (!rightSection.contains(tip)) rightSection.insertBefore(tip, rightSection.firstChild);
             if (dashboardContent && !dashboardContent.contains(notice)) dashboardContent.parentNode.insertBefore(notice, dashboardContent);
             if (!leftSection.contains(welcomeSection)) leftSection.insertBefore(welcomeSection, leftSection.firstChild);
             mobileRow.style.display = 'none';
+            mobileRow.classList.add('hidden');
         }
     }
     moveNoticeAndTipForMobile();

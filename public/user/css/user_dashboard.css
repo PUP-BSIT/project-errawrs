@@ -1485,3 +1485,13 @@ select#dashboard_account_select option {
     color: #dc3545 !important;
   }
 }
+
+/* Utility classes for inline styles moved from HTML */
+.hidden { display: none !important; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.sidebar-black { background-color: #000 !important; }
+.popup-header-style { display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 0 24px; min-height: 64px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px; }
+.logo-large { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 auto 0 0; }
+.mobile-top-row-hidden { display: none !important; }
+.sidebar-overlay-hidden { display: none !important; }
+.edit-icon-hidden { display: none !important; }
