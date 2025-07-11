@@ -110,16 +110,16 @@ function clearSearch() {
     selectedAccount = null;
     updateDisplayedBalance();
     suggestionsDiv.classList.remove('active');
-    clearSearchBtn.style.display = 'none';
+    clearSearchBtn.classList.remove('show');
     validateAmount(parseFloat(amountInput.value) || 0);
 }
 
 // Show/hide clear button based on input value
 function toggleClearButton() {
     if (accountInput.value.trim().length > 0) {
-        clearSearchBtn.style.display = 'flex';
+        clearSearchBtn.classList.add('show');
     } else {
-        clearSearchBtn.style.display = 'none';
+        clearSearchBtn.classList.remove('show');
     }
 }
 
@@ -238,14 +238,14 @@ function validateAmount(amount) {
     const amountInput = document.getElementById('deposit_amount');
     
     if (!selectedAccount) {
-        amountInput.style.borderColor = '';
+        amountInput.classList.remove('error');
         validationMessage.style.display = 'none';
         confirmButton.classList.remove('active');
         return false;
     }
     
     if (selectedAccount.status === 'closed') {
-        amountInput.style.borderColor = 'var(--color-red)';
+        amountInput.classList.add('error');
         validationMessage.textContent = 'Cannot deposit to a closed account';
         validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
@@ -254,26 +254,26 @@ function validateAmount(amount) {
 
     // If amount is empty or not entered yet, don't show error
     if (amountInput.value === '') {
-        amountInput.style.borderColor = '';
+        amountInput.classList.remove('error');
         validationMessage.style.display = 'none';
         confirmButton.classList.remove('active');
         return false;
     }
     
     if (isNaN(amount) || amount <= 0) {
-        amountInput.style.borderColor = 'var(--color-red)';
+        amountInput.classList.add('error');
         validationMessage.textContent = 'Please enter a valid amount';
         validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     } else if (amount > MAX_DEPOSIT_AMOUNT) {
-        amountInput.style.borderColor = 'var(--color-red)';
+        amountInput.classList.add('error');
         validationMessage.textContent = `Maximum deposit amount is ${formatCurrency(MAX_DEPOSIT_AMOUNT)}`;
         validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     } else {
-        amountInput.style.borderColor = '';
+        amountInput.classList.remove('error');
         validationMessage.style.display = 'none';
         confirmButton.classList.add('active');
         return true;
@@ -479,7 +479,7 @@ function finishTransaction() {
     const confirmButton = document.querySelector('.btn.confirm');
     confirmButton.classList.remove('active');
     document.querySelector('.validation-message').style.display = 'none';
-    document.getElementById('deposit_amount').style.borderColor = '';
+    document.getElementById('deposit_amount').classList.remove('error');
 }
 
 // Add input validation for amount

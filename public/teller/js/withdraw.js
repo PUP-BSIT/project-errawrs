@@ -110,16 +110,16 @@ function clearSearch() {
     selectedAccount = null;
     updateDisplayedBalance();
     suggestionsDiv.classList.remove('active');
-    clearSearchBtn.style.display = 'none';
+    clearSearchBtn.classList.remove('show');
     validateAmount(parseFloat(amountInput.value) || 0);
 }
 
 // Show/hide clear button based on input value
 function toggleClearButton() {
     if (accountInput.value.trim().length > 0) {
-        clearSearchBtn.style.display = 'flex';
+        clearSearchBtn.classList.add('show');
     } else {
-        clearSearchBtn.style.display = 'none';
+        clearSearchBtn.classList.remove('show');
     }
 }
 
@@ -127,29 +127,7 @@ function toggleClearButton() {
 clearSearchBtn.addEventListener('click', clearSearch);
 accountInput.addEventListener('input', toggleClearButton);
 
-// Clear search functionality
-function clearSearch() {
-    accountInput.value = '';
-    selectedAccount = null;
-    updateDisplayedBalance();
-    suggestionsDiv.classList.remove('active');
-    clearSearchBtn.classList.add('hidden');
-    validateAmount(parseFloat(amountInput.value) || 0);
-}
 
-// Show/hide clear button based on input value
-function toggleClearButton() {
-    if (accountInput.value.trim().length > 0) {
-        clearSearchBtn.classList.remove('hidden');
-        clearSearchBtn.classList.add('flex');
-    } else {
-        clearSearchBtn.classList.add('hidden');
-    }
-}
-
-// Add event listeners for clear functionality
-clearSearchBtn.addEventListener('click', clearSearch);
-accountInput.addEventListener('input', toggleClearButton);
 
 accountInput.addEventListener('input', function(e) {
     const searchTerm = e.target.value.trim();
@@ -262,63 +240,49 @@ function validateAmount(amount) {
     const amountInput = document.getElementById('withdraw_amount');
     
     if (!selectedAccount) {
-        amountInput.classList.remove('border-error');
-        amountInput.classList.add('border-normal');
-        validationMessage.classList.remove('block');
-        validationMessage.classList.add('hidden');
+        amountInput.classList.remove('error');
+        validationMessage.style.display = 'none';
         confirmButton.classList.remove('active');
         return false;
     }
     
     if (selectedAccount.status === 'closed') {
-        amountInput.classList.add('border-error');
-        amountInput.classList.remove('border-normal');
+        amountInput.classList.add('error');
         validationMessage.textContent = 'Cannot withdraw from a closed account';
-        validationMessage.classList.remove('hidden');
-        validationMessage.classList.add('block');
+        validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     }
 
     // If amount is empty or not entered yet, don't show error
     if (amountInput.value === '') {
-        amountInput.classList.remove('border-error');
-        amountInput.classList.add('border-normal');
-        validationMessage.classList.remove('block');
-        validationMessage.classList.add('hidden');
+        amountInput.classList.remove('error');
+        validationMessage.style.display = 'none';
         confirmButton.classList.remove('active');
         return false;
     }
     
     if (isNaN(amount) || amount <= 0) {
-        amountInput.classList.add('border-error');
-        amountInput.classList.remove('border-normal');
+        amountInput.classList.add('error');
         validationMessage.textContent = 'Please enter a valid amount';
-        validationMessage.classList.remove('hidden');
-        validationMessage.classList.add('block');
+        validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     } else if (amount > MAX_WITHDRAW_AMOUNT) {
-        amountInput.classList.add('border-error');
-        amountInput.classList.remove('border-normal');
+        amountInput.classList.add('error');
         validationMessage.textContent = `Maximum withdrawal amount is ${formatCurrency(MAX_WITHDRAW_AMOUNT)}`;
-        validationMessage.classList.remove('hidden');
-        validationMessage.classList.add('block');
+        validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     } else if (amount > selectedAccount.balance) {
-        amountInput.classList.add('border-error');
-        amountInput.classList.remove('border-normal');
+        amountInput.classList.add('error');
         validationMessage.textContent = 'Insufficient balance';
-        validationMessage.classList.remove('hidden');
-        validationMessage.classList.add('block');
+        validationMessage.style.display = 'block';
         confirmButton.classList.remove('active');
         return false;
     } else {
-        amountInput.classList.remove('border-error');
-        amountInput.classList.add('border-normal');
-        validationMessage.classList.remove('block');
-        validationMessage.classList.add('hidden');
+        amountInput.classList.remove('error');
+        validationMessage.style.display = 'none';
         confirmButton.classList.add('active');
         return true;
     }
@@ -499,10 +463,8 @@ function finishTransaction() {
     // Clear validation states
     const confirmButton = document.querySelector('.btn.confirm');
     confirmButton.classList.remove('active');
-    document.querySelector('.validation-message').classList.remove('block');
-    document.querySelector('.validation-message').classList.add('hidden');
-    document.getElementById('withdraw_amount').classList.remove('border-error');
-    document.getElementById('withdraw_amount').classList.add('border-normal');
+    document.querySelector('.validation-message').style.display = 'none';
+    document.getElementById('withdraw_amount').classList.remove('error');
 }
 
 // Add input validation for amount
