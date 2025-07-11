@@ -9,7 +9,7 @@ techblinders_api.md
 stackovercash_api_doc.md
 
 # Logs
-/src/logs/*
+/logs/*
 *.log
 error.log
 error_log
