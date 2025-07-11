@@ -27,6 +27,15 @@ if (!$teller_id) {
     exit();
 }
 
+// Helper to get base URL
+function getBaseUrl() {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+        return 'http://localhost/project-errawrs/public';
+    }
+    return 'https://dev.stackovercash.site';
+}
+
 try {
     $db = db_connect();
     $stmt = $db->prepare('SELECT email, first_name, last_name FROM teller WHERE teller_id = ?');
@@ -41,10 +50,25 @@ try {
     $first_name = $teller['first_name'];
     $last_name = $teller['last_name'];
     // Generate reset link
-    $reset_link = 'http://localhost/project-errawrs/public/teller/reset_password.html?teller_email=' . urlencode($email);
-    // Send email
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
-    $dotenv->load();
+    $reset_link = getBaseUrl() . '/teller/reset_password.html?teller_email=' . urlencode($email);
+    // Prepare HTML email
+    $templatePath = __DIR__ . '/../user/email-templates/teller-reset-password-email.html';
+    $template = file_get_contents($templatePath);
+    $cssPath = __DIR__ . '/../user/email-templates/registration-email.css';
+    $css = file_get_contents($cssPath);
+    $htmlBody = str_replace([
+      '{{FIRST_NAME}}',
+      '{{LAST_NAME}}',
+      '{{EMAIL}}',
+      '{{RESET_PASSWORD_LINK}}',
+      '<link rel="stylesheet" href="registration-email.css">'
+    ], [
+      htmlspecialchars($first_name),
+      htmlspecialchars($last_name),
+      htmlspecialchars($email),
+      $reset_link,
+      '<style>' . $css . '</style>'
+    ], $template);
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
     $mail->isSMTP();
     $mail->Host = $_ENV['GMAIL_HOST'];
@@ -56,7 +80,9 @@ try {
     $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
     $mail->addAddress($email, "$first_name $last_name");
     $mail->Subject = 'Reset Your Teller Account Password';
-    $mail->Body = "Dear $first_name $last_name,\n\nYou requested a password reset for your teller account. Please click the link below to reset your password:\n\n$reset_link\n\nIf you did not request this reset, please ignore this email.\n\nBest regards,\nStackOvercash Team";
+    $mail->isHTML(true);
+    $mail->Body = $htmlBody;
+    $mail->AltBody = "Dear $first_name $last_name,\n\nYou requested a password reset for your teller account. Please use the following link: $reset_link\n\nIf you did not request this reset, please ignore this email.\n\nBest regards,\nStackOvercash Team";
     $mail->send();
     echo json_encode(['success' => true, 'message' => 'A password reset link has been sent to the teller\'s email address.']);
 } catch (Exception $e) {

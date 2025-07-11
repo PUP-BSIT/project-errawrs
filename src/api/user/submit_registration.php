@@ -141,20 +141,19 @@
       $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
       // Read the email template
-      $emailTemplate = file_get_contents(__DIR__ . '/email-templates/registration-email.html');
+      $emailTemplate = file_get_contents(__DIR__ . '/email-templates/registration-review-email.html');
       $emailCSS = file_get_contents(__DIR__ . '/email-templates/registration-email.css');
-      
-      // Replace placeholders in the template
-      $emailTemplate = str_replace('{{FIRST_NAME}}', $input['first_name'], $emailTemplate);
-      $emailTemplate = str_replace('{{LAST_NAME}}', $input['last_name'], $emailTemplate);
-      $emailTemplate = str_replace('{{REGISTRATION_ID}}', $registration_id, $emailTemplate);
-      
-      // Embed CSS inline for email compatibility
-      $emailTemplate = str_replace(
-          '<link rel="stylesheet" href="registration-email.css">',
-          '<style>' . $emailCSS . '</style>',
-          $emailTemplate
-      );
+      $emailTemplate = str_replace([
+        '{{FIRST_NAME}}',
+        '{{LAST_NAME}}',
+        '{{REGISTRATION_ID}}',
+        '<link rel="stylesheet" href="registration-email.css">'
+      ], [
+        htmlspecialchars($input['first_name']),
+        htmlspecialchars($input['last_name']),
+        htmlspecialchars($registration_id),
+        '<style>' . $emailCSS . '</style>'
+      ], $emailTemplate);
 
       $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
       $mail->addAddress($input['email']);
