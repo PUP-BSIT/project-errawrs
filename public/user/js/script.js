@@ -42,8 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function goToIndex(index) {
-        const cardWidth = cards[0].offsetWidth;
-        const gap = parseInt(getComputedStyle(track).gap) || 32;
+        let cardWidth, gap;
+        if (window.innerWidth <= 700) {
+            cardWidth = cards[0].offsetWidth; // Use the actual card width (90vw)
+            gap = 0;
+        } else {
+            cardWidth = cards[0].offsetWidth;
+            gap = parseInt(getComputedStyle(track).gap) || 32;
+        }
         currentIndex = Math.max(0, Math.min(index, cards.length - 1));
         let offset = currentIndex * (cardWidth + gap);
 
@@ -100,3 +106,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 }); 
+
+// Hamburger menu functionality
+(function() {
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+  const closeMenu = document.querySelector('.close-menu');
+
+  function toggleIcons(isMenuOpen) {
+    if (hamburger) hamburger.style.display = isMenuOpen ? 'none' : 'block';
+    if (closeMenu) closeMenu.style.display = isMenuOpen ? 'block' : 'none';
+  }
+
+  if (hamburger && mobileMenuOverlay && closeMenu) {
+    // Initial state
+    toggleIcons(false);
+    hamburger.addEventListener('click', function() {
+      mobileMenuOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      toggleIcons(true);
+    });
+    closeMenu.addEventListener('click', function() {
+      mobileMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+      toggleIcons(false);
+    });
+    // Optional: close menu when clicking outside the menu
+    mobileMenuOverlay.addEventListener('click', function(e) {
+      if (e.target === mobileMenuOverlay) {
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        toggleIcons(false);
+      }
+    });
+  }
+})(); 
