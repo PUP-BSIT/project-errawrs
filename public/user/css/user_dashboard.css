@@ -52,7 +52,7 @@ body {
                 var(--color-bg-gradient-start) 0%, 
                 var(--color-bg-gradient-end) 100%);
     min-height: 100vh;
-    overflow: hidden;
+    overflow: auto;
     overflow-x: hidden;
     max-width: 100vw;
 }
@@ -1224,22 +1224,17 @@ select#dashboard_account_select option {
     left: -9999px !important;
   }
   .main-header.mobile-header {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    background: #181818;
-    padding: 0 16px;
-    min-height: 56px;
-    z-index: 1200;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: #181818;
+      padding: 0 16px;
+      min-height: 56px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
   .dashboard-container {
-    padding-top: 56px;
+    padding-top: 0;
   }
   .sidebar-overlay {
     z-index: 1199;
@@ -1400,7 +1395,7 @@ select#dashboard_account_select option {
     word-break: break-word;
   }
   .balance-amount {
-    font-size: 2rem;
+    font-size: 1.3rem !important;
     padding: 0 2vw;
     word-break: break-word;
   }
@@ -1425,5 +1420,68 @@ select#dashboard_account_select option {
   .account-type-large, .account-number-large, .account-number-text {
     font-size: 1rem !important;
     word-break: break-word;
+  }
+  /* Make main containers 90% width and centered for less congestion */
+  .notice-banner,
+  .financial-tip,
+  .balance-card,
+  .transactions-card,
+  .dashboard-content,
+  .main-content,
+  .mobile-top-row {
+    width: 90% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Recent Transaction section mobile improvements */
+  .transactions-card {
+    padding: 16px 8px !important;
+  }
+  .transactions-title {
+    font-size: 1rem !important;
+    margin-bottom: 12px !important;
+  }
+  .transaction-header {
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+    flex-wrap: nowrap !important;
+  }
+  .header-tag {
+    font-size: 0.95rem !important;
+    padding: 10px 14px !important;
+    min-width: 70px;
+    white-space: nowrap;
+  }
+  .transaction-item {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding: 10px 0 !important;
+  }
+  .transaction-date {
+    font-size: 1rem !important;
+    min-width: 80px;
+    color: #888 !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+  }
+  .transaction-amount {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin-left: auto !important;
+    text-align: right !important;
+    line-height: 1.2 !important;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .transaction-amount.positive,
+  .transaction-amount.deposit {
+    color: #28a745 !important;
+  }
+  .transaction-amount.negative,
+  .transaction-amount.withdrawal {
+    color: #dc3545 !important;
   }
 }

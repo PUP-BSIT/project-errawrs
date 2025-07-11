@@ -26,7 +26,7 @@
                 <i class="fas fa-bars"></i>
             </button>
         </header>
-        <!-- Mobile/Tablet Dropdown Nav -->
+        <!-- Move nav here: Topnav Dropdown Nav (now block, not floating) -->
         <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
             <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
             <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
@@ -35,6 +35,7 @@
             <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
             <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
         </nav>
+        <!-- Mobile/Tablet Dropdown Nav moved above -->
         <!-- Mobile flex row container, will be filled by JS only on mobile -->
         <div class="mobile-top-row" id="mobile_top_row" style="display:none;"></div>
         <div class="dashboard-container">
