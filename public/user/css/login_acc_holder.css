@@ -75,9 +75,9 @@ header {
 
 .login-form-container {
     background-color: var(--color-primary-black);
-    width: 56%;
-    min-width: 420px;
-    max-width: 700px;
+    width: 40%;
+    min-width: 320px;
+    max-width: 450px;
     padding: 2rem 2rem;
     color: var(--color-white);
     display: flex;
@@ -124,8 +124,7 @@ header {
     border: none;
     border-radius: 4px;
     font-family: var(--font-main);
-    font-size: 1.15rem;
-    font-weight: 500;
+    font-size: 1rem;
     box-sizing: border-box;
     background-color: var(--color-white);
 }
@@ -150,7 +149,7 @@ header {
     border: none;
     border-radius: 4px;
     padding: 1rem;
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 700;
     text-transform: lowercase;
     cursor: pointer;
@@ -175,9 +174,8 @@ header {
     justify-content: center;
     align-items: center;
     margin-top: 0.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--color-gray);
-    font-weight: 500;
 }
 
 .forgot-link {
@@ -204,8 +202,7 @@ header {
 .divider-text {
     padding: 0 1rem;
     color: var(--color-gray);
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .register-button {
@@ -213,8 +210,8 @@ header {
     color: var(--color-primary-black);
     border-radius: 4px;
     padding: 1rem;
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     text-align: center;
     text-decoration: none;
     display: block;
@@ -325,247 +322,6 @@ header {
     }
 }
 
-/* Mobile S */
-@media (max-width: 320px) {
-    .login-container {
-        flex-direction: column;
-        height: 100vh;
-        align-items: center;
-        justify-content: flex-start;
-    }
-    .login-form-container {
-        width: 100vw;
-        min-width: 0;
-        max-width: 340px;
-        height: auto;
-        min-height: 100vh;
-        margin: 0 auto;
-        padding: 2.2rem 0.7rem 1.2rem 0.7rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-    .login-header-top {
-        margin-bottom: 1.2rem;
-        width: 100%;
-        text-align: center;
-    }
-    .login-logo {
-        font-size: 1.2rem;
-    }
-    .welcome-text {
-        font-size: 1rem;
-    }
-    .login-form {
-        gap: 0.7rem;
-        width: 100%;
-    }
-    .login-input, .login-button, .register-button {
-        font-size: 1rem;
-        padding: 0.7rem;
-    }
-    .register-button, .login-button {
-        width: 100%;
-    }
-    .register-button {
-        width: 90%;
-        max-width: 260px;
-        margin: 2rem auto 0 auto;
-        display: block;
-    }
-    .login-illustration {
-        display: none !important;
-    }
-}
-/* Mobile M */
-@media (min-width: 321px) and (max-width: 375px) {
-    .login-container {
-        flex-direction: column;
-        height: 100vh;
-        align-items: center;
-        justify-content: flex-start;
-    }
-    .login-form-container {
-        width: 100vw;
-        min-width: 0;
-        max-width: 370px;
-        height: auto;
-        min-height: 100vh;
-        margin: 0 auto;
-        padding: 2.5rem 1rem 1.5rem 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-    .login-header-top {
-        margin-bottom: 1.3rem;
-        width: 100%;
-        text-align: center;
-    }
-    .login-logo {
-        font-size: 1.3rem;
-    }
-    .welcome-text {
-        font-size: 1.1rem;
-    }
-    .login-form {
-        gap: 0.9rem;
-        width: 100%;
-    }
-    .login-input, .login-button, .register-button {
-        font-size: 1.08rem;
-        padding: 0.8rem;
-    }
-    .register-button, .login-button {
-        width: 100%;
-    }
-    .register-button {
-        width: 90%;
-        max-width: 280px;
-        margin: 2rem auto 0 auto;
-        display: block;
-    }
-    .login-illustration {
-        display: none !important;
-    }
-}
-/* Mobile L */
-@media (min-width: 376px) and (max-width: 425px) {
-    .login-container {
-        flex-direction: column;
-        height: 100vh;
-        align-items: center;
-        justify-content: flex-start;
-    }
-    .login-form-container {
-        width: 100vw;
-        min-width: 0;
-        max-width: 410px;
-        height: auto;
-        min-height: 100vh;
-        margin: 0 auto;
-        padding: 3rem 1.2rem 2rem 1.2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-    .login-header-top {
-        margin-bottom: 1.5rem;
-        width: 100%;
-        text-align: center;
-    }
-    .login-logo {
-        font-size: 1.5rem;
-    }
-    .welcome-text {
-        font-size: 1.2rem;
-    }
-    .login-form {
-        gap: 1.1rem;
-        width: 100%;
-    }
-    .login-input, .login-button, .register-button {
-        font-size: 1.12rem;
-        padding: 0.9rem;
-    }
-    .register-button, .login-button {
-        width: 100%;
-    }
-    .register-button {
-        width: 90%;
-        max-width: 320px;
-        margin: 2rem auto 0 auto;
-        display: block;
-    }
-    .login-illustration {
-        display: none !important;
-    }
-}
-/* Tablet */
-@media (min-width: 426px) and (max-width: 768px) {
-    .login-container {
-        flex-direction: column;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-    }
-    .login-form-container {
-        width: 100vw;
-        min-width: 0;
-        max-width: 520px;
-        height: auto;
-        min-height: 100vh;
-        margin: 0 auto;
-        padding: 3.5rem 2rem 2.5rem 2rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-    .login-header-top {
-        margin-bottom: 2rem;
-        width: 100%;
-        text-align: center;
-    }
-    .login-logo {
-        font-size: 1.7rem;
-    }
-    .welcome-text {
-        font-size: 1.3rem;
-    }
-    .login-form {
-        gap: 1.2rem;
-        width: 100%;
-    }
-    .login-input, .login-button, .register-button {
-        font-size: 1.15rem;
-        padding: 1rem;
-    }
-    .register-button, .login-button {
-        width: 100%;
-    }
-    .login-illustration {
-        display: none !important;
-    }
-}
-/* Laptop */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .login-form-container {
-        width: 60%;
-        min-width: 420px;
-        max-width: 600px;
-        padding: 3.5rem 2.5rem 2.5rem 2.5rem;
-    }
-    .login-header-top {
-        margin-bottom: 2.2rem;
-    }
-    .login-logo {
-        font-size: 2rem;
-    }
-    .welcome-text {
-        font-size: 1.4rem;
-    }
-}
-/* & Above */
-@media (min-width: 1025px) {
-    .login-form-container {
-        width: 56%;
-        min-width: 420px;
-        max-width: 700px;
-        padding: 2rem 2rem;
-    }
-}
 .modal {
     position: fixed;
     top: 0;
