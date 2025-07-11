@@ -33,9 +33,7 @@
                         <li><a href="./about.html">About Us</a></li>
                     </ul>
                 </nav>
-                <a href="./login_account_holder.html" class="login-btn"
-                    >Login</a
-                >
+                <a id="login-link" class="login-btn">Login</a>
             </div>
         </header>
 
@@ -454,6 +452,10 @@
                 </div>
             </div>
         </footer>
+        <script src="./js/config.js"></script>
+        <script>
+        document.getElementById('login-link').href = ROUTES.LOGIN;
+        </script>
         <script src="./js/script.js"></script>
     </body>
 </html>

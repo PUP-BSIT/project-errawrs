@@ -888,3 +888,4 @@ footer {
         padding: 0.7rem 1rem 1.1rem 1rem;
     }
 }
+.slide-x { transform: translateX(var(--slide-x, 0)); transition: transform 0.2s; }

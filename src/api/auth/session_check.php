@@ -54,26 +54,37 @@ try {
         // Update last activity
         $sessionManager->updateActivity();
 
-        // Use account data from session if available
-        $userData = [
-            'id' => $_SESSION['auth']['id'],
-            'username' => $_SESSION['auth']['identifier'],
-            'first_name' => $_SESSION['auth']['first_name'],
-            'last_name' => $_SESSION['auth']['last_name'],
-            'phone_number' => $_SESSION['auth']['phone_number'],
-            'email' => $_SESSION['auth']['email']
-        ];
-        
-        // Add account data if it exists in session
-        if (isset($_SESSION['userInfo']['account'])) {
-            $userData['account'] = $_SESSION['userInfo']['account'];
-        }
+        // Fetch all user fields from the database
+        $conn = db_connect();
+        $user_id = $_SESSION['auth']['id'];
+        $stmt = $conn->prepare('SELECT user_id, username, first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image FROM user WHERE user_id = ?');
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $stmt->bind_result($user_id, $username, $first_name, $last_name, $phone_number, $date_of_birth, $nationality, $street, $city, $zip_code, $country, $email, $id_type, $id_image);
+        $stmt->fetch();
+        $stmt->close();
+        $conn->close();
 
+        $userData = [
+            'user_id' => $user_id,
+            'username' => $username,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'phone_number' => $phone_number,
+            'date_of_birth' => $date_of_birth,
+            'nationality' => $nationality,
+            'street' => $street,
+            'city' => $city,
+            'zip_code' => $zip_code,
+            'country' => $country,
+            'email' => $email,
+            'id_type' => $id_type,
+            'id_image' => $id_image
+        ];
         echo json_encode([
             'success' => true,
             'authenticated' => true,
-            'user' => $userData,
-            'userInfo' => $_SESSION['userInfo'] ?? null // Include the full userInfo object
+            'user' => $userData
         ]);
     } else {
         error_log("Session check failed - Not authenticated");
