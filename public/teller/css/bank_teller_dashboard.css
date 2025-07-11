@@ -1,35 +1,56 @@
+/* ========================================
+   BANK TELLER DASHBOARD STYLES
+   ======================================== */
+
+/* CSS Custom Properties (Variables) */
 :root {
+    /* Color Palette */
     --color-primary-black: #111111;
     --color-lime-green: #b6ff4a;
     --color-bg-gradient-start: #f3ffe1;
     --color-bg-gradient-end: #d4f3ad;
     --color-white: #ffffff;
-    --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
-    --color-login-button: #ee5634;
     --color-red: #ff4757;
+    
+    /* Input & Border Colors */
     --color-input-bg: #e5e5e5;
     --color-border: #ddd;
     --color-text-muted: #666;
+    
+    /* Status Colors */
     --color-success: #28a745;
     --color-error: #dc3545;
     --color-warning: #ffc107;
     --color-info: #17a2b8;
+    
+    /* Status Background Colors */
     --color-success-bg: #d4edda;
     --color-error-bg: #f8d7da;
     --color-warning-bg: #fff3cd;
     --color-info-bg: #d1ecf1;
+    
+    /* Spacing & Layout */
     --border-radius-small: 8px;
     --border-radius-medium: 20px;
     --spacing-small: 0.5rem;
     --spacing-medium: 1rem;
     --spacing-large: 2rem;
     --spacing-xl: 3rem;
+    
+    /* Effects */
     --box-shadow-light: 0 10px 30px rgba(0, 0, 0, 0.1);
     --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
     --transition-default: 0.3s ease;
+    
+    /* Typography */
+    --font-main: 'Montserrat', sans-serif;
 }
+
+/* ========================================
+   GLOBAL RESET & BASE STYLES
+   ======================================== */
 
 * {
     margin: 0;
@@ -46,13 +67,84 @@ body {
     color: var(--color-primary-black);
 }
 
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.hidden {
+    display: none;
+}
+
+.block {
+    display: block;
+}
+
+.rounded {
+    border-radius: var(--border-radius-small);
+}
+
+.rounded-lg {
+    border-radius: var(--border-radius-medium);
+}
+
+.shadow {
+    box-shadow: var(--box-shadow-light);
+}
+
+.shadow-lg {
+    box-shadow: var(--box-shadow-heavy);
+}
+
+.transition {
+    transition: var(--transition-default);
+}
+
+/* ========================================
+   MAIN LAYOUT CONTAINER
+   ======================================== */
+
 .container {
     display: flex;
     height: 100vh;
     overflow: hidden;
 }
 
-/* Sidebar Styles */
+/* ========================================
+   SIDEBAR STYLES
+   ======================================== */
+
 .sidebar {
     width: 250px;
     background-color: var(--color-primary-black);
@@ -67,6 +159,7 @@ body {
     z-index: 1000;
 }
 
+/* Logo Section */
 .logo {
     margin-bottom: 40px;
 }
@@ -85,6 +178,7 @@ body {
     color: var(--color-lime-green);
 }
 
+/* User Profile Section */
 .user-profile {
     text-align: center;
     margin-bottom: 48px;
@@ -116,6 +210,7 @@ body {
     letter-spacing: -0.3px;
 }
 
+/* Dynamic Avatar (Initials) */
 .user-avatar.dynamic-avatar {
     background: var(--color-white);
     border: 3px solid var(--color-mint);
@@ -127,7 +222,7 @@ body {
     color: var(--color-primary-black);
 }
 
-/* Navigation Styles */
+/* Navigation Menu */
 .nav-menu {
     flex: 1;
     display: flex;
@@ -165,7 +260,7 @@ body {
     background-color: #333;
 }
 
-/* Sidebar Footer*/
+/* Logout Button */
 .nav-logout {
     display: flex;
     align-items: center;
@@ -198,17 +293,19 @@ body {
 }
 
 .nav-logout i {
-    font-size: 14px;
     font-size: 1.2rem;
 }
 
-/* Main Content Styles */
+/* ========================================
+   MAIN CONTENT AREA
+   ======================================== */
+
 .main-content {
     flex: 1;
     padding: 35px 32px 0px 32px;
     margin-left: 250px;
     height: 100vh;
-    overflow-y: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -219,10 +316,15 @@ body {
     flex-shrink: 0;
 }
 
-/* Top Bar Styles */
-.top-bar, .top-icons, .top-icon { display: none !important; }
+/* Hide top bar elements */
+.top-bar, .top-icons, .top-icon { 
+    display: none !important; 
+}
 
-/* Notifications */
+/* ========================================
+   NOTIFICATION SYSTEM
+   ======================================== */
+
 .notification-container {
     position: fixed;
     top: 20px;
@@ -272,7 +374,10 @@ body {
     }
 }
 
-/* Notice Section */
+/* ========================================
+   NOTICE SECTION
+   ======================================== */
+
 .notice-section {
     background-color: var(--color-white);
     border-radius: 16px;
@@ -311,13 +416,17 @@ body {
     margin-top: 0 !important;
 }
 
-/* Search Container Styles */
+/* ========================================
+   SEARCH FUNCTIONALITY
+   ======================================== */
+
 .search-container {
     width: 500px;
     position: relative;
     z-index: 100;
     display: flex;
     flex-direction: column;
+    margin-bottom: 16px;
 }
 
 .search-label {
@@ -364,6 +473,7 @@ body {
     font-size: 16px;
 }
 
+/* Search Results Dropdown */
 .search-results {
     display: none;
     position: absolute;
@@ -378,10 +488,12 @@ body {
     box-shadow: var(--box-shadow-heavy);
     z-index: 1000;
 }
+
 .search-results.block {
     display: block;
 }
 
+/* Search Results Scrollbar */
 .search-results::-webkit-scrollbar {
     width: 8px;
 }
@@ -395,6 +507,7 @@ body {
     border-radius: 4px;
 }
 
+/* Search Result Items */
 .search-result-item {
     padding: 20px;
     margin-bottom: 10px;
@@ -432,6 +545,7 @@ body {
     margin-bottom: 5px;
 }
 
+/* No Results & Loading States */
 .no-results, .loading-results {
     padding: 25px;
     text-align: center;
@@ -452,12 +566,16 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Stats Grid Styles */
+/* ========================================
+   STATISTICS GRID
+   ======================================== */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    padding: 0;
+    padding: 20px 0;
+    margin: 20px 0;
     max-width: 100%;
     position: sticky;
     top: 20px;
@@ -465,11 +583,10 @@ body {
     background: linear-gradient(135deg, 
                 var(--color-bg-gradient-start) 0%, 
                 var(--color-bg-gradient-end) 100%);
-    padding: 20px 0;
-    margin: 20px 0;
     border-radius: 16px;
 }
 
+/* Individual Stat Cards */
 .stat-card {
     background: var(--color-white);
     border-radius: 16px;
@@ -487,6 +604,7 @@ body {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
+/* Stat Card Icon */
 .stat-icon {
     width: 48px;
     height: 48px;
@@ -502,6 +620,7 @@ body {
     color: var(--color-primary-black);
 }
 
+/* Stat Card Details */
 .stat-details {
     flex: 1;
 }
@@ -527,7 +646,10 @@ body {
     font-weight: 500;
 }
 
-/* Account Card Styles */
+/* ========================================
+   ACCOUNT CARD STYLES
+   ======================================== */
+
 .account-card {
     background: var(--color-white);
     border-radius: 20px;
@@ -559,6 +681,7 @@ body {
     letter-spacing: -0.3px;
 }
 
+/* Status Badges */
 .status-badge {
     padding: 8px 16px;
     border-radius: 20px;
@@ -576,6 +699,7 @@ body {
     color: var(--color-error);
 }
 
+/* Account Details */
 .account-details {
     display: grid;
     gap: 16px;
@@ -605,20 +729,27 @@ body {
     font-size: 1.1rem;
 }
 
-/* Registration Section */
+/* ========================================
+   REGISTRATION SECTION
+   ======================================== */
+
 .registration-section {
     flex: 1;
     min-width: 530px;
     max-width: 600px;
     background: var(--color-white);
     border-radius: 20px;
-    padding: 24px;
-    margin-top: 30px;
+    padding: 20px;
+    margin-top: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    position: relative;
-    height: 90px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    min-height: 80px;
 }
 
+/* Registration Section Header */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -651,26 +782,31 @@ body {
     transform: translateY(-2px);
 }
 
+/* Registration List */
 .registration-list {
-    position: absolute;
-    top: 100px; /* Adjust as needed to sit below the header */
-    left: 0;
+    position: relative;
     width: 100%;
-    max-height: 350px; /* Adjust as needed */
+    max-height: 150px;
     background: var(--color-white);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     border-radius: 12px;
     border: 1px solid var(--color-border);
+    margin-top: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 5;
 }
 
+/* Individual Registration Items */
 .registration-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 12px;
     background: var(--color-bg-gradient-start);
     border-radius: 12px;
     transition: all 0.3s ease;
+    margin-bottom: 8px;
+    border: 1px solid var(--color-border);
 }
 
 .registration-item:hover {
@@ -678,6 +814,11 @@ body {
     background: var(--color-bg-gradient-end);
 }
 
+.registration-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Registration Info */
 .registration-info {
     display: flex;
     align-items: center;
@@ -685,15 +826,15 @@ body {
 }
 
 .registration-icon {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background: var(--color-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--color-mint);
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .registration-details {
@@ -702,23 +843,24 @@ body {
 }
 
 .registration-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--color-primary-black);
 }
 
 .registration-date {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
 }
 
+/* Registration Actions */
 .registration-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .action-btn {
-    padding: 8px 16px;
+    padding: 6px 12px;
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -726,7 +868,16 @@ body {
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
+    z-index: 10;
+    position: relative;
+    font-size: 0.9rem;
+}
+
+.action-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
 }
 
 .action-btn.approve {
@@ -734,8 +885,10 @@ body {
     color: var(--color-primary-black);
 }
 
-.action-btn.approve:hover {
+.action-btn.approve:hover:not(:disabled) {
     background: var(--color-lime-green);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .action-btn.deny {
@@ -743,10 +896,22 @@ body {
     color: var(--color-white);
 }
 
-.action-btn.deny:hover {
+.action-btn.deny:hover:not(:disabled) {
     background: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Loading state styles */
+.action-btn.loading {
+    pointer-events: none;
+}
+
+.action-btn .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Loading State */
 .loading {
     text-align: center;
     padding: 20px;
@@ -758,22 +923,24 @@ body {
     color: var(--color-mint);
 }
 
-/* Greeting Container Styles */
+/* ========================================
+   GREETING SECTION
+   ======================================== */
+
 .greeting-container {
     position: relative;
     text-align: left;
     padding-top: 10px;
     padding-left: 70px;
-    margin-bottom: 120px;
+    margin-bottom: 60px;
+    z-index: 1;
 }
 
 .hello-text,
 .name-text {
-    font-size: 48px;
+    font-size: 40px;
     font-weight: 800;
     color: var(--color-primary-black);
-    line-height: 1.1;
-    letter-spacing: -1px;
 }
 
 .name-text {
@@ -781,7 +948,10 @@ body {
     margin-top: 10px;
 }
 
-/* Result Status Styles */
+/* ========================================
+   STATUS INDICATORS
+   ======================================== */
+
 .status-text {
     font-weight: 600;
     padding: 5px 10px;
@@ -800,12 +970,18 @@ body {
     color: #ff3b30;
 }
 
+/* ========================================
+   LAYOUT UTILITIES
+   ======================================== */
+
 .top-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 32px;
     margin-bottom: 24px;
+    position: relative;
+    height: 120px;
 }
 
 .card-actions,
