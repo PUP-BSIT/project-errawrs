@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Teller Search Account</title>
-    <link 
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" 
-        rel="stylesheet">
-    <link 
-        rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Bank Teller Search Account - StackOvercash</title>
+    
+    <!-- External Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="./css/bank_teller_search_account.css">
 </head>
 <body>
+    <!-- Main Container -->
     <div class="container">
+        
+        <!-- ============================================================================
+             SIDEBAR NAVIGATION
+             ============================================================================ -->
         <div class="sidebar">
+            <!-- Logo Section -->
             <div class="logo">
                 <h1>
                     <span class="stack">Stack</span>
@@ -22,6 +30,7 @@
                 </h1>
             </div>
             
+            <!-- User Profile Section -->
             <div class="user-profile">
                 <a href="bank_teller_view_profile.html">
                     <div class="user-avatar dynamic-avatar"></div>
@@ -29,6 +38,7 @@
                 <div class="user-name"></div>
             </div>
             
+            <!-- Navigation Menu -->
             <div class="nav-menu">
                 <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
                 <div class="nav-selected">Search Account</div>
@@ -38,6 +48,7 @@
                 <a href="bank_teller_history.html" class="nav-item">Transaction</a>
             </div>
 
+            <!-- Logout Section -->
             <div class="nav-logout">
                 <a href="./bank_teller_login.html">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
@@ -45,32 +56,34 @@
             </div>
         </div>
 
+        <!-- ============================================================================
+             MAIN CONTENT AREA
+             ============================================================================ -->
         <div class="main-content">
+            
+            <!-- Search Container -->
             <div class="search-container">
                 <div class="search-input-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="search_input" class="search-input" placeholder="Search Account Number">
+                    <input 
+                        type="text" 
+                        id="search_input" 
+                        class="search-input" 
+                        placeholder="Search by Account Number or Name"
+                        autocomplete="off"
+                    >
                     <button type="button" id="clear_search_btn" class="clear-search-btn">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
 
+            <!-- Content Area -->
             <div class="content-area">
+                <!-- Account Results Container -->
                 <div class="account-container"></div>
 
-                <div class="search-history hidden" id="search_history">
-                    <h2>Search History</h2>
-                    <div class="history-header">
-                        <div class="header-cell">Number</div>
-                        <div class="header-cell">Account Name</div>
-                        <div class="header-cell">Account Number</div>
-                        <div class="header-cell">Balance</div>
-                        <div class="header-cell">Card Type</div>
-                    </div>
-                    <div class="history-body" id="history_body"></div>
-                </div>
-
+                <!-- Transaction Modal (Hidden by default) -->
                 <div class="transaction-modal" id="transaction_form">
                     <div class="transaction-container"></div>
                 </div>
@@ -78,7 +91,10 @@
         </div>
     </div>
 
+    <!-- Notification Container -->
     <div id="notification_container" class="notification-container"></div>
+
+    <!-- JavaScript -->
     <script src="./js/search_account.js"></script>
 </body>
 </html>
