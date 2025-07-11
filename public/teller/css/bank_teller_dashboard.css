@@ -616,6 +616,7 @@ body {
     padding: 24px;
     margin-top: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
 }
 
 .section-header {
@@ -651,9 +652,16 @@ body {
 }
 
 .registration-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    position: absolute;
+    top: 110px; /* Adjust as needed to sit below the header */
+    left: 0;
+    width: 100%;
+    max-height: 350px; /* Adjust as needed */
+    background: var(--color-white);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    display: block;
 }
 
 .registration-item {
