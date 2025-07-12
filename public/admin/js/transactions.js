@@ -38,25 +38,25 @@ if (logoutBtn) {
     logoutBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         try {
-            await fetch('/project-errawrs/src/api/auth/logout.php', {
+            await fetch(APP_CONFIG.getApiUrl('auth/logout.php'), {
                 method: 'POST',
                 credentials: 'include'
             });
         } catch (err) {}
         sessionStorage.clear();
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        window.location.href = './login.html';
     });
 }
 // Session check on page load
 (async function() {
     try {
-        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const res = await fetch(APP_CONFIG.getApiUrl('auth/session_check.php'), { credentials: 'include' });
         const data = await res.json();
         if (!data.success) {
-            window.location.href = '/project-errawrs/public/admin/login.html';
+            window.location.href = './login.html';
         }
     } catch (e) {
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        window.location.href = './login.html';
     }
 })();
 

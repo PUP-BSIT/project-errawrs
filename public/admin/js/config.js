@@ -12,8 +12,11 @@ class Config {
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
             // Local development - use the full path
             return `${protocol}//${hostname}/project-errawrs/src/api`;
+        } else if (hostname === 'admin.stackovercash.site') {
+            // Admin domain - use the /api/ route as configured in nginx
+            return `${protocol}//${hostname}/api`;
         } else {
-            // Production - use the /api/ route
+            // Other production domains - use the /api/ route
             return `${protocol}//${hostname}/api`;
         }
     }

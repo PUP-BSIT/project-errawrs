@@ -25,7 +25,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://admin.stackovercash.site;" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://admin.stackovercash.site;" always;
 
     # MIME types
     include /etc/nginx/mime.types;
@@ -173,69 +173,3 @@ server {
     access_log /var/log/nginx/admin.stackovercash.site.access.log;
     error_log /var/log/nginx/admin.stackovercash.site.error.log;
 }
-
-## Key Fixes Applied
-
-### 1. Content Security Policy (CSP) Fix
-- **Problem**: Invalid characters in CSP directive names due to line breaks
-- **Solution**: Removed line breaks and backslashes, made CSP a single line
-
-### 2. API Routing Issues
-- **Problem**: `/project-errawrs/src/api/auth/login.php` returning 404
-- **Solution**: Added proper `/api/` and `/src/api/` location blocks with correct aliases
-
-### 3. CORS Configuration
-- **Problem**: Missing CORS headers for API requests
-- **Solution**: Added comprehensive CORS headers for both `/api/` and `/src/api/` paths
-
-### 4. Favicon 404 Error
-- **Problem**: Favicon not found
-- **Solution**: Added specific location block for favicon.ico
-
-### 5. PHP-FPM Configuration
-- **Problem**: Incorrect PHP-FPM socket path
-- **Solution**: Updated to use `/run/php/php-fpm.sock` (standard path)
-
-### 6. Security Headers
-- **Problem**: Inconsistent security headers
-- **Solution**: Standardized security headers with `always` flag
-
-## Implementation Steps
-
-1. **Backup current configuration**:
-   ```bash
-   sudo cp /etc/nginx/sites-available/admin.stackovercash.site /etc/nginx/sites-available/admin.stackovercash.site.backup
-   ```
-
-2. **Replace configuration**:
-   ```bash
-   sudo nano /etc/nginx/sites-available/admin.stackovercash.site
-   ```
-
-3. **Test configuration**:
-   ```bash
-   sudo nginx -t
-   ```
-
-4. **Reload Nginx**:
-   ```bash
-   sudo systemctl reload nginx
-   ```
-
-5. **Check logs for errors**:
-   ```bash
-   sudo tail -f /var/log/nginx/admin.stackovercash.site.error.log
-   ```
-
-## Troubleshooting
-
-### If login still fails:
-1. Check browser console for CORS errors
-2. Verify API endpoint is accessible: `curl -I https://admin.stackovercash.site/api/auth/login.php`
-3. Check PHP-FPM status: `sudo systemctl status php-fpm`
-4. Verify file permissions: `ls -la /var/www/html/project-errawrs/src/api/auth/`
-
-### If static assets don't load:
-1. Check file permissions: `ls -la /var/www/html/project-errawrs/public/admin/`
-2. Verify MIME types are loaded: `nginx -T | grep mime.types`
-3. Check access logs: `sudo tail -f /var/log/nginx/admin.stackovercash.site.access.log` 
