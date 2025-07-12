@@ -213,7 +213,7 @@ body {
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: var(--spacing-xl) var(--spacing-xxl);
+    padding: var(--spacing-lg) var(--spacing-xxl);
     margin-left: 250px;
     height: 100vh;
     overflow: auto;
