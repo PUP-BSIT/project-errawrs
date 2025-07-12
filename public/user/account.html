@@ -15,106 +15,43 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <link rel="stylesheet" href="./css/user_dashboard.css" />
         <link rel="stylesheet" href="./css/account.css" />
-        <style>
-            /* Account List Container */
-            .account-list-container {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: 20px;
-                margin-top: 20px;
-            }
-
-            /* Account Item */
-            .account-item {
-                background-color: #fff;
-                border-radius: 16px;
-                padding: 24px;
-                position: relative;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-                transition: all 0.3s ease;
-                overflow: visible;
-            }
-
-            .account-item:hover {
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                transform: translateY(-2px);
-            }
-
-            /* Add Account Item */
-            .add-account-item {
-                background-color: transparent;
-                border: 2px dashed rgba(0, 0, 0, 0.1);
-                border-radius: 16px;
-                padding: 24px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                min-height: 200px;
-                transition: all 0.3s ease;
-            }
-
-            .add-account-item:hover {
-                border-color: rgba(0, 0, 0, 0.3);
-                background-color: rgba(255, 255, 255, 0.7);
-                transform: translateY(-2px);
-            }
-
-            .add-account-icon {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                background-color: rgba(0, 0, 0, 0.05);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 16px;
-            }
-
-            .add-account-icon i {
-                font-size: 24px;
-                color: #333;
-            }
-
-            .add-account-text {
-                font-size: 16px;
-                font-weight: 600;
-                color: #333;
-            }
-
-            /* Three dots */
-            .three-dots-button {
-                position: absolute;
-                top: 16px;
-                right: 16px;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                z-index: 5;
-            }
-        </style>
     </head>
     <body class="authenticated-page">
+        <!-- Mobile Header -->
+        <header class="main-header mobile-header hidden">
+            <div class="mobile-logo" id="mobile_logo">
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+            </div>
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        <!-- Topnav Dropdown Nav (mobile/tablet) -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
+        <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-logo" style="margin: 32px 0 24px 0; display: flex; justify-content: center; align-items: center;">
-                    <span class="logo" style="font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">
-                        Stack<span class="logo-overcash" style="color: #b6ff4a;">Overcash</span>
+            <div class="sidebar sidebar-black" id="sidebar_nav">
+                <div class="popup-header popup-header-style">
+                    <span class="logo logo-large">
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
                 </div>
-
-                <div class="user-profile">
+                <div class="user-profile flex-center">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <!-- Removed username from sidebar -->
                 </div>
-
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">

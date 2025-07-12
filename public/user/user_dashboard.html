@@ -125,8 +125,22 @@
                         </div>
 
                         <div class="balance-card">
-                            <div class="account-display-container" id="account-display-container">
-                                <!-- Account items will be dynamically added here -->
+                            <div class="account-dropdown-container" id="account-dropdown-container">
+                                <div class="account-dropdown-trigger" id="account-dropdown-trigger">
+                                    <span class="account-type" id="dashboard_account_type">Savings Account</span>
+                                    <span class="account-number" id="dashboard_account_number">xxxxxxxx0003</span>
+                                    <span class="account-dropdown-icons-row">
+                                        <span class="account-eye-icon" id="dashboard_account_eye" title="Show/Hide Account Number">
+                                            <i class="fas fa-eye"></i>
+                                        </span>
+                                        <span class="account-dropdown-arrow" id="account-dropdown-arrow">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="account-dropdown-list hidden" id="account-dropdown-list">
+                                    <!-- Account options will be populated here by JS -->
+                                </div>
                             </div>
                             <div class="balance-amount" id="account_balance">
                                 <!-- Balance will be dynamically added here -->

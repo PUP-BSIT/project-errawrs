@@ -60,9 +60,16 @@ let transfer_now_btn;
 let account_balance_element;
 let transaction_list_element;
 let user_name_element;
-let account_display_container;
 let user_avatar_container;
 let profile_edit_modal;
+// New dropdown/eye elements
+let dropdownTrigger;
+let dropdownList;
+let dropdownArrow;
+let dropdownEye;
+let dropdownType;
+let dropdownNumber;
+let dropdownBalance;
 
 // State
 let user_data = {}; // Will be populated from API
@@ -120,11 +127,18 @@ function initializeDOMElements() {
     account_balance_element = document.getElementById('account_balance');
     transaction_list_element = document.getElementById('transaction_list');
     user_name_element = document.getElementById('user_name');
-    account_display_container = document.getElementById('account-display-container');
     user_avatar_container = document.getElementById('user_avatar_container');
     profile_edit_modal = document.getElementById('edit_profile_modal');
-
-    if (!account_display_container || !account_balance_element) {
+    // New dropdown/eye elements
+    dropdownTrigger = document.getElementById('account-dropdown-trigger');
+    dropdownList = document.getElementById('account-dropdown-list');
+    dropdownArrow = document.getElementById('account-dropdown-arrow');
+    dropdownEye = document.getElementById('dashboard_account_eye');
+    dropdownType = document.getElementById('dashboard_account_type');
+    dropdownNumber = document.getElementById('dashboard_account_number');
+    dropdownBalance = document.getElementById('account_balance');
+    // Only require the new dropdown elements and balance
+    if (!dropdownTrigger || !dropdownList || !dropdownArrow || !dropdownEye || !dropdownType || !dropdownNumber || !dropdownBalance) {
         console.error('Required DOM elements not found');
         return false;
     }
@@ -326,94 +340,13 @@ async function fetchUserAccounts() {
     }
 }
 
-// Update Account Display
+// Update Account Display: only call setupAccountDropdown
 function updateAccountDisplay() {
-    if (!account_display_container || !account_balance_element) {
-        console.error('Required DOM elements not found');
+    if (!initializeDOMElements()) {
+        console.error('Required DOM elements not initialized');
         return;
     }
-
-    console.log('Updating account display with:', user_accounts);
-
-    // Clear existing content
-    account_display_container.innerHTML = '';
-
-    if (!Array.isArray(user_accounts) || user_accounts.length === 0) {
-        console.log('No accounts found');
-        account_balance_element.textContent = `${CURRENCY.SYMBOL}0.00`;
-        account_display_container.innerHTML = '<div class="no-accounts">No active accounts found</div>';
-        if (transfer_now_btn) {
-            transfer_now_btn.disabled = true;
-        }
-        return;
-    }
-
-    // Sort accounts by account number
-    const sortedAccounts = [...user_accounts].sort((a, b) => 
-        a.account_number.localeCompare(b.account_number)
-    );
-
-    // Use the first account as default selected
-    let selectedAccountNumber = window.selectedAccountNumber || sortedAccounts[0].account_number;
-    window.selectedAccountNumber = selectedAccountNumber;
-
-    // Display all accounts
-    sortedAccounts.forEach(account => {
-        const accountElement = document.createElement('div');
-        accountElement.className = 'account-item';
-        if (account.account_number === selectedAccountNumber) {
-            accountElement.classList.add('selected');
-        }
-        accountElement.classList.add('pointer');
-        accountElement.addEventListener('click', (e) => {
-            // Prevent toggling mask when clicking the eye icon
-            if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
-            window.selectedAccountNumber = account.account_number;
-            update_balance_display(account.balance);
-            fetchRecentTransactions(account.account_number);
-            updateAccountDisplay();
-        });
-        const accountType = account.account_type 
-            ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
-            : 'Savings';
-        // Mask state for this account
-        const isMasked = accountMaskState[account.account_number] !== false;
-        const displayNumber = isMasked ? maskAccountNumber(account.account_number) : account.account_number;
-        const eyeIconClass = isMasked ? 'fa-eye' : 'fa-eye-slash';
-        accountElement.innerHTML = `
-            <div class="account-info">
-                <div class="account-type account-type-large">${accountType} Account</div>
-                <div class="account-number account-number-large">
-                    <span class="account-number-text" data-account-number="${account.account_number}">${displayNumber}</span>
-                    <span class="account-eye-icon" style="margin-left:12px; cursor:pointer; vertical-align:middle;" title="Show/Hide Account Number">
-                        <i class="fas ${eyeIconClass}"></i>
-                    </span>
-                </div>
-            </div>
-        `;
-        // Add event listener for eye icon
-        const eyeIcon = accountElement.querySelector('.account-eye-icon');
-        if (eyeIcon) {
-            eyeIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                accountMaskState[account.account_number] = !isMasked;
-                updateAccountDisplay();
-            });
-        }
-        account_display_container.appendChild(accountElement);
-    });
-
-    // Show balance for selected account
-    const selectedAccount = sortedAccounts.find(a => a.account_number === selectedAccountNumber);
-    if (selectedAccount) {
-        update_balance_display(selectedAccount.balance);
-        fetchRecentTransactions(selectedAccount.account_number);
-    }
-
-    // Enable transfer button
-    if (transfer_now_btn) {
-        transfer_now_btn.disabled = false;
-    }
+    setupAccountDropdown(user_accounts, window.selectedAccountNumber);
 }
 
 // Initialize dashboard
@@ -562,12 +495,12 @@ function toggleAccountNumberMask() {
 
 // Update Balance Display
 function update_balance_display(balance) {
-    if (account_balance_element) {
+    if (dropdownBalance) { // Use dropdownBalance
         const formatted_balance = `₱ ${parseFloat(balance).toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}`;
-        account_balance_element.textContent = formatted_balance;
+        dropdownBalance.textContent = formatted_balance; // Use dropdownBalance
     }
 }
 
@@ -766,6 +699,107 @@ function displayFinancialTip() {
             <p>${tip.content}</p>
         </div>
     `;
+}
+
+// --- Account Dropdown Logic for Balance Card ---
+function setupAccountDropdown(accounts, selectedAccountNumber) {
+    // Helper to mask/unmask
+    function getDisplayNumber(account) {
+        const isMasked = accountMaskState[account.account_number] !== false;
+        return isMasked ? maskAccountNumber(account.account_number) : account.account_number;
+    }
+    function getEyeIconClass(account) {
+        return accountMaskState[account.account_number] !== false ? 'fa-eye' : 'fa-eye-slash';
+    }
+
+    function renderDropdown() {
+        dropdownList.innerHTML = '';
+        accounts.forEach(account => {
+            if (account.account_number === window.selectedAccountNumber) return; // Always use window.selectedAccountNumber
+            const option = document.createElement('div');
+            option.className = 'account-dropdown-option';
+            const isMasked = accountMaskState[account.account_number] !== false;
+            option.innerHTML = `
+                <span class="account-type">${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} Account</span>
+                <span class="account-number" style="margin-left:10px; font-family:monospace;">${isMasked ? maskAccountNumber(account.account_number) : account.account_number}</span>
+            `;
+            option.addEventListener('click', () => {
+                window.selectedAccountNumber = account.account_number;
+                updateAccountDropdownDisplay(account);
+                update_balance_display(account.balance);
+                fetchRecentTransactions(account.account_number);
+                dropdownList.classList.add('hidden');
+                dropdownTrigger.classList.remove('active');
+                renderDropdown(); // Re-render so previous account is available again
+            });
+            dropdownList.appendChild(option);
+        });
+        if (dropdownList.children.length === 0) dropdownList.classList.add('hidden');
+    }
+
+    function updateAccountDropdownDisplay(account) {
+        dropdownType.textContent = `${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} Account`;
+        dropdownNumber.textContent = getDisplayNumber(account);
+        // Update eye icon
+        const icon = dropdownEye.querySelector('i');
+        if (icon) {
+            icon.className = 'fas ' + getEyeIconClass(account);
+        }
+        // Always update balance
+        update_balance_display(account.balance);
+    }
+
+    // Initial display
+    let selected = accounts.find(a => a.account_number === selectedAccountNumber) || accounts[0];
+    if (!selected && accounts.length > 0) selected = accounts[0];
+    if (!selected) {
+        // Fallback/mock data for UI testing
+        selected = { account_type: 'Savings', account_number: '0000000001', balance: 0.00 };
+        accounts = [selected];
+    }
+    updateAccountDropdownDisplay(selected);
+    fetchRecentTransactions(selected.account_number);
+    renderDropdown();
+
+    // Eye icon toggles mask for selected account
+    dropdownEye.onclick = (e) => {
+        e.stopPropagation();
+        const acc = accounts.find(a => a.account_number === window.selectedAccountNumber) || selected;
+        if (!acc) return;
+        accountMaskState[acc.account_number] = !(accountMaskState[acc.account_number] !== false);
+        updateAccountDropdownDisplay(acc);
+    };
+
+    // Show/hide dropdown
+    dropdownArrow.onclick = (e) => {
+        e.stopPropagation();
+        if (accounts.length <= 1) return;
+        dropdownList.classList.toggle('hidden');
+        dropdownTrigger.classList.toggle('active');
+    };
+    dropdownTrigger.onclick = (e) => {
+        e.stopPropagation();
+        if (accounts.length <= 1) return;
+        dropdownList.classList.toggle('hidden');
+        dropdownTrigger.classList.toggle('active');
+    };
+    // Hide dropdown on outside click
+    document.addEventListener('click', (e) => {
+        if (!dropdownList.classList.contains('hidden')) {
+            dropdownList.classList.add('hidden');
+            dropdownTrigger.classList.remove('active');
+        }
+    });
+    // Prevent closing when clicking inside
+    dropdownList.onclick = (e) => e.stopPropagation();
+    // Hide dropdown/arrow if only one account
+    if (accounts.length <= 1) {
+        dropdownTrigger.style.cursor = 'default';
+        dropdownArrow.style.display = 'none';
+        dropdownList.classList.add('hidden');
+    } else {
+        dropdownArrow.style.display = 'flex';
+    }
 }
 
 // --- END OF FILE ---

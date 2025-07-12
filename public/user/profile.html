@@ -16,22 +16,40 @@
         <link rel="stylesheet" href="./css/profile.css"/> <!-- New profile specific styles -->
     </head>
     <body class="authenticated-page">
+        <!-- Mobile Header -->
+        <header class="main-header mobile-header hidden">
+            <div class="mobile-logo" id="mobile_logo">
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+            </div>
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        <!-- Topnav Dropdown Nav (mobile/tablet) -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
+        <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-logo" style="margin: 32px 0 24px 0; display: flex; justify-content: center; align-items: center;">
-                    <span class="logo" style="font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">
-                        Stack<span class="logo-overcash" style="color: #b6ff4a;">Overcash</span>
+            <div class="sidebar sidebar-black" id="sidebar_nav">
+                <div class="popup-header popup-header-style">
+                    <span class="logo logo-large">
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
                 </div>
-                <div class="user-profile">
+                <div class="user-profile flex-center">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
-                         <div class="edit-icon hidden" id="edit_profile_icon">
+                        <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <!-- Removed username from sidebar -->
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
@@ -82,119 +100,95 @@
                 </header>
 
                 <!-- Profile Content -->
-                <div class="profile-content">
-                    <div class="profile-header">
-                        <h2>Edit Profile</h2>
-                        <p>Update your personal information and manage your account settings</p>
+                <div class="profile-form-container">
+                    <div class="profile-form-progress" id="profile_form_progress">
+                        <span class="progress-step active" data-step="0"></span>
+                        <span class="progress-step" data-step="1"></span>
+                        <span class="progress-step" data-step="2"></span>
                     </div>
-
-                    <div class="profile-grid">
-                        <!-- Personal Information Card -->
-                        <div class="profile-card">
-                            <div class="profile-card-header">
-                                <div class="profile-card-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="profile-card-title">
-                                    <h3>Personal Information</h3>
-                                    <p>Your basic profile details</p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_username">Username</label>
-                                <input type="text" id="edit_username" class="form-input" readonly>
-                            </div>
+                    <div class="profile-header-block">
+                        <!-- Avatar removed for minimalist look -->
+                        <div class="profile-minimal-user-info">
+                            <div class="profile-minimal-fullname" id="profile_fullname"></div>
+                            <div class="profile-minimal-username" id="profile_username"></div>
+                        </div>
+                    </div>
+                    <hr class="profile-header-divider" />
+                    <form class="profile-form-steps" id="profile_form_steps">
+                        <!-- Step 1: Basic Info -->
+                        <div class="profile-form-step" data-step="0">
+                            <h3>Basic Information</h3>
                             <div class="form-group">
                                 <label for="edit_first_name">First Name</label>
-                                <input type="text" id="edit_first_name" class="form-input" readonly>
+                                <input type="text" id="edit_first_name" class="form-input" autocomplete="given-name" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="edit_last_name">Last Name</label>
-                                <input type="text" id="edit_last_name" class="form-input" readonly>
+                                <input type="text" id="edit_last_name" class="form-input" autocomplete="family-name" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_username">Username</label>
+                                <input type="text" id="edit_username" class="form-input" readonly autocomplete="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_email">Email</label>
+                                <input type="email" id="edit_email" class="form-input" autocomplete="email">
+                            </div>
+                        </div>
+                        <!-- Step 2: Contact & Address -->
+                        <div class="profile-form-step" data-step="1" style="display:none;">
+                            <h3>Contact & Address</h3>
+                            <div class="form-group">
+                                <label for="edit_phone_number">Phone Number</label>
+                                <input type="tel" id="edit_phone_number" class="form-input" autocomplete="tel">
                             </div>
                             <div class="form-group">
                                 <label for="edit_date_of_birth">Date of Birth</label>
-                                <input type="date" id="edit_date_of_birth" class="form-input" readonly>
+                                <input type="date" id="edit_date_of_birth" class="form-input" autocomplete="bday">
                             </div>
                             <div class="form-group">
                                 <label for="edit_nationality">Nationality</label>
                                 <input type="text" id="edit_nationality" class="form-input" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="edit_id">ID</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <button type="button" id="view_id_image_btn" class="btn secondary-btn" style="padding: 4px 8px;">View My ID</button>
-                                    <button type="button" id="update_id_image_btn" class="btn secondary-btn" style="padding: 4px 8px;">Update My ID</button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_email">Email</label>
-                                <input type="email" id="edit_email" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_phone_number">Phone Number</label>
-                                <input type="tel" id="edit_phone_number" class="form-input">
-                            </div>
-                            <div class="form-group">
                                 <label for="edit_street">Street Address</label>
-                                <input type="text" id="edit_street" class="form-input">
+                                <input type="text" id="edit_street" class="form-input" autocomplete="street-address">
                             </div>
                             <div class="form-group">
                                 <label for="edit_city">City</label>
-                                <input type="text" id="edit_city" class="form-input">
+                                <input type="text" id="edit_city" class="form-input" autocomplete="address-level2">
                             </div>
                             <div class="form-group">
                                 <label for="edit_zip_code">ZIP Code</label>
-                                <input type="text" id="edit_zip_code" class="form-input">
+                                <input type="text" id="edit_zip_code" class="form-input" autocomplete="postal-code">
                             </div>
                             <div class="form-group">
                                 <label for="edit_country">Country</label>
-                                <input type="text" id="edit_country" class="form-input">
+                                <input type="text" id="edit_country" class="form-input" autocomplete="country-name">
                             </div>
                         </div>
-
-                        <!-- Account Settings Card -->
-                        <div class="profile-card">
-                            <div class="profile-card-header">
-                                <div class="profile-card-icon">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <div class="profile-card-title">
-                                    <h3>Account Settings</h3>
-                                    <p>Manage your login credentials</p>
-                                </div>
-                            </div>
-
+                        <!-- Step 3: Account Settings -->
+                        <div class="profile-form-step" data-step="2" style="display:none;">
+                            <h3>Account Settings</h3>
                             <div class="form-group">
                                 <label for="edit_password">New Password</label>
-                                <input type="password" id="edit_password" class="form-input" placeholder="Enter new password">
-                                <i class="fas fa-eye input-icon toggle-password" data-target="edit_password"></i>
+                                <input type="password" id="edit_password" class="form-input" autocomplete="new-password">
                                 <div class="helper-text">Leave blank to keep current password</div>
-                                <div class="password-strength">
-                                    <div class="password-strength-bar"></div>
-                                </div>
                             </div>
-
                             <div class="form-group">
                                 <label for="edit_confirm_password">Confirm New Password</label>
-                                <input type="password" id="edit_confirm_password" class="form-input" placeholder="Confirm new password">
-                                <i class="fas fa-eye input-icon toggle-password" data-target="edit_confirm_password"></i>
+                                <input type="password" id="edit_confirm_password" class="form-input" autocomplete="new-password">
                                 <div class="helper-text">Re-enter your new password to confirm</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="button-group">
-                        <button id="save_profile_button" class="btn primary-btn">
-                            <i class="fas fa-save"></i>
-                            Save Changes
-                        </button>
-                        <button id="reset_profile_button" class="btn secondary-btn">
-                            <i class="fas fa-undo"></i>
-                            Reset
-                        </button>
-                    </div>
+                        <!-- Navigation Buttons -->
+                        <div class="profile-form-actions">
+                            <button type="button" class="btn secondary-btn" id="profile_prev_btn" style="display:none;">Back</button>
+                            <button type="button" class="btn primary-btn" id="profile_next_btn">Next</button>
+                            <button type="submit" class="btn primary-btn" id="save_profile_button" style="display:none;">Save Changes</button>
+                            <button type="button" class="btn secondary-btn" id="reset_profile_button">Reset</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -206,8 +200,8 @@
             <h3>Confirm Changes</h3>
             <p>To save changes to your profile, please enter your current password:</p>
             <input type="password" id="profile_confirm_password" class="form-input" placeholder="Current password" autocomplete="current-password">
-            <div id="profile-confirm-error" class="text-error" style="display:none; margin-top:8px;"></div>
-            <div class="button-group" style="margin-top: 18px;">
+            <div id="profile-confirm-error" class="text-error hidden"></div>
+            <div class="button-group mt-18">
               <button id="profile_confirm_btn" class="btn primary-btn">Confirm</button>
               <button id="profile_cancel_btn" class="btn secondary-btn">Cancel</button>
             </div>
@@ -217,9 +211,9 @@
         <!-- ID Image Modal -->
         <div id="id-image-modal" class="modal hidden">
           <div class="modal-content">
-            <span id="close-id-image-modal" style="float:right;cursor:pointer;">&times;</span>
+            <span id="close-id-image-modal" class="close-modal">&times;</span>
             <h3>ID Image Preview</h3>
-            <img id="id-image-preview" src="" alt="ID Image" style="max-width:100%;max-height:400px;display:block;margin:auto;">
+            <img id="id-image-preview" src="" alt="ID Image" class="modal-img-preview">
           </div>
         </div>
 
@@ -247,14 +241,14 @@
               <label for="modal_current_password">Current Password</label>
               <input type="password" id="modal_current_password" class="form-input" placeholder="Enter your current password" autocomplete="current-password">
             </div>
-            <div id="modal_id_error" class="hide" style="color: #e53935; margin-bottom: 10px; text-align: center;"></div>
-            <div class="button-group" style="margin-top: 18px; display: flex; gap: 8px;">
+            <div id="modal_id_error" class="hide text-error text-center mb-10"></div>
+            <div class="button-group mt-18 flex gap-8">
               <button id="modal_upload_id_btn" class="btn primary-btn" type="button">Upload</button>
               <button id="modal_confirm_id_btn" class="btn primary-btn hide" type="button">Confirm</button>
               <button id="modal_cancel_id_btn" class="btn secondary-btn" type="button">Cancel</button>
             </div>
-            <div style="margin-top: 12px; text-align: center;">
-              <img id="modal_id_image_preview" src="" alt="ID Preview" class="hide" style="max-width: 100%; max-height: 300px; margin: auto;" />
+            <div class="mt-12 text-center">
+              <img id="modal_id_image_preview" src="" alt="ID Preview" class="hide modal-img-preview" />
             </div>
           </div>
         </div>
