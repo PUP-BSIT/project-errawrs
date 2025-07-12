@@ -2,8 +2,13 @@
 
 require_once __DIR__ . '/../../config/SessionManager.php';
 require_once __DIR__ . '/../../config/database.php';
-// require_once __DIR__ . '/../../config/mailer.php'; // Uncomment and use your mailer
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
+use Dotenv\Dotenv;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Initialize session and set headers
 $session = SessionManager::getInstance();
 $session->initSession();
 
@@ -13,6 +18,8 @@ header('Content-Type: application/json');
 error_log("Session ID in create_additional_account: " . session_id());
 error_log("Full SESSION data: " . print_r($_SESSION, true));
 
+// AUTHENTICATION & AUTHORIZATION CHECKS
+
 // Check if user is logged in
 if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     http_response_code(401);
@@ -20,16 +27,19 @@ if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     exit();
 }
 
+// Check if OTP has been verified
 if (!isset($_SESSION['otp_verified']) || $_SESSION['otp_verified'] !== true) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'OTP has not been verified.']);
     exit();
 }
 
+// INPUT VALIDATION
 $input = json_decode(file_get_contents('php://input'), true);
-$account_type = $input['account_type'] ?? null;
+$requestedAccountType = $input['account_type'] ?? null;
 
-if (!$account_type || !in_array($account_type, ['savings', 'credit'])) {
+// Validate account type
+if (!$requestedAccountType || !in_array($requestedAccountType, ['savings', 'credit'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Valid account type is required.']);
     exit();
@@ -39,69 +49,128 @@ try {
     $db = db_connect();
     $db->begin_transaction();
     
-    $user_id = $_SESSION['auth']['id'];
+    $userId = $_SESSION['auth']['id'];
     
-    // Check account limits
-    $stmt = $db->prepare('SELECT account_type, status FROM account WHERE user_id = ?');
-    $stmt->bind_param('i', $user_id);
-    $stmt->execute();
-    $accounts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    // ============================================================================
+    // ACCOUNT LIMIT VALIDATION
+    // ============================================================================
     
-    $active_accounts = array_filter($accounts, fn($acc) => $acc['status'] === 'active');
+    // Get all user accounts
+    $accountQuery = $db->prepare('SELECT account_type, status FROM account WHERE user_id = ?');
+    $accountQuery->bind_param('i', $userId);
+    $accountQuery->execute();
+    $userAccounts = $accountQuery->get_result()->fetch_all(MYSQLI_ASSOC);
+    
+    // Filter active accounts
+    $activeAccounts = array_filter($userAccounts, fn($account) => $account['status'] === 'active');
+    $totalActiveAccounts = count($activeAccounts);
 
-    if (count($active_accounts) >= 3) {
+    if ($totalActiveAccounts >= 3) {
         throw new Exception('You have reached the maximum number of active accounts (3).');
     }
 
-    $savings_count = count(array_filter($active_accounts, fn($acc) => $acc['account_type'] === 'savings'));
-    $credit_count = count(array_filter($active_accounts, fn($acc) => $acc['account_type'] === 'credit'));
+    // Count accounts by type
+    $savingsAccountCount = count(array_filter($activeAccounts, fn($account) => $account['account_type'] === 'savings'));
+    $creditAccountCount = count(array_filter($activeAccounts, fn($account) => $account['account_type'] === 'credit'));
 
-    if ($account_type === 'savings' && $savings_count >= 2) {
+    if ($requestedAccountType === 'savings' && $savingsAccountCount >= 2) {
         throw new Exception('You can only have a maximum of 2 savings accounts.');
     }
 
-    if ($account_type === 'credit' && $credit_count >= 1) {
+    if ($requestedAccountType === 'credit' && $creditAccountCount >= 1) {
         throw new Exception('You can only have a maximum of 1 credit account.');
     }
     
-    // Fetch user profile details from the user table, including id_type and id_image
-    $profileStmt = $db->prepare('SELECT first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image FROM user WHERE user_id = ?');
-    $profileStmt->bind_param('i', $user_id);
-    $profileStmt->execute();
-    $profileStmt->bind_result($first_name, $last_name, $phone_number, $date_of_birth, $nationality, $street, $city, $zip_code, $country, $email, $id_type, $id_image);
-    $profileStmt->fetch();
-    $profileStmt->close();
-    
-    // Insert add account request into registration_request
-    $requestStmt = $db->prepare('INSERT INTO registration_request (
-        user_id, request_type, account_type, first_name, last_name, phone_number, date_of_birth, nationality,
-        street, city, zip_code, country, email, id_type, id_image, status, created_at
-    ) VALUES (?, "add_account", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())');
-    $requestStmt->bind_param(
-        'isssssssssssss',
-        $user_id, $account_type, $first_name, $last_name, $phone_number,
-        $date_of_birth, $nationality, $street, $city, $zip_code, $country, $email, $id_type, $id_image
+    // FETCH USER PROFILE DATA
+    $profileQuery = $db->prepare('
+        SELECT first_name, last_name, phone_number, date_of_birth, nationality, 
+               street, city, zip_code, country, email, id_type, id_image 
+        FROM user 
+        WHERE user_id = ?
+    ');
+    $profileQuery->bind_param('i', $userId);
+    $profileQuery->execute();
+    $profileQuery->bind_result(
+        $firstName, $lastName, $phoneNumber, $dateOfBirth, $nationality,
+        $street, $city, $zipCode, $country, $email, $idType, $idImage
     );
-    $requestStmt->execute();
+    $profileQuery->fetch();
+    $profileQuery->close();
     
+    // CREATE ACCOUNT REQUEST
+    $requestQuery = $db->prepare('
+        INSERT INTO registration_request (
+            user_id, request_type, account_type, first_name, last_name, 
+            phone_number, date_of_birth, nationality, street, city, 
+            zip_code, country, email, id_type, id_image, status, created_at
+        ) VALUES (?, "add_account", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())
+    ');
+    
+    $requestQuery->bind_param(
+        'isssssssssssss',
+        $userId, $requestedAccountType, $firstName, $lastName, $phoneNumber,
+        $dateOfBirth, $nationality, $street, $city, $zipCode, $country, $email, $idType, $idImage
+    );
+    $requestQuery->execute();
+    
+    // Commit transaction
     $db->commit();
     
+    // Clear OTP verification flag
     unset($_SESSION['otp_verified']);
     
-    // Send email to user (replace with your mailer)
-    $user_name = $_SESSION['auth']['first_name'] ?? 'Valued Customer';
-    $user_email = $_SESSION['auth']['email'] ?? '';
-    $subject = "Stack Overcash: New Account Request Submitted";
-    $body = "Hello $user_name,\n\nYour request to open a new $account_type account has been received and is pending teller review. You will be notified by email once it is approved or denied.\n\nThank you!";
-    // send_mail($user_email, $subject, $body); // Uncomment and use your mailer
+    // EMAIL NOTIFICATION
+    try {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+        $dotenv->load();
 
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = $_ENV['GMAIL_HOST'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['GMAIL_USERNAME'];
+        $mail->Password = $_ENV['GMAIL_PASSWORD'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = (int)$_ENV['GMAIL_PORT'];
+
+        $emailTemplate = file_get_contents(__DIR__ . '/email-templates/additional-account-email.html');
+        $emailCSS = file_get_contents(__DIR__ . '/email-templates/additional-account-email.css');
+        
+        $emailTemplate = str_replace('{{FIRST_NAME}}', $firstName, $emailTemplate);
+        $emailTemplate = str_replace('{{LAST_NAME}}', $lastName, $emailTemplate);
+        $emailTemplate = str_replace('{{ACCOUNT_TYPE}}', ucfirst($requestedAccountType), $emailTemplate);
+        
+        $emailTemplate = str_replace(
+            '<link rel="stylesheet" href="additional-account-email.css">',
+            '<style>' . $emailCSS . '</style>',
+            $emailTemplate
+        );
+
+        $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+        $mail->addAddress($email);
+        $mail->Subject = 'Additional Account Request Submitted - StackOvercash';
+        $mail->isHTML(true);
+        $mail->Body = $emailTemplate;
+
+        $mail->send();
+        error_log("Additional account request email sent successfully to: " . $email);
+        
+    } catch (Exception $emailError) {
+        error_log("Failed to send additional account request email: " . $emailError->getMessage());
+    }
+
+    // SUCCESS RESPONSE
     echo json_encode([
         'success' => true,
         'message' => 'Your request to open a new account has been submitted for review.'
     ]);
 
 } catch (Exception $e) {
-    $db->rollback();
+    // Rollback transaction on error
+    if (isset($db)) {
+        $db->rollback();
+    }
+    
     http_response_code(400); // Bad Request for business logic errors
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 } 

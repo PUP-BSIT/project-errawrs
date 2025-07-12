@@ -4,66 +4,88 @@ require_once __DIR__ . '/../../config/database.php';
 
 $sessionManager = SessionManager::getInstance();
 $sessionManager->initSession();
-
 header('Content-Type: application/json');
 
-// Debug: Log session state
-error_log("Session state: " . print_r($_SESSION, true));
+define('DEBUG', true);
+define('DEFAULT_LIMIT', 10);
+define('MIN_PAGE', 1);
+define('MIN_LIMIT', 1);
 
-// Check if user is logged in
-if (!isset($_SESSION['auth']['id'])) {
-    error_log("User not authenticated - no session ID found");
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Unauthorized']);
-    exit();
+if (DEBUG) {
+    error_log("Session state: " . print_r($_SESSION, true));
 }
 
-$user_id = $_SESSION['auth']['id'];
-error_log("Processing transactions for user_id: " . $user_id);
+function validateUserAuthentication() {
+    if (!isset($_SESSION['auth']['id'])) {
+        if (DEBUG) {
+            error_log("User not authenticated - no session ID found");
+        }
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Unauthorized']);
+        exit();
+    }
+}
 
+function getPaginationParameters() {
+    $page = isset($_GET['page']) ? max(MIN_PAGE, intval($_GET['page'])) : MIN_PAGE;
+    $limit = isset($_GET['limit']) ? max(MIN_LIMIT, intval($_GET['limit'])) : DEFAULT_LIMIT;
+    $offset = ($page - 1) * $limit;
+    
+    return [
+        'page' => $page,
+        'limit' => $limit,
+        'offset' => $offset
+    ];
+}
 
+function getAccountFilter() {
+    return isset($_GET['account']) ? $_GET['account'] : null;
+}
 
-// Get pagination parameters
-$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$limit = isset($_GET['limit']) ? max(1, intval($_GET['limit'])) : 10; // Default limit 10
-$offset = ($page - 1) * $limit;
-
-// Get account filter if provided
-$account_number = isset($_GET['account']) ? $_GET['account'] : null;
-error_log("Account filter: " . ($account_number ? $account_number : "None"));
-
-try {
-    error_log("Attempting database connection");
-    $conn = db_connect();
-    error_log("Database connection successful");
-
-    // Build the WHERE clause based on whether an account filter is provided
+function buildWhereClause($userId, $accountNumber) {
     $whereClause = "a.user_id = ?";
-    $params = [$user_id];
-    $types = "i"; // Integer for user_id
+    $params = [$userId];
+    $types = "i";
 
-    if ($account_number) {
+    if ($accountNumber) {
         $whereClause .= " AND a.account_number = ?";
-        $params[] = $account_number;
-        $types .= "s"; // String for account_number
+        $params[] = $accountNumber;
+        $types .= "s";
     }
 
-    // Get total number of transactions for the user's accounts (with account filter if provided)
+    return [
+        'where_clause' => $whereClause,
+        'params' => $params,
+        'types' => $types
+    ];
+}
+
+function getTotalTransactions($db, $whereClause, $params, $types) {
     $countQuery = "SELECT COUNT(*) as total 
                    FROM transaction t
-                   JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
                    WHERE $whereClause";
-    error_log("Count query: " . $countQuery . " with params: " . implode(", ", $params));
     
-    $countStmt = $conn->prepare($countQuery);
-    $countStmt->bind_param($types, ...$params);
-    $countStmt->execute();
-    $totalTransactions = $countStmt->get_result()->fetch_assoc()['total'];
-    $countStmt->close();
-    error_log("Total transactions found: " . $totalTransactions);
+    if (DEBUG) {
+        error_log("Count query: " . $countQuery . " with params: " . implode(", ", $params));
+    }
+    
+    $countQuery = $db->prepare($countQuery);
+    $countQuery->bind_param($types, ...$params);
+    $countQuery->execute();
+    $totalTransactions = $countQuery->get_result()->fetch_assoc()['total'];
+    $countQuery->close();
+    
+    if (DEBUG) {
+        error_log("Total transactions found: " . $totalTransactions);
+    }
+    
+    return $totalTransactions;
+}
 
-    // Fetch transactions for the user's accounts with pagination (and account filter if provided)
-    $query = "SELECT 
+function buildTransactionQuery($whereClause) {
+    return "SELECT 
                 t.transaction_id, 
                 t.amount, 
                 t.transaction_type as type, 
@@ -80,47 +102,101 @@ try {
                     ELSE t.amount
                 END as adjusted_amount
               FROM transaction t
-              JOIN account a ON (t.sender_account_id = a.account_id OR t.receiver_account_id = a.account_id)
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
               LEFT JOIN account sender ON t.sender_account_id = sender.account_id
               LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
               WHERE $whereClause
               ORDER BY t.created_at DESC
               LIMIT ? OFFSET ?";
-    
-    // Add pagination parameters to the param array
-    $params[] = $limit;
-    $params[] = $offset;
-    $types .= "ii"; // Two integers for limit and offset
-    
-    error_log("Main query: " . $query . " with params: " . implode(", ", $params));
+}
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param($types, ...$params);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    error_log("Query executed successfully");
+function fetchTransactions($db, $query, $params, $types) {
+    if (DEBUG) {
+        error_log("Main query: " . $query . " with params: " . implode(", ", $params));
+    }
 
+    $transactionQuery = $db->prepare($query);
+    $transactionQuery->bind_param($types, ...$params);
+    $transactionQuery->execute();
+    $result = $transactionQuery->get_result();
+    
+    if (DEBUG) {
+        error_log("Query executed successfully");
+    }
+    
+    return $result;
+}
+
+function processTransactionResults($result) {
     $transactions = [];
+    
     while ($row = $result->fetch_assoc()) {
-        // Format date and amount for consistency with frontend expectations
-        $row['date'] = date('Y-m-d H:i:s', strtotime($row['transaction_date'])); // Format date
-        unset($row['transaction_date']); // Remove original date field
+        $row['date'] = date('Y-m-d H:i:s', strtotime($row['transaction_date']));
+        unset($row['transaction_date']);
 
-        // Use the adjusted amount which is negative for outgoing transactions
         $row['amount'] = (string)floatval($row['adjusted_amount']);
-        unset($row['adjusted_amount']); // Remove the temporary field
+        unset($row['adjusted_amount']);
 
         $transactions[] = $row;
     }
-    error_log("Processed " . count($transactions) . " transactions");
+    
+    if (DEBUG) {
+        error_log("Processed " . count($transactions) . " transactions");
+    }
+    
+    return $transactions;
+}
+
+validateUserAuthentication();
+
+$userId = $_SESSION['auth']['id'];
+$pagination = getPaginationParameters();
+$accountFilter = getAccountFilter();
+
+if (DEBUG) {
+    error_log("Processing transactions for user_id: " . $userId);
+    error_log("Account filter: " . ($accountFilter ? $accountFilter : "None"));
+}
+
+try {
+    if (DEBUG) {
+        error_log("Attempting database connection");
+    }
+    
+    $db = db_connect();
+    
+    if (DEBUG) {
+        error_log("Database connection successful");
+    }
+
+    $whereData = buildWhereClause($userId, $accountFilter);
+    
+    $totalTransactions = getTotalTransactions(
+        $db, 
+        $whereData['where_clause'], 
+        $whereData['params'], 
+        $whereData['types']
+    );
+
+    $mainQuery = buildTransactionQuery($whereData['where_clause']);
+    
+    $queryParams = $whereData['params'];
+    $queryParams[] = $pagination['limit'];
+    $queryParams[] = $pagination['offset'];
+    $queryTypes = $whereData['types'] . "ii";
+    
+    $result = fetchTransactions($db, $mainQuery, $queryParams, $queryTypes);
+    
+    $transactions = processTransactionResults($result);
 
     echo json_encode([
         'success' => true,
         'total' => $totalTransactions,
-        'page' => $page,
-        'limit' => $limit,
+        'page' => $pagination['page'],
+        'limit' => $pagination['limit'],
         'transactions' => $transactions,
-        'account_filter' => $account_number
+        'account_filter' => $accountFilter
     ]);
 
 } catch (Exception $e) {
@@ -128,15 +204,15 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'An error occurred while fetching transactions. Please check the error logs for details.'
+        'error' => 'An error occurred while fetching transactions. ' .
+                  'Please check the error logs for details.'
     ]);
 } finally {
-    if (isset($stmt)) {
-        $stmt->close();
+    if (isset($db)) {
+        $db->close();
     }
-    if (isset($conn)) {
-        $conn->close();
+    if (DEBUG) {
+        error_log("Connection closed");
     }
-    error_log("Connection closed");
 }
 ?> 

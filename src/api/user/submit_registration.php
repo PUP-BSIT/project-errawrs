@@ -1,185 +1,267 @@
 <?php
-  require_once __DIR__ . '/../../../vendor/autoload.php'; // Adjusted path
-  require_once __DIR__ . '/../../config/database.php';
-  require_once __DIR__ . '/../../config/SessionManager.php';
-  
-  $sessionManager = SessionManager::getInstance();
-  $sessionManager->initSession();
-  
-  use Dotenv\Dotenv;
-  use PHPMailer\PHPMailer\PHPMailer;
-  use PHPMailer\PHPMailer\Exception;
+require_once __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/SessionManager.php';
 
-  header('Content-Type: application/json');
+use Dotenv\Dotenv;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-  // Debug session data
-  error_log("Submit Registration - Session data: " . print_r($_SESSION, true));
-  error_log("Submit Registration - OTP verified flag: " . (isset($_SESSION['otp_verified']) ? $_SESSION['otp_verified'] : 'NOT SET'));
+$sessionManager = SessionManager::getInstance();
+$sessionManager->initSession();
+header('Content-Type: application/json');
 
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-      http_response_code(405);
-      echo json_encode(['success' => false, 'error' => 'Method not allowed']);
-      exit();
-  }
+define('DEBUG', true);
+define('ALLOWED_FILE_EXTENSIONS', ['jpg', 'jpeg', 'png', 'pdf']);
+define('PHONE_REGEX', '/^\+639\d{9}$/');
 
-  if (!isset($_SESSION['otp_verified']) || !$_SESSION['otp_verified']) {
-      http_response_code(403);
-      echo json_encode(['success' => false, 'error' => 'Phone number not verified']);
-      exit();
-  }
+if (DEBUG) {
+    error_log("Submit Registration - Session data: " . print_r($_SESSION, true));
+    error_log("Submit Registration - OTP verified flag: " . 
+        (isset($_SESSION['otp_verified']) ? $_SESSION['otp_verified'] : 'NOT SET'));
+}
 
-  // Handle file upload
-  if (!isset($_FILES['id_image']) || $_FILES['id_image']['error'] !== UPLOAD_ERR_OK) {
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'ID image is required']);
-      exit();
-  }
+function validateHttpMethod() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+        exit();
+    }
+}
 
-  // Get other form data
-  $input = json_decode($_POST['data'] ?? '{}', true);
-  $required_fields = [
-      'first_name', 'last_name', 'phone_number', 'date_of_birth',
-      'nationality', 'street', 'city', 'zip_code', 'country',
-      'email', 'id_type'
-  ];
-  foreach ($required_fields as $field) {
-      if (empty($input[$field])) {
-          http_response_code(400);
-          echo json_encode(['success' => false, 'error' => "Missing required field: $field"]);
-          exit();
-      }
-  }
+function validateOtpVerification() {
+    if (!isset($_SESSION['otp_verified']) || !$_SESSION['otp_verified']) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Phone number not verified']);
+        exit();
+    }
+}
 
-  // Validate phone number: must start with +639 and be 13 characters
-  $raw_phone = $input['phone_number'];
-  if (!preg_match('/^\+639\d{9}$/', $raw_phone)) {
-      http_response_code(400);
-      echo json_encode(['success' => false, 'error' => 'Invalid phone number format. Must start with +639 and be 13 characters.']);
-      exit();
-  }
-  $input['phone_number'] = $raw_phone;
+function validateFileUpload() {
+    if (!isset($_FILES['id_image']) || $_FILES['id_image']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'ID image is required']);
+        exit();
+    }
+}
 
-  try {
-      $db = db_connect();
-      $db->begin_transaction();
+function validateRequiredFields($input) {
+    $requiredFields = [
+        'first_name', 'last_name', 'phone_number', 'date_of_birth',
+        'nationality', 'street', 'city', 'zip_code', 'country',
+        'email', 'id_type'
+    ];
+    
+    foreach ($requiredFields as $field) {
+        if (empty($input[$field])) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false, 
+                'error' => "Missing required field: $field"
+            ]);
+            exit();
+        }
+    }
+}
 
-      // Check if phone number already exists in registration_request
-      $checkPhoneStmt = $db->prepare('SELECT registration_id FROM registration_request WHERE phone_number = ? AND status = "pending"');
-      $checkPhoneStmt->bind_param('s', $input['phone_number']);
-      $checkPhoneStmt->execute();
-      $phoneResult = $checkPhoneStmt->get_result();
-      
-      if ($phoneResult->num_rows > 0) {
-          throw new Exception('A registration with this phone number is already pending. Please wait for approval or contact support.');
-      }
+function validatePhoneNumber($phoneNumber) {
+    if (!preg_match(PHONE_REGEX, $phoneNumber)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false, 
+            'error' => 'Invalid phone number format. Must start with +639 and be 13 characters.'
+        ]);
+        exit();
+    }
+}
 
-      // Check if phone number already exists in user table
-      $checkUserStmt = $db->prepare('SELECT user_id FROM user WHERE phone_number = ?');
-      $checkUserStmt->bind_param('s', $input['phone_number']);
-      $checkUserStmt->execute();
-      $userResult = $checkUserStmt->get_result();
-      
-      if ($userResult->num_rows > 0) {
-          throw new Exception('This phone number is already registered. Please use a different phone number or contact support.');
-      }
+function checkExistingRegistration($db, $phoneNumber) {
+    $checkPhoneQuery = $db->prepare(
+        'SELECT registration_id FROM registration_request WHERE phone_number = ? AND status = "pending"'
+    );
+    $checkPhoneQuery->bind_param('s', $phoneNumber);
+    $checkPhoneQuery->execute();
+    $phoneResult = $checkPhoneQuery->get_result();
+    
+    if ($phoneResult->num_rows > 0) {
+        throw new Exception(
+            'A registration with this phone number is already pending. ' .
+            'Please wait for approval or contact support.'
+        );
+    }
+}
 
-      // Insert into registration_request table
-      $stmt = $db->prepare('INSERT INTO registration_request (first_name, last_name, phone_number, date_of_birth, nationality, street, city, zip_code, country, email, id_type, id_image, status, request_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", "new_registration")');
-      
-      // Create placeholder for id_image path
-      $id_image_path = '';
-      
-      $stmt->bind_param(
-          'ssssssssssss',
-          $input['first_name'], $input['last_name'], $input['phone_number'], $input['date_of_birth'],
-          $input['nationality'], $input['street'], $input['city'], $input['zip_code'], $input['country'],
-          $input['email'], $input['id_type'], $id_image_path
-      );
-      $stmt->execute();
-      $registration_id = $db->insert_id;
+function checkExistingUser($db, $phoneNumber) {
+    $checkUserQuery = $db->prepare('SELECT user_id FROM user WHERE phone_number = ?');
+    $checkUserQuery->bind_param('s', $phoneNumber);
+    $checkUserQuery->execute();
+    $userResult = $checkUserQuery->get_result();
+    
+    if ($userResult->num_rows > 0) {
+        throw new Exception(
+            'This phone number is already registered. ' .
+            'Please use a different phone number or contact support.'
+        );
+    }
+}
 
-      // Create directory for this registration
-      $upload_dir = __DIR__ . '/uploads/registration/' . $registration_id;
-      if (!file_exists($upload_dir)) {
-          mkdir($upload_dir, 0777, true);
-      }
+function insertRegistrationRequest($db, $input) {
+    $insertQuery = $db->prepare(
+        'INSERT INTO registration_request (
+            first_name, last_name, phone_number, date_of_birth, nationality, 
+            street, city, zip_code, country, email, id_type, id_image, 
+            status, request_type
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", "new_registration"
+        )'
+    );
+    
+    $idImagePath = '';
+    
+    $insertQuery->bind_param(
+        'ssssssssssss',
+        $input['first_name'], $input['last_name'], $input['phone_number'], 
+        $input['date_of_birth'], $input['nationality'], $input['street'], 
+        $input['city'], $input['zip_code'], $input['country'], $input['email'], 
+        $input['id_type'], $idImagePath
+    );
+    $insertQuery->execute();
+    
+    return $db->insert_id;
+}
 
-      // Get file extension
-      $file_extension = strtolower(pathinfo($_FILES['id_image']['name'], PATHINFO_EXTENSION));
-      $allowed_extensions = ['jpg', 'jpeg', 'png', 'pdf'];
-      
-      if (!in_array($file_extension, $allowed_extensions)) {
-          throw new Exception('Invalid file type. Allowed types: ' . implode(', ', $allowed_extensions));
-      }
+function createUploadDirectory($registrationId) {
+    $uploadDir = __DIR__ . '/uploads/registration/' . $registrationId;
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+    return $uploadDir;
+}
 
-      // Create filename with registration ID and ID type
-      $filename = $registration_id . '_' . $input['id_type'] . '.' . $file_extension;
-      $file_path = $upload_dir . '/' . $filename;
-      
-      // Move uploaded file
-      if (!move_uploaded_file($_FILES['id_image']['tmp_name'], $file_path)) {
-          throw new Exception('Failed to upload file');
-      }
+function processFileUpload($uploadDir, $registrationId, $idType) {
+    $fileExtension = strtolower(
+        pathinfo($_FILES['id_image']['name'], PATHINFO_EXTENSION)
+    );
+    
+    if (!in_array($fileExtension, ALLOWED_FILE_EXTENSIONS)) {
+        throw new Exception(
+            'Invalid file type. Allowed types: ' . 
+            implode(', ', ALLOWED_FILE_EXTENSIONS)
+        );
+    }
 
-      // Update the registration_request with the correct file path
-      $relative_path = 'uploads/registration/' . $registration_id . '/' . $filename;
-      $update_stmt = $db->prepare('UPDATE registration_request SET id_image = ? WHERE registration_id = ?');
-      $update_stmt->bind_param('si', $relative_path, $registration_id);
-      $update_stmt->execute();
+    $filename = $registrationId . '_' . $idType . '.' . $fileExtension;
+    $filePath = $uploadDir . '/' . $filename;
+    
+    if (!move_uploaded_file($_FILES['id_image']['tmp_name'], $filePath)) {
+        throw new Exception('Failed to upload file');
+    }
 
-      // Send review email
-      $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
-      $dotenv->load();
+    return 'uploads/registration/' . $registrationId . '/' . $filename;
+}
 
-      $mail = new PHPMailer(true);
-      $mail->isSMTP();
-      $mail->Host = $_ENV['GMAIL_HOST'];
-      $mail->SMTPAuth = true;
-      $mail->Username = $_ENV['GMAIL_USERNAME'];
-      $mail->Password = $_ENV['GMAIL_PASSWORD'];
-      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      $mail->Port = (int)$_ENV['GMAIL_PORT'];
+function updateRegistrationFilePath($db, $registrationId, $filePath) {
+    $updateQuery = $db->prepare(
+        'UPDATE registration_request SET id_image = ? WHERE registration_id = ?'
+    );
+    $updateQuery->bind_param('si', $filePath, $registrationId);
+    $updateQuery->execute();
+}
 
-      // Read the email template
-      $emailTemplate = file_get_contents(__DIR__ . '/email-templates/registration-review-email.html');
-      $emailCSS = file_get_contents(__DIR__ . '/email-templates/registration-email.css');
-      $emailTemplate = str_replace([
-        '{{FIRST_NAME}}',
-        '{{LAST_NAME}}',
-        '{{REGISTRATION_ID}}',
-        '<link rel="stylesheet" href="registration-email.css">'
-      ], [
-        htmlspecialchars($input['first_name']),
-        htmlspecialchars($input['last_name']),
-        htmlspecialchars($registration_id),
-        '<style>' . $emailCSS . '</style>'
-      ], $emailTemplate);
+function configurePHPMailer() {
+    $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+    $dotenv->load();
 
-      $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
-      $mail->addAddress($input['email']);
-      $mail->Subject = 'Registration Submitted Successfully';
-      $mail->isHTML(true);
-      $mail->Body = $emailTemplate;
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = $_ENV['GMAIL_HOST'];
+    $mail->SMTPAuth = true;
+    $mail->Username = $_ENV['GMAIL_USERNAME'];
+    $mail->Password = $_ENV['GMAIL_PASSWORD'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
-      $mail->send();
+    return $mail;
+}
 
-      $db->commit();
-      unset($_SESSION['otp_verified']);
+function prepareEmailTemplate($firstName, $lastName, $registrationId) {
+    $emailTemplate = file_get_contents(
+        __DIR__ . '/email-templates/registration-email.html'
+    );
+    $emailCSS = file_get_contents(
+        __DIR__ . '/email-templates/registration-email.css'
+    );
+    
+    $emailTemplate = str_replace('{{FIRST_NAME}}', $firstName, $emailTemplate);
+    $emailTemplate = str_replace('{{LAST_NAME}}', $lastName, $emailTemplate);
+    $emailTemplate = str_replace('{{REGISTRATION_ID}}', $registrationId, $emailTemplate);
+    
+    $emailTemplate = str_replace(
+        '<link rel="stylesheet" href="registration-email.css">',
+        '<style>' . $emailCSS . '</style>',
+        $emailTemplate
+    );
 
-      echo json_encode([
-          'success' => true,
-          'message' => 'Registration submitted. Check your email for review status.',
-          'registration_id' => $registration_id
-      ]);
+    return $emailTemplate;
+}
 
-  } catch (Exception $e) {
-      if (isset($db)) $db->rollback();
-      error_log("Registration Request Error: " . $e->getMessage());
-      http_response_code(500);
-      echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-  } finally {
-      if (isset($stmt)) $stmt->close();
-      if (isset($update_stmt)) $update_stmt->close();
-      if (isset($db)) $db->close();
-  }
-  ?>
+function sendConfirmationEmail($email, $firstName, $lastName, $registrationId) {
+    $mail = configurePHPMailer();
+    $emailTemplate = prepareEmailTemplate($firstName, $lastName, $registrationId);
+
+    $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
+    $mail->addAddress($email);
+    $mail->Subject = 'Registration Submitted Successfully';
+    $mail->isHTML(true);
+    $mail->Body = $emailTemplate;
+
+    $mail->send();
+}
+
+validateHttpMethod();
+validateOtpVerification();
+validateFileUpload();
+
+$input = json_decode($_POST['data'] ?? '{}', true);
+validateRequiredFields($input);
+validatePhoneNumber($input['phone_number']);
+
+try {
+    $db = db_connect();
+    $db->begin_transaction();
+
+    checkExistingRegistration($db, $input['phone_number']);
+    checkExistingUser($db, $input['phone_number']);
+
+    $registrationId = insertRegistrationRequest($db, $input);
+
+    $uploadDir = createUploadDirectory($registrationId);
+    $filePath = processFileUpload($uploadDir, $registrationId, $input['id_type']);
+    
+    updateRegistrationFilePath($db, $registrationId, $filePath);
+
+    sendConfirmationEmail(
+        $input['email'], 
+        $input['first_name'], 
+        $input['last_name'], 
+        $registrationId
+    );
+
+    $db->commit();
+    unset($_SESSION['otp_verified']);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Registration submitted. Check your email for review status.',
+        'registration_id' => $registrationId
+    ]);
+
+} catch (Exception $e) {
+    if (isset($db)) $db->rollback();
+    error_log("Registration Request Error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+} finally {
+    if (isset($db)) $db->close();
+}
+?>

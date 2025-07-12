@@ -201,6 +201,12 @@ body {
     justify-content: space-between;
 }
 
+.transaction-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .transaction-item {
     background-color: var(--color-bg-gradient-start);
     padding: 20px;
@@ -263,6 +269,35 @@ body {
     color: var(--color-primary-black);
     font-size: 16px;
     font-weight: 500;
+}
+
+.bank-source {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: rgba(182, 255, 74, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid var(--color-lime-green);
+    font-size: 14px;
+    color: var(--color-primary-black);
+    font-weight: 500;
+}
+
+.bank-source span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bank-source span:first-child::before {
+    content: "🏦";
+    margin-right: 4px;
+}
+
+.bank-source span:last-child::before {
+    content: "📋";
+    margin-right: 4px;
 }
 
 .transaction-completed {

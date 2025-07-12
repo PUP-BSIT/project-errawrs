@@ -101,6 +101,43 @@
             </div>
         </main>
         <!-- Scripts -->
+        <script src="./js/config.js"></script>
         <script src="./js/user_accounts.js"></script>
+        <!-- User Detail Card (hidden by default) -->
+        <div id="user_detail_card" style="display:none;">
+          <div class="user-detail-center-wrapper">
+            <div class="user-card detail">
+              <button id="user_detail_back" class="back-btn">&larr; Back</button>
+              <h2 class="user-detail-title">User Details</h2>
+              <hr class="user-detail-divider" />
+              <div class="user-detail-content-grid">
+                <div class="user-detail-fields">
+                  <div class="user-detail-row"><span class="user-detail-label">User ID</span><span id="ud_user_id" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Username</span><span id="ud_username" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">First Name</span><span id="ud_first_name" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Last Name</span><span id="ud_last_name" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Phone Number</span><span id="ud_phone_number" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Date of Birth</span><span id="ud_date_of_birth" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Nationality</span><span id="ud_nationality" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Email</span><span id="ud_email" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Created At</span><span id="ud_created_at" class="user-detail-value"></span></div>
+                </div>
+                <div class="user-detail-fields">
+                  <div class="user-detail-row"><span class="user-detail-label">Street</span><span id="ud_street" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">City</span><span id="ud_city" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Zip Code</span><span id="ud_zip_code" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">Country</span><span id="ud_country" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">ID Type</span><span id="ud_id_type" class="user-detail-value"></span></div>
+                  <div class="user-detail-row"><span class="user-detail-label">ID Image</span><span id="ud_id_image" class="user-detail-value"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ID Image Modal -->
+        <div id="idImageModal" class="id-image-modal">
+          <span class="id-image-modal-close" id="idImageModalClose">&times;</span>
+          <img id="idImageModalImg" src="" alt="ID Image" />
+        </div>
     </body>
 </html>
