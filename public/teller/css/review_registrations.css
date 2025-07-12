@@ -16,6 +16,18 @@
     --color-error: #dc3545;
     --color-warning: #ffc107;
     --color-info: #17a2b8;
+    --color-badge-request-bg: #e5e7eb;
+    --color-badge-request-text: #222;
+    --color-badge-request-icon: #7ed957;
+    --color-badge-account-bg: #d1fae5;
+    --color-badge-account-text: #065f46;
+    --color-badge-account-icon: #10b981;
+    --color-btn-approve-hover: #218838;
+    --color-btn-deny-hover: #c82333;
+    --color-modal-bg: #f3f4f6;
+    --color-modal-border: #e5e7eb;
+    --color-modal-cancel-hover: #e5e7eb;
+    --color-modal-cancel-hover-border: #d1d5db;
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
     --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
@@ -558,7 +570,7 @@ body {
 }
 
 .btn-approve:hover {
-    background-color: #218838;
+    background-color: var(--color-btn-approve-hover);
 }
 
 .btn-deny {
@@ -568,7 +580,7 @@ body {
 }
 
 .btn-deny:hover {
-    background-color: #c82333;
+    background-color: var(--color-btn-deny-hover);
 }
 
 /* Pagination */
@@ -1183,9 +1195,9 @@ body {
 }
 #cancel_action_btn {
     flex: 1 1 0;
-    background: #f3f4f6;
-    color: #222;
-    border: 1px solid #e5e7eb;
+    background: var(--color-modal-bg);
+    color: var(--color-primary-black);
+    border: 1px solid var(--color-modal-border);
     border-radius: 8px;
     font-size: 1.1rem;
     font-weight: 500;
@@ -1194,8 +1206,8 @@ body {
     transition: background 0.2s, border 0.2s;
 }
 #cancel_action_btn:hover {
-    background: #e5e7eb;
-    border-color: #d1d5db;
+    background: var(--color-modal-cancel-hover);
+    border-color: var(--color-modal-cancel-hover-border);
 }
 @media (max-width: 500px) {
     .modal-content {
@@ -1213,8 +1225,8 @@ body {
 
 /* Request Type Badge Styling */
 .request-type-badge {
-  background: #e5e7eb;
-  color: #222;
+  background: var(--color-badge-request-bg);
+  color: var(--color-badge-request-text);
   padding: 4px 10px;
   border-radius: 12px;
   font-weight: 600;
@@ -1227,14 +1239,14 @@ body {
   text-transform: uppercase;
 }
 .request-type-badge i {
-  color: #7ed957;
+  color: var(--color-badge-request-icon);
   font-size: 1rem;
 }
 
 /* Account Type Badge Styling */
 .account-type-badge {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-badge-account-bg);
+  color: var(--color-badge-account-text);
   padding: 4px 10px;
   border-radius: 12px;
   font-weight: 600;
@@ -1247,6 +1259,11 @@ body {
   text-transform: capitalize;
 }
 .account-type-badge i {
-  color: #10b981;
+  color: var(--color-badge-account-icon);
   font-size: 1rem;
+}
+
+/* Utility class for hiding elements via JS */
+.hidden {
+    display: none;
 }

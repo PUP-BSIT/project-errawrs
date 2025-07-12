@@ -1,73 +1,61 @@
-class RegistrationReview {
-    constructor() {
-        this.currentPage = 1;
-        this.itemsPerPage = 2; // Always 2 per page
-        this.currentStatus = 'pending';
-        this.allRegistrations = [];
-        this.filteredRegistrations = [];
-        this.setupEventListeners();
-        this.loadRegistrations();
-    }
+// State object to hold all registration review data
+const regReviewState = {
+    currentPage: 1,
+    itemsPerPage: 2,
+    currentStatus: 'pending',
+    allRegistrations: [],
+    filteredRegistrations: []
+};
 
-    // Configuration - Dynamic base URL detection
-    getBaseURL() {
+// Get the base URL for API requests
+function getBaseURL() {
         const protocol = window.location.protocol;
         const host = window.location.host;
-        
-        // Check if we're on the EC2 server
         if (host === 'dev-teller.stackovercash.site') {
-            return `${protocol}//${host}/api`;
+        return protocol + '//' + host + '/api';
         }
-        
-        // Local XAMPP environment
-        return `${protocol}//${host}/project-errawrs/src/api`;
+    return protocol + '//' + host + '/project-errawrs/src/api';
     }
 
-    setupEventListeners() {
-        // Status filter
+// Set up event listeners for filter and search
+function setupEventListeners() {
         const statusFilter = document.getElementById('status_filter');
         if (statusFilter) {
             statusFilter.addEventListener('change', () => {
-                this.currentStatus = statusFilter.value;
-                this.currentPage = 1;
-                this.loadRegistrations();
+            regReviewState.currentStatus = statusFilter.value;
+            regReviewState.currentPage = 1;
+            loadRegistrations();
             });
         }
-
-        // Search box
         const searchBox = document.getElementById('search_box');
         if (searchBox) {
             searchBox.addEventListener('input', () => {
-                this.currentPage = 1;
-                this.applySearchFilter();
-                this.displayRegistrations(this.getPaginatedRegistrations());
-                this.updatePagination();
+            regReviewState.currentPage = 1;
+            applySearchFilter();
+            displayRegistrations(getPaginatedRegistrations());
+            updatePagination();
             });
         }
-
-        // Modal close button
         const closeModal = document.querySelector('.close-modal');
         if (closeModal) {
             closeModal.addEventListener('click', () => {
-                document.getElementById('application_modal').style.display = '';
+                document.getElementById('application_modal').classList.add('hidden');
             });
         }
-
-        // Close modal when clicking outside
         window.addEventListener('click', (e) => {
             const modal = document.getElementById('application_modal');
             if (e.target === modal) {
-                modal.style.display = '';
+                modal.classList.add('hidden');
             }
         });
     }
 
-    async loadRegistrations() {
+// Load registrations from the server
+async function loadRegistrations() {
         try {
-            const baseUrl = this.getBaseURL();
-            const url = new URL(`${baseUrl}/teller/get_registrations.php`);
-            url.searchParams.append('status', this.currentStatus);
-            // Fetch all registrations for search and pagination
+        const baseUrl = getBaseURL();
+        const url = new URL(baseUrl + '/teller/get_registrations.php');
+        url.searchParams.append('status', regReviewState.currentStatus);
             url.searchParams.append('page', 1);
             url.searchParams.append('per_page', 1000);
             const response = await fetch(url, { credentials: 'include' });
@@ -76,518 +64,515 @@ class RegistrationReview {
                 return;
             }
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to fetch registrations: ${response.status} ${response.statusText}`);
+            throw new Error('Failed to fetch registrations');
             }
             const data = await response.json();
             if (!data.success) {
-                throw new Error(data.error || 'Unknown error occurred');
+            throw new Error(data.error || 'Unknown error');
             }
-            this.allRegistrations = data.registrations;
-            this.applySearchFilter();
-            this.displayRegistrations(this.getPaginatedRegistrations());
-            this.updatePagination();
+        regReviewState.allRegistrations = data.registrations;
+        applySearchFilter();
+        displayRegistrations(getPaginatedRegistrations());
+        updatePagination();
         } catch (error) {
-            this.showNotification(error.message, 'error');
+        showNotification(error.message, 'error');
             const container = document.querySelector('.applications-grid');
             if (container) {
-                container.innerHTML = `
-                    <div class="no-applications">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading applications. Please try again.</p>
-                    </div>
-                `;
+            container.innerHTML =
+                '<div class="no-applications">' +
+                '<i class="fas fa-exclamation-circle"></i>' +
+                '<p>Error loading applications. Please try again.</p>' +
+                '</div>';
             }
         }
     }
 
-    applySearchFilter() {
+// Filter registrations by search box
+function applySearchFilter() {
         const searchBox = document.getElementById('search_box');
         const query = searchBox ? searchBox.value.trim().toLowerCase() : '';
         if (!query) {
-            this.filteredRegistrations = this.allRegistrations;
+        regReviewState.filteredRegistrations =
+            regReviewState.allRegistrations;
         } else {
-            this.filteredRegistrations = this.allRegistrations.filter(reg => {
+        regReviewState.filteredRegistrations =
+            regReviewState.allRegistrations.filter(reg => {
                 return (
-                    (reg.account_number && reg.account_number.toLowerCase().includes(query)) ||
-                    (reg.first_name && reg.first_name.toLowerCase().includes(query)) ||
-                    (reg.last_name && reg.last_name.toLowerCase().includes(query))
+                    (reg.account_number &&
+                        reg.account_number.toLowerCase().includes(query)) ||
+                    (reg.first_name &&
+                        reg.first_name.toLowerCase().includes(query)) ||
+                    (reg.last_name &&
+                        reg.last_name.toLowerCase().includes(query))
                 );
             });
         }
     }
 
-    getPaginatedRegistrations() {
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return this.filteredRegistrations.slice(start, end);
+// Get registrations for the current page
+function getPaginatedRegistrations() {
+    const start = (regReviewState.currentPage - 1) *
+        regReviewState.itemsPerPage;
+    const end = start + regReviewState.itemsPerPage;
+    return regReviewState.filteredRegistrations.slice(start, end);
     }
 
-    displayRegistrations(registrations) {
+// Display registration cards (all design is handled by CSS classes)
+function displayRegistrations(registrations) {
         const container = document.querySelector('.applications-grid');
         if (!container) return;
         if (!registrations.length) {
-            container.innerHTML = `
-                <div class="no-applications">
-                    <i class="fas fa-inbox fa-3x"></i>
-                    <p>No ${this.currentStatus === 'all' ? '' : this.currentStatus} applications found</p>
-                    ${this.currentStatus !== 'pending' ? `
-                        <button class="btn view-pending" onclick="registrationReview.viewPending()">
-                            <i class="fas fa-clock"></i> View Pending Applications
-                        </button>
-                    ` : ''}
-                </div>
-            `;
+        container.innerHTML =
+            '<div class="no-applications">' +
+            '<i class="fas fa-inbox fa-3x"></i>' +
+            '<p>No ' +
+            (regReviewState.currentStatus === 'all'
+                ? ''
+                : regReviewState.currentStatus) +
+            ' applications found</p>' +
+            (regReviewState.currentStatus !== 'pending'
+                ? '<button class="btn view-pending" ' +
+                  'onclick="viewPending()">' +
+                  '<i class="fas fa-clock"></i> View Pending Applications' +
+                  '</button>'
+                : '') +
+            '</div>';
             return;
         }
-        const html = registrations.map(reg => `
-            <div class="registration-card"
-                data-registration-id="${reg.registration_id}"
-                data-dob="${reg.date_of_birth}"
-                data-street="${reg.street_address || ''}"
-                data-city="${reg.city || ''}"
-                data-country="${reg.country || ''}"
-                data-zip-code="${reg.zip_code || ''}"
-                data-id-image="${reg.id_image || ''}"
-                data-request-type="${reg.request_type || ''}"
-                data-account-type="${reg.account_type || ''}"
-            >
-                <div class="status-badge status-badge-absolute ${reg.status}" title="Application Status">
-                    <i class="fas ${
-                        reg.status === 'pending' ? 'fa-clock' :
-                        reg.status === 'approved' ? 'fa-check-circle' :
-                        'fa-times-circle'
-                    }"></i>
-                    ${reg.status.charAt(0).toUpperCase() + reg.status.slice(1)}
-                </div>
-                <div class="card-left">
-                    <div class="registration-header">
-                        <div class="applicant-info">
-                            <h3 class="applicant-name">${reg.first_name} ${reg.last_name}</h3>
-                            <div class="meta-info">
-                                <span class="application-date" title="Application Date">
-                                    <i class="far fa-calendar-alt"></i>
-                                    ${new Date(reg.created_at).toLocaleDateString()}
-                                </span>
-                                <span class="application-id" title="Application ID">
-                                    <i class="fas fa-hashtag"></i>
-                                    ${reg.registration_id}
-                                </span>
-                                <span class="request-type-badge" title="Request Type">
-                                    <i class="fas fa-info-circle"></i>
-                                    ${reg.request_type ? reg.request_type.replace('_', ' ').toUpperCase() : 'N/A'}
-                                </span>
-                                ${reg.request_type === 'add_account' ? `
-                                <span class="account-type-badge" title="Account Type">
-                                    <i class="fas fa-university"></i>
-                                    ${reg.account_type ? reg.account_type.charAt(0).toUpperCase() + reg.account_type.slice(1) : 'N/A'}
-                                </span>
-                                ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="registration-details">
-                        <div class="detail-row">
-                            <div class="detail-item email">
-                                <i class="far fa-envelope"></i>
-                                <span>${reg.email}</span>
-                            </div>
-                            <div class="detail-item phone">
-                                <i class="fas fa-phone"></i>
-                                <span>${reg.phone_number}</span>
-                            </div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-item id-type">
-                                <i class="fas fa-id-card"></i>
-                                <span>${reg.id_type}</span>
-                            </div>
-                            <div class="detail-item nationality">
-                                <i class="fas fa-globe"></i>
-                                <span>${reg.nationality}</span>
-                            </div>
-                        </div>
-                        ${reg.status !== 'pending' ? `
-                            <div class="update-info">
-                                <i class="far fa-clock"></i>
-                                Last updated ${this.getTimeAgo(new Date(reg.updated_at))}
-                            </div>
-                        ` : ''}
-                    </div>
-                    ${reg.status === 'pending' ? `
-                    <div class="action-buttons-row">
-                        <button class="btn btn-approve" onclick="registrationReview.handleAction(${reg.registration_id}, 'approve')" title="Approve Application">
-                            <i class="fas fa-check"></i> Approve
-                        </button>
-                        <button class="btn btn-deny" onclick="registrationReview.handleAction(${reg.registration_id}, 'deny')" title="Deny Application">
-                            <i class="fas fa-times"></i> Deny
-                        </button>
-                    </div>
-                    ` : ''}
-                    <button class="btn btn-view btn-view-details" onclick="registrationReview.viewDetails(${reg.registration_id})">
-                        <i class="fas fa-eye"></i> View Details
-                    </button>
-                </div>
-            </div>
-        `).join('');
+    const html = registrations
+        .map(reg => {
+            return (
+                '<div class="registration-card" ' +
+                'data-registration-id="' + reg.registration_id + '" ' +
+                'data-dob="' + (reg.date_of_birth || '') + '" ' +
+                'data-street="' + (reg.street_address || '') + '" ' +
+                'data-city="' + (reg.city || '') + '" ' +
+                'data-country="' + (reg.country || '') + '" ' +
+                'data-zip-code="' + (reg.zip_code || '') + '" ' +
+                'data-id-image="' + (reg.id_image || '') + '" ' +
+                'data-request-type="' + (reg.request_type || '') + '" ' +
+                'data-account-type="' + (reg.account_type || '') + '">' +
+                '<div class="status-badge status-badge-absolute ' +
+                reg.status + '" title="Application Status">' +
+                '<i class="fas ' +
+                (reg.status === 'pending'
+                    ? 'fa-clock'
+                    : reg.status === 'approved'
+                    ? 'fa-check-circle'
+                    : 'fa-times-circle') +
+                '"></i> ' +
+                reg.status.charAt(0).toUpperCase() +
+                reg.status.slice(1) +
+                '</div>' +
+                '<div class="card-left">' +
+                '<div class="registration-header">' +
+                '<div class="applicant-info">' +
+                '<h3 class="applicant-name">' +
+                reg.first_name +
+                ' ' +
+                reg.last_name +
+                '</h3>' +
+                '<div class="meta-info">' +
+                '<span class="application-date" title="Application Date">' +
+                '<i class="far fa-calendar-alt"></i> ' +
+                new Date(reg.created_at).toLocaleDateString() +
+                '</span>' +
+                '<span class="application-id" title="Application ID">' +
+                '<i class="fas fa-hashtag"></i> ' +
+                reg.registration_id +
+                '</span>' +
+                '<span class="request-type-badge" title="Request Type">' +
+                '<i class="fas fa-info-circle"></i> ' +
+                (reg.request_type
+                    ? reg.request_type.replace('_', ' ').toUpperCase()
+                    : 'N/A') +
+                '</span>' +
+                (reg.request_type === 'add_account'
+                    ? '<span class="account-type-badge" ' +
+                      'title="Account Type">' +
+                      '<i class="fas fa-university"></i> ' +
+                      (reg.account_type
+                          ? reg.account_type.charAt(0).toUpperCase() +
+                            reg.account_type.slice(1)
+                          : 'N/A') +
+                      '</span>'
+                    : '') +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="registration-details">' +
+                '<div class="detail-row">' +
+                '<div class="detail-item email">' +
+                '<i class="far fa-envelope"></i> ' +
+                '<span>' + reg.email + '</span>' +
+                '</div>' +
+                '<div class="detail-item phone">' +
+                '<i class="fas fa-phone"></i> ' +
+                '<span>' + reg.phone_number + '</span>' +
+                '</div>' +
+                '</div>' +
+                '<div class="detail-row">' +
+                '<div class="detail-item id-type">' +
+                '<i class="fas fa-id-card"></i> ' +
+                '<span>' + reg.id_type + '</span>' +
+                '</div>' +
+                '<div class="detail-item nationality">' +
+                '<i class="fas fa-globe"></i> ' +
+                '<span>' + reg.nationality + '</span>' +
+                '</div>' +
+                '</div>' +
+                (reg.status !== 'pending'
+                    ? '<div class="update-info">' +
+                      '<i class="far fa-clock"></i> Last updated ' +
+                      getTimeAgo(new Date(reg.updated_at)) +
+                      '</div>'
+                    : '') +
+                '</div>' +
+                (reg.status === 'pending'
+                    ? '<div class="action-buttons-row">' +
+                      '<button class="btn btn-approve" ' +
+                      'onclick="handleAction(' +
+                      reg.registration_id +
+                      ', \'approve\')">' +
+                      '<i class="fas fa-check"></i> Approve</button>' +
+                      '<button class="btn btn-deny" ' +
+                      'onclick="handleAction(' +
+                      reg.registration_id +
+                      ', \'deny\')">' +
+                      '<i class="fas fa-times"></i> Deny</button>' +
+                      '</div>'
+                    : '') +
+                '<button class="btn btn-view btn-view-details" ' +
+                'onclick="viewDetails(' +
+                reg.registration_id +
+                ')"><i class="fas fa-eye"></i> View Details</button>' +
+                '</div>' +
+                '</div>'
+            );
+        })
+        .join('');
         container.innerHTML = html;
     }
 
-    updatePagination() {
-        const totalPages = Math.ceil(this.filteredRegistrations.length / this.itemsPerPage) || 1;
+// Update pagination controls
+function updatePagination() {
+    const totalPages =
+        Math.ceil(regReviewState.filteredRegistrations.length /
+            regReviewState.itemsPerPage) || 1;
         const pageNumbers = document.getElementById('page-numbers');
         if (pageNumbers) {
             let html = '';
             for (let i = 1; i <= totalPages; i++) {
-                html += `
-                    <button class="page-number ${i === this.currentPage ? 'active' : ''}"
-                            onclick="registrationReview.goToPage(${i})">
-                        ${i}
-                    </button>
-                `;
+            html +=
+                '<button class="page-number ' +
+                (i === regReviewState.currentPage ? 'active' : '') +
+                '" onclick="goToPage(' +
+                i +
+                ')">' +
+                i +
+                '</button>';
             }
             pageNumbers.innerHTML = html;
         }
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
-        if (prevBtn) prevBtn.disabled = this.currentPage === 1;
-        if (nextBtn) nextBtn.disabled = this.currentPage === totalPages;
+    if (prevBtn) prevBtn.disabled = regReviewState.currentPage === 1;
+    if (nextBtn) nextBtn.disabled = regReviewState.currentPage === totalPages;
     }
 
-    async viewDetails(registrationId) {
+// Show details view for a registration
+function viewDetails(registrationId) {
         try {
-            const card = document.querySelector(`[data-registration-id="${registrationId}"]`);
+        const card = document.querySelector(
+            '[data-registration-id="' + registrationId + '"]'
+        );
             if (!card) {
                 throw new Error('Registration card not found');
             }
-
-            // Hide the filter section and applications grid
-            document.querySelector('.filter-section').style.display = 'none';
-            document.querySelector('.applications-grid').style.display = 'none';
-            document.querySelector('.pagination-container').style.display = 'none';
-
-            // Create and show the details view
+            document.querySelector('.filter-section').classList.add('hidden');
+            document.querySelector('.applications-grid').classList.add('hidden');
+            document.querySelector('.pagination-container').classList.add('hidden');
             const detailsContainer = document.createElement('div');
             detailsContainer.className = 'registration-details-view';
-            
             const details = {
                 id: registrationId,
-                name: card.querySelector('.applicant-name')?.textContent || 'N/A',
+            name:
+                card.querySelector('.applicant-name')?.textContent || 'N/A',
                 email: card.querySelector('.email span')?.textContent || 'N/A',
                 phone: card.querySelector('.phone span')?.textContent || 'N/A',
                 idType: card.querySelector('.id-type span')?.textContent || 'N/A',
-                nationality: card.querySelector('.nationality span')?.textContent || 'N/A',
-                status: card.querySelector('.status-badge')?.textContent?.toLowerCase().trim() || 'pending',
-                createdAt: card.querySelector('.application-date')?.textContent?.trim() || 'N/A',
-                updatedAt: card.querySelector('.update-info')?.textContent?.trim() || 'Not reviewed yet',
-                requestType: card.dataset.requestType ? card.dataset.requestType.replace('_', ' ').toUpperCase() : 'N/A',
-                accountType: card.dataset.accountType ? card.dataset.accountType.charAt(0).toUpperCase() + card.dataset.accountType.slice(1) : 'N/A'
+            nationality:
+                card.querySelector('.nationality span')?.textContent || 'N/A',
+            status:
+                card.querySelector('.status-badge')?.textContent
+                    ?.toLowerCase()
+                    .trim() || 'pending',
+            createdAt:
+                card.querySelector('.application-date')?.textContent?.trim() ||
+                'N/A',
+            updatedAt:
+                card.querySelector('.update-info')?.textContent?.trim() ||
+                'Not reviewed yet',
+            requestType: card.dataset.requestType
+                ? card.dataset.requestType.replace('_', ' ').toUpperCase()
+                : 'N/A',
+            accountType: card.dataset.accountType
+                ? card.dataset.accountType.charAt(0).toUpperCase() +
+                  card.dataset.accountType.slice(1)
+                : 'N/A',
             };
-
-            detailsContainer.innerHTML = `
-                <div class="details-header">
-                    <button class="btn btn-back" onclick="registrationReview.goBack()">
-                        <i class="fas fa-arrow-left"></i> Back to Applications
-                    </button>
-                    <div class="status-badge ${details.status}">
-                        <i class="fas ${
-                            details.status === 'pending' ? 'fa-clock' :
-                            details.status === 'approved' ? 'fa-check-circle' :
-                            'fa-times-circle'
-                        }"></i>
-                        ${details.status.charAt(0).toUpperCase() + details.status.slice(1)}
-                    </div>
-                </div>
-
-                <div class="details-content">
-                    <div class="details-main">
-                        <div class="section">
-                            <h2>Personal Information</h2>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label><i class="fas fa-user"></i> Full Name</label>
-                                    <span>${details.name}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="far fa-envelope"></i> Email Address</label>
-                                    <span>${details.email}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-phone"></i> Phone Number</label>
-                                    <span>${details.phone}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-calendar"></i> Date of Birth</label>
-                                    <span>${new Date(card.dataset.dob).toLocaleDateString()}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-globe"></i> Nationality</label>
-                                    <span>${details.nationality}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="section">
-                            <h2>Request Type</h2>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label><i class="fas fa-info-circle"></i> Request Type</label>
-                                    <span>${details.requestType}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        ${details.requestType === 'ADD ACCOUNT' ? `
-                        <div class="section">
-                            <h2>Account Type</h2>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label><i class="fas fa-university"></i> Account Type</label>
-                                    <span>${details.accountType}</span>
-                                </div>
-                            </div>
-                        </div>
-                        ` : ''}
-
-                        <div class="section">
-                            <h2>Address Information</h2>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label><i class="fas fa-map-marker-alt"></i> Street Address</label>
-                                    <span>${card.dataset.street}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-city"></i> City</label>
-                                    <span>${card.dataset.city}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-map"></i> Country</label>
-                                    <span>${card.dataset.country}</span>
-                                </div>
-                                <div class="info-item">
-                                    <label><i class="fas fa-mail-bulk"></i> ZIP Code</label>
-                                    <span>${card.dataset.zipCode}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="section">
-                            <h2>ID Document</h2>
-                            <div class="id-preview-section">
-                                <div class="id-preview-container">
-                                    <img src="${card.dataset.idImage}" alt="ID Document" class="id-preview-image">
-                                </div>
-                                <div class="id-preview-note">
-                                    <i class="fas fa-search-plus"></i>
-                                    Click to zoom
-                                </div>
-                            </div>
-                        </div>
-
-                        ${details.status === 'pending' ? `
-                            <div class="section">
-                                <h2>Actions</h2>
-                                <div class="details-actions">
-                                    <button class="btn btn-approve" onclick="registrationReview.handleAction('${details.id}', 'approve')">
-                                        <i class="fas fa-check"></i> Approve Application
-                                    </button>
-                                    <button class="btn btn-deny" onclick="registrationReview.handleAction('${details.id}', 'deny')">
-                                        <i class="fas fa-times"></i> Reject Application
-                                    </button>
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-
-            // Add the details view to the page
+        detailsContainer.innerHTML =
+            '<div class="details-header">' +
+            '<button class="btn btn-back" onclick="goBack()">' +
+            '<i class="fas fa-arrow-left"></i> Back to Applications</button>' +
+            '<div class="status-badge ' +
+            details.status +
+            '"><i class="fas ' +
+            (details.status === 'pending'
+                ? 'fa-clock'
+                : details.status === 'approved'
+                ? 'fa-check-circle'
+                : 'fa-times-circle') +
+            '"></i> ' +
+            details.status.charAt(0).toUpperCase() +
+            details.status.slice(1) +
+            '</div></div>' +
+            '<div class="details-content">' +
+            '<div class="details-main">' +
+            '<div class="section">' +
+            '<h2>Personal Information</h2>' +
+            '<div class="info-grid">' +
+            '<div class="info-item"><label><i class="fas fa-user"></i> Full Name</label>' +
+            '<span>' + details.name + '</span></div>' +
+            '<div class="info-item"><label><i class="far fa-envelope"></i> Email Address</label>' +
+            '<span>' + details.email + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-phone"></i> Phone Number</label>' +
+            '<span>' + details.phone + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-calendar"></i> Date of Birth</label>' +
+            '<span>' + new Date(card.dataset.dob).toLocaleDateString() + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-globe"></i> Nationality</label>' +
+            '<span>' + details.nationality + '</span></div>' +
+            '</div></div>' +
+            '<div class="section">' +
+            '<h2>Request Type</h2>' +
+            '<div class="info-grid">' +
+            '<div class="info-item"><label><i class="fas fa-info-circle"></i> Request Type</label>' +
+            '<span>' + details.requestType + '</span></div>' +
+            '</div></div>' +
+            (details.requestType === 'ADD ACCOUNT'
+                ? '<div class="section">' +
+                  '<h2>Account Type</h2>' +
+                  '<div class="info-grid">' +
+                  '<div class="info-item"><label><i class="fas fa-university"></i> Account Type</label>' +
+                  '<span>' + details.accountType + '</span></div>' +
+                  '</div></div>'
+                : '') +
+            '<div class="section">' +
+            '<h2>Address Information</h2>' +
+            '<div class="info-grid">' +
+            '<div class="info-item"><label><i class="fas fa-map-marker-alt"></i> Street Address</label>' +
+            '<span>' + card.dataset.street + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-city"></i> City</label>' +
+            '<span>' + card.dataset.city + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-map"></i> Country</label>' +
+            '<span>' + card.dataset.country + '</span></div>' +
+            '<div class="info-item"><label><i class="fas fa-mail-bulk"></i> ZIP Code</label>' +
+            '<span>' + card.dataset.zipCode + '</span></div>' +
+            '</div></div>' +
+            '<div class="section">' +
+            '<h2>ID Document</h2>' +
+            '<div class="id-preview-section">' +
+            '<div class="id-preview-container">' +
+            '<img src="' + card.dataset.idImage + '" alt="ID Document" class="id-preview-image">' +
+            '</div>' +
+            '<div class="id-preview-note">' +
+            '<i class="fas fa-search-plus"></i> Click to zoom</div>' +
+            '</div></div>' +
+            (details.status === 'pending'
+                ? '<div class="section">' +
+                  '<h2>Actions</h2>' +
+                  '<div class="details-actions">' +
+                  '<button class="btn btn-approve" ' +
+                  'onclick="handleAction(\'' +
+                  details.id +
+                  '\', \'approve\')">' +
+                  '<i class="fas fa-check"></i> Approve Application</button>' +
+                  '<button class="btn btn-deny" ' +
+                  'onclick="handleAction(\'' +
+                  details.id +
+                  '\', \'deny\')">' +
+                  '<i class="fas fa-times"></i> Reject Application</button>' +
+                  '</div></div>'
+                : '') +
+            '</div></div>';
             document.querySelector('.main-content').appendChild(detailsContainer);
-
         } catch (error) {
-            console.error('Error in viewDetails:', error);
-            this.showNotification('Error loading application details', 'error');
+        showNotification('Error loading application details', 'error');
         }
     }
 
-    goBack() {
-        // Remove the details view
+// Go back to the main list from details view
+function goBack() {
         const detailsView = document.querySelector('.registration-details-view');
         if (detailsView) {
             detailsView.remove();
         }
-
-        // Show the filter section and applications grid
-        document.querySelector('.filter-section').style.display = 'flex';
-        document.querySelector('.applications-grid').style.display = 'grid';
-        document.querySelector('.pagination-container').style.display = 'flex';
+        document.querySelector('.filter-section').classList.remove('hidden');
+        document.querySelector('.applications-grid').classList.remove('hidden');
+        document.querySelector('.pagination-container').classList.remove('hidden');
     }
 
-    viewPending() {
-        this.currentStatus = 'pending';
-        this.currentPage = 1;
-        this.loadRegistrations();
+// View only pending applications
+function viewPending() {
+    regReviewState.currentStatus = 'pending';
+    regReviewState.currentPage = 1;
+    loadRegistrations();
     }
 
-    getTimeAgo(date) {
+// Get time ago string
+function getTimeAgo(date) {
         const seconds = Math.floor((new Date() - date) / 1000);
-        
         let interval = Math.floor(seconds / 31536000);
         if (interval > 1) return interval + ' years ago';
         if (interval === 1) return 'a year ago';
-        
         interval = Math.floor(seconds / 2592000);
         if (interval > 1) return interval + ' months ago';
         if (interval === 1) return 'a month ago';
-        
         interval = Math.floor(seconds / 86400);
         if (interval > 1) return interval + ' days ago';
         if (interval === 1) return 'yesterday';
-        
         interval = Math.floor(seconds / 3600);
         if (interval > 1) return interval + ' hours ago';
         if (interval === 1) return 'an hour ago';
-        
         interval = Math.floor(seconds / 60);
         if (interval > 1) return interval + ' minutes ago';
         if (interval === 1) return 'a minute ago';
-        
         return 'just now';
     }
 
-    async handleAction(registrationId, action) {
-        let approveBtn, denyBtn, originalApproveHTML, originalDenyHTML;
-        // Detect if in details view
-        const detailsView = document.querySelector('.registration-details-view');
-        if (detailsView) {
-            approveBtn = detailsView.querySelector('.btn-approve');
-            denyBtn = detailsView.querySelector('.btn-deny');
-        } else {
-            const card = document.querySelector(`[data-registration-id="${registrationId}"]`);
-            if (card) {
-                approveBtn = card.querySelector('.btn-approve');
-                denyBtn = card.querySelector('.btn-deny');
-            }
+// Approve or deny a registration, with loading state
+async function handleAction(registrationId, action) {
+    let approveBtn, denyBtn, originalApproveHTML, originalDenyHTML;
+    const detailsView = document.querySelector('.registration-details-view');
+    if (detailsView) {
+        approveBtn = detailsView.querySelector('.btn-approve');
+        denyBtn = detailsView.querySelector('.btn-deny');
+    } else {
+        const card = document.querySelector(
+            '[data-registration-id="' + registrationId + '"]'
+        );
+        if (card) {
+            approveBtn = card.querySelector('.btn-approve');
+            denyBtn = card.querySelector('.btn-deny');
         }
-        if (approveBtn) originalApproveHTML = approveBtn.innerHTML;
-        if (denyBtn) originalDenyHTML = denyBtn.innerHTML;
-        try {
-            // Disable both buttons
-            if (approveBtn) approveBtn.disabled = true;
-            if (denyBtn) denyBtn.disabled = true;
-            // Show loading state on clicked button
-            if (action === 'approve' && approveBtn) {
-                approveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            } else if (action === 'deny' && denyBtn) {
-                denyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    }
+    if (approveBtn) originalApproveHTML = approveBtn.innerHTML;
+    if (denyBtn) originalDenyHTML = denyBtn.innerHTML;
+    try {
+        if (approveBtn) approveBtn.disabled = true;
+        if (denyBtn) denyBtn.disabled = true;
+        if (action === 'approve' && approveBtn) {
+            approveBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        } else if (action === 'deny' && denyBtn) {
+            denyBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        }
+        const confirmed = await confirmAction(action);
+        if (!confirmed) {
+            if (approveBtn) {
+                approveBtn.disabled = false;
+                approveBtn.innerHTML = originalApproveHTML;
             }
-
-            const confirmed = await this.confirmAction(action);
-            if (!confirmed) {
-                // Restore buttons if cancelled
-                if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = originalApproveHTML; }
-                if (denyBtn) { denyBtn.disabled = false; denyBtn.innerHTML = originalDenyHTML; }
-                return;
+            if (denyBtn) {
+                denyBtn.disabled = false;
+                denyBtn.innerHTML = originalDenyHTML;
             }
-
-            console.log(`Processing ${action} for registration ${registrationId}`);
-
-            const response = await fetch(`${this.getBaseURL()}/teller/review_registration.php`, {
+            return;
+        }
+        const response = await fetch(
+            getBaseURL() + '/teller/review_registration.php',
+            {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
                     registration_id: registrationId,
-                    action: action
-                })
-            });
-
-            console.log('Response status:', response.status);
+                    action: action,
+                }),
+            }
+        );
             const responseText = await response.text();
-            console.log('Response text:', responseText);
-
             let data;
             try {
                 data = JSON.parse(responseText);
             } catch (e) {
-                console.error('Error parsing response:', e);
-                console.error('Raw response:', responseText);
-                throw new Error('Invalid response from server: ' + responseText.substring(0, 100));
+            throw new Error('Invalid response from server');
             }
-
             if (!response.ok || !data.success) {
-                const errorMessage = data.error || data.details || 'Failed to process registration';
-                console.error('Server error:', data);
-                throw new Error(errorMessage);
+            throw new Error(
+                data.error || data.details || 'Failed to process registration'
+            );
             }
-
-            // Close modals
-            this.closeConfirmationModal();
+        closeConfirmationModal();
             const appModal = document.getElementById('application_modal');
             if (appModal) {
-                appModal.style.display = 'none';
+                appModal.classList.add('hidden');
             }
-
-            // Show success message
-            this.showNotification(
-                `Application successfully ${action === 'approve' ? 'approved' : 'denied'}`,
+        showNotification(
+            'Application successfully ' +
+                (action === 'approve' ? 'approved' : 'denied'),
                 'success'
             );
-
-            // If in details view, close it and show main list
-            if (detailsView) {
-                detailsView.remove();
-                // Show the filter section and applications grid
-                document.querySelector('.filter-section').style.display = 'flex';
-                document.querySelector('.applications-grid').style.display = 'grid';
-                document.querySelector('.pagination-container').style.display = 'flex';
-            }
-
-            // Reload registrations
-            await this.loadRegistrations();
-
+        if (detailsView) {
+            detailsView.remove();
+            document.querySelector('.filter-section').classList.remove('hidden');
+            document.querySelector('.applications-grid').classList.remove('hidden');
+            document.querySelector('.pagination-container').classList.remove('hidden');
+        }
+        await loadRegistrations();
         } catch (error) {
-            console.error('Error in handleAction:', error);
-            this.showNotification(error.message, 'error');
-        } finally {
-            // Restore buttons if still present
-            if (approveBtn) { approveBtn.disabled = false; approveBtn.innerHTML = originalApproveHTML; }
-            if (denyBtn) { denyBtn.disabled = false; denyBtn.innerHTML = originalDenyHTML; }
+        showNotification(error.message, 'error');
+    } finally {
+        if (approveBtn) {
+            approveBtn.disabled = false;
+            approveBtn.innerHTML = originalApproveHTML;
+        }
+        if (denyBtn) {
+            denyBtn.disabled = false;
+            denyBtn.innerHTML = originalDenyHTML;
         }
     }
+}
 
-    confirmAction(action) {
-        return new Promise((resolve) => {
+// Show a confirmation modal for approve/deny
+function confirmAction(action) {
+    return new Promise(resolve => {
             const modal = document.getElementById('confirmation_modal');
             const message = document.getElementById('confirmation_message');
             const confirmBtn = document.getElementById('confirm_action_btn');
             const cancelBtn = document.getElementById('cancel_action_btn');
-            
-            // Set message and button style based on action
-            message.textContent = action === 'approve' ?
-                'Are you sure you want to approve this application?' :
-                'Are you sure you want to deny this application?';
-            
-            confirmBtn.className = `btn btn-${action === 'approve' ? 'approve' : 'deny'}`;
-            confirmBtn.textContent = action === 'approve' ? 'Approve' : 'Deny';
-            
-            // Show modal
+        message.textContent =
+            action === 'approve'
+                ? 'Are you sure you want to approve this application?'
+                : 'Are you sure you want to deny this application?';
+        confirmBtn.className =
+            'btn btn-' + (action === 'approve' ? 'approve' : 'deny');
+        confirmBtn.textContent =
+            action === 'approve' ? 'Approve' : 'Deny';
             modal.classList.add('active');
-            
-            // Handle confirm button click
             const handleConfirm = () => {
                 modal.classList.remove('active');
                 confirmBtn.removeEventListener('click', handleConfirm);
-                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
+            if (cancelBtn)
+                cancelBtn.removeEventListener('click', handleCancel);
                 resolve(true);
             };
-            // Handle cancel button click
             const handleCancel = () => {
                 modal.classList.remove('active');
                 confirmBtn.removeEventListener('click', handleConfirm);
-                if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
+            if (cancelBtn)
+                cancelBtn.removeEventListener('click', handleCancel);
                 resolve(false);
             };
             confirmBtn.addEventListener('click', handleConfirm);
@@ -595,70 +580,62 @@ class RegistrationReview {
         });
     }
 
-    closeConfirmationModal() {
+// Close the confirmation modal
+function closeConfirmationModal() {
         const modal = document.getElementById('confirmation_modal');
         modal.classList.remove('active');
     }
 
-    goToPage(page) {
-        this.currentPage = page;
-        this.displayRegistrations(this.getPaginatedRegistrations());
-        this.updatePagination();
+// Go to a specific page
+function goToPage(page) {
+    regReviewState.currentPage = page;
+    displayRegistrations(getPaginatedRegistrations());
+    updatePagination();
     }
 
-    showNotification(message, type = 'info') {
+// Show a notification message
+function showNotification(message, type = 'info') {
         const container = document.getElementById('notification_container');
         if (!container) return;
-
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        
+    notification.className = 'notification ' + type;
         const icon = document.createElement('i');
-        icon.className = type === 'success' ? 'fas fa-check-circle' :
-                        type === 'error' ? 'fas fa-exclamation-circle' :
-                        'fas fa-info-circle';
-        
+    icon.className =
+        type === 'success'
+            ? 'fas fa-check-circle'
+            : type === 'error'
+            ? 'fas fa-exclamation-circle'
+            : 'fas fa-info-circle';
         const text = document.createElement('span');
         text.textContent = message;
-
         notification.appendChild(icon);
         notification.appendChild(text);
         container.appendChild(notification);
-        
-        // Trigger animation
         setTimeout(() => notification.classList.add('show'), 10);
-        
-        // Remove after delay
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 5000);
-    }
 }
 
-// Initialize when DOM is ready
+// Initialize RegistrationReview when DOM is ready
 let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
-    registrationReview = new RegistrationReview();
-    
-    // Get teller info from session storage and populate user profile
+    setupEventListeners();
+    loadRegistrations();
     const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
     const userNameElement = document.querySelector('.user-name');
     const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
-    
     if (tellerInfo) {
         let fullName = '';
         if (tellerInfo.first_name && tellerInfo.last_name) {
-            fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+            fullName = tellerInfo.first_name + ' ' + tellerInfo.last_name;
         } else if (tellerInfo.name) {
             fullName = tellerInfo.name;
         }
-        
         if (userNameElement && fullName) {
             userNameElement.textContent = fullName;
         }
-        
-        // Set avatar initial
         if (avatarElement && fullName) {
             const initial = fullName.trim().charAt(0).toUpperCase();
             avatarElement.textContent = initial;
