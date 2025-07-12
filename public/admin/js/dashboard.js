@@ -139,7 +139,7 @@ class AdminDashboard {
 
     async loadAdminInfo() {
         try {
-            const response = await fetch('/project-errawrs/src/api/admin/info.php', {
+            		const response = await fetch(APP_CONFIG.getApiUrl('admin/info.php'), {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -172,7 +172,7 @@ class AdminDashboard {
     async loadDashboardStats() {
         try {
             console.log('Loading dashboard stats...');
-            const response = await fetch('/project-errawrs/src/api/admin/dashboard_stats.php', {
+            		const response = await fetch(APP_CONFIG.getApiUrl('admin/dashboard_stats.php'), {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -223,11 +223,15 @@ class AdminDashboard {
 
     async handleLogout(e) {
         e.preventDefault();
-        
-        // Clear session storage
+        try {
+            await fetch('/project-errawrs/src/api/auth/logout.php', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (err) {
+            // Ignore errors, proceed with logout
+        }
         sessionStorage.clear();
-        
-        // Redirect to login page
         window.location.href = '/project-errawrs/public/admin/login.html';
     }
 
@@ -288,7 +292,7 @@ class AdminDashboard {
                     <p>Searching tellers...</p>
                 </div>`;
             
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?search=${encodeURIComponent(searchTerm)}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?search=${encodeURIComponent(searchTerm)}`, {
                 credentials: 'include'
             });
 
@@ -347,16 +351,15 @@ class AdminDashboard {
     }
 
     async handleUserSearch(searchTerm) {
+        const userResults = document.getElementById('user_results');
         try {
-            const userResults = document.getElementById('user_results');
-            
             // Show loading state
             userResults.innerHTML = `
                 <div class="loading-state">
                     <p>Searching accounts...</p>
                 </div>`;
             
-            const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?search=${encodeURIComponent(searchTerm)}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_users.php')}?search=${encodeURIComponent(searchTerm)}`, {
                 credentials: 'include'
             });
 
@@ -373,7 +376,7 @@ class AdminDashboard {
                 return;
             }
 
-            if (data.users.length === 0) {
+            if (!Array.isArray(data.list) || data.list.length === 0) {
                 userResults.innerHTML = `
                     <div class="no-results">
                         <i class="fas fa-search"></i>
@@ -382,15 +385,15 @@ class AdminDashboard {
                 return;
             }
 
-            const cardsHtml = data.users.map(user => `
+            const cardsHtml = data.list.map(user => `
                 <div class="user-card">
                     <div class="user-header">
                         <div class="user-info">
                             <h3 class="user-name">${user.first_name} ${user.last_name}</h3>
                             <span class="account-number">${user.account_number || 'No Account'}</span>
                         </div>
-                        <span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-inactive'}">
-                            ${user.status || 'active'}
+                        <span class="status-badge ${(user.account_status === 'active' ? 'status-active' : 'status-inactive')}">
+                            ${user.account_status || 'active'}
                         </span>
                     </div>
                     <div class="user-details">
@@ -404,7 +407,7 @@ class AdminDashboard {
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Created</span>
-                            <span class="detail-value">${formatDate(user.created_at)}</span>
+                            <span class="detail-value">${formatDate(user.user_created_at)}</span>
                         </div>
                     </div>
                 </div>
@@ -414,11 +417,13 @@ class AdminDashboard {
 
         } catch (error) {
             console.error('Error searching users:', error);
-            userResults.innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <p>An error occurred while searching</p>
-                </div>`;
+            if (userResults) {
+                userResults.innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>An error occurred while searching</p>
+                    </div>`;
+            }
         }
     }
 }
@@ -460,7 +465,7 @@ async function loadTellers(searchTerm = '', page = 1) {
             params.append('search', searchTerm);
         }
         
-        const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params.toString()}`, {
+        		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?${params.toString()}`, {
             credentials: 'include'
         });
         
@@ -598,7 +603,7 @@ function editTeller(tellerId) {
 
 async function toggleTellerStatus(tellerId) {
     try {
-        const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+        		const response = await fetch(APP_CONFIG.getApiUrl('admin/toggle_teller_status.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -671,7 +676,7 @@ async function loadUsers(searchTerm = '') {
             params.append('search', searchTerm);
         }
         
-        const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?${params.toString()}`, {
+        		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_users.php')}?${params.toString()}`, {
             credentials: 'include'
         });
         
@@ -740,3 +745,22 @@ async function loadUsers(searchTerm = '') {
             </div>`;
     }
 }
+
+// Session check on page load
+(async function() {
+    try {
+        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) {
+            window.location.href = '/project-errawrs/public/admin/login.html';
+        }
+    } catch (e) {
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    }
+})();
+
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});

@@ -418,6 +418,38 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchUserData(); // Fetch user data on load
     fetchTransactions(); // Existing fetch for transactions
     console.log('StackOvercash Transaction Page Initialized Dynamically!');
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
+    const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
+
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
 });
 
 // Function to handle logout

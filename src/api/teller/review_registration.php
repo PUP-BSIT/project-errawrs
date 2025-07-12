@@ -307,6 +307,24 @@ try {
                 $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
                 $dotenv->load();
 
+                $emailTemplate = file_get_contents(__DIR__ . '/../user/email-templates/registration-approved-email.html');
+                $emailCSS = file_get_contents(__DIR__ . '/../user/email-templates/registration-email.css');
+                $emailTemplate = str_replace([
+                  '{{FIRST_NAME}}',
+                  '{{LAST_NAME}}',
+                  '{{USERNAME}}',
+                  '{{PASSWORD}}',
+                  '{{ACCOUNT_NUMBER}}',
+                  '<link rel="stylesheet" href="registration-email.css">'
+                ], [
+                  htmlspecialchars($registration['first_name']),
+                  htmlspecialchars($registration['last_name']),
+                  htmlspecialchars($username),
+                  htmlspecialchars($password),
+                  htmlspecialchars($accountNumber),
+                  '<style>' . $emailCSS . '</style>'
+                ], $emailTemplate);
+
                 $mail = new PHPMailer(true);
                 $mail->SMTPOptions = [
                     'ssl' => [
@@ -326,16 +344,10 @@ try {
                 $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
                 $mail->addAddress($registration['email']);
                 $mail->Subject = 'Registration Approved - Your Account Details';
-                $mail->Body = "Hello {$registration['first_name']},\n\n"
-                    . "Your registration has been approved! Here are your account details:\n\n"
-                    . "Username: $username\n"
-                    . "Password: $password\n"
-                    . "Account Number: $accountNumber\n\n"
-                        . "You can login to your account at: https://dev.stackovercash.site/login\n\n"
-                    . "Please change your password after your first login.\n\n"
-                    . "Thank you for choosing our bank!";
-
-                    try {
+                $mail->isHTML(true);
+                $mail->Body = $emailTemplate;
+                $mail->AltBody = "Hello {$registration['first_name']},\n\nYour registration has been approved! Here are your account details:\n\nUsername: $username\nPassword: $password\nAccount Number: $accountNumber\n\nYou can login to your account at: https://dev.stackovercash.site/login\n\nPlease change your password after your first login.\n\nThank you for choosing our bank!";
+                try {
                 $mail->send();
                         error_log("Approval email sent successfully");
                     } catch (Exception $e) {

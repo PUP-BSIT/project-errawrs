@@ -103,7 +103,7 @@ class TellerManager {
                 search: this.searchTerm
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?${params}`, {
                 credentials: 'include'
             });
 
@@ -301,7 +301,7 @@ class TellerManager {
 
     async editTeller(tellerId) {
         try {
-            const response = await fetch(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/get_teller.php')}?id=${tellerId}`, {
                 credentials: 'include'
             });
 
@@ -370,12 +370,12 @@ class TellerManager {
 
             // Log the request data for debugging
             console.log('Request data:', {
-                url: isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php',
+                			url: isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'),
                 method: isEdit ? 'PUT' : 'POST',
                 body: formData
             });
 
-            const response = await fetch(isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php', {
+            		const response = await fetch(isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'), {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -438,7 +438,7 @@ class TellerManager {
                     // Close the modal first
                     this.closeModal(modal);
 
-                    const response = await fetch('/project-errawrs/src/api/admin/send_teller_reset_email.php', {
+                    		const response = await fetch(APP_CONFIG.getApiUrl('admin/send_teller_reset_email.php'), {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -501,7 +501,7 @@ class TellerManager {
                 // Close the modal first
                 this.closeModal(modal);
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                		const response = await fetch(APP_CONFIG.getApiUrl('admin/toggle_teller_status.php'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -638,11 +638,13 @@ class TellerManager {
 
     async handleLogout(e) {
         e.preventDefault();
-        
-        // Clear session storage
+        try {
+            await fetch('/project-errawrs/src/api/auth/logout.php', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (err) {}
         sessionStorage.clear();
-        
-        // Redirect to login page
         window.location.href = '/project-errawrs/public/admin/login.html';
     }
 
@@ -654,3 +656,22 @@ class TellerManager {
 
 // Initialize when the DOM is loaded
 document.addEventListener('DOMContentLoaded', TellerManager.init);
+
+// Session check on page load
+(async function() {
+    try {
+        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) {
+            window.location.href = '/project-errawrs/public/admin/login.html';
+        }
+    } catch (e) {
+        window.location.href = '/project-errawrs/public/admin/login.html';
+    }
+})();
+
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});

@@ -4,7 +4,7 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>StackOvercash - Transfer</title>
-        <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+        <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -17,23 +17,40 @@
         <link rel="stylesheet" href="./css/transfer.css"/> <!-- New transfer specific styles -->
     </head>
     <body class="authenticated-page">
+        <!-- Mobile Header -->
+        <header class="main-header mobile-header hidden">
+            <div class="mobile-logo" id="mobile_logo">
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+            </div>
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+        <!-- Topnav Dropdown Nav (mobile/tablet) -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
+        <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" style="background-color:#000;">
-                <div class="sidebar-header">
-                    <div class="logo">
-                        <span class="logo-stack">Stack</span>
-                        <span class="logo-overcash">Overcash</span>
-                    </div>
+            <div class="sidebar sidebar-black" id="sidebar_nav">
+                <div class="popup-header popup-header-style">
+                    <span class="logo logo-large">
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+                    </span>
                 </div>
-                <div class="user-profile">
+                <div class="user-profile flex-center">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
-                    <h3 class="username" id="user_name"></h3>
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
@@ -98,15 +115,15 @@
                             <!-- Bank selection radio buttons here -->
                             <div class="radio-option">
                                 <input type="radio" id="stackovercash_bank" name="bank" value="StackOvercash Bank" checked>
-                                <label for="stackovercash_bank">StackOvercash Bank</label>
+                                <label for="stackovercash_bank">StackOvercash</label>
                             </div>
                             <div class="radio-option">
                                 <input type="radio" id="techy_blinders_bank" name="bank" value="Techy Blinders Bank">
-                                <label for="techy_blinders_bank">Techy Blinders Bank</label>
+                                <label for="techy_blinders_bank">Blind Vault</label>
                             </div>
                             <div class="radio-option">
                                 <input type="radio" id="dragon_fly_bank" name="bank" value="Dragon Fly Bank">
-                                <label for="dragon_fly_bank">Dragon Fly Bank</label>
+                                <label for="dragon_fly_bank">Dragon Vault</label>
                             </div>
                             <button class="next-btn" id="next-button" disabled>Next</button>
                         </div>

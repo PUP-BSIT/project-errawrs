@@ -3,10 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
         <title>About Us – StackOverCash</title>
         <!-- Google Fonts -->
         <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
         <!-- Font Awesome -->
@@ -16,14 +17,18 @@
             crossorigin="anonymous"
         />
         <!-- Custom CSS -->
+        <link rel="stylesheet" href="./css/styles.css"/>
+        <link rel="stylesheet" href="./css/contact.css"/>
         <link rel="stylesheet" href="./css/about.css" />
     </head>
     <body>
         <header>
             <div class="container-nav">
                 <div class="logo">
-                    <span class="white">Stack</span
-                    ><span class="green">Overcash</span>
+                    <span class="logo-text"
+                        ><span class="white">Stack</span
+                        ><span class="green">Overcash</span></span
+                    >
                 </div>
                 <nav>
                     <ul class="nav-links">
@@ -34,12 +39,47 @@
                         </li>
                     </ul>
                 </nav>
-                <a id="login-link" class="login-btn">Log In</a>
+                <a href="./login_account_holder.html" class="login-btn"
+                    >Join Now</a
+                >
+                <!-- Hamburger Icon (Font Awesome) -->
+                <button class="hamburger" aria-label="Open menu">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu-overlay">
+                <div class="mobile-menu">
+                    <div class="mobile-menu-header">
+                        <span class="logo">
+                            <span class="white">Stack</span
+                            ><span class="green">Overcash</span>
+                        </span>
+                        <button class="close-menu" aria-label="Close menu">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <ul>
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./contact_us.html">Contact Us</a></li>
+                        <li><a href="./about.html">About Us</a></li>
+                    </ul>
+                    <a href="./login_account_holder.html" class="join-btn"
+                        >Join Now</a
+                    >
+                </div>
             </div>
         </header>
+        <div style="height: 2.5rem"></div>
         <main class="container">
             <!-- Hero Section -->
             <section class="hero-section">
+                <div class="large-hero-image hero-image">
+                    <img
+                        src="../assets/images/about_banner.png"
+                        alt="Happy customers using StackOverCash"
+                    />
+                </div>
                 <div class="hero-content">
                     <h1>
                         Banking Reinvented<br />Empowering Your Future<br />One
@@ -50,12 +90,6 @@
                         seamless transfers, secure deposits, and effortless
                         account management, all in one click.
                     </p>
-                </div>
-                <div class="hero-image">
-                    <img
-                        src="../assets/images/about_banner.png"
-                        alt="Happy customers using StackOverCash"
-                    />
                 </div>
             </section>
             <!-- Mission & Vision -->
@@ -105,7 +139,8 @@
                         <h4>Company</h4>
                         <ul>
                             <li><a href="./about.html">About Us</a></li>
-                            <li><a href="./contact_us.html">Contact Us</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#faq">FAQ</a></li>
                         </ul>
                     </div>
                     <div class="footer-contact">
@@ -139,11 +174,7 @@
                 </div>
             </div>
         </footer>
-        <script src="./js/config.js"></script>
-        <script>
-            document.getElementById('login-link').href = ROUTES.LOGIN;
-        </script>
-        <script src="./js/session-manager.js"></script>
-        <!-- <script src="./js/about.js"></script> -->
+        <script src="./js/about.js"></script>
+        <script src="./js/script.js"></script>
     </body>
 </html>

@@ -13,6 +13,9 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/manage_tellers.css">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 </head>
 <body>
     <!-- Sidebar -->
@@ -44,22 +47,20 @@
                         <span>User Accounts</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="transactions.html" class="nav-link">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span>Transactions</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Logout Section -->
-        <div class="sidebar-footer">
-            <a href="#" id="logout_btn" class="nav-link logout-link">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
-        </div>
+                                        <li class="nav-item">
+                            <a href="transactions.html" class="nav-link">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Transactions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item logout-item">
+                            <a href="#" id="logout_btn" class="nav-link">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
     </aside>
 
     <!-- Main Content -->
@@ -236,7 +237,8 @@
       <!-- Toast Container -->
       <div class="toast-container"></div>
 
-      <!-- Scripts -->
-      <script src="./js/manage_tellers.js"></script>
+              <!-- Scripts -->
+        <script src="./js/config.js"></script>
+        <script src="./js/manage_tellers.js"></script>
   </body>
   </html>

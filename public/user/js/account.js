@@ -194,8 +194,6 @@ function updateAccountDisplay() {
 
     DOM.accountList.innerHTML = '';
 
-    console.log('Updating account display with accounts:', state.userAccounts); // Debug log
-
     // Display existing accounts
     if (state.userAccounts && state.userAccounts.length > 0) {
         state.userAccounts.forEach((account) => {
@@ -224,18 +222,18 @@ function updateAccountDisplay() {
 
 // Create account item element
 function createAccountItem(account) {
-    console.log('Creating account item with:', account);
-    
     const accountItem = document.createElement('div');
     accountItem.classList.add(ACCOUNT_UI.CLASS.ACCOUNT_ITEM);
-    
-    // Handle different account ID field names
     accountItem.dataset.accountId = account.account_id || account.id || '';
-
-    // Format account_type for display (handle different field names)
     const accountType = account.type || account.account_type || 'savings';
     const accountTypeDisplay = accountType.charAt(0).toUpperCase() + accountType.slice(1);
-    
+    // Use Font Awesome icon for badge
+    let typeIcon = '';
+    if (accountType.toLowerCase() === 'savings') {
+        typeIcon = `<i class='fas fa-piggy-bank account-type-icon-savings'></i>`;
+    } else if (accountType.toLowerCase() === 'credit') {
+        typeIcon = `<i class='fas fa-credit-card account-type-icon-credit'></i>`;
+    }
     accountItem.innerHTML = `
         <div class="${ACCOUNT_UI.CLASS.ACCOUNT_INFO}">
             <div class="${ACCOUNT_UI.CLASS.INFO_GROUP}">
@@ -244,7 +242,7 @@ function createAccountItem(account) {
             </div>
             <div class="${ACCOUNT_UI.CLASS.INFO_GROUP}">
                 <span class="${ACCOUNT_UI.CLASS.INFO_LABEL}">Type</span>
-                <span class="${ACCOUNT_UI.CLASS.ACCOUNT_TYPE_BADGE} ${accountType.toLowerCase()}">${accountTypeDisplay}</span>
+                <span class="${ACCOUNT_UI.CLASS.ACCOUNT_TYPE_BADGE} ${accountType.toLowerCase()}">${typeIcon}${accountTypeDisplay}</span>
             </div>
             <div class="${ACCOUNT_UI.CLASS.INFO_GROUP}">
                 <span class="${ACCOUNT_UI.CLASS.INFO_LABEL}">Balance</span>
@@ -270,7 +268,6 @@ function createAccountItem(account) {
             </div>
         </div>
     `;
-
     return accountItem;
 }
 
@@ -399,7 +396,41 @@ function init() {
     attachEventListeners();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
+    const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
+
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
+});
 
 // Handle proceed add account
 async function handleProceedAddAccount() {
@@ -447,7 +478,6 @@ async function handleVerifyOtp() {
             body: JSON.stringify({ otp, phone_number: state.userData.phone_number, purpose: 'create_account' }),
         });
         const verifyData = await verifyResponse.json();
-        console.log('OTP verification response:', verifyData);
         
         if (DOM.buttons.verifyOtp) {
             DOM.buttons.verifyOtp.disabled = false;
@@ -455,15 +485,12 @@ async function handleVerifyOtp() {
         }
 
         if (verifyData.success) {
-            console.log('OTP verified, about to call:', API_ENDPOINTS.USER.CREATE_ADDITIONAL_ACCOUNT, accountType);
             const createResponse = await fetch(API_ENDPOINTS.USER.CREATE_ADDITIONAL_ACCOUNT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ account_type: accountType }),
             });
-            console.log('createResponse:', createResponse);
             const createData = await createResponse.json();
-            console.log('Create account response:', createData);
             if (createData.success) {
                 showNotification(createData.message || TEXT.ACCOUNT_CREATED, CLASS.SUCCESS);
                 fetchUserAccounts();

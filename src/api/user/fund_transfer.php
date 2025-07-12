@@ -1,15 +1,9 @@
 <?php
-// Prevent PHP from displaying errors as HTML
-ini_set('display_errors', 0);
-error_reporting(E_ALL);
-
-// Use SessionManager for session handling
 require_once __DIR__ . '/../../config/SessionManager.php';
 SessionManager::getInstance()->initSession();
 require_once __DIR__ . '/../../config/database.php';
 header('Content-Type: application/json');
 
-// Custom error handler to ensure we always return JSON
 function handleError($errno, $errstr, $errfile, $errline) {
     http_response_code(500);
     echo json_encode([
@@ -24,7 +18,6 @@ function handleError($errno, $errstr, $errfile, $errline) {
 }
 set_error_handler('handleError');
 
-// Check if user is logged in for all requests
 if (!isset($_SESSION['auth']) || $_SESSION['auth']['type'] !== 'user') {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
@@ -45,7 +38,7 @@ if ((isset($input['debug']) && $input['debug']) || (isset($_GET['debug']) && $_G
 }
 $debug_log = [];
 
-// EXECUTION LOGIC: This runs AFTER OTP verification
+// Execute transfer after OTP verification
 if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true && isset($_SESSION['pending_transfer'])) {
     try {
         $transfer = $_SESSION['pending_transfer'];
@@ -53,47 +46,47 @@ if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true && is
         $db->begin_transaction();
         error_log('DB transaction started');
 
-        // Re-verify source account and balance
-        $stmt = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND status = 'active'");
-        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
-        $stmt->bind_param('s', $transfer['source_account_no']);
-        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
-        $source = $stmt->get_result()->fetch_assoc();
+        // Verify source account and balance
+        $sourceQuery = $db->prepare("SELECT account_id, balance FROM account WHERE account_number = ? AND status = 'active'");
+        if (!$sourceQuery) throw new Exception('Prepare failed: ' . $db->error);
+        $sourceQuery->bind_param('s', $transfer['source_account_no']);
+        if (!$sourceQuery->execute()) throw new Exception('Execute failed: ' . $sourceQuery->error);
+        $source = $sourceQuery->get_result()->fetch_assoc();
         if (!$source) throw new Exception('Source account not found or inactive');
         if ($source['balance'] < $transfer['amount']) throw new Exception('Insufficient balance');
         error_log('Source account verified');
 
-        // Re-verify recipient
-        $stmt = $db->prepare("SELECT account_id FROM account WHERE account_number = ? AND status = 'active'");
-        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
-        $stmt->bind_param('s', $transfer['recipient_account_no']);
-        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
-        $recipient = $stmt->get_result()->fetch_assoc();
+        // Verify recipient account
+        $recipientQuery = $db->prepare("SELECT account_id FROM account WHERE account_number = ? AND status = 'active'");
+        if (!$recipientQuery) throw new Exception('Prepare failed: ' . $db->error);
+        $recipientQuery->bind_param('s', $transfer['recipient_account_no']);
+        if (!$recipientQuery->execute()) throw new Exception('Execute failed: ' . $recipientQuery->error);
+        $recipient = $recipientQuery->get_result()->fetch_assoc();
         if (!$recipient) throw new Exception('Recipient account not found or inactive');
         error_log('Recipient account verified');
 
-        // Deduct from source
-        $stmt = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ?");
-        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
-        $stmt->bind_param('di', $transfer['amount'], $source['account_id']);
-        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
-        if ($stmt->affected_rows !== 1) throw new Exception('Failed to update source account balance');
+        // Deduct from source account
+        $debitQuery = $db->prepare("UPDATE account SET balance = balance - ? WHERE account_id = ?");
+        if (!$debitQuery) throw new Exception('Prepare failed: ' . $db->error);
+        $debitQuery->bind_param('di', $transfer['amount'], $source['account_id']);
+        if (!$debitQuery->execute()) throw new Exception('Execute failed: ' . $debitQuery->error);
+        if ($debitQuery->affected_rows !== 1) throw new Exception('Failed to update source account balance');
         error_log('Source account debited');
 
-        // Credit recipient
-        $stmt = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_id = ?");
-        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
-        $stmt->bind_param('di', $transfer['amount'], $recipient['account_id']);
-        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
-        if ($stmt->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
+        // Credit recipient account
+        $creditQuery = $db->prepare("UPDATE account SET balance = balance + ? WHERE account_id = ?");
+        if (!$creditQuery) throw new Exception('Prepare failed: ' . $db->error);
+        $creditQuery->bind_param('di', $transfer['amount'], $recipient['account_id']);
+        if (!$creditQuery->execute()) throw new Exception('Execute failed: ' . $creditQuery->error);
+        if ($creditQuery->affected_rows !== 1) throw new Exception('Failed to update recipient account balance');
         error_log('Recipient account credited');
 
         // Record transaction
-        $stmt = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW())");
-        if (!$stmt) throw new Exception('Prepare failed: ' . $db->error);
+        $transactionQuery = $db->prepare("INSERT INTO transaction (transaction_type, amount, sender_account_id, receiver_account_id, status, description, created_at, completed_at) VALUES ('transfer_internal', ?, ?, ?, 'completed', ?, NOW(), NOW())");
+        if (!$transactionQuery) throw new Exception('Prepare failed: ' . $db->error);
         $description = "Transfer to account {$transfer['recipient_account_no']}";
-        $stmt->bind_param('diis', $transfer['amount'], $source['account_id'], $recipient['account_id'], $description);
-        if (!$stmt->execute()) throw new Exception('Execute failed: ' . $stmt->error);
+        $transactionQuery->bind_param('diis', $transfer['amount'], $source['account_id'], $recipient['account_id'], $description);
+        if (!$transactionQuery->execute()) throw new Exception('Execute failed: ' . $transactionQuery->error);
         $transaction_id = $db->insert_id;
         error_log('Transaction record inserted, ID: ' . $transaction_id);
 
@@ -125,7 +118,7 @@ if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified'] === true && is
     exit;
 }
 
-// INITIATION LOGIC: This runs BEFORE OTP to set up the session
+// Initiate transfer and store in session for OTP verification
 try {
     $required = ['transaction_amount', 'source_account_no', 'recipient_account_no'];
     foreach ($required as $param) {
@@ -144,23 +137,23 @@ try {
     $db = db_connect();
     $userId = $_SESSION['auth']['id'];
 
-    // Validate source account
-    $stmt = $db->prepare('SELECT account_id, balance, user_id FROM account WHERE account_number = ? AND user_id = ? AND status = "active"');
-    $stmt->bind_param('si', $sourceAccountNo, $userId);
-    $stmt->execute();
-    $source = $stmt->get_result()->fetch_assoc();
+    // Validate source account ownership and balance
+    $sourceValidationQuery = $db->prepare('SELECT account_id, balance, user_id FROM account WHERE account_number = ? AND user_id = ? AND status = "active"');
+    $sourceValidationQuery->bind_param('si', $sourceAccountNo, $userId);
+    $sourceValidationQuery->execute();
+    $source = $sourceValidationQuery->get_result()->fetch_assoc();
     if (!$source) throw new Exception('Invalid source account or you do not own this account');
     if ($source['balance'] < $amount) throw new Exception('Insufficient balance');
 
-    // Validate recipient account
-    $stmt = $db->prepare('SELECT account_id, user_id FROM account WHERE account_number = ? AND status = "active"');
-    $stmt->bind_param('s', $recipientAccountNo);
-    $stmt->execute();
-    $recipient = $stmt->get_result()->fetch_assoc();
+    // Validate recipient account exists
+    $recipientValidationQuery = $db->prepare('SELECT account_id, user_id FROM account WHERE account_number = ? AND status = "active"');
+    $recipientValidationQuery->bind_param('s', $recipientAccountNo);
+    $recipientValidationQuery->execute();
+    $recipient = $recipientValidationQuery->get_result()->fetch_assoc();
     if (!$recipient) throw new Exception('Invalid recipient account');
     if ($source['account_id'] === $recipient['account_id']) throw new Exception('Cannot transfer to the same account');
     
-    // Store transfer details in session for OTP verification
+    // Store transfer details for OTP verification
     $_SESSION['pending_transfer'] = [
         'amount' => $amount,
         'source_account_no' => $sourceAccountNo,

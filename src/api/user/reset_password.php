@@ -39,7 +39,7 @@ try {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Update the user's password
-        $updateStmt = $db->prepare('UPDATE user SET password = ? WHERE user_id = ?');
+        $updateStmt = $db->prepare('UPDATE user SET password_hash = ? WHERE user_id = ?');
         $updateStmt->bind_param('si', $hashed_password, $user_id);
         $updateStmt->execute();
 
