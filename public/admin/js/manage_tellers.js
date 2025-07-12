@@ -103,7 +103,7 @@ class TellerManager {
                 search: this.searchTerm
             });
 
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?${params}`, {
                 credentials: 'include'
             });
 
@@ -301,7 +301,7 @@ class TellerManager {
 
     async editTeller(tellerId) {
         try {
-            const response = await fetch(`/project-errawrs/src/api/admin/get_teller.php?id=${tellerId}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/get_teller.php')}?id=${tellerId}`, {
                 credentials: 'include'
             });
 
@@ -370,12 +370,12 @@ class TellerManager {
 
             // Log the request data for debugging
             console.log('Request data:', {
-                url: isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php',
+                			url: isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'),
                 method: isEdit ? 'PUT' : 'POST',
                 body: formData
             });
 
-            const response = await fetch(isEdit ? '/project-errawrs/src/api/admin/update.php' : '/project-errawrs/src/api/admin/create_teller.php', {
+            		const response = await fetch(isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'), {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -438,7 +438,7 @@ class TellerManager {
                     // Close the modal first
                     this.closeModal(modal);
 
-                    const response = await fetch('/project-errawrs/src/api/admin/send_teller_reset_email.php', {
+                    		const response = await fetch(APP_CONFIG.getApiUrl('admin/send_teller_reset_email.php'), {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -501,7 +501,7 @@ class TellerManager {
                 // Close the modal first
                 this.closeModal(modal);
 
-                const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+                		const response = await fetch(APP_CONFIG.getApiUrl('admin/toggle_teller_status.php'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

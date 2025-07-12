@@ -31,7 +31,7 @@ async function loadTransactions() {
     try {
         const searchQuery = searchInput.value ? searchInput.value.trim() : '';
         const statusFilter = '';
-        const url = `/project-errawrs/src/api/admin/get_transactions.php?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
+        		const url = `${APP_CONFIG.getApiUrl('admin/get_transactions.php')}?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
         console.log('Fetching transactions from:', url);
         const response = await fetch(url, {
             credentials: 'include'
@@ -85,12 +85,21 @@ function displayTransactions(transactions) {
         const date = formatDate(transaction.transaction_date);
 
         // Handle sender and receiver display based on transaction type
-        let senderDisplay = transaction.sender_username || 'N/A';
-        let receiverDisplay = transaction.receiver_username || 'N/A';
+        let senderDisplay = transaction.sender_account_number || 'N/A';
+        let receiverDisplay = transaction.receiver_account_number || 'N/A';
 
         // If teller_full_name is present, show it as the sender (for teller-initiated transactions)
         if (transaction.teller_full_name) {
             senderDisplay = transaction.teller_full_name;
+        }
+
+        // For external transfers, the external account should be the sender or receiver
+        if (transaction.external_bank_code && transaction.external_account_number) {
+            if (transaction.transaction_type === 'transfer_external_in') {
+                senderDisplay = `${transaction.external_bank_code} - ${transaction.external_account_number}`;
+            } else if (transaction.transaction_type === 'transfer_external_out') {
+                receiverDisplay = `${transaction.external_bank_code} - ${transaction.external_account_number}`;
+            }
         }
 
         transactionEl.innerHTML = `
@@ -107,7 +116,7 @@ function displayTransactions(transactions) {
                     <span class="transaction-date">${date}</span>
                 </div>
                 <div class="transaction-users">
-                    <div>
+                    <div class="transaction-users-list">
                         <span>From: ${senderDisplay}</span>
                         <span>To: ${receiverDisplay}</span>
                     </div>
@@ -191,7 +200,11 @@ function getTransactionIcon(type) {
 }
 
 function formatTransactionType(type) {
-    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    // Convert snake_case to Title Case with spaces
+    return type
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
 }
 
 function formatAmount(amount) {

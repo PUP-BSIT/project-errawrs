@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userCardsContainer.classList.add('loading');
         
         try {
-            const response = await fetch('/project-errawrs/src/api/admin/list_users.php', {
+            		const response = await fetch(APP_CONFIG.getApiUrl('admin/list_users.php'), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
+            card.setAttribute('data-user-id', user.user_id); // Add data-user-id
             userCardsContainer.appendChild(card);
         });
     }
@@ -229,4 +230,89 @@ document.addEventListener('DOMContentLoaded', () => {
         // Manual close
         toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
     }
+
+    // Back button for user detail card
+    const backBtn = document.getElementById('user_detail_back');
+    if (backBtn) {
+        backBtn.onclick = () => {
+            document.getElementById('user_detail_card').style.display = 'none';
+            document.querySelector('.user-cards-wrapper').style.display = '';
+            document.querySelector('.pagination').style.display = '';
+            document.querySelector('.content-header').style.display = '';
+        };
+    }
+
+    // Delegate click event to user cards
+    document.getElementById('user_cards').addEventListener('click', async (e) => {
+        const card = e.target.closest('.user-card');
+        if (!card) return;
+        const userId = card.getAttribute('data-user-id');
+        if (!userId) return;
+        // Fetch user details
+        try {
+            const response = await fetch(APP_CONFIG.getApiUrl(`admin/get_user.php?user_id=${userId}`), { credentials: 'include' });
+            const data = await response.json();
+            if (data.success && data.user) {
+                showUserDetailsCard(data.user);
+            } else {
+                alert('Failed to load user details.');
+            }
+        } catch (err) {
+            alert('Error loading user details.');
+        }
+    });
+
+    // Modal close logic for ID image
+    const idImageModal = document.getElementById('idImageModal');
+    const idImageModalClose = document.getElementById('idImageModalClose');
+    if (idImageModal && idImageModalClose) {
+        idImageModalClose.onclick = function() {
+            idImageModal.style.display = 'none';
+            document.getElementById('idImageModalImg').src = '';
+        };
+        idImageModal.onclick = function(e) {
+            if (e.target === idImageModal) {
+                idImageModal.style.display = 'none';
+                document.getElementById('idImageModalImg').src = '';
+            }
+        };
+    }
 });
+
+function capitalizeFirst(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function showUserDetailsCard(user) {
+    document.getElementById('ud_user_id').textContent = user.user_id;
+    document.getElementById('ud_username').textContent = user.username;
+    document.getElementById('ud_first_name').textContent = user.first_name;
+    document.getElementById('ud_last_name').textContent = user.last_name;
+    document.getElementById('ud_phone_number').textContent = user.phone_number;
+    document.getElementById('ud_date_of_birth').textContent = user.date_of_birth;
+    document.getElementById('ud_nationality').textContent = capitalizeFirst(user.nationality);
+    document.getElementById('ud_street').textContent = user.street;
+    document.getElementById('ud_city').textContent = user.city;
+    document.getElementById('ud_zip_code').textContent = user.zip_code;
+    document.getElementById('ud_country').textContent = capitalizeFirst(user.country);
+    document.getElementById('ud_email').textContent = user.email;
+    document.getElementById('ud_id_type').textContent = user.id_type;
+    document.getElementById('ud_created_at').textContent = user.created_at;
+    // ID image button
+    const idImageSpan = document.getElementById('ud_id_image');
+    if (user.id_image) {
+        idImageSpan.innerHTML = `<button class='view-id-image-btn'>View ID Image</button>`;
+        const btn = idImageSpan.querySelector('.view-id-image-btn');
+        btn.onclick = function() {
+            document.getElementById('idImageModalImg').src = user.id_image;
+            document.getElementById('idImageModal').style.display = 'flex';
+        };
+    } else {
+        idImageSpan.textContent = 'N/A';
+    }
+    document.getElementById('user_detail_card').style.display = 'block';
+    document.querySelector('.user-cards-wrapper').style.display = 'none';
+    document.querySelector('.pagination').style.display = 'none';
+    document.querySelector('.content-header').style.display = 'none';
+}

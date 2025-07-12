@@ -139,7 +139,7 @@ class AdminDashboard {
 
     async loadAdminInfo() {
         try {
-            const response = await fetch('/project-errawrs/src/api/admin/info.php', {
+            		const response = await fetch(APP_CONFIG.getApiUrl('admin/info.php'), {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -172,7 +172,7 @@ class AdminDashboard {
     async loadDashboardStats() {
         try {
             console.log('Loading dashboard stats...');
-            const response = await fetch('/project-errawrs/src/api/admin/dashboard_stats.php', {
+            		const response = await fetch(APP_CONFIG.getApiUrl('admin/dashboard_stats.php'), {
                 method: 'GET',
                 credentials: 'include'
             });
@@ -288,7 +288,7 @@ class AdminDashboard {
                     <p>Searching tellers...</p>
                 </div>`;
             
-            const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?search=${encodeURIComponent(searchTerm)}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?search=${encodeURIComponent(searchTerm)}`, {
                 credentials: 'include'
             });
 
@@ -356,7 +356,7 @@ class AdminDashboard {
                     <p>Searching accounts...</p>
                 </div>`;
             
-            const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?search=${encodeURIComponent(searchTerm)}`, {
+            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_users.php')}?search=${encodeURIComponent(searchTerm)}`, {
                 credentials: 'include'
             });
 
@@ -460,7 +460,7 @@ async function loadTellers(searchTerm = '', page = 1) {
             params.append('search', searchTerm);
         }
         
-        const response = await fetch(`/project-errawrs/src/api/admin/list_tellers.php?${params.toString()}`, {
+        		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?${params.toString()}`, {
             credentials: 'include'
         });
         
@@ -598,7 +598,7 @@ function editTeller(tellerId) {
 
 async function toggleTellerStatus(tellerId) {
     try {
-        const response = await fetch('/project-errawrs/src/api/admin/toggle_teller_status.php', {
+        		const response = await fetch(APP_CONFIG.getApiUrl('admin/toggle_teller_status.php'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -671,7 +671,7 @@ async function loadUsers(searchTerm = '') {
             params.append('search', searchTerm);
         }
         
-        const response = await fetch(`/project-errawrs/src/api/admin/list_users.php?${params.toString()}`, {
+        		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_users.php')}?${params.toString()}`, {
             credentials: 'include'
         });
         

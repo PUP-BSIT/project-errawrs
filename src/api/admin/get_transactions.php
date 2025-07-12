@@ -59,11 +59,13 @@ try {
 
     // Add search query
     if (!empty($search_query)) {
-        $sql_conditions[] = "(t.transaction_id LIKE ? OR su.username LIKE ? OR ru.username LIKE ?)";
+        $sql_conditions[] = "(t.transaction_id LIKE ? OR su.username LIKE ? OR ru.username LIKE ? OR sa.account_number LIKE ? OR ra.account_number LIKE ?)";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
-        $sql_types .= 'sss';
+        $sql_params[] = "%" . $search_query . "%";
+        $sql_params[] = "%" . $search_query . "%";
+        $sql_types .= 'sssss';
     }
 
     $where_clause = '';
@@ -110,9 +112,13 @@ try {
                 t.status, 
                 t.created_at AS transaction_date, 
                 t.description,
+                t.external_bank_code,
+                t.external_account_number,
+                sa.account_number AS sender_account_number,
                 su.username AS sender_username, 
                 su.first_name AS sender_first_name, 
                 su.last_name AS sender_last_name,
+                ra.account_number AS receiver_account_number,
                 ru.username AS receiver_username, 
                 ru.first_name AS receiver_first_name, 
                 ru.last_name AS receiver_last_name,
