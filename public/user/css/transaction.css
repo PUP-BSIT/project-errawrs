@@ -30,8 +30,6 @@
     --transition-default: 0.3s ease;
 }
 
-/* Existing base styles from user-dashboard.css might be included via the link tag */
-
 /* Specific styles for Transaction History page */
 .transaction-history-content {
     padding: 20px;
@@ -52,13 +50,13 @@
 
 .transaction-table-container {
     margin-bottom: 20px;
-    overflow-x: auto; /* Add horizontal scroll if needed */
+    overflow-x: auto;
 }
 
 .transaction-table {
     width: 100%;
-    border-collapse: separate; /* Use separate for border-spacing */
-    border-spacing: 0 8px; /* Space between rows */
+    border-collapse: separate;
+    border-spacing: 0 8px;
 }
 
 .transaction-table th,
@@ -87,8 +85,8 @@
 }
 
 .transaction-table tbody tr {
-    background-color: var(--color-input-bg); /* Light gray background for rows */
-    border-radius: 8px; /* Rounded corners for rows */
+    background-color: var(--color-input-bg);
+    border-radius: 8px;
 }
 
 .transaction-table tbody tr td:first-child {
@@ -102,7 +100,7 @@
 }
 
 .transaction-table tbody tr:hover {
-    background-color: #e0e0e0; /* Darker gray on hover */
+    background-color: #e0e0e0;
 }
 
 .status-success i {
@@ -120,15 +118,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 15px; /* Align with table content */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    padding: 0 15px;
+    flex-wrap: wrap;
 }
 
 .pagination-buttons {
-    display: flex; /* Use flex to align Previous, Page Numbers, and Next */
+    display: flex;
     align-items: center;
-    /* Removing gap here as we'll use margins on individual buttons */
-    /* gap: 5px; */
 }
 
 .pagination-buttons button {
@@ -136,9 +132,9 @@
     color: var(--color-white);
     border: none;
     padding: 8px 15px;
-    border-radius: 4px; /* Slightly less rounded than image, match page numbers */
+    border-radius: 4px;
     cursor: pointer;
-    margin: 0; /* Reset margin */
+    margin: 0;
     font-family: var(--font-main);
     font-size: 14px;
 }
@@ -146,13 +142,13 @@
 .pagination-buttons button:first-child {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
-    margin-right: 5px; /* Add space after Previous button */
+    margin-right: 5px;
 }
 
 .pagination-buttons button:last-child {
-     border-top-right-radius: 8px;
+    border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
-    margin-left: 5px; /* Add space before Next button */
+    margin-left: 5px;
 }
 
 .pagination-buttons button:hover:not(:disabled) {
@@ -165,16 +161,16 @@
 }
 
 .page-numbers {
-     display: flex; /* Use flex for page number buttons */
-     align-items: center;
-     gap: 3px; /* Maintain gap between page number buttons */
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
 .page-numbers button {
     background-color: transparent;
     color: var(--color-primary-black);
     border: 1px solid var(--color-border);
-    margin: 0 2px; /* Add small margin to each page number button */
+    margin: 0 2px;
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
@@ -183,11 +179,11 @@
 }
 
 .page-numbers button:first-child {
-    margin-left: 0; /* Remove extra margin */
+    margin-left: 0;
 }
 
 .page-numbers button:last-child {
-     margin-right: 0; /* Remove extra margin */
+    margin-right: 0;
 }
 
 .page-numbers button.active {
@@ -227,7 +223,7 @@
 }
 
 .pagination-controls .custom-select {
-     position: relative;
+    position: relative;
 }
 
 .pagination-controls .custom-select select {
@@ -256,24 +252,58 @@
 }
 
 .pagination-controls #go-button:hover {
-     background-color: #67bf45;
+    background-color: #67bf45;
 }
 
 /* Ensure 80 column width */
 /* This is handled by the editor's formatting, not CSS */
-.hidden { display: none !important; }
-.block { display: block !important; }
-.flex { display: flex !important; }
-.fade-in { opacity: 1 !important; transition: opacity 0.2s; }
-.fade-out { opacity: 0 !important; transition: opacity 0.2s; }
-.bg-white { background-color: #fff !important; }
-.text-error { color: red !important; }
-.text-success { color: var(--color-success) !important; }
-.text-info { color: var(--color-info) !important; }
-.transition { transition: opacity 0.2s ease, transform 0.2s ease !important; }
-.no-pointer { pointer-events: none !important; }
-.pointer { pointer-events: auto !important; }
-.border-error { border-color: var(--color-error) !important; }
-.border-normal { border-color: initial !important; }
-.centered { text-align: center !important; }
-.padded { padding: 20px !important; } 
+.hidden {
+    display: none !important;
+}
+.block {
+    display: block !important;
+}
+.flex {
+    display: flex !important;
+}
+.fade-in {
+    opacity: 1 !important;
+    transition: opacity 0.2s;
+}
+.fade-out {
+    opacity: 0 !important;
+    transition: opacity 0.2s;
+}
+.bg-white {
+    background-color: #fff !important;
+}
+.text-error {
+    color: red !important;
+}
+.text-success {
+    color: var(--color-success) !important;
+}
+.text-info {
+    color: var(--color-info) !important;
+}
+.transition {
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+.no-pointer {
+    pointer-events: none !important;
+}
+.pointer {
+    pointer-events: auto !important;
+}
+.border-error {
+    border-color: var(--color-error) !important;
+}
+.border-normal {
+    border-color: initial !important;
+}
+.centered {
+    text-align: center !important;
+}
+.padded {
+    padding: 20px !important;
+}

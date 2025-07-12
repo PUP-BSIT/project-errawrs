@@ -32,7 +32,6 @@ header {
 .nav-links a {
     text-decoration: none;
     color: #fff !important;
-    /* Ensure nav links are white for contrast on dark bg */
     font-weight: 500;
     font-size: 1.08rem;
     transition: color 0.2s;
@@ -42,7 +41,6 @@ header {
 .nav-links a.active,
 .nav-links a:hover {
     color: #b6ff4a !important;
-    /* Use the same lime green as contact page */
     opacity: 1;
 }
 
