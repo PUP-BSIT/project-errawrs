@@ -8,6 +8,7 @@
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
     --color-login-button: #ee5634;
+    --color-red: #ff4757;
     --color-input-bg: #e5e5e5;
     --color-border: #ddd;
     --color-text-muted: #666;
@@ -169,7 +170,7 @@ body {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    color: var(--color-white);
+    color: var(--color-red);
     font-family: var(--font-main);
     font-weight: 500;
     font-size: 1.2rem;
@@ -179,15 +180,21 @@ body {
 }
 
 .nav-logout:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--color-red);
+    color: var(--color-white);
 }
 
 .nav-logout a {
-    color: var(--color-white);
+    color: var(--color-red);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: var(--transition-default);
+}
+
+.nav-logout:hover a {
+    color: var(--color-white);
 }
 
 .nav-logout i {
@@ -601,13 +608,15 @@ body {
 /* Registration Section */
 .registration-section {
     flex: 1;
-    min-width: 450px;
-    max-width: 550px;
+    min-width: 530px;
+    max-width: 600px;
     background: var(--color-white);
     border-radius: 20px;
     padding: 24px;
-    margin-top: 0;
+    margin-top: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    position: relative;
+    height: 90px;
 }
 
 .section-header {
@@ -643,9 +652,15 @@ body {
 }
 
 .registration-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    position: absolute;
+    top: 100px; /* Adjust as needed to sit below the header */
+    left: 0;
+    width: 100%;
+    max-height: 350px; /* Adjust as needed */
+    background: var(--color-white);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
 }
 
 .registration-item {
@@ -670,15 +685,15 @@ body {
 }
 
 .registration-icon {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     background: var(--color-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--color-mint);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 .registration-details {

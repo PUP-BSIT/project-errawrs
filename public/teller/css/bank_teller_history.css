@@ -4,15 +4,29 @@
     --color-bg-gradient-start: #f3ffe1;
     --color-bg-gradient-end: #d4f3ad;
     --color-white: #ffffff;
-    --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
+    --color-red: #ff4757;
     --color-success: #22c55e;
     --color-failed: #ef4444;
+    --color-warning: #ff9800;
+    --color-info: #70a1ff;
     --color-input-bg: #e5e5e5;
     --color-border: #ddd;
-    --box-shadow-light: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --color-hover: #f5f5f5;
+    --color-nav-hover: #333;
+    --color-shadow: rgba(0, 0, 0, 0.08);
+    --color-shadow-dark: rgba(0, 0, 0, 0.15);
+    --color-lime-transparent: rgba(182, 255, 74, 0.1);
+    --box-shadow-light: 0 4px 20px var(--color-shadow);
+    --box-shadow-medium: 0 4px 12px var(--color-shadow-dark);
     --transition-default: 0.3s ease;
+    --font-main: 'Montserrat', sans-serif;
+    --border-radius-small: 6px;
+    --border-radius-medium: 8px;
+    --border-radius-large: 15px;
+    --border-radius-round: 25px;
+    --border-radius-circle: 50%;
 }
 
 * {
@@ -82,7 +96,7 @@ body {
 .user-avatar {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+    border-radius: var(--border-radius-circle);
     overflow: hidden;
     margin: 0 auto 16px;
     border: 3px solid var(--color-mint);
@@ -123,10 +137,10 @@ body {
 .nav-selected {
     display: block;
     padding: 16px 20px;
-    background-color: rgba(182, 255, 74, 0.1);
+    background-color: var(--color-lime-transparent);
     color: var(--color-white);
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
     font-weight: 600;
     font-size: 1.2rem;
     letter-spacing: -0.2px;
@@ -139,7 +153,7 @@ body {
     padding: 16px 20px;
     color: var(--color-white);
     text-decoration: none;
-    border-radius: 25px;
+    border-radius: var(--border-radius-round);
     transition: var(--transition-default);
     font-weight: 500;
     font-size: 1.2rem;
@@ -147,7 +161,7 @@ body {
 }
 
 .nav-item:hover {
-    background-color: #333;
+    background-color: var(--color-nav-hover);
 }
 
 /* Sidebar Footer */
@@ -155,29 +169,34 @@ body {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    color: var(--color-white);
+    color: var(--color-red);
     font-family: var(--font-main);
     font-weight: 500;
     font-size: 1.2rem;
     cursor: pointer;
-    border-radius: 25px;
+    border-radius: var(--border-radius-round);
     transition: var(--transition-default);
 }
 
 .nav-logout:hover {
-    background-color: #333;
+    background-color: var(--color-red);
+    color: var(--color-white);
 }
 
 .nav-logout a {
-    color: var(--color-white);
+    color: var(--color-red);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: var(--transition-default);
+}
+
+.nav-logout:hover a {
+    color: var(--color-white);
 }
 
 .nav-logout i {
-    font-size: 14px;
     font-size: 1.2rem;
 }
 
@@ -193,7 +212,6 @@ body {
     justify-content: center;
 }
 
-/* Ensure content scrolls properly */
 .main-content > *:not(.top-bar) {
     flex-shrink: 0;
 }
@@ -201,7 +219,7 @@ body {
 /* History Container Styles */
 .history-container {
     background: var(--color-white);
-    border-radius: 15px;
+    border-radius: var(--border-radius-large);
     padding: 30px;
     margin: 10px auto;
     display: flex;
@@ -233,7 +251,7 @@ body {
 .table-header {
     margin-bottom: 20px;
     background: var(--color-lime-green);
-    border-radius: 25px;
+    border-radius: var(--border-radius-round);
     padding: 15px 20px;
 }
 
@@ -273,7 +291,7 @@ body {
 }
 
 .table-row:hover {
-    background-color: #f5f5f5;
+    background-color: var(--color-hover);
 }
 
 .table-cell {
@@ -284,7 +302,6 @@ body {
     word-wrap: break-word;
 }
 
-/* Specific cell styles */
 .table-cell.date,
 .table-cell.time {
     font-family: var(--font-main);
@@ -320,7 +337,7 @@ body {
 }
 
 .details-withdraw {
-    color: #ff9800;
+    color: var(--color-warning);
 }
 
 .details-close {
@@ -372,7 +389,7 @@ body {
     background: var(--color-primary-black);
     color: var(--color-white);
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
@@ -410,7 +427,7 @@ body {
 
 .per-page-select {
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: var(--border-radius-small);
     border: 1px solid var(--color-border);
     font-size: 0.9rem;
     outline: none;
@@ -441,15 +458,6 @@ body {
     padding: 0 4px;
 }
 
-/* Status Styles */
-.status-success {
-    color: var(--color-success);
-}
-
-.status-failed {
-    color: var(--color-failed);
-}
-
 /* Empty State */
 .empty-state {
     display: flex;
@@ -460,8 +468,28 @@ body {
     grid-column: 1 / -1;
 }
 
-/* Top Bar Styles */
-.top-bar, .top-icons, .top-icon { display: none !important; }
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: var(--color-gray);
+}
+
+.empty-state-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-primary-black);
+}
+
+.empty-state-subtitle {
+    font-size: 1rem;
+    color: var(--color-gray);
+}
 
 /* Notification Styles */
 .notification-container {
@@ -476,14 +504,14 @@ body {
 
 .notification {
     padding: 15px 25px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
     color: var(--color-white);
     font-size: 1.1rem;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--box-shadow-medium);
     animation: slide-in 0.3s ease forwards;
     cursor: pointer;
     min-width: 300px;
@@ -499,11 +527,11 @@ body {
 }
 
 .notification.warning {
-    background-color: var(--color-pending);
+    background-color: var(--color-warning);
 }
 
 .notification.info {
-    background-color: #70a1ff;
+    background-color: var(--color-info);
 }
 
 .notification i {
@@ -534,30 +562,4 @@ body {
 
 .notification.fade-out {
     animation: fade-out 0.3s ease forwards;
-}
-
-/* Notification Animation Styles */
-.notification.fade-out {
-    animation: fade-out 0.3s ease forwards;
-}
-
-@keyframes fade-out {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
-/* Currency Format Styles */
-.currency {
-    font-family: var(--font-main);
-}
-
-/* Date Format Styles */
-.date {
-    font-family: var(--font-main);
 }

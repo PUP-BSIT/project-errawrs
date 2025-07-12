@@ -1,25 +1,19 @@
+/* ========================================
+   BANK TELLER DASHBOARD JAVASCRIPT
+   ======================================== */
+
+// ========================================
+// GLOBAL VARIABLES & CONFIGURATION
+// ========================================
+
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
+
+// Validate teller session
 if (!tellerInfo || !tellerInfo.teller_number) {
     console.error("No teller info found in session storage");
     window.location.href = "./bank_teller_login.html";
 }
-
-// Configuration - Dynamic base URL detection
-function getBaseURL() {
-    const host = window.location.hostname;
-    
-    // Check if we're on the EC2 server
-    if (host === 'dev-teller.stackovercash.site') {
-        return '/api';
-    }
-    
-    // Local XAMPP environment
-    return '/project-errawrs/src/api';
-}
-
-// Get the API base URL
-const API_BASE_URL = getBaseURL();
 
 // Keep track of last known values to detect changes
 let lastKnownValues = {
@@ -31,7 +25,30 @@ let lastKnownValues = {
     declined_accounts: 0
 };
 
-// Show notification function
+// Search functionality variables
+let searchTimeout = null;
+
+// ========================================
+// UTILITY FUNCTIONS
+// ========================================
+
+/**
+ * Dynamically detect the base URL for API calls
+ * @returns {string} The appropriate API base URL
+ */
+function getBaseURL() {
+    const host = window.location.hostname;
+    return host === 'dev-teller.stackovercash.site' ? '/api' : '/project-errawrs/src/api';
+}
+
+// Get the API base URL
+const API_BASE_URL = getBaseURL();
+
+/**
+ * Display notification messages to the user
+ * @param {string} message - The message to display
+ * @param {string} type - The type of notification ('info', 'success', 'error', 'warning')
+ */
 function showNotification(message, type = 'info') {
     const container = document.getElementById('notification_container');
     const notification = document.createElement('div');
@@ -43,116 +60,128 @@ function showNotification(message, type = 'info') {
     // Remove notification after 3 seconds
     setTimeout(() => {
         notification.classList.add('fade-out');
-        setTimeout(() => {
-            container.removeChild(notification);
-        }, 300);
+        setTimeout(() => container.removeChild(notification), 300);
     }, 3000);
 }
 
-let searchTimeout = null;
+/**
+ * Format date for display
+ * @param {string} dateString - The date string to format
+ * @returns {string} Formatted date string
+ */
+function formatDate(dateString) {
+    const options = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
 
-// Initialize dashboard
-document.addEventListener("DOMContentLoaded", () => {
-    // Update name in sidebar and greeting section
-    const userNameElements = document.querySelectorAll(".user-name");
-    const nameTextElement = document.querySelector(".name-text");
-    const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
-    let fullName = '';
-    if (tellerInfo.first_name && tellerInfo.last_name) {
-        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-        userNameElements.forEach(el => el.textContent = fullName);
-        nameTextElement.textContent = fullName + "!";
-    } else if (tellerInfo.name) {
-        fullName = tellerInfo.name;
-        userNameElements.forEach(el => el.textContent = tellerInfo.name);
-        nameTextElement.textContent = tellerInfo.name + "!";
+/**
+ * Make API request with error handling
+ * @param {string} url - The API endpoint
+ * @param {Object} options - Fetch options
+ * @returns {Promise} The API response
+ */
+async function makeApiRequest(url, options = {}) {
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+            ...options
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
     }
-    // Set avatar initial
-    if (avatarElement && fullName) {
-        const initial = fullName.trim().charAt(0).toUpperCase();
-        avatarElement.textContent = initial;
-    }
-    // Set up search functionality
-    setupSearch();
-    // Fetch and update dashboard summary
-    fetchDashboardSummary();
-    // Set up auto-refresh every 5 minutes
-    setInterval(fetchDashboardSummary, 5 * 60 * 1000);
-    // Load recent registrations
-    loadRecentRegistrations();
-    // Refresh registrations every 30 seconds
-    setInterval(loadRecentRegistrations, 30000);
-});
+}
 
-// Set up search functionality
+// ========================================
+// SEARCH FUNCTIONALITY
+// ========================================
+
+/**
+ * Set up search functionality with debouncing
+ */
 function setupSearch() {
     const searchInput = document.getElementById('quick_search');
     const searchResults = document.getElementById('search_results');
 
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.trim();
-            
-            // Clear previous timeout
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
+    if (!searchInput) return;
 
-            // Hide results if search term is empty
-            if (searchTerm.length === 0) {
-                searchResults.classList.add('hidden');
-                searchResults.classList.remove('block');
-                return;
-            }
+    // Handle input changes with debouncing
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.trim();
+        
+        // Clear previous timeout
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
+        }
 
-            // Show loading state
-            searchResults.classList.remove('hidden');
-            searchResults.classList.add('block');
-            searchResults.innerHTML = `
-                <div class="loading-results">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    Searching...
-                </div>`;
+        // Hide results if search term is empty
+        if (searchTerm.length === 0) {
+            searchResults.classList.add('hidden');
+            searchResults.classList.remove('block');
+            return;
+        }
 
-            // Debounce search
-            searchTimeout = setTimeout(() => {
-                performSearch(searchTerm);
-            }, 300);
-        });
+        // Show loading state
+        searchResults.classList.remove('hidden');
+        searchResults.classList.add('block');
+        searchResults.innerHTML = `
+            <div class="loading-results">
+                <i class="fas fa-spinner fa-spin"></i>
+                Searching...
+            </div>`;
 
-        // Show results again on focus if input is not empty
-        searchInput.addEventListener('focus', () => {
+        // Debounce search (wait 300ms after user stops typing)
+        searchTimeout = setTimeout(() => performSearch(searchTerm), 300);
+    });
+
+    // Show results again on focus if input is not empty
+    searchInput.addEventListener('focus', () => {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm.length > 0) {
+            performSearch(searchTerm);
+        }
+    });
+
+    // Show results on Enter key
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
             const searchTerm = searchInput.value.trim();
             if (searchTerm.length > 0) {
                 performSearch(searchTerm);
             }
-        });
+        }
+    });
 
-        // Show results on Enter
-        searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const searchTerm = searchInput.value.trim();
-                if (searchTerm.length > 0) {
-                    performSearch(searchTerm);
-                }
-            }
-        });
-
-        // Close search results when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.classList.add('hidden');
-                searchResults.classList.remove('block');
-            }
-        });
-    }
+    // Close search results when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.classList.add('hidden');
+            searchResults.classList.remove('block');
+        }
+    });
 }
 
-// Perform search
+/**
+ * Perform account search
+ * @param {string} searchTerm - The search term
+ */
 async function performSearch(searchTerm) {
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`);
-        const data = await response.json();
+        const data = await makeApiRequest(
+            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`
+        );
 
         const searchResults = document.getElementById('search_results');
 
@@ -175,16 +204,15 @@ async function performSearch(searchTerm) {
         }
 
         // Render compact clickable results
-        searchResults.innerHTML = data.accounts.map(account => {
-            return `
-                <div class='search-result-item' style='cursor:pointer; padding:10px; border-bottom:1px solid #eee;' data-account='${account.account_number}'>
-                    <div><strong>${account.user.name}</strong></div>
-                    <div>Account No: ${account.account_number}</div>
-                    <div>Balance: ₱${Number(account.balance.toString().replace(/,/g, '')).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
-                    <div>Status: <span class='status-text ${account.status}'>${account.status}</span></div>
-                </div>
-            `;
-        }).join('');
+        searchResults.innerHTML = data.accounts.map(account => `
+            <div class='search-result-item' style='cursor:pointer; padding:10px; border-bottom:1px solid #eee;' data-account='${account.account_number}'>
+                <div><strong>${account.user.name}</strong></div>
+                <div>Account No: ${account.account_number}</div>
+                <div>Balance: ₱${Number(account.balance.toString().replace(/,/g, '')).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                <div>Status: <span class='status-text ${account.status}'>${account.status}</span></div>
+            </div>
+        `).join('');
+        
         searchResults.classList.remove('hidden');
         searchResults.classList.add('block');
 
@@ -206,33 +234,18 @@ async function performSearch(searchTerm) {
     }
 }
 
-// Handle logout
-document.querySelector('.nav-logout a').addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    // Clear session storage
-    sessionStorage.removeItem('tellerInfo');
-    
-    // Redirect to login page
-    window.location.href = './bank_teller_login.html';
-});
+// ========================================
+// DASHBOARD DATA MANAGEMENT
+// ========================================
 
-// Format time to 12-hour format with AM/PM
-function formatTime(date) {
-    return date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
-}
-
-// Fetch dashboard summary data
+/**
+ * Fetch dashboard summary data from the server
+ */
 async function fetchDashboardSummary() {
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`, {
-            credentials: 'include'
-        });
-        const data = await response.json();
+        const data = await makeApiRequest(
+            `${API_BASE_URL}/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`
+        );
 
         if (data.success) {
             updateDashboardSummary(data.summary);
@@ -246,85 +259,58 @@ async function fetchDashboardSummary() {
     }
 }
 
-// Update dashboard summary in the UI
+/**
+ * Update dashboard summary in the UI
+ * @param {Array} summary - Array of summary data
+ */
 function updateDashboardSummary(summary) {
-    summary.forEach(item => {
-        let elementIdPrefix = '';
-        let lastKnownValueKey = '';
-        let parseValue = (value) => value; // Default parser, for deposits/withdrawals (string)
+    const summaryMappings = {
+        'Total Deposits Today': { prefix: 'deposits', key: 'deposits' },
+        'Total Withdrawals Today': { prefix: 'withdrawals', key: 'withdrawals' },
+        'Total Closed Accounts': { prefix: 'closed', key: 'closed_accounts', parser: (value) => parseInt(value.replace(' Accounts', '')) },
+        'Total Re-opened Accounts': { prefix: 'reopened', key: 'reopened_accounts', parser: (value) => parseInt(value.replace(' Accounts', '')) },
+        'Total Pending Accounts': { prefix: 'pending', key: 'pending_accounts', parser: (value) => parseInt(value.replace(' Accounts', '')) },
+        'Total Declined Accounts': { prefix: 'declined', key: 'declined_accounts', parser: (value) => parseInt(value.replace(' Accounts', '')) }
+    };
 
-        switch (item.title) {
-            case 'Total Deposits Today':
-                elementIdPrefix = 'deposits';
-                lastKnownValueKey = 'deposits';
-                break;
-            case 'Total Withdrawals Today':
-                elementIdPrefix = 'withdrawals';
-                lastKnownValueKey = 'withdrawals';
-                break;
-            case 'Total Closed Accounts':
-                elementIdPrefix = 'closed';
-                lastKnownValueKey = 'closed_accounts';
-                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
-                break;
-            case 'Total Re-opened Accounts':
-                elementIdPrefix = 'reopened';
-                lastKnownValueKey = 'reopened_accounts';
-                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
-                break;
-            case 'Total Pending Accounts':
-                elementIdPrefix = 'pending';
-                lastKnownValueKey = 'pending_accounts';
-                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
-                break;
-            case 'Total Declined Accounts':
-                elementIdPrefix = 'declined';
-                lastKnownValueKey = 'declined_accounts';
-                parseValue = (value) => parseInt(value.replace(' Accounts', ''));
-                break;
-            default:
-                console.warn('Unknown dashboard item title:', item.title);
-                return;
+    summary.forEach(item => {
+        const mapping = summaryMappings[item.title];
+        if (!mapping) {
+            console.warn('Unknown dashboard item title:', item.title);
+            return;
         }
 
-        const numberElement = document.getElementById(`total-${elementIdPrefix}`);
+        const numberElement = document.getElementById(`total-${mapping.prefix}`);
+        if (!numberElement) return;
 
-        if (numberElement) {
-            const currentParsedValue = parseValue(item.amount_count);
+        const parseValue = mapping.parser || ((value) => value);
+        const currentParsedValue = parseValue(item.amount_count);
 
-            if (lastKnownValues[lastKnownValueKey] !== currentParsedValue) {
-                numberElement.textContent = item.amount_count; // Always display the original string from PHP
-                lastKnownValues[lastKnownValueKey] = currentParsedValue;
-            }
+        // Only update if value has changed
+        if (lastKnownValues[mapping.key] !== currentParsedValue) {
+            numberElement.textContent = item.amount_count;
+            lastKnownValues[mapping.key] = currentParsedValue;
         }
     });
 }
 
-// Check if user is logged in
-document.addEventListener('DOMContentLoaded', function() {
-    const tellerInfo = sessionStorage.getItem('tellerInfo');
-    if (!tellerInfo) {
-        window.location.href = './bank_teller_login.html';
-    }
-});
+// ========================================
+// REGISTRATION MANAGEMENT
+// ========================================
 
-// Load recent registration requests
+/**
+ * Load recent registration requests
+ */
 async function loadRecentRegistrations() {
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/get_registrations.php`, {
-            credentials: 'include'
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await makeApiRequest(`${API_BASE_URL}/teller/get_registrations.php`);
 
         if (!data.success) {
             throw new Error(data.message || data.error || 'Failed to load registrations');
         }
 
         const registrationList = document.getElementById('recent_registrations');
-        const registrations = data.registrations.slice(0, 3); // Show only 3 most recent
+        const registrations = data.registrations.slice(0, 2); // Show only 2 most recent
 
         if (registrations.length === 0) {
             registrationList.innerHTML = `
@@ -335,7 +321,8 @@ async function loadRecentRegistrations() {
             return;
         }
 
-        registrationList.innerHTML = registrations.map(reg => `
+        // Generate HTML for registration items
+        const registrationHTML = registrations.map(reg => `
             <div class="registration-item" data-id="${reg.registration_id}">
                 <div class="registration-info">
                     <div class="registration-icon">
@@ -347,15 +334,17 @@ async function loadRecentRegistrations() {
                     </div>
                 </div>
                 <div class="registration-actions">
-                    <button class="action-btn approve" onclick="handleRegistration(${reg.registration_id}, 'approve')">
+                    <button class="action-btn approve" onclick="handleRegistration(${reg.registration_id}, 'approve')" data-registration-id="${reg.registration_id}">
                         <i class="fas fa-check"></i> Approve
                     </button>
-                    <button class="action-btn deny" onclick="handleRegistration(${reg.registration_id}, 'deny')">
+                    <button class="action-btn deny" onclick="handleRegistration(${reg.registration_id}, 'deny')" data-registration-id="${reg.registration_id}">
                         <i class="fas fa-times"></i> Deny
                     </button>
                 </div>
             </div>
         `).join('');
+        
+        registrationList.innerHTML = registrationHTML;
 
         // Update pending count in summary
         document.getElementById('total-pending').textContent = `${data.registrations.length} Requests`;
@@ -366,26 +355,66 @@ async function loadRecentRegistrations() {
     }
 }
 
-// Handle registration approval/denial
+/**
+ * Disable all action buttons in a registration item
+ * @param {number} registrationId - The registration ID
+ */
+function disableRegistrationButtons(registrationId) {
+    const registrationItem = document.querySelector(`[data-id="${registrationId}"]`);
+    if (registrationItem) {
+        const buttons = registrationItem.querySelectorAll('.action-btn');
+        buttons.forEach(button => {
+            button.disabled = true;
+            button.style.opacity = '0.7';
+        });
+    }
+}
+
+/**
+ * Enable all action buttons in a registration item
+ * @param {number} registrationId - The registration ID
+ */
+function enableRegistrationButtons(registrationId) {
+    const registrationItem = document.querySelector(`[data-id="${registrationId}"]`);
+    if (registrationItem) {
+        const buttons = registrationItem.querySelectorAll('.action-btn');
+        buttons.forEach(button => {
+            button.disabled = false;
+            button.style.opacity = '1';
+        });
+    }
+}
+
+/**
+ * Handle registration approval/denial
+ * @param {number} registrationId - The registration ID
+ * @param {string} action - The action to perform ('approve' or 'deny')
+ */
 async function handleRegistration(registrationId, action) {
+    // Get the button that was clicked
+    const button = event.target.closest('.action-btn');
+    const originalContent = button.innerHTML;
+    
+    // Disable all buttons in this registration item
+    disableRegistrationButtons(registrationId);
+    
+    // Show loading state on the clicked button
+    button.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i> 
+        ${action === 'approve' ? 'Approving' : 'Denying'}...
+    `;
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/review_registration.php`, {
+        const data = await makeApiRequest(`${API_BASE_URL}/teller/review_registration.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include',
             body: JSON.stringify({
                 registration_id: registrationId,
                 action: action
             })
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
 
         if (!data.success) {
             throw new Error(data.message || data.error || 'Operation failed');
@@ -397,17 +426,115 @@ async function handleRegistration(registrationId, action) {
     } catch (error) {
         console.error('Error handling registration:', error);
         showNotification(`Error ${action === 'approve' ? 'approving' : 'denying'} registration: ${error.message}`, 'error');
+        
+        // Restore button to original state on error
+        button.innerHTML = originalContent;
+        enableRegistrationButtons(registrationId);
     }
 }
 
-// Format date for display
-function formatDate(dateString) {
-    const options = { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+// ========================================
+// USER INTERFACE INITIALIZATION
+// ========================================
+
+/**
+ * Initialize the user interface elements
+ */
+function initializeUI() {
+    // Update name in sidebar and greeting section
+    const userNameElements = document.querySelectorAll(".user-name");
+    const nameTextElement = document.querySelector(".name-text");
+    const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
+    
+    let fullName = '';
+    
+    if (tellerInfo.first_name && tellerInfo.last_name) {
+        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+    } else if (tellerInfo.name) {
+        fullName = tellerInfo.name;
+    }
+    
+    // Update all name elements
+    userNameElements.forEach(el => el.textContent = fullName);
+    if (nameTextElement) {
+        nameTextElement.textContent = fullName + "!";
+    }
+    
+    // Set avatar initial
+    if (avatarElement && fullName) {
+        const initial = fullName.trim().charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
+    }
 }
+
+/**
+ * Set up event listeners for user interactions
+ */
+function setupEventListeners() {
+    // Handle logout
+    document.querySelector('.nav-logout a').addEventListener('click', function(e) {
+        e.preventDefault();
+        sessionStorage.removeItem('tellerInfo');
+        window.location.href = './bank_teller_login.html';
+    });
+}
+
+/**
+ * Set up auto-refresh intervals for real-time updates
+ */
+function setupAutoRefresh() {
+    // Set up auto-refresh every 5 minutes for dashboard summary
+    setInterval(fetchDashboardSummary, 5 * 60 * 1000);
+    
+    // Refresh registrations every 30 seconds
+    setInterval(loadRecentRegistrations, 30000);
+}
+
+// ========================================
+// MAIN INITIALIZATION
+// ========================================
+
+/**
+ * Main initialization function
+ */
+function initializeDashboard() {
+    // Initialize UI elements
+    initializeUI();
+    
+    // Set up search functionality
+    setupSearch();
+    
+    // Set up event listeners
+    setupEventListeners();
+    
+    // Fetch initial data
+    fetchDashboardSummary();
+    loadRecentRegistrations();
+    
+    // Set up auto-refresh
+    setupAutoRefresh();
+}
+
+// ========================================
+// SESSION VALIDATION
+// ========================================
+
+/**
+ * Check if user is logged in
+ */
+function validateSession() {
+    const tellerInfo = sessionStorage.getItem('tellerInfo');
+    if (!tellerInfo) {
+        window.location.href = './bank_teller_login.html';
+    }
+}
+
+// ========================================
+// EVENT LISTENERS
+// ========================================
+
+// Initialize dashboard when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+    validateSession();
+    initializeDashboard();
+});

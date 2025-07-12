@@ -1,7 +1,8 @@
 <?php
-// Enable error reporting for debugging
+// Disable error display to prevent HTML output before JSON
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 
 // Enable CORS for localhost development
 header('Access-Control-Allow-Origin: *');
@@ -15,10 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Include database configuration
-require_once '../../config/database.php';
-
 try {
+    // Include database configuration
+    require_once '../../config/database.php';
+    
     // Get database connection
     $conn = db_connect();
 
@@ -129,6 +130,12 @@ try {
                 $card_type = $row['sender_account_type'];
                 $action = 'Withdrawal';
                 break;
+            default:
+                $account_number = $row['sender_account_number'] ?? $row['receiver_account_number'] ?? '—';
+                $account_name = $row['sender_name'] ?? $row['receiver_name'] ?? '—';
+                $card_type = $row['sender_account_type'] ?? $row['receiver_account_type'] ?? '—';
+                $action = $row['description'] ?? 'Unknown Transaction';
+                break;
         }
 
         // Handle account closure/reopen cases from description
@@ -141,12 +148,12 @@ try {
         $transactions[] = [
             'date' => $created_at->format('Y-m-d'),
             'time' => $created_at->format('H:i:s'),
-            'account_number' => $account_number,
-            'account_name' => $account_name,
+            'account_number' => $account_number ?: '—',
+            'account_name' => $account_name ?: '—',
             'amount' => number_format((float)$row['amount'], 2),
-            'card_type' => ucfirst($card_type),
-            'action' => $action,
-            'status' => $row['status']
+            'card_type' => $card_type ? ucfirst($card_type) : '—',
+            'action' => $action ?: '—',
+            'status' => $row['status'] ?: '—'
         ];
     }
 
@@ -172,6 +179,7 @@ try {
 } finally {
     // Clean up
     if (isset($teller_stmt)) mysqli_stmt_close($teller_stmt);
+    if (isset($count_stmt)) mysqli_stmt_close($count_stmt);
     if (isset($transactions_stmt)) mysqli_stmt_close($transactions_stmt);
     if (isset($conn)) mysqli_close($conn);
 } 

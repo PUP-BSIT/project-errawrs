@@ -6,19 +6,28 @@
     --color-white: #ffffff;
     --font-main: 'Montserrat', sans-serif;
     --color-mint: #7ed957;
+    --color-mint-dark: #5fb83d;
     --color-gray: #a3a3a3;
     --color-login-button: #ee5634;
-    --color-input-bg: #e5e5e5;
-    --color-border: #ddd;
     --color-text-muted: #666;
     --color-success: #28a745;
     --color-error: #dc3545;
-    --color-warning: #ffc107;
-    --color-info: #17a2b8;
-    --color-success-bg: #d4edda;
-    --color-error-bg: #f8d7da;
-    --color-warning-bg: #fff3cd;
-    --color-info-bg: #d1ecf1;
+    --color-border: #ddd;
+    --color-input-bg: #e5e5e5;
+    --color-dark-gray: #666666;
+    --color-darker-gray: #5a5a5a;
+    --color-light-gray: #f0f0f0;
+    --color-light-bg: #f8f9fa;
+    --color-dark-bg: #181818;
+    --color-black: #000000;
+    --color-orange: #ff6b35;
+    --color-dark-text: #222;
+    --color-medium-text: #333;
+    --color-light-text: #444;
+    --color-mobile-bg: #e5faca;
+    --color-sidebar-bg: #111;
+    --color-sidebar-dark: #181818;
+    --color-hover-bg: #333;
     --border-radius-small: 8px;
     --border-radius-medium: 20px;
     --spacing-small: 0.5rem;
@@ -61,7 +70,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
     width: 280px;
-    background-color: #000;
+    background-color: var(--color-black);
     color: var(--color-white);
     display: flex;
     flex-direction: column;
@@ -175,7 +184,7 @@ body {
 .username {
     font-size: 28px;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: -0.3px;
     margin-top: 4px;
     text-align: center;
@@ -210,7 +219,7 @@ body {
     display: flex;
     align-items: center;
     padding: 24px 24px;
-    color: #fff;
+    color: var(--color-white);
     text-decoration: none;
     border-radius: 12px;
     transition: all 0.3s ease;
@@ -240,7 +249,7 @@ body {
 }
 
 .nav-item.active .nav-link {
-    color: #fff;
+    color: var(--color-white);
     background-color: rgba(182, 255, 74, 0.08);
 }
 
@@ -283,7 +292,7 @@ body {
     padding: 24px 24px;
     background-color: transparent;
     border: none;
-    color: #fff;
+    color: var(--color-white);
     cursor: pointer;
     border-radius: 12px;
     transition: all 0.3s ease;
@@ -295,7 +304,7 @@ body {
 
 .logout-btn:hover {
     background-color: rgba(220, 53, 69, 0.12); /* faded red */
-    color: #fff;
+    color: var(--color-white);
 }
 
 /* Main Content Styles */
@@ -320,7 +329,7 @@ body {
     padding: 16px 20px;
     margin-bottom: 32px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #ff6b35;
+    border-left: 4px solid var(--color-orange);
 }
 
 .notice-content {
@@ -330,13 +339,13 @@ body {
 }
 
 .notice-icon {
-    color: #ff6b35;
+    color: var(--color-orange);
     margin-top: 2px;
     font-size: 14px;
 }
 
 .notice-text {
-    color: #333;
+    color: var(--color-medium-text);
     line-height: 1.5;
     font-size: 14px;
     font-weight: 400;
@@ -487,7 +496,7 @@ body {
     left: 0;
     top: calc(100% + 8px);
     width: 100%;
-    background: #FFFFFF;
+    background: var(--color-white);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 20;
@@ -507,7 +516,7 @@ body {
     font-size: 20px;
     font-weight: 600;
     color: var(--color-primary-black);
-    background: #FFFFFF;
+    background: var(--color-white);
     cursor: pointer;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
@@ -528,7 +537,7 @@ body {
 
 /* Transfer Button Styles */
 .transfer-btn {
-    background-color: #666666;
+    background-color: var(--color-dark-gray);
     color: var(--color-white);
     border: none;
     padding: 24px 48px;
@@ -551,7 +560,7 @@ body {
 }
 
 .transfer-btn:hover {
-    background-color: #5a5a5a;
+    background-color: var(--color-darker-gray);
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
 }
@@ -570,7 +579,7 @@ body {
 }
 
 .financial-tip {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    background: linear-gradient(135deg, var(--color-white) 0%, var(--color-light-bg) 100%);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 32px;
@@ -752,7 +761,7 @@ body {
 }
 
 .modal-content .secondary-btn:hover {
-    background-color: #888;
+    background-color: var(--color-gray);
 }
 
 .modal-content .primary-btn:disabled {
@@ -1025,14 +1034,14 @@ select#dashboard_account_select option {
 .account-type-large {
     font-size: 1.35rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: 0.5px;
     margin-bottom: 2px;
 }
 .account-number-large {
     font-size: 2.1rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--color-white);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1046,7 +1055,7 @@ select#dashboard_account_select option {
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
-    color: #fff;
+    color: var(--color-white);
     background: rgba(0,0,0,0.12);
     border-radius: 50%;
     width: 32px;
@@ -1056,8 +1065,8 @@ select#dashboard_account_select option {
     transition: background 0.2s, color 0.2s;
 }
 .account-eye-icon:hover {
-    background: #b6ff4a;
-    color: #222;
+    background: var(--color-lime-green);
+    color: var(--color-dark-text);
 }
 
 /* Ensure .account-number-text is bold and readable */
@@ -1065,7 +1074,7 @@ select#dashboard_account_select option {
     font-family: 'Montserrat', monospace;
     font-weight: 800;
     font-size: 2.1rem;
-    color: #fff;
+    color: var(--color-white);
     letter-spacing: 1.2px;
 }
 
@@ -1075,7 +1084,7 @@ select#dashboard_account_select option {
     background: none;
     border: none;
     font-size: 2.2rem;
-    color: #111;
+    color: var(--color-primary-black);
     cursor: pointer;
     margin-right: 16px;
     z-index: 120;
@@ -1085,7 +1094,7 @@ select#dashboard_account_select option {
     background: none;
     border: none;
     font-size: 2.2rem;
-    color: #fff;
+    color: var(--color-white);
     position: absolute;
     top: 18px;
     right: 18px;
