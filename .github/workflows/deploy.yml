@@ -57,10 +57,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
 
-          # Clean the deployment directory (remove all files/folders) - requires sudo
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/*"
+          # Clean the deployment directory (remove all files/folders including hidden ones) - requires sudo
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]*"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}"
 
           echo "Cleaned deployment path ${DEPLOY_PATH}."
@@ -133,9 +131,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
 
-          # Clean the deployment directory (remove all files/folders) - requires sudo
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* && sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R www-data:www-data ${DEPLOY_PATH}"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* && sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R www-data:www-data ${DEPLOY_PATH}"
+          # Clean the deployment directory (remove all files/folders including hidden ones) - requires sudo
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]* && sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R www-data:www-data ${DEPLOY_PATH}"
 
           echo "Cleaned deployment path ${DEPLOY_PATH}."
 
