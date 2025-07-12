@@ -15,7 +15,11 @@
     --color-border: #ddd;
     --color-hover: #f5f5f5;
     --color-nav-hover: #333;
-    --box-shadow-light: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --color-shadow: rgba(0, 0, 0, 0.08);
+    --color-shadow-dark: rgba(0, 0, 0, 0.15);
+    --color-lime-transparent: rgba(182, 255, 74, 0.1);
+    --box-shadow-light: 0 4px 20px var(--color-shadow);
+    --box-shadow-medium: 0 4px 12px var(--color-shadow-dark);
     --transition-default: 0.3s ease;
     --font-main: 'Montserrat', sans-serif;
     --border-radius-small: 6px;
@@ -133,7 +137,7 @@ body {
 .nav-selected {
     display: block;
     padding: 16px 20px;
-    background-color: rgba(182, 255, 74, 0.1);
+    background-color: var(--color-lime-transparent);
     color: var(--color-white);
     text-decoration: none;
     border-radius: var(--border-radius-medium);
@@ -507,7 +511,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--box-shadow-medium);
     animation: slide-in 0.3s ease forwards;
     cursor: pointer;
     min-width: 300px;

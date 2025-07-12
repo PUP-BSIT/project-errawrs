@@ -8,12 +8,10 @@ if (!tellerInfo || !tellerInfo.teller_number) {
 // Configuration - Dynamic base URL detection
 function getBaseURL() {
     const host = window.location.hostname;
-    // Use /api for both dev and main teller domains
     if (host === 'dev-teller.stackovercash.site' || 
         host === 'teller.stackovercash.site') {
         return '/api';
     }
-    // Local XAMPP or fallback
     return '/project-errawrs/src/api';
 }
 
@@ -73,11 +71,7 @@ function setupLogout() {
     document.querySelector('.nav-logout a').addEventListener('click', 
         function(e) {
             e.preventDefault();
-            
-            // Clear session storage
             sessionStorage.removeItem('tellerInfo');
-            
-            // Redirect to login page
             window.location.href = './bank_teller_login.html';
         });
 }
@@ -147,12 +141,11 @@ function processTransactionData(data) {
     totalItems = data.pagination.total_records;
     
     // Calculate pages based on the fetched data and display limit
-    // If selected count > 5, it will create multiple pages
     totalPages = Math.ceil(filteredData.length / DISPLAY_ITEMS_PER_PAGE);
     
-    // Ensure we don't exceed the selected count
+    // Only one page if selected count is 5 or less
     if (selectedItemCount <= DISPLAY_ITEMS_PER_PAGE) {
-        totalPages = 1; // Only one page if selected count is 5 or less
+        totalPages = 1;
     }
     
     lastFetchTime = new Date().getTime();
@@ -218,8 +211,6 @@ function changeItemsPerPage() {
     if (newItemCount !== selectedItemCount) {
         selectedItemCount = newItemCount;
         currentPage = 1; // Reset to first page
-        
-        // Always fetch the selected amount from server
         fetchTransactionHistory();
     }
 }
