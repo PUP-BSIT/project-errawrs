@@ -9,7 +9,8 @@ if (!tellerInfo || !tellerInfo.teller_number) {
 function getBaseURL() {
     const host = window.location.hostname;
     // Use /api for both dev and main teller domains
-    if (host === 'dev-teller.stackovercash.site' || host === 'teller.stackovercash.site') {
+    if (host === 'dev-teller.stackovercash.site' || 
+        host === 'teller.stackovercash.site') {
         return '/api';
     }
     // Local XAMPP or fallback
@@ -21,13 +22,12 @@ const API_BASE_URL = getBaseURL();
 
 // Global variables
 let currentPage = 1;
-let itemsPerPage = 5; // This will now be fixed at 5
-let selectedItemCount = 5; // This will track the user's selection
+let selectedItemCount = 5;
 let totalItems = 0;
 let totalPages = 0;
 let lastFetchTime = null;
-const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-const MAX_ITEMS_PER_PAGE = 5; // Maximum items to display per page
+const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+const DISPLAY_ITEMS_PER_PAGE = 5; // Maximum items to display per page
 
 // Table data storage
 let tableData = [];
@@ -36,7 +36,13 @@ let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    // Update teller name in the UI
+    updateTellerInfo();
+    setupLogout();
+    initializeApplication();
+});
+
+// Update teller information in the UI
+function updateTellerInfo() {
     const userNameElement = document.querySelector(".user-name");
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     let fullName = '';
@@ -60,21 +66,23 @@ document.addEventListener("DOMContentLoaded", function () {
     if (perPageSelect) {
         perPageSelect.value = selectedItemCount.toString();
     }
-    
-    // Handle logout
-    document.querySelector('.nav-logout a').addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Clear session storage
-        sessionStorage.removeItem('tellerInfo');
-        
-        // Redirect to login page
-        window.location.href = './bank_teller_login.html';
-    });
-    
-    initializeApplication();
-});
+}
 
+// Setup logout functionality
+function setupLogout() {
+    document.querySelector('.nav-logout a').addEventListener('click', 
+        function(e) {
+            e.preventDefault();
+            
+            // Clear session storage
+            sessionStorage.removeItem('tellerInfo');
+            
+            // Redirect to login page
+            window.location.href = './bank_teller_login.html';
+        });
+}
+
+// Initialize the application
 async function initializeApplication() {
     console.log("Bank Teller History Application Initialized");
     await fetchTransactionHistory();
@@ -98,7 +106,11 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/get_transaction_history.php?teller_number=${encodeURIComponent(tellerInfo.teller_number)}&page=${currentPage}&limit=${selectedItemCount}`);
+        const url = `${API_BASE_URL}/teller/get_transaction_history.php?` +
+                   `teller_number=${encodeURIComponent(tellerInfo.teller_number)}` +
+                   `&page=${currentPage}&limit=${selectedItemCount}`;
+        
+        const response = await fetch(url);
         const data = await response.json();
 
         if (!response.ok) {
@@ -106,52 +118,72 @@ async function fetchTransactionHistory() {
         }
 
         if (data.success && data.transactions) {
-            tableData = data.transactions.map(item => ({
-                id: item.account_number,
-                date: new Date(item.date),
-                time: item.time,
-                account_number: item.account_number,
-                account_name: item.account_name,
-                amount: item.amount,
-                card_type: item.card_type,
-                action: item.action,
-                type: determineTransactionType(item.action, item.card_type)
-            }));
-            filteredData = [...tableData];
-            totalItems = data.pagination.total_records;
-            // Calculate total pages based on MAX_ITEMS_PER_PAGE
-            totalPages = Math.ceil(selectedItemCount / MAX_ITEMS_PER_PAGE);
-            lastFetchTime = new Date().getTime();
-            
-            // Update display after fetching new data
-            updateTableDisplay();
-            updatePaginationDisplay();
+            processTransactionData(data);
         } else {
-            tableData = [];
-            filteredData = [];
-            totalItems = 0;
-            totalPages = 0;
-            showNotification("No transaction history found", "info");
-            
-            // Update display for empty state
-            updateTableDisplay();
-            updatePaginationDisplay();
+            handleEmptyData();
         }
     } catch (error) {
         console.error("Error fetching transaction history:", error);
-        showNotification(error.message || "Error fetching transaction history", "error");
+        showNotification(error.message || "Error fetching transaction history", 
+                        "error");
     }
 }
 
-// Helper function to determine transaction type for icon and styling
+// Process transaction data
+function processTransactionData(data) {
+    tableData = data.transactions.map(item => ({
+        id: item.account_number,
+        date: new Date(item.date),
+        time: item.time,
+        account_number: item.account_number,
+        account_name: item.account_name,
+        amount: item.amount,
+        card_type: item.card_type,
+        action: item.action,
+        type: determineTransactionType(item.action, item.card_type)
+    }));
+    
+    filteredData = [...tableData];
+    totalItems = data.pagination.total_records;
+    
+    // Calculate pages based on the fetched data and display limit
+    // If selected count > 5, it will create multiple pages
+    totalPages = Math.ceil(filteredData.length / DISPLAY_ITEMS_PER_PAGE);
+    
+    // Ensure we don't exceed the selected count
+    if (selectedItemCount <= DISPLAY_ITEMS_PER_PAGE) {
+        totalPages = 1; // Only one page if selected count is 5 or less
+    }
+    
+    lastFetchTime = new Date().getTime();
+    
+    updateTableDisplay();
+    updatePaginationDisplay();
+}
+
+// Handle empty data
+function handleEmptyData() {
+    tableData = [];
+    filteredData = [];
+    totalItems = 0;
+    totalPages = 0;
+    showNotification("No transaction history found", "info");
+    
+    updateTableDisplay();
+    updatePaginationDisplay();
+}
+
+// Determine transaction type for icon and styling
 function determineTransactionType(action, cardType) {
-    if (action.toLowerCase().includes('deposit')) {
+    const actionLower = action.toLowerCase();
+    
+    if (actionLower.includes('deposit')) {
         return 'deposit';
-    } else if (action.toLowerCase().includes('withdraw')) {
+    } else if (actionLower.includes('withdraw')) {
         return 'withdraw';
-    } else if (action.toLowerCase().includes('closed')) {
+    } else if (actionLower.includes('closed')) {
         return 'close';
-    } else if (action.toLowerCase().includes('reopened')) {
+    } else if (actionLower.includes('reopened')) {
         return 'reopen';
     } else {
         return cardType?.toLowerCase() || 'unknown';
@@ -162,10 +194,8 @@ function determineTransactionType(action, cardType) {
 function goToPage(pageNum) {
     if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
         currentPage = pageNum;
-        fetchTransactionHistory().then(() => {
-            updateTableDisplay();
-            updatePaginationDisplay();
-        });
+        updateTableDisplay();
+        updatePaginationDisplay();
     }
 }
 
@@ -187,16 +217,11 @@ function changeItemsPerPage() {
     
     if (newItemCount !== selectedItemCount) {
         selectedItemCount = newItemCount;
-        currentPage = 1; // Reset to first page when changing items count
+        currentPage = 1; // Reset to first page
         
-        // Fetch new data with updated items count
+        // Always fetch the selected amount from server
         fetchTransactionHistory();
     }
-}
-
-function applyPaginationSettings() {
-    updateTableDisplay();
-    console.log("Pagination settings applied");
 }
 
 // Update pagination display
@@ -204,11 +229,10 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
-    // Calculate total pages based on selected item count and MAX_ITEMS_PER_PAGE
-    totalPages = Math.ceil(selectedItemCount / MAX_ITEMS_PER_PAGE);
+    totalPages = Math.ceil(filteredData.length / DISPLAY_ITEMS_PER_PAGE);
 
     if (totalPages <= 0) {
-        return; // No pages to display
+        return;
     }
 
     // Adjust current page if it's beyond the actual data
@@ -250,10 +274,7 @@ function updatePaginationDisplay() {
         addPageButton(totalPages);
     }
 
-    // Update showing text
     updateShowingText();
-
-    // Update navigation buttons
     updateNavigationButtons(totalPages);
 }
 
@@ -277,9 +298,12 @@ function updateShowingText() {
         if (filteredData.length === 0) {
             showingText.textContent = "Showing 0 to 0 of 0 entries";
         } else {
-            const startItem = ((currentPage - 1) * MAX_ITEMS_PER_PAGE) + 1;
-            const endItem = Math.min(startItem + MAX_ITEMS_PER_PAGE - 1, filteredData.length);
-            showingText.textContent = `Showing ${startItem} to ${String(endItem).padStart(2, "0")} of ${filteredData.length} entries (Page ${currentPage} of ${totalPages})`;
+            const startItem = ((currentPage - 1) * DISPLAY_ITEMS_PER_PAGE) + 1;
+            const endItem = Math.min(startItem + DISPLAY_ITEMS_PER_PAGE - 1, 
+                                   filteredData.length);
+            showingText.textContent = 
+                `Showing ${startItem} to ${String(endItem).padStart(2, "0")} ` +
+                `of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
         }
     }
 }
@@ -303,21 +327,10 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * MAX_ITEMS_PER_PAGE;
-    const endIndex = Math.min(startIndex + MAX_ITEMS_PER_PAGE, filteredData.length);
+    const startIndex = (currentPage - 1) * DISPLAY_ITEMS_PER_PAGE;
+    const endIndex = Math.min(startIndex + DISPLAY_ITEMS_PER_PAGE, 
+                             filteredData.length);
     return filteredData.slice(startIndex, endIndex);
-}
-
-// Get status icon
-function getStatusIcon(status) {
-    switch (status.toLowerCase()) {
-        case "success":
-            return "✓";
-        case "failed":
-            return "✗";
-        default:
-            return "?";
-    }
 }
 
 // Create table row
@@ -355,8 +368,8 @@ function createTableRow(item) {
     const detailsCell = document.createElement("div");
     detailsCell.className = "table-cell details-cell";
     
-    // Set the details content based on transaction type and card type
-    const detailsContent = getTransactionDetails(item.type, item.card_type, item.action);
+    const detailsContent = getTransactionDetails(item.type, item.card_type, 
+                                                item.action);
     detailsCell.innerHTML = `
         <i class="${detailsContent.icon}"></i>
         <span class="${detailsContent.class}">${detailsContent.text}</span>
@@ -373,9 +386,8 @@ function createTableRow(item) {
     return row;
 }
 
-// Helper function to get transaction details
+// Get transaction details for display
 function getTransactionDetails(type, cardType, action) {
-    // First check for specific transaction types
     switch (type?.toLowerCase()) {
         case 'deposit':
             return {
@@ -402,7 +414,6 @@ function getTransactionDetails(type, cardType, action) {
                 class: 'details-reopen'
             };
         default:
-            // If no specific transaction type, show card type
             return {
                 icon: 'fas fa-credit-card',
                 text: cardType ? `${cardType} Account` : action || 'View Details',
@@ -416,29 +427,31 @@ function updateTableDisplay() {
     const tableBody = document.getElementById("table-body");
     const currentPageData = getCurrentPageData();
 
-    // Clear existing rows
     tableBody.innerHTML = "";
 
     if (currentPageData.length === 0) {
-        // Show empty state message
-        const emptyRow = document.createElement("div");
-        emptyRow.className = "table-row empty-state";
-        emptyRow.innerHTML = `
-            <div class="empty-state-container">
-                <i class="fa-regular fa-folder-open empty-state-icon"></i>
-                <div class="empty-state-title">No transactions found</div>
-                <div class="empty-state-subtitle">Transaction history will appear here</div>
-            </div>
-        `;
-        tableBody.appendChild(emptyRow);
+        showEmptyState(tableBody);
         return;
     }
 
-    // Create new rows based on itemsPerPage
     currentPageData.forEach(function (item) {
         const row = createTableRow(item);
         tableBody.appendChild(row);
     });
+}
+
+// Show empty state message
+function showEmptyState(tableBody) {
+    const emptyRow = document.createElement("div");
+    emptyRow.className = "table-row empty-state";
+    emptyRow.innerHTML = `
+        <div class="empty-state-container">
+            <i class="fa-regular fa-folder-open empty-state-icon"></i>
+            <div class="empty-state-title">No transactions found</div>
+            <div class="empty-state-subtitle">Transaction history will appear here</div>
+        </div>
+    `;
+    tableBody.appendChild(emptyRow);
 }
 
 // Row interaction functions
@@ -477,50 +490,6 @@ function clearAllSelections() {
     selectedRows.clear();
 }
 
-function showTransactionDetails(transaction) {
-    if (transaction) {
-        alert(
-            `Transaction Details:\n\nDate: ${transaction.date}\nType: ${transaction.type}\nAmount: ${transaction.amount}\nAccount No.: ${transaction.accountNo}\nAccount Name: ${transaction.accountName}\nStatus: ${transaction.status}`
-        );
-    }
-}
-
-// Filter and sort functions
-function filterData(filterFunction) {
-    filteredData = tableData.filter(filterFunction);
-    totalPages = Math.ceil(filteredData.length / itemsPerPage);
-    currentPage = 1; // Reset to first page
-    updateTableDisplay();
-    updatePaginationDisplay();
-}
-
-function sortData(sortKey, direction = "asc") {
-    filteredData.sort(function (a, b) {
-        let aValue = a[sortKey];
-        let bValue = b[sortKey];
-
-        // Handle amount sorting (remove currency symbol)
-        if (sortKey === "amount") {
-            aValue = parseFloat(aValue.replace(/[₱,]/g, ""));
-            bValue = parseFloat(bValue.replace(/[₱,]/g, ""));
-        }
-
-        // Handle date sorting
-        if (sortKey === "date") {
-            aValue = new Date(aValue);
-            bValue = new Date(bValue);
-        }
-
-        if (direction === "asc") {
-            return aValue > bValue ? 1 : -1;
-        } else {
-            return aValue < bValue ? 1 : -1;
-        }
-    });
-
-    updateTableDisplay();
-}
-
 // Utility functions
 function showNotification(message, type = "info") {
     const notification = document.createElement("div");
@@ -541,15 +510,13 @@ function showNotification(message, type = "info") {
 }
 
 function formatCurrency(amount) {
-    // Convert amount to a number if it's a string
-    const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
+    const numericAmount = typeof amount === 'string' ? 
+        parseFloat(amount.replace(/[^\d.-]/g, '')) : amount;
     
-    // Check if it's a valid number
     if (isNaN(numericAmount)) {
         return "—";
     }
 
-    // Format the number using Intl.NumberFormat
     return new Intl.NumberFormat('en-PH', {
         style: 'currency',
         currency: 'PHP',
@@ -610,10 +577,8 @@ function selectAllVisibleRows() {
     currentPageData.forEach(function (transaction) {
         const rows = document.querySelectorAll(".table-row");
         rows.forEach(function (row, index) {
-            if (
-                currentPageData[index] &&
-                currentPageData[index].id === transaction.id
-            ) {
+            if (currentPageData[index] && 
+                currentPageData[index].id === transaction.id) {
                 selectRow(row, transaction.id);
             }
         });
