@@ -18,27 +18,33 @@
     </head>
     <body class="authenticated-page">
         <!-- Mobile Header -->
-        <header class="main-header mobile-header" style="display: none;">
+        <header class="main-header mobile-header hidden">
             <div class="mobile-logo" id="mobile_logo">
-                <span class="logo-stack">Stack</span>
-                <span class="logo-overcash">Overcash</span>
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
             </div>
             <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </header>
+        <!-- Move nav here: Topnav Dropdown Nav (now block, not floating) -->
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        </nav>
+        <!-- Mobile/Tablet Dropdown Nav moved above -->
         <!-- Mobile flex row container, will be filled by JS only on mobile -->
-        <div class="mobile-top-row" id="mobile_top_row" style="display:none;"></div>
+        <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
             <!-- Sidebar -->
-            <div class="sidebar" id="sidebar_nav" style="background-color:#000;">
-                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; padding: 24px 24px 0 24px; min-height: 64px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-                    <span class="logo" style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 auto 0 0;">
-                        Stack<span class="logo-overcash" style="color: #b6ff4a;">Overcash</span>
+            <div class="sidebar sidebar-black" id="sidebar_nav">
+                <div class="popup-header popup-header-style">
+                    <span class="logo logo-large">
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
-                    <button class="close-sidebar-btn" id="close_sidebar_btn" aria-label="Close navigation" style="margin-left: 32px; margin-right: 0; font-size: 2rem; color: #fff; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
                 <div class="user-profile">
                     <div class="avatar" id="user_avatar_container" aria-label="User avatar">
@@ -119,8 +125,22 @@
                         </div>
 
                         <div class="balance-card">
-                            <div class="account-display-container" id="account-display-container">
-                                <!-- Account items will be dynamically added here -->
+                            <div class="account-dropdown-container" id="account-dropdown-container">
+                                <div class="account-dropdown-trigger" id="account-dropdown-trigger">
+                                    <span class="account-type" id="dashboard_account_type">Savings Account</span>
+                                    <span class="account-number" id="dashboard_account_number">xxxxxxxx0003</span>
+                                    <span class="account-dropdown-icons-row">
+                                        <span class="account-eye-icon" id="dashboard_account_eye" title="Show/Hide Account Number">
+                                            <i class="fas fa-eye"></i>
+                                        </span>
+                                        <span class="account-dropdown-arrow" id="account-dropdown-arrow">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="account-dropdown-list hidden" id="account-dropdown-list">
+                                    <!-- Account options will be populated here by JS -->
+                                </div>
                             </div>
                             <div class="balance-amount" id="account_balance">
                                 <!-- Balance will be dynamically added here -->
@@ -159,7 +179,7 @@
         <div class="notification-container"></div>
 
         <!-- Overlay for mobile nav -->
-        <div id="sidebar_overlay" class="sidebar-overlay" style="display:none;"></div>
+        <div id="sidebar_overlay" class="sidebar-overlay hidden"></div>
 
         <!-- Load configuration first -->
         <script src="./js/config.js"></script>

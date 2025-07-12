@@ -63,18 +63,6 @@ balanceWarning.className = 'balance-warning';
 balanceWarning.innerHTML = `<i class="fas fa-exclamation-circle"></i><span></span>`;
 amountFormGroup.appendChild(balanceWarning);
 
-// Debug logging of DOM elements
-console.log('DOM Elements loaded:');
-console.log('- select_bank_panel:', select_bank_panel ? 'found' : 'NOT FOUND');
-console.log('- account_details_panel:', account_details_panel ? 'found' : 'NOT FOUND');
-console.log('- bank_radio_buttons:', bank_radio_buttons.length, 'elements found');
-console.log('- next_button:', next_button ? 'found' : 'NOT FOUND');
-console.log('- send_money_button:', send_money_button ? 'found' : 'NOT FOUND');
-console.log('- info_correct_checkbox:', info_correct_checkbox ? 'found' : 'NOT FOUND');
-console.log('- your_account_select:', your_account_select ? 'found' : 'NOT FOUND');
-console.log('- receiver_account_input:', receiver_account_input ? 'found' : 'NOT FOUND');
-console.log('- amount_input:', amount_input ? 'found' : 'NOT FOUND');
-
 // DOM Elements for Profile Edit
 const user_avatar_container = document.getElementById('user_avatar_container');
 const edit_profile_icon = document.getElementById('edit_profile_icon');
@@ -605,6 +593,40 @@ document.addEventListener('DOMContentLoaded', () => {
     
     addTransitionStyle(select_bank_panel);
     addTransitionStyle(account_details_panel);
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
+    const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
+
+    // Mobile/tablet nav logic
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    // Mobile logout button uses same handler
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
 });
 
 // Validate transfer form

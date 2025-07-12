@@ -60,9 +60,16 @@ let transfer_now_btn;
 let account_balance_element;
 let transaction_list_element;
 let user_name_element;
-let account_display_container;
 let user_avatar_container;
 let profile_edit_modal;
+// New dropdown/eye elements
+let dropdownTrigger;
+let dropdownList;
+let dropdownArrow;
+let dropdownEye;
+let dropdownType;
+let dropdownNumber;
+let dropdownBalance;
 
 // State
 let user_data = {}; // Will be populated from API
@@ -120,11 +127,18 @@ function initializeDOMElements() {
     account_balance_element = document.getElementById('account_balance');
     transaction_list_element = document.getElementById('transaction_list');
     user_name_element = document.getElementById('user_name');
-    account_display_container = document.getElementById('account-display-container');
     user_avatar_container = document.getElementById('user_avatar_container');
     profile_edit_modal = document.getElementById('edit_profile_modal');
-
-    if (!account_display_container || !account_balance_element) {
+    // New dropdown/eye elements
+    dropdownTrigger = document.getElementById('account-dropdown-trigger');
+    dropdownList = document.getElementById('account-dropdown-list');
+    dropdownArrow = document.getElementById('account-dropdown-arrow');
+    dropdownEye = document.getElementById('dashboard_account_eye');
+    dropdownType = document.getElementById('dashboard_account_type');
+    dropdownNumber = document.getElementById('dashboard_account_number');
+    dropdownBalance = document.getElementById('account_balance');
+    // Only require the new dropdown elements and balance
+    if (!dropdownTrigger || !dropdownList || !dropdownArrow || !dropdownEye || !dropdownType || !dropdownNumber || !dropdownBalance) {
         console.error('Required DOM elements not found');
         return false;
     }
@@ -144,14 +158,55 @@ let accountMaskState = {};
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Hamburger/Sidebar logic (declare once for both desktop and mobile)
+    // Declare all shared DOM variables ONCE
     const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
     const sidebar = document.getElementById('sidebar_nav');
     const closeSidebarBtn = document.getElementById('close_sidebar_btn');
     const sidebarOverlay = document.getElementById('sidebar_overlay');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Only toggle dropdown if sidebar is hidden (mobile/tablet)
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    // Mobile logout button uses same handler
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
+    // Sidebar logic for desktop only
     function openSidebar() {
-        sidebar.classList.add('open');
-        sidebarOverlay.style.display = 'block';
+        if (window.innerWidth > 1024) {
+            sidebar.classList.add('open');
+            sidebarOverlay.style.display = 'block';
+            document.body.classList.add('sidebar-open');
+            closeSidebarBtn.style.display = 'flex';
+            setTimeout(() => {
+                if (navLinks[0]) navLinks[0].focus();
+            }, 100);
+        }
     }
     function closeSidebar() {
         if (sidebar) sidebar.classList.remove('open');
@@ -160,18 +215,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
         sidebar.classList.remove('open');
         sidebarOverlay.style.display = 'none';
+        document.body.classList.remove('sidebar-open');
+        closeSidebarBtn.style.display = 'none';
     }
-    if (hamburgerBtn) {
-        hamburgerBtn.style.display = '';
-        hamburgerBtn.addEventListener('click', openSidebar);
+    if (hamburgerBtn && sidebar) {
+        hamburgerBtn.addEventListener('click', () => {
+            if (window.innerWidth > 1024) openSidebar();
+        });
     }
     if (closeSidebarBtn) {
-        closeSidebarBtn.style.display = '';
         closeSidebarBtn.addEventListener('click', closeSidebar);
     }
     if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth > 1024) closeSidebar();
+        });
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+            closeSidebar();
+        } else {
+            if (topnavDropdown) topnavDropdown.classList.remove('open');
+        }
+    });
     init_dashboard().catch(error => {
         console.error('Failed to initialize dashboard:', error);
         show_notification('Failed to initialize dashboard', 'error');
@@ -194,137 +268,37 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!mobileRow.contains(welcomeSection)) mobileRow.appendChild(welcomeSection);
             mobileRow.style.display = 'flex';
             mobileRow.style.flexDirection = 'column';
+            mobileRow.classList.remove('hidden');
         } else {
             if (!rightSection.contains(tip)) rightSection.insertBefore(tip, rightSection.firstChild);
             if (dashboardContent && !dashboardContent.contains(notice)) dashboardContent.parentNode.insertBefore(notice, dashboardContent);
             if (!leftSection.contains(welcomeSection)) leftSection.insertBefore(welcomeSection, leftSection.firstChild);
             mobileRow.style.display = 'none';
+            mobileRow.classList.add('hidden');
         }
     }
     moveNoticeAndTipForMobile();
     window.addEventListener('resize', moveNoticeAndTipForMobile);
 
     // --- MOBILE NAVIGATION LOGIC ---
-    const navLinks = document.querySelectorAll('.nav-link');
-    function openSidebar() {
-        if (window.innerWidth > 768) return;
-        sidebar.classList.add('open');
-        sidebarOverlay.style.display = 'block';
-        document.body.classList.add('sidebar-open');
-        closeSidebarBtn.style.display = 'flex';
-        // Focus trap: focus first nav link
-        setTimeout(() => {
-            if (navLinks[0]) navLinks[0].focus();
-        }, 100);
-    }
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
-        document.body.classList.remove('sidebar-open');
-        closeSidebarBtn.style.display = 'none';
-    }
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', openSidebar);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', closeSidebar);
-    }
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', closeSidebar);
-    }
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) closeSidebar();
-        });
-    });
-    // ESC key closes sidebar
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            closeSidebar();
-        }
-    });
-    // Hide sidebar on resize to desktop
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            closeSidebar();
-        }
-    });
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 
     // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
-    let originalSidebarParent = sidebar.parentNode;
-    let originalSidebarNext = sidebar.nextSibling;
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 
-    function showSidebarPopup() {
-        if (window.innerWidth > 768) return;
-        // Move sidebar to body
-        document.body.appendChild(sidebar);
-        // Show overlay
-        sidebarOverlay.style.display = 'block';
-        sidebarOverlay.style.zIndex = 9998;
-        // Style sidebar as popup
-        Object.assign(sidebar.style, {
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            zIndex: 99999,
-            width: '92vw',
-            maxWidth: '350px',
-            height: 'auto',
-            maxHeight: '95vh',
-            transform: 'translate(-50%, -50%) scale(1)',
-            borderRadius: '24px',
-            boxShadow: '0 12px 48px 0 rgba(0,0,0,0.35)',
-            background: '#111',
-            paddingTop: '0',
-            marginTop: '0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            opacity: 1,
-            pointerEvents: 'auto',
-            overflow: 'visible',
-            transition: 'opacity 0.25s cubic-bezier(.4,0,.2,1), transform 0.25s cubic-bezier(.4,0,.2,1)'
-        });
-        sidebar.classList.add('open');
-    }
-    function hideSidebarPopup() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
-        // Hide and move back to original parent
-        if (window.innerWidth <= 768) {
-            sidebar.style.opacity = 0;
-            sidebar.style.pointerEvents = 'none';
-            // Optionally move back to original parent
-            if (originalSidebarParent && originalSidebarNext) {
-                originalSidebarParent.insertBefore(sidebar, originalSidebarNext);
-            } else if (originalSidebarParent) {
-                originalSidebarParent.appendChild(sidebar);
-            }
-        }
-    }
-    if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', showSidebarPopup);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', hideSidebarPopup);
-    }
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', hideSidebarPopup);
-    }
-    // ESC key closes sidebar
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            hideSidebarPopup();
-        }
-    });
-    // On resize, hide popup and restore sidebar
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            hideSidebarPopup();
-        }
-    });
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC ---
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
+
+    // --- DYNAMIC SIDEBAR POPUP FOR MOBILE ---
+    // This section is no longer needed as sidebar logic is now handled by the new openSidebar/closeSidebar functions
+    // Keeping it for now in case it's re-introduced elsewhere, but it's effectively removed.
+    // The original logic for mobile sidebar popup is removed.
 });
 
 // Update the fetchUserAccounts function
@@ -366,94 +340,13 @@ async function fetchUserAccounts() {
     }
 }
 
-// Update Account Display
+// Update Account Display: only call setupAccountDropdown
 function updateAccountDisplay() {
-    if (!account_display_container || !account_balance_element) {
-        console.error('Required DOM elements not found');
+    if (!initializeDOMElements()) {
+        console.error('Required DOM elements not initialized');
         return;
     }
-
-    console.log('Updating account display with:', user_accounts);
-
-    // Clear existing content
-    account_display_container.innerHTML = '';
-
-    if (!Array.isArray(user_accounts) || user_accounts.length === 0) {
-        console.log('No accounts found');
-        account_balance_element.textContent = `${CURRENCY.SYMBOL}0.00`;
-        account_display_container.innerHTML = '<div class="no-accounts">No active accounts found</div>';
-        if (transfer_now_btn) {
-            transfer_now_btn.disabled = true;
-        }
-        return;
-    }
-
-    // Sort accounts by account number
-    const sortedAccounts = [...user_accounts].sort((a, b) => 
-        a.account_number.localeCompare(b.account_number)
-    );
-
-    // Use the first account as default selected
-    let selectedAccountNumber = window.selectedAccountNumber || sortedAccounts[0].account_number;
-    window.selectedAccountNumber = selectedAccountNumber;
-
-    // Display all accounts
-    sortedAccounts.forEach(account => {
-        const accountElement = document.createElement('div');
-        accountElement.className = 'account-item';
-        if (account.account_number === selectedAccountNumber) {
-            accountElement.classList.add('selected');
-        }
-        accountElement.style.cursor = 'pointer';
-        accountElement.addEventListener('click', (e) => {
-            // Prevent toggling mask when clicking the eye icon
-            if (e.target.classList.contains('account-eye-icon') || e.target.closest('.account-eye-icon')) return;
-            window.selectedAccountNumber = account.account_number;
-            update_balance_display(account.balance);
-            fetchRecentTransactions(account.account_number);
-            updateAccountDisplay();
-        });
-        const accountType = account.account_type 
-            ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1)
-            : 'Savings';
-        // Mask state for this account
-        const isMasked = accountMaskState[account.account_number] !== false;
-        const displayNumber = isMasked ? maskAccountNumber(account.account_number) : account.account_number;
-        const eyeIconClass = isMasked ? 'fa-eye' : 'fa-eye-slash';
-        accountElement.innerHTML = `
-            <div class="account-info">
-                <div class="account-type account-type-large">${accountType} Account</div>
-                <div class="account-number account-number-large">
-                    <span class="account-number-text" data-account-number="${account.account_number}">${displayNumber}</span>
-                    <span class="account-eye-icon" style="margin-left:12px; cursor:pointer; vertical-align:middle;" title="Show/Hide Account Number">
-                        <i class="fas ${eyeIconClass}"></i>
-                    </span>
-                </div>
-            </div>
-        `;
-        // Add event listener for eye icon
-        const eyeIcon = accountElement.querySelector('.account-eye-icon');
-        if (eyeIcon) {
-            eyeIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                accountMaskState[account.account_number] = !isMasked;
-                updateAccountDisplay();
-            });
-        }
-        account_display_container.appendChild(accountElement);
-    });
-
-    // Show balance for selected account
-    const selectedAccount = sortedAccounts.find(a => a.account_number === selectedAccountNumber);
-    if (selectedAccount) {
-        update_balance_display(selectedAccount.balance);
-        fetchRecentTransactions(selectedAccount.account_number);
-    }
-
-    // Enable transfer button
-    if (transfer_now_btn) {
-        transfer_now_btn.disabled = false;
-    }
+    setupAccountDropdown(user_accounts, window.selectedAccountNumber);
 }
 
 // Initialize dashboard
@@ -602,12 +495,12 @@ function toggleAccountNumberMask() {
 
 // Update Balance Display
 function update_balance_display(balance) {
-    if (account_balance_element) {
+    if (dropdownBalance) { // Use dropdownBalance
         const formatted_balance = `₱ ${parseFloat(balance).toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}`;
-        account_balance_element.textContent = formatted_balance;
+        dropdownBalance.textContent = formatted_balance; // Use dropdownBalance
     }
 }
 
@@ -806,6 +699,107 @@ function displayFinancialTip() {
             <p>${tip.content}</p>
         </div>
     `;
+}
+
+// --- Account Dropdown Logic for Balance Card ---
+function setupAccountDropdown(accounts, selectedAccountNumber) {
+    // Helper to mask/unmask
+    function getDisplayNumber(account) {
+        const isMasked = accountMaskState[account.account_number] !== false;
+        return isMasked ? maskAccountNumber(account.account_number) : account.account_number;
+    }
+    function getEyeIconClass(account) {
+        return accountMaskState[account.account_number] !== false ? 'fa-eye' : 'fa-eye-slash';
+    }
+
+    function renderDropdown() {
+        dropdownList.innerHTML = '';
+        accounts.forEach(account => {
+            if (account.account_number === window.selectedAccountNumber) return; // Always use window.selectedAccountNumber
+            const option = document.createElement('div');
+            option.className = 'account-dropdown-option';
+            const isMasked = accountMaskState[account.account_number] !== false;
+            option.innerHTML = `
+                <span class="account-type">${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} Account</span>
+                <span class="account-number" style="margin-left:10px; font-family:monospace;">${isMasked ? maskAccountNumber(account.account_number) : account.account_number}</span>
+            `;
+            option.addEventListener('click', () => {
+                window.selectedAccountNumber = account.account_number;
+                updateAccountDropdownDisplay(account);
+                update_balance_display(account.balance);
+                fetchRecentTransactions(account.account_number);
+                dropdownList.classList.add('hidden');
+                dropdownTrigger.classList.remove('active');
+                renderDropdown(); // Re-render so previous account is available again
+            });
+            dropdownList.appendChild(option);
+        });
+        if (dropdownList.children.length === 0) dropdownList.classList.add('hidden');
+    }
+
+    function updateAccountDropdownDisplay(account) {
+        dropdownType.textContent = `${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} Account`;
+        dropdownNumber.textContent = getDisplayNumber(account);
+        // Update eye icon
+        const icon = dropdownEye.querySelector('i');
+        if (icon) {
+            icon.className = 'fas ' + getEyeIconClass(account);
+        }
+        // Always update balance
+        update_balance_display(account.balance);
+    }
+
+    // Initial display
+    let selected = accounts.find(a => a.account_number === selectedAccountNumber) || accounts[0];
+    if (!selected && accounts.length > 0) selected = accounts[0];
+    if (!selected) {
+        // Fallback/mock data for UI testing
+        selected = { account_type: 'Savings', account_number: '0000000001', balance: 0.00 };
+        accounts = [selected];
+    }
+    updateAccountDropdownDisplay(selected);
+    fetchRecentTransactions(selected.account_number);
+    renderDropdown();
+
+    // Eye icon toggles mask for selected account
+    dropdownEye.onclick = (e) => {
+        e.stopPropagation();
+        const acc = accounts.find(a => a.account_number === window.selectedAccountNumber) || selected;
+        if (!acc) return;
+        accountMaskState[acc.account_number] = !(accountMaskState[acc.account_number] !== false);
+        updateAccountDropdownDisplay(acc);
+    };
+
+    // Show/hide dropdown
+    dropdownArrow.onclick = (e) => {
+        e.stopPropagation();
+        if (accounts.length <= 1) return;
+        dropdownList.classList.toggle('hidden');
+        dropdownTrigger.classList.toggle('active');
+    };
+    dropdownTrigger.onclick = (e) => {
+        e.stopPropagation();
+        if (accounts.length <= 1) return;
+        dropdownList.classList.toggle('hidden');
+        dropdownTrigger.classList.toggle('active');
+    };
+    // Hide dropdown on outside click
+    document.addEventListener('click', (e) => {
+        if (!dropdownList.classList.contains('hidden')) {
+            dropdownList.classList.add('hidden');
+            dropdownTrigger.classList.remove('active');
+        }
+    });
+    // Prevent closing when clicking inside
+    dropdownList.onclick = (e) => e.stopPropagation();
+    // Hide dropdown/arrow if only one account
+    if (accounts.length <= 1) {
+        dropdownTrigger.style.cursor = 'default';
+        dropdownArrow.style.display = 'none';
+        dropdownList.classList.add('hidden');
+    } else {
+        dropdownArrow.style.display = 'flex';
+    }
 }
 
 // --- END OF FILE ---

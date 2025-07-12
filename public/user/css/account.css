@@ -229,9 +229,8 @@
 }
 
 .account-type-badge.savings::before {
-    content: '□';
-    margin-right: 6px;
-    color: #1976d2;
+    display: none !important;
+    content: none !important;
 }
 
 .account-type-badge.credit {
@@ -240,9 +239,8 @@
 }
 
 .account-type-badge.credit::before {
-    content: '◆';
-    margin-right: 6px;
-    color: #7b1fa2;
+    display: none !important;
+    content: none !important;
 }
 
 /* Account Header */
@@ -1035,4 +1033,70 @@
 
 .transfer-button i {
     font-size: 14px;
+} 
+
+/* Mobile S, M, L, Tablet: Make account cards fit screen, no overflow */
+@media (max-width: 425px) {
+  .account-list-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .account-item {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto 12px auto;
+    padding: 12px 6px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    font-size: 1rem;
+  }
+  .info-value {
+    font-size: 1.1rem;
+    word-break: break-all;
+  }
+  .account-type-badge {
+    font-size: 0.95rem;
+    padding: 4px 10px;
+  }
+  .account-status {
+    font-size: 0.95rem;
+  }
+}
+@media (min-width: 426px) and (max-width: 768px) {
+  .account-list-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 2vw;
+    box-sizing: border-box;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .account-item {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto 16px auto;
+    padding: 16px 10px;
+    box-sizing: border-box;
+    border-radius: 18px;
+    font-size: 1.08rem;
+  }
+  .info-value {
+    font-size: 1.18rem;
+    word-break: break-all;
+  }
+  .account-type-badge {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+  .account-status {
+    font-size: 1rem;
+  }
 } 
