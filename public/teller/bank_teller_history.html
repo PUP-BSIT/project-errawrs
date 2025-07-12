@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller History</title>
     <link 
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" 
-          rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" 
+        rel="stylesheet">
     <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/bank_teller_history.css">
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
             <div class="logo">
-                <h1> <span class="stack">Stack</span>
+                <h1>
+                    <span class="stack">Stack</span>
                     <span class="overcash">Overcash</span>
                 </h1>
             </div>
@@ -29,22 +30,28 @@
             </div>
             
             <div class="nav-menu">
-                <a href="bank_teller_dashboard.html" 
-                      class="nav-item">Dashboard</a>
-                <a href="bank_teller_search_account.html"
-                      class="nav-item">Search Account</a>
-                <a href="bank_teller_deposit.html"
-                      class="nav-item">Deposit</a>
-                <a href="bank_teller_withdraw.html"
-                      class="nav-item">Withdraw</a>
-                <a href="bank_teller_review_registration.html"
-                      class="nav-item">Review Registration</a>
+                <a href="bank_teller_dashboard.html" class="nav-item">
+                    Dashboard
+                </a>
+                <a href="bank_teller_search_account.html" class="nav-item">
+                    Search Account
+                </a>
+                <a href="bank_teller_deposit.html" class="nav-item">
+                    Deposit
+                </a>
+                <a href="bank_teller_withdraw.html" class="nav-item">
+                    Withdraw
+                </a>
+                <a href="bank_teller_review_registration.html" class="nav-item">
+                    Review Registration
+                </a>
                 <div class="nav-selected">Transaction</div>
             </div>
 
             <div class="nav-logout">
                 <a href="./bank_teller_login.html">
-                    Log out <i class="fa-solid fa-right-from-bracket"></i>
+                    Log out 
+                    <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
         </div>
@@ -61,7 +68,7 @@
                             <div class="header-cell">ACCOUNT NUMBER</div>
                             <div class="header-cell">ACCOUNT NAME</div>
                             <div class="header-cell">ACCOUNT TYPE</div>
-                            <div class="header-cell amount-header">AMOUNT</div>
+                            <div class="header-cell">AMOUNT</div>
                             <div class="header-cell">DETAILS</div>
                         </div>
                     </div>
@@ -73,16 +80,23 @@
 
                 <div class="pagination-container">
                     <div class="pagination-left">
-                        <button id="prev-btn" class="pagination-btn" onclick="goToPreviousPage()">Previous</button>
+                        <button id="prev-btn" class="pagination-btn" 
+                                onclick="goToPreviousPage()">
+                            Previous
+                        </button>
                         <div id="page-numbers" class="page-numbers">
                             <!-- Page numbers will be populated by JavaScript -->
                         </div>
-                        <button id="next-btn" class="pagination-btn" onclick="goToNextPage()">Next</button>
+                        <button id="next-btn" class="pagination-btn" 
+                                onclick="goToNextPage()">
+                            Next
+                        </button>
                     </div>
                     
                     <div class="pagination-right">
                         <div class="per-page-container">
-                            <select id="per-page-select" class="per-page-select" onchange="changeItemsPerPage()">
+                            <select id="per-page-select" class="per-page-select" 
+                                    onchange="changeItemsPerPage()">
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="15">15</option>
@@ -98,7 +112,9 @@
             </div>
         </div>
     </div>
+    
     <div id="notification_container" class="notification-container"></div>
+    
     <script src="./js/history.js"></script>
 </body>
 </html>

@@ -311,13 +311,10 @@ const DOM = {
 const ProfileManager = {
     async fetchProfile() {
         StateManager.setState({ isLoading: true });
-        console.log('Fetching profile...');
         try {
             const data = await ApiService.getProfile();
-            console.log('API Response:', data);
             
             if (data.success && data.authenticated && data.user) {
-                console.log('Profile fetched successfully. User data:', data.user);
                 StateManager.setState({ 
                     userData: data.user,
                     isFormDirty: false
@@ -336,17 +333,14 @@ const ProfileManager = {
                 }, 2000);
             }
         } catch (error) {
-            console.error('Error during profile fetch:', error);
             ErrorHandler.handle(error, 'fetching profile');
             this.disableForm();
         } finally {
             StateManager.setState({ isLoading: false });
-            console.log('Profile fetch process finished.');
         }
     },
 
     updateDisplay() {
-        console.log('Updating display...');
         const { userData } = StateManager.state;
         const { userNameElement, userAvatarContainer } = DOM;
         
@@ -359,19 +353,15 @@ const ProfileManager = {
             return;
         }
 
-        console.log('User data for display:', userData);
-        
         const fullName = userData.first_name && userData.last_name
             ? `${userData.first_name} ${userData.last_name}`.trim()
             : 'User';
         
         userNameElement.textContent = fullName;
         userAvatarContainer.textContent = fullName.charAt(0).toUpperCase();
-        console.log(`Updated display with name: ${fullName} and initial: ${fullName.charAt(0).toUpperCase()}`);
     },
 
     populateForm() {
-        console.log('Populating form...');
         const { userData } = StateManager.state;
         const {
             editFirstNameInput,
@@ -396,8 +386,6 @@ const ProfileManager = {
             return;
         }
 
-        console.log('User data for form population:', userData);
-
         editUsernameInput.value = userData.username || '';
         editFirstNameInput.value = userData.first_name || '';
         editLastNameInput.value = userData.last_name || '';
@@ -414,7 +402,6 @@ const ProfileManager = {
         
         if (editPasswordInput) editPasswordInput.value = '';
         if (editConfirmPasswordInput) editConfirmPasswordInput.value = '';
-        console.log('Form populated.');
     },
 
     disableForm() {
@@ -550,19 +537,10 @@ const ProfileManager = {
             const data = await response.json();
             StateManager.state.idImageFile = null; // Reset after upload
             if (data.success) {
-                if (changedFields.length > 0) {
-                    changedFields.forEach(field => {
-                        NotificationManager.show(
-                            `${field} updated successfully!`,
-                            CONFIG.NOTIFICATION.TYPES.SUCCESS
-                        );
-                    });
-                } else {
-                    NotificationManager.show(
-                        'No changes were made.',
-                        CONFIG.NOTIFICATION.TYPES.INFO
-                    );
-                }
+                NotificationManager.show(
+                    'Profile updated successfully!',
+                    CONFIG.NOTIFICATION.TYPES.SUCCESS
+                );
                 StateManager.setState({
                     userData: { ...StateManager.state.userData, ...response.user },
                     isFormDirty: false
@@ -798,7 +776,89 @@ if (UpdateIdModal.confirmBtn) {
     };
 }
 
-// Initialize the profile page
+// --- Multi-Step Profile Form Logic ---
 document.addEventListener('DOMContentLoaded', () => {
     ProfileManager.init();
+
+    // Multi-step form logic
+    const steps = Array.from(document.querySelectorAll('.profile-form-step'));
+    const progressSteps = Array.from(document.querySelectorAll('.progress-step'));
+    const nextBtn = document.getElementById('profile_next_btn');
+    const prevBtn = document.getElementById('profile_prev_btn');
+    const saveBtn = document.getElementById('save_profile_button');
+    const resetBtn = document.getElementById('reset_profile_button');
+    let currentStep = 0;
+
+    function showStep(step) {
+        steps.forEach((el, idx) => {
+            el.style.display = idx === step ? 'flex' : 'none';
+            if (idx === step) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+        progressSteps.forEach((el, idx) => {
+            if (idx === step) el.classList.add('active');
+            else el.classList.remove('active');
+        });
+        prevBtn.style.display = step > 0 ? 'inline-flex' : 'none';
+        nextBtn.style.display = step < steps.length - 1 ? 'inline-flex' : 'none';
+        saveBtn.style.display = step === steps.length - 1 ? 'inline-flex' : 'none';
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+    resetBtn.addEventListener('click', () => {
+        currentStep = 0;
+        showStep(currentStep);
+        if (typeof ProfileManager.handleCancel === 'function') {
+            ProfileManager.handleCancel();
+        }
+    });
+    // On submit, stay on last step
+    document.getElementById('profile_form_steps').addEventListener('submit', (e) => {
+        showStep(steps.length - 1);
+    });
+    // Initial state
+    showStep(currentStep);
+
+    // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
+    const hamburgerBtn = document.getElementById('hamburger_btn');
+    const topnavDropdown = document.getElementById('topnav_dropdown');
+    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
+
+    if (hamburgerBtn && topnavDropdown) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (window.innerWidth <= 1024) {
+                topnavDropdown.classList.toggle('open');
+            }
+        });
+        // Close dropdown when clicking a nav link or logout
+        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
+            });
+        });
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+                topnavDropdown.classList.remove('open');
+            }
+        });
+    }
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault();
+            handleLogout();
+        });
+    }
 }); 

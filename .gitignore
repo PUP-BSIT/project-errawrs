@@ -28,4 +28,7 @@ tmp/*
 # Dependencies
 /vendor/
 
+# Dependencies
+/vendor/
+
 .vscode/
