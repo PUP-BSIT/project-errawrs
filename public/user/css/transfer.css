@@ -713,164 +713,146 @@
 }
 
 @media (max-width: 768px) {
-    html,
-    body {
+    html, body {
         width: 100vw;
         max-width: 100vw;
         overflow-x: hidden;
+        background: #f3ffe1;
     }
     .transfer-content {
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-        overflow-x: hidden;
-        font-size: 1rem;
+        margin: 10px auto 0 auto;
+        max-width: 92vw;
+        width: 92vw;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         background: #fff;
+        padding: 10px 2vw 12px 2vw;
     }
     .transfer-content h2 {
-        font-size: 1.5rem;
-        margin-bottom: 18px;
-        word-break: break-word;
-        text-align: center;
-        line-height: 1.2;
+        font-size: 1rem;
+        margin-bottom: 6px;
     }
     .transfer-panel {
-        width: 100vw;
-        max-width: 100vw;
-        padding: 0;
         margin: 0 auto;
-        background: #fff;
-        border-radius: 0;
-        box-shadow: none;
+        max-width: 92vw;
+        width: 100%;
+        border-radius: 8px;
+        padding: 0;
     }
     .panel-header {
-        font-size: 1rem;
-        margin-bottom: 12px;
-        flex-wrap: wrap;
-        word-break: break-word;
-        overflow-x: auto;
-        padding-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        padding-bottom: 2px;
+        margin-bottom: 4px;
         border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+    }
+    .back-button {
+        align-self: flex-start;
+        margin-bottom: 2px;
+        font-size: 0.95rem;
     }
     .panel-header-steps {
-        gap: 8px;
-        padding: 0 1px;
-        font-size: 1rem;
-        flex-wrap: wrap;
-        word-break: break-word;
-        overflow-x: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        font-size: 0.92rem;
+        margin: 0 auto;
     }
     .panel-header-step {
+        max-width: 36vw;
+        font-size: 0.92rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-width: 40vw;
-        font-size: 1rem;
+        position: relative;
+        padding-bottom: 2px;
+    }
+    .panel-header-step.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--color-lime-green);
+        border-radius: 2px;
+        display: block;
     }
     .panel-body {
-        width: 100vw;
-        max-width: 100vw;
-        padding: 18px 5vw 24px 5vw;
-        margin-top: 0;
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        box-sizing: border-box;
+        max-width: 92vw;
+        padding: 6px 0 6px 0;
+        gap: 6px;
     }
     .form-group {
-        width: 100%;
-        max-width: 100vw;
-        min-width: 0;
-        margin-bottom: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        box-sizing: border-box;
+        max-width: 92vw;
+        gap: 2px;
     }
     .form-group label {
-        font-size: 1rem;
-        margin-bottom: 2px;
-        text-align: left;
+        font-size: 0.92rem;
+        margin-bottom: 0;
     }
     .form-group input[type='text'],
     .form-group select {
-        width: 100%;
-        max-width: 100vw;
-        min-width: 0;
-        box-sizing: border-box;
-        font-size: 1.1rem;
-        padding: 12px 10px;
-        border-radius: 6px;
-        margin-bottom: 0;
-        background-clip: padding-box;
+        font-size: 0.92rem;
+        padding: 7px 6px;
+        border-radius: 4px;
     }
     .form-group input[type='text']::placeholder {
-        font-size: 1rem;
-        color: #b0b0b0;
-        opacity: 1;
-        white-space: nowrap;
-        overflow: visible;
+        font-size: 0.91rem;
     }
     .custom-select select {
-        padding-right: 6px;
+        padding-right: 4px;
     }
     .select-arrow {
-        right: 1px;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
     .checkbox-group {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1rem;
-        margin: 10px 0 10px 0;
-        padding-left: 2px;
+        max-width: 92vw;
+        gap: 4px;
+        font-size: 0.91rem;
+        margin: 6px 0 6px 0;
+        padding-left: 1px;
     }
     .checkbox-group input[type='checkbox'] {
-        width: 18px;
-        height: 18px;
-        border-radius: 3px;
-        margin-right: 4px;
+        width: 14px;
+        height: 14px;
+        border-radius: 2px;
+        margin-right: 2px;
     }
     .radio-option {
-        font-size: 1rem;
-        padding: 10px 10px;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        max-width: 100%;
-        min-height: 32px;
-        box-sizing: border-box;
+        font-size: 0.91rem;
+        padding: 6px 6px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        min-height: 22px;
     }
     .radio-option input[type='radio'] {
-        width: 18px;
-        height: 18px;
-        margin-right: 8px;
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
     }
     .radio-option input[type='radio']:checked::before {
-        width: 10px;
-        height: 10px;
+        width: 6px;
+        height: 6px;
     }
     .radio-option label {
-        font-size: 1rem;
+        font-size: 0.91rem;
     }
     .next-btn,
     .send-btn {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
-        font-size: 1.1rem;
-        padding: 16px;
-        border-radius: 6px;
-        margin-top: 16px;
-        margin-bottom: 2px;
+        max-width: 92vw;
+        font-size: 0.97rem;
+        padding: 8px;
+        border-radius: 4px;
+        margin-top: 6px;
+        margin-bottom: 1px;
     }
 }
 
