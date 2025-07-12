@@ -1,6 +1,7 @@
 # Environment variables
 .env
 
+# Configuration files
 dev.stackovercash.site.conf
 nginx.conf
 techblinders_api.md
@@ -18,17 +19,11 @@ debug.log
 # Temporary files
 tmp/
 !tmp/.gitkeep
-tmp/*
-!tmp/.gitkeep
 /tmp/
 !/tmp/.gitkeep
-/tmp/*
-!/tmp/.gitkeep
 
 # Dependencies
 /vendor/
 
-# Dependencies
-/vendor/
-
+# IDE files
 .vscode/
