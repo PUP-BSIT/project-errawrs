@@ -107,7 +107,8 @@ const ROUTES = {
     TRANSFER: '/user/transfer',
     TRANSFER_SUCCESS: '/user/transfer_success',
     TRANSFER_FAILED: '/user/transfer_failed',
-    CONTACT: '/contact',
+    CONTACT: '/contact-us',
+    ABOUT: '/about-us',
     REGISTRATION: '/registration',
 };
 

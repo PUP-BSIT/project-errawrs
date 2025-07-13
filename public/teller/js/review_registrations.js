@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '/api_config.js';
+
 // State object to hold all registration review data
 const regReviewState = {
     currentPage: 1,
@@ -6,16 +8,6 @@ const regReviewState = {
     allRegistrations: [],
     filteredRegistrations: []
 };
-
-// Get the base URL for API requests
-function getBaseURL() {
-        const protocol = window.location.protocol;
-        const host = window.location.host;
-        if (host === 'dev-teller.stackovercash.site') {
-        return protocol + '//' + host + '/api';
-        }
-    return protocol + '//' + host + '/project-errawrs/src/api';
-    }
 
 // Set up event listeners for filter and search
 function setupEventListeners() {
@@ -53,8 +45,7 @@ function setupEventListeners() {
 // Load registrations from the server
 async function loadRegistrations() {
         try {
-        const baseUrl = getBaseURL();
-        const url = new URL(baseUrl + '/teller/get_registrations.php');
+        const url = new URL(API_ENDPOINTS?.TELLER_REGISTRATIONS || '/api/teller/registrations', window.location.origin);
         url.searchParams.append('status', regReviewState.currentStatus);
             url.searchParams.append('page', 1);
             url.searchParams.append('per_page', 1000);
@@ -259,10 +250,10 @@ function updatePagination() {
     const totalPages =
         Math.ceil(regReviewState.filteredRegistrations.length /
             regReviewState.itemsPerPage) || 1;
-        const pageNumbers = document.getElementById('page-numbers');
-        if (pageNumbers) {
-            let html = '';
-            for (let i = 1; i <= totalPages; i++) {
+    const pageNumbers = document.getElementById('page-numbers');
+    if (pageNumbers) {
+        let html = '';
+        for (let i = 1; i <= totalPages; i++) {
             html +=
                 '<button class="page-number ' +
                 (i === regReviewState.currentPage ? 'active' : '') +
@@ -271,14 +262,28 @@ function updatePagination() {
                 ')">' +
                 i +
                 '</button>';
-            }
-            pageNumbers.innerHTML = html;
         }
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-    if (prevBtn) prevBtn.disabled = regReviewState.currentPage === 1;
-    if (nextBtn) nextBtn.disabled = regReviewState.currentPage === totalPages;
+        pageNumbers.innerHTML = html;
     }
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    if (prevBtn) {
+        prevBtn.disabled = regReviewState.currentPage === 1;
+        prevBtn.onclick = function() {
+            if (regReviewState.currentPage > 1) {
+                goToPage(regReviewState.currentPage - 1);
+            }
+        };
+    }
+    if (nextBtn) {
+        nextBtn.disabled = regReviewState.currentPage === totalPages;
+        nextBtn.onclick = function() {
+            if (regReviewState.currentPage < totalPages) {
+                goToPage(regReviewState.currentPage + 1);
+            }
+        };
+    }
+}
 
 // Show details view for a registration
 function viewDetails(registrationId) {
@@ -490,47 +495,7 @@ async function handleAction(registrationId, action) {
             }
             return;
         }
-        const response = await fetch(
-            getBaseURL() + '/teller/review_registration.php',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    registration_id: registrationId,
-                    action: action,
-                }),
-            }
-        );
-            const responseText = await response.text();
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch (e) {
-            throw new Error('Invalid response from server');
-            }
-            if (!response.ok || !data.success) {
-            throw new Error(
-                data.error || data.details || 'Failed to process registration'
-            );
-            }
-        closeConfirmationModal();
-            const appModal = document.getElementById('application_modal');
-            if (appModal) {
-                appModal.classList.add('hidden');
-            }
-        showNotification(
-            'Application successfully ' +
-                (action === 'approve' ? 'approved' : 'denied'),
-                'success'
-            );
-        if (detailsView) {
-            detailsView.remove();
-            document.querySelector('.filter-section').classList.remove('hidden');
-            document.querySelector('.applications-grid').classList.remove('hidden');
-            document.querySelector('.pagination-container').classList.remove('hidden');
-        }
-        await loadRegistrations();
+        await reviewRegistration(registrationId, action);
         } catch (error) {
         showNotification(error.message, 'error');
     } finally {
@@ -585,6 +550,26 @@ function closeConfirmationModal() {
         const modal = document.getElementById('confirmation_modal');
         modal.classList.remove('active');
     }
+
+// Update review/approve/reject registration API call
+async function reviewRegistration(registrationId, action, reason = '') {
+    try {
+        const response = await fetch(API_ENDPOINTS?.TELLER_REVIEW_REGISTRATION || '/api/teller/registrations/review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ registration_id: registrationId, action, reason })
+        });
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Unknown error');
+        }
+        showNotification('Registration updated successfully', 'success');
+        loadRegistrations();
+    } catch (error) {
+        showNotification(error.message, 'error');
+    }
+}
 
 // Go to a specific page
 function goToPage(page) {
@@ -641,4 +626,9 @@ document.addEventListener('DOMContentLoaded', () => {
             avatarElement.textContent = initial;
         }
     }
-}); 
+});
+
+window.handleAction = handleAction;
+window.viewDetails = viewDetails;
+window.goBack = goBack;
+window.goToPage = goToPage; 

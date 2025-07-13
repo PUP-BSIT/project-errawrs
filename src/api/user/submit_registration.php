@@ -143,7 +143,7 @@ function insertRegistrationRequest($db, $input) {
 }
 
 function createUploadDirectory($registrationId) {
-    $uploadDir = __DIR__ . '/uploads/registration/' . $registrationId;
+    $uploadDir = __DIR__ . '/../../../uploads/registration/' . $registrationId;
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }

@@ -1,9 +1,11 @@
+import { API_ENDPOINTS } from '/api_config.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Get teller info from session storage (like dashboard)
     const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
     if (!tellerInfo || !tellerInfo.teller_number) {
         console.error("No teller info found in session storage");
-        window.location.href = "./bank_teller_login.html";
+        window.location.href = "/login";
         return;
     }
 
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Try to get detailed teller information from API
     try {
-        const response = await fetch(`../../src/api/teller/view_profile.php?teller_number=${tellerInfo.teller_number}`, {
+        const response = await fetch(`${API_ENDPOINTS.TELLER_PROFILE}?teller_number=${tellerInfo.teller_number}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });

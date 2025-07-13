@@ -1,25 +1,10 @@
+import { API_ENDPOINTS } from '/api_config.js';
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
     console.error("No teller info found in session storage");
-    window.location.href = "./bank_teller_login.html";
+    window.location.href = "/login";
 }
-
-// Configuration - Dynamic base URL detection
-function getBaseURL() {
-    const host = window.location.hostname;
-    
-    // Check if we're on the EC2 server
-    if (host === 'dev-teller.stackovercash.site') {
-        return '/api';
-    }
-    
-    // Local XAMPP environment
-    return '/project-errawrs/src/api';
-}
-
-// Get the API base URL
-const API_BASE_URL = getBaseURL();
 
 // Define maximum deposit amount
 const MAX_DEPOSIT_AMOUNT = 500000;
@@ -146,15 +131,13 @@ accountInput.addEventListener('input', function(e) {
             try {
                 searchSpinner.classList.add('active');
                 
-                const response = await fetch('/project-errawrs/src/api/teller/search_account.php', {
-                    method: 'POST',
+                // Use GET request with query parameters
+                const url = `${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`;
+                const response = await fetch(url, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        search: searchTerm,
-                        teller_number: tellerInfo.teller_number
-                    })
+                    }
                 });
 
                 const data = await response.json();
@@ -351,6 +334,9 @@ function confirmAmount() {
     updateSteps(2);
 }
 
+// Make confirmAmount globally available for HTML onclick
+window.confirmAmount = confirmAmount;
+
 // Back to amount entry
 function backToAmount() {
     document.getElementById('confirmation').classList.add('hidden');
@@ -368,7 +354,7 @@ async function submitDeposit() {
     toggleLoading(true, amount);
     
     try {
-        const response = await fetch('/project-errawrs/src/api/teller/deposit.php', {
+        const response = await fetch(API_ENDPOINTS.TELLER_DEPOSIT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -438,6 +424,8 @@ async function submitDeposit() {
         toggleLoading(false);
     }
 }
+// Make submitDeposit globally available for HTML onclick
+window.submitDeposit = submitDeposit;
 
 // Finish transaction and return to search
 function finishTransaction() {
@@ -481,6 +469,8 @@ function finishTransaction() {
     document.querySelector('.validation-message').style.display = 'none';
     document.getElementById('deposit_amount').classList.remove('error');
 }
+// Make finishTransaction globally available for HTML onclick
+window.finishTransaction = finishTransaction;
 
 // Add input validation for amount
 amountInput.addEventListener('input', function(e) {
@@ -528,7 +518,7 @@ async function handleDeposit(event) {
 
     try {
         // First, verify the account exists and is active
-        const accountResponse = await fetch(`${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(accountNumber)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`, {
+        const accountResponse = await fetch(`${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(accountNumber)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`, {
             credentials: 'include'
         });
         const accountData = await accountResponse.json();
@@ -539,7 +529,7 @@ async function handleDeposit(event) {
         }
 
         // Proceed with deposit
-        const response = await fetch(`${API_BASE_URL}/teller/deposit.php`, {
+        const response = await fetch(API_ENDPOINTS.TELLER_DEPOSIT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
