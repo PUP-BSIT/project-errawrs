@@ -11,7 +11,7 @@
     <link 
         rel="stylesheet" 
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/bank_teller_history.css">
+    <link rel="stylesheet" href="/teller/css/bank_teller_history.css">
 </head>
 <body>
     <div class="container">
@@ -24,35 +24,34 @@
             </div>
             
             <div class="user-profile">
-                <a href="user/profile">
+                <a href="/profile">
                     <div class="user-avatar dynamic-avatar"></div>
                 </a>
                 <div class="user-name"></div>
             </div>
             
             <div class="nav-menu">
-                <a href="teller/dashboard" class="nav-item">
+                <a href="/dashboard" class="nav-item">
                     Dashboard
                 </a>
-                <a href="user/account" class="nav-item">
+                <a href="/search" class="nav-item">
                     Search Account
                 </a>
-                <a href="teller/deposit" class="nav-item">
+                <a href="/deposit" class="nav-item">
                     Deposit
                 </a>
-                <a href="teller/withdraw" class="nav-item">
+                <a href="/withdraw" class="nav-item">
                     Withdraw
                 </a>
-                <a href="register" class="nav-item">
+                <a href="/registrations" class="nav-item">
                     Review Registration
                 </a>
                 <div class="nav-selected">Transaction</div>
             </div>
 
             <div class="nav-logout">
-                <a href="login/teller">
-                    Log out 
-                    <i class="fa-solid fa-right-from-bracket"></i>
+                <a href="/login" onclick="tellerLogout(); return false;">
+                    Log out <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
         </div>
@@ -116,6 +115,7 @@
     
     <div id="notification_container" class="notification-container"></div>
     
-    <script src="js/history.js"></script>
+    <script type="module" src="/teller/js/history.js"></script>
+    <script type="module" src="/teller/js/logout.js"></script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+1. go to apache configuration: xampp then click the config button > Apache (httpd.conf)
+
+search for "DocumentRoot"
+
+C:xampp/htdocs - this is replaceable with the actual directory of your xampp folder. 
+    just add project-errawrs/public
+replace your whole DocumentRoot with this or you can just edit:
+
+DocumentRoot "C:/xampp/htdocs/project-errawrs/public"
+
+<Directory "C:/xampp/htdocs">
+    Options Indexes FollowSymLinks Includes ExecCGI
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory "C:/xampp/htdocs/project-errawrs/public">
+    Options Indexes FollowSymLinks Includes ExecCGI
+    AllowOverride All
+    Require all granted
+</Directory>
+
+
+2. on the same file, Search for "LoadModule rewrite_module modules/mod_rewrite.so"
+uncomment it(remove # at the start) then save it
+
+3. you can now access localhost/ and it will point to landing page of the project

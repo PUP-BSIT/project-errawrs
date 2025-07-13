@@ -1,6 +1,8 @@
 // Bank Teller Search Account - Main JavaScript File
 // This file handles account search functionality for bank tellers
 
+import { API_ENDPOINTS, ROUTES } from '/api_config.js';
+
 // ============================================================================
 // INITIALIZATION AND CONFIGURATION
 // ============================================================================
@@ -9,16 +11,8 @@
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
     console.error("No teller info found in session storage");
-    window.location.href = "./bank_teller_login.html";
+    window.location.href = "/login";
 }
-
-// Get API base URL based on environment
-function getBaseURL() {
-    const host = window.location.hostname;
-    return host === 'dev-teller.stackovercash.site' ? '/api' : '/project-errawrs/src/api';
-}
-
-const API_BASE_URL = getBaseURL();
 
 // ============================================================================
 // DOM ELEMENTS
@@ -201,10 +195,10 @@ function handleActionButtonClick(button, account, balance) {
     
     if (button.classList.contains('deposit')) {
         sessionStorage.setItem("selectedAccount", JSON.stringify(accountData));
-        window.location.href = "./bank_teller_deposit.html";
+        window.location.href = ROUTES.TELLER_DEPOSIT;
     } else if (button.classList.contains('withdraw')) {
         sessionStorage.setItem("selectedAccount", JSON.stringify(accountData));
-        window.location.href = "./bank_teller_withdraw.html";
+        window.location.href = ROUTES.TELLER_WITHDRAW;
     } else if (button.classList.contains('close')) {
         sessionStorage.setItem("currentAccount", JSON.stringify(accountData));
         closeAccount();
@@ -234,7 +228,7 @@ async function searchAccount() {
 
     try {
         const response = await fetch(
-            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
+            `${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(searchTerm)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
         const data = await response.json();
 
@@ -295,7 +289,7 @@ async function closeAccount() {
     showLoadingOverlay("Closing account...");
 
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/close_account.php`, {
+        const response = await fetch(`${API_ENDPOINTS.TELLER_CLOSE_ACCOUNT}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -334,7 +328,7 @@ async function reopenAccount() {
     showLoadingOverlay("Reopening account...");
 
     try {
-        const response = await fetch(`${API_BASE_URL}/teller/reopen_account.php`, {
+        const response = await fetch(`${API_ENDPOINTS.TELLER_REOPEN_ACCOUNT}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -355,7 +349,7 @@ async function reopenAccount() {
 
         // Fetch updated account data to refresh the UI
         const searchResponse = await fetch(
-            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(account.account_number)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
+            `${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(account.account_number)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
         const searchData = await searchResponse.json();
 

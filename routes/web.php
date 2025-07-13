@@ -6,6 +6,59 @@
  * Routes are organized by user type and functionality.
  */
 
+$host = $_SERVER['HTTP_HOST'] ?? '';
+if (strpos($host, 'teller.') === 0) {
+    // Teller subdomain routes
+    $router->get('/', 'public/teller/bank_teller_login.html');
+    $router->get('/login', 'public/teller/bank_teller_login.html');
+    $router->get('/dashboard', 'public/teller/bank_teller_dashboard.html');
+    $router->get('/search', 'public/teller/bank_teller_search_account.html');
+    $router->get('/deposit', 'public/teller/bank_teller_deposit.html');
+    $router->get('/withdraw', 'public/teller/bank_teller_withdraw.html');
+    $router->get('/history', 'public/teller/bank_teller_history.html');
+    $router->get('/profile', 'public/teller/bank_teller_view_profile.html');
+    $router->get('/registrations', 'public/teller/bank_teller_review_registration.html');
+    $router->get('/set-password', 'public/teller/set_password.html');
+    $router->get('/reset-password', 'public/teller/reset_password.html');
+    
+    // Favicon for teller subdomain
+    $router->get('/favicon.ico', function() {
+        $path = "public/assets/images/favicon.ico";
+        if (file_exists($path)) {
+            header('Content-Type: image/x-icon');
+            readfile($path);
+        } else {
+            http_response_code(404);
+        }
+    });
+    
+    // Asset and error routes remain the same
+    return $router;
+}
+if (strpos($host, 'admin.') === 0) {
+    // Admin subdomain routes
+    $router->get('/', 'public/admin/login.html');
+    $router->get('/login', 'public/admin/login.html');
+    $router->get('/dashboard', 'public/admin/dashboard.html');
+    $router->get('/users', 'public/admin/user_accounts.html');
+    $router->get('/tellers', 'public/admin/manage_tellers.html');
+    $router->get('/transactions', 'public/admin/transactions.html');
+    
+    // Favicon for admin subdomain
+    $router->get('/favicon.ico', function() {
+        $path = "public/assets/images/favicon.ico";
+        if (file_exists($path)) {
+            header('Content-Type: image/x-icon');
+            readfile($path);
+        } else {
+            http_response_code(404);
+        }
+    });
+    
+    // Asset and error routes remain the same
+    return $router;
+}
+
 // =====================================================
 // PUBLIC ROUTES (No Authentication Required)
 // =====================================================
@@ -16,8 +69,8 @@ $router->get('/home', 'public/user/index.html');
 $router->get('/landing', 'public/user/index.html');
 
 // About and information pages
-$router->get('/about', 'public/user/about.html');
-$router->get('/contact', 'public/user/contact_us.html');
+$router->get('/about-us', 'public/user/about.html');
+$router->get('/contact-us', 'public/user/contact_us.html');
 $router->get('/privacy-policy', 'public/user/privacy_policy.html');
 
 // =====================================================
@@ -26,9 +79,6 @@ $router->get('/privacy-policy', 'public/user/privacy_policy.html');
 
 // Login pages
 $router->get('/login', 'public/user/login_account_holder.html');
-$router->get('/login/user', 'public/user/login_account_holder.html');
-$router->get('/login/teller', 'public/teller/bank_teller_login.html');
-$router->get('/login/admin', 'public/admin/login.html');
 
 // Registration pages
 $router->get('/register', 'public/user/registration.html');
@@ -54,24 +104,6 @@ $router->get('/user/transfer', 'public/user/transfer.html');
 $router->get('/user/transfer/success', 'public/user/transfer_success.html');
 $router->get('/user/transfer/failed', 'public/user/transfer_failed.html');
 
-// =====================================================
-// TELLER ROUTES
-// =====================================================
-
-// Teller dashboard and main pages
-$router->get('/teller/dashboard', 'public/teller/bank_teller_dashboard.html');
-$router->get('/teller/search', 'public/teller/bank_teller_search_account.html');
-$router->get('/teller/deposit', 'public/teller/bank_teller_deposit.html');
-$router->get('/teller/withdraw', 'public/teller/bank_teller_withdraw.html');
-$router->get('/teller/history', 'public/teller/bank_teller_history.html');
-$router->get('/teller/profile', 'public/teller/bank_teller_view_profile.html');
-
-// Teller registration management
-$router->get('/teller/registrations', 'public/teller/bank_teller_review_registration.html');
-
-// Teller password management
-$router->get('/teller/set-password', 'public/teller/set_password.html');
-$router->get('/teller/reset-password', 'public/teller/reset_password.html');
 
 // =====================================================
 // ADMIN ROUTES
@@ -107,14 +139,20 @@ $router->get('/css/{file}', function($file) {
 
 // JavaScript files
 $router->get('/js/{file}', function($file) {
-    $path = "public/assets/js/{$file}";
-    if (file_exists($path)) {
-        header('Content-Type: application/javascript');
-        readfile($path);
-    } else {
-        http_response_code(404);
-        echo "JavaScript file not found";
+    $paths = [
+        "public/user/js/{$file}",
+        "public/teller/js/{$file}",
+        "public/admin/js/{$file}"
+    ];
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            header('Content-Type: application/javascript');
+            readfile($path);
+            return;
+        }
     }
+    http_response_code(404);
+    echo "JavaScript file not found";
 });
 
 // Image files
