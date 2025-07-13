@@ -8,20 +8,56 @@ replace your whole DocumentRoot with this or you can just edit:
 
 DocumentRoot "C:/xampp/htdocs/project-errawrs/public"
 
-<Directory "C:/xampp/htdocs">
-    Options Indexes FollowSymLinks Includes ExecCGI
-    AllowOverride All
-    Require all granted
-</Directory>
+<VirtualHost *:80>
+    ServerName stackovercash.site.local
+    DocumentRoot "C:/xampp/htdocs/project-errawrs/public"
+    
+    <Directory "C:/xampp/htdocs/project-errawrs/public">
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
 
-<Directory "C:/xampp/htdocs/project-errawrs/public">
-    Options Indexes FollowSymLinks Includes ExecCGI
-    AllowOverride All
-    Require all granted
-</Directory>
+# Teller Subdomain
+<VirtualHost *:80>
+    ServerName teller.stackovercash.site.local
+    DocumentRoot "C:/xampp/htdocs/project-errawrs/public"
+    
+    <Directory "C:/xampp/htdocs/project-errawrs/public">
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+# Admin Subdomain
+<VirtualHost *:80>
+    ServerName admin.stackovercash.site.local
+    DocumentRoot "C:/xampp/htdocs/project-errawrs/public"
+    
+    <Directory "C:/xampp/htdocs/project-errawrs/public">
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
 
 
 2. on the same file, Search for "LoadModule rewrite_module modules/mod_rewrite.so"
 uncomment it(remove # at the start) then save it
 
-3. you can now access localhost/ and it will point to landing page of the project
+3. go to "C:\Windows\System32\drivers\etc"
+open the "hosts" file as administrator. 
+you can click win+r 
+then type "notepad C:\Windows\System32\drivers\etc\hosts"
+then ctrl+shift+enter
+it will open the hosts file as administrator, just click yes for prompt.
+
+4. add this to the very bottom
+# Local Development - StackOverCash Project
+127.0.0.1   stackovercash.site.local
+127.0.0.1   teller.stackovercash.site.local
+127.0.0.1   admin.stackovercash.site.local
+
+5. you can now access 3 subdomains and it will point to landing page of the project
