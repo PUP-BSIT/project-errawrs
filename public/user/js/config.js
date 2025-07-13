@@ -124,5 +124,3 @@ window.ROUTES = ROUTES;
 window.API_ENDPOINTS = API_ENDPOINTS;
 window.API_BASE_URL = API_BASE_URL;
 console.log('config.js loaded, ROUTES =', window.ROUTES); 
-
-export { API_ENDPOINTS, ROUTES, API_BASE_URL }; 

@@ -8,7 +8,8 @@ import * as notifications from './register-notifications.js';
 import { submitRegistrationData } from './register-submit.js';
 import { initFileUpload, setOnFileChangeCallback } from './register-file-upload.js';
 import { hideLoading, hideOtpModal } from './register-otp-modal.js';
-import { API_ENDPOINTS } from './config.js';
+// import { API_ENDPOINTS } from './config.js';
+const API_ENDPOINTS = window.API_ENDPOINTS;
 
 const FORM_VALIDATION = {
 	FIRST_NAME_MIN_LENGTH: 2,
