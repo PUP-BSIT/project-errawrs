@@ -3,9 +3,9 @@ require_once __DIR__ . '/../../config/SessionManager.php';
 
 $session = SessionManager::getInstance();
 
-// Prevent any HTML error output
+// Enable error display for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 
 // Set JSON header first before any output
 header("Access-Control-Allow-Origin: *");
@@ -14,10 +14,14 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
 // Function to handle errors
-function sendError($message, $code = 400) {
+function sendError($message, $code = 400, $details = null) {
     error_log("Toggle Teller Status Error: " . $message);
     http_response_code($code);
-    echo json_encode(['success' => false, 'message' => $message]);
+    $response = ['success' => false, 'message' => $message];
+    if ($details) {
+        $response['details'] = $details;
+    }
+    echo json_encode($response);
     exit();
 }
 
@@ -98,5 +102,9 @@ try {
 
 } catch (Exception $e) {
     error_log("Toggle Teller Status Exception: " . $e->getMessage());
-    sendError('Server error: ' . $e->getMessage(), 500);
+    sendError('Server error: ' . $e->getMessage(), 500, [
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString()
+    ]);
 } 

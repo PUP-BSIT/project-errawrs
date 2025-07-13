@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" href="../assets/images/soc-logo.png" />
+        <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <title>StackOvercash - Account</title>
-        <link
-            rel="icon"
-            type="image/x-icon"
-            href="../assets/images/favicon.ico"
-        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -20,8 +16,8 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
-        <link rel="stylesheet" href="./css/user_dashboard.css" />
-        <link rel="stylesheet" href="./css/account.css" />
+        <link rel="stylesheet" href="/user/css/user_dashboard.css" />
+        <link rel="stylesheet" href="/user/css/account.css" />
     </head>
     <body class="authenticated-page">
         <!-- Mobile Header -->
@@ -35,11 +31,11 @@
         </header>
         <!-- Topnav Dropdown Nav (mobile/tablet) -->
         <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
-            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
-            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
-            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
-            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <a href="/user/dashboard" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="/user/transfer" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="/user/transactions" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="/user/account" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="/user/profile" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
             <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
         </nav>
         <div class="mobile-top-row hidden" id="mobile_top_row"></div>
@@ -63,7 +59,7 @@
                     <ul class="nav-list">
                         <li class="nav-item">
                             <a
-                                href="./user_dashboard.html"
+                                href="/user/dashboard"
                                 class="nav-link"
                                 data-page="dashboard"
                                 aria-label="Dashboard"
@@ -77,7 +73,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="./transfer.html"
+                                href="/user/transfer"
                                 class="nav-link"
                                 data-page="transfer"
                                 aria-label="Transfer funds"
@@ -91,7 +87,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="./transaction.html"
+                                href="/user/transactions"
                                 class="nav-link"
                                 data-page="transaction"
                                 aria-label="View transactions"
@@ -105,7 +101,7 @@
                         </li>
                         <li class="nav-item active">
                             <a
-                                href="./account.html"
+                                href="/user/account"
                                 class="nav-link"
                                 data-page="account"
                                 aria-label="Manage accounts"
@@ -116,7 +112,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="./profile.html"
+                                href="/user/profile"
                                 class="nav-link"
                                 data-page="profile"
                                 aria-label="User profile"
@@ -376,10 +372,10 @@
         </div>
 
         <!-- Scripts -->
-        <script src="./js/config.js"></script>
-        <script src="./js/auth-guard.js"></script>
-        <script src="./js/session-manager.js"></script>
-        <script src="./js/account.js"></script>
-        <script src="./js/logout.js"></script>
+        <script src="/user/js/config.js"></script>
+        <script src="/user/js/auth-guard.js"></script>
+        <script src="/user/js/session-manager.js"></script>
+        <script src="/user/js/account.js"></script>
+        <script src="/user/js/logout.js"></script>
     </body>
 </html>

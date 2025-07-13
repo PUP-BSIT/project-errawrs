@@ -8,6 +8,7 @@ import * as notifications from './register-notifications.js';
 import { submitRegistrationData } from './register-submit.js';
 import { initFileUpload, setOnFileChangeCallback } from './register-file-upload.js';
 import { hideLoading, hideOtpModal } from './register-otp-modal.js';
+import { API_ENDPOINTS } from '../config.js';
 
 const FORM_VALIDATION = {
 	FIRST_NAME_MIN_LENGTH: 2,
@@ -16,7 +17,7 @@ const FORM_VALIDATION = {
 	MAX_AGE: 100,
 };
 
-const API_ENDPOINT = '/project-errawrs/src/api/user/submit_registration.php';
+const API_ENDPOINT = API_ENDPOINTS.SUBMIT_REGISTRATION;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Step navigation

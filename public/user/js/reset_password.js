@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function verifyToken(token) {
         try {
-            const response = await fetch('../../src/api/user/verify_reset_token.php', {
+            const response = await fetch(API_ENDPOINTS.VERIFY_RESET_TOKEN, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: token })
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         submitButton.textContent = 'Resetting...';
 
         try {
-            const response = await fetch('../../src/api/user/reset_password.php', {
+            const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: token, password: password })

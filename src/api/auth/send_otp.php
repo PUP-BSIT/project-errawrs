@@ -79,13 +79,16 @@ try {
     $senderId = $_ENV['SEMAPHORE_SENDER_ID'];
     $apiUrl = $_ENV['SEMAPHORE_API_URL'];
 
+    // FOR TESTING: Use fixed OTP but still send SMS
+    $otp = '123456';
+    
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
         'apikey' => $apiKey,
         'number' => $formattedPhone,
-        'message' => 'Your OTP is {otp}. DO NOT SHARE THIS TO ANYONE.',
+        'message' => 'Your OTP is ' . $otp . '. DO NOT SHARE THIS TO ANYONE.',
         'sendername' => $senderId
     ]));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -108,13 +111,6 @@ try {
     if (!$apiResponse || isset($apiResponse['error'])) {
         error_log("Semaphore API Error Response: " . $response);
         throw new Exception('Failed to send OTP via SMS: ' . ($apiResponse['error'] ?? 'Unknown error'));
-    }
-
-    // Get the OTP code from the API response
-    $otp = $apiResponse[0]['code'] ?? null;
-    if (!$otp) {
-        error_log("Semaphore API Error: No OTP code in response");
-        throw new Exception('Failed to generate OTP. Please try again.');
     }
 
     error_log("Send OTP - Generated OTP: " . $otp);

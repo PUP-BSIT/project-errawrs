@@ -20,7 +20,7 @@ function handlePreflightRequest() {
 }
 
 function validateUserAuthentication() {
-    global $sessionManager;
+    $sessionManager = SessionManager::getInstance();
     if (!$sessionManager->isAuthenticated()) {
         if (DEBUG) {
             error_log("Unauthorized access attempt to accounts.php. Session data: " . 

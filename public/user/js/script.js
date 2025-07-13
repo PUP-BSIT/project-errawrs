@@ -24,13 +24,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createDots() {
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < dotCount; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToIndex(i));
-            dotsContainer.appendChild(dot);
+        const dotsContainer = document.getElementById('dots-container');
+        if (dotsContainer) {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToIndex(i));
+                dotsContainer.appendChild(dot);
+            }
         }
     }
     
@@ -42,16 +45,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function goToIndex(index) {
-        let cardWidth, gap;
+        const slide = cards[index];
+        if (!slide) return; // Prevents error if slide is undefined
+        const width = slide.offsetWidth;
+        let gap;
         if (window.innerWidth <= 700) {
-            cardWidth = cards[0].offsetWidth; // Use the actual card width (90vw)
             gap = 0;
         } else {
-            cardWidth = cards[0].offsetWidth;
             gap = parseInt(getComputedStyle(track).gap) || 32;
         }
         currentIndex = Math.max(0, Math.min(index, cards.length - 1));
-        let offset = currentIndex * (cardWidth + gap);
+        let offset = currentIndex * (width + gap);
 
         const maxOffset = Math.max(0, track.scrollWidth - track.parentElement.offsetWidth);
         if (offset > maxOffset) offset = maxOffset;
@@ -60,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         track.style.transform = `translateX(-${offset}px)`;
 
         // Update currentIndex to match the actual offset (for dots/buttons)
-        currentIndex = Math.round(offset / (cardWidth + gap));
+        currentIndex = Math.round(offset / (width + gap));
         updateDots();
     }
     
@@ -77,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Event listeners
-    nextBtn.addEventListener('click', nextCard);
-    prevBtn.addEventListener('click', prevCard);
+    if (nextBtn) nextBtn.addEventListener('click', nextCard);
+    if (prevBtn) prevBtn.addEventListener('click', prevCard);
     
     // Responsive
     let resizeTimeout;

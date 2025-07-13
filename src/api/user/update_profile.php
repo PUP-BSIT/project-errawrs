@@ -9,7 +9,7 @@ header('Content-Type: application/json');
 define('DEBUG', true);
 
 function validateUserAuthentication() {
-    global $session;
+    $session = SessionManager::getInstance();
     if (!$session->isAuthenticated() || 
         !isset($_SESSION['auth']['type']) || 
         $_SESSION['auth']['type'] !== 'user') {
@@ -20,7 +20,8 @@ function validateUserAuthentication() {
 }
 
 function validateHttpMethod() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $allowedMethods = ['GET', 'POST', 'PUT'];
+    if (!in_array($_SERVER['REQUEST_METHOD'], $allowedMethods)) {
         http_response_code(405);
         echo json_encode(['success' => false, 'error' => 'Method Not Allowed']);
         exit();
@@ -175,6 +176,41 @@ validateUserAuthentication();
 validateHttpMethod();
 
 $userId = $_SESSION['auth']['id'];
+
+// Handle GET request for viewing profile
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    try {
+        $db = db_connect();
+        
+        $query = "SELECT user_id, username, first_name, last_name, email, phone_number, 
+                         street, city, zip_code, country, created_at 
+                  FROM user WHERE user_id = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        
+        if ($user) {
+            echo json_encode([
+                'success' => true,
+                'user' => $user
+            ]);
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'error' => 'User not found']);
+        }
+        
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'Server error']);
+    } finally {
+        if (isset($db)) $db->close();
+    }
+    exit();
+}
+
+// Handle POST/PUT requests for updating profile
 $requestData = getRequestData();
 $profileData = extractProfileData($requestData['data']);
 

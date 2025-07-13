@@ -222,7 +222,14 @@ validateHttpMethod();
 validateOtpVerification();
 validateFileUpload();
 
-$input = json_decode($_POST['data'] ?? '{}', true);
+// Handle both JSON and multipart form data
+if (isset($_POST['data'])) {
+    // JSON data format
+    $input = json_decode($_POST['data'], true);
+} else {
+    // Multipart form data format
+    $input = $_POST;
+}
 validateRequiredFields($input);
 validatePhoneNumber($input['phone_number']);
 

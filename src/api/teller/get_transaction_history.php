@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     // Include database configuration
-    require_once '../../config/database.php';
+    require_once __DIR__ . '/../../config/database.php';
     
     // Get database connection
     $conn = db_connect();

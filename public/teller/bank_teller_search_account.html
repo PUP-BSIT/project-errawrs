@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller Search Account - StackOvercash</title>
@@ -12,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="./css/bank_teller_search_account.css">
+    <link rel="stylesheet" href="css/bank_teller_search_account.css">
 </head>
 <body>
     <!-- Main Container -->
@@ -32,7 +33,7 @@
             
             <!-- User Profile Section -->
             <div class="user-profile">
-                <a href="bank_teller_view_profile.html">
+                <a href="user/profile">
                     <div class="user-avatar dynamic-avatar"></div>
                 </a>
                 <div class="user-name"></div>
@@ -40,17 +41,17 @@
             
             <!-- Navigation Menu -->
             <div class="nav-menu">
-                <a href="bank_teller_dashboard.html" class="nav-item">Dashboard</a>
+                <a href="teller/dashboard" class="nav-item">Dashboard</a>
                 <div class="nav-selected">Search Account</div>
-                <a href="bank_teller_deposit.html" class="nav-item">Deposit</a>
-                <a href="bank_teller_withdraw.html" class="nav-item">Withdraw</a>
-                <a href="bank_teller_review_registration.html" class="nav-item">Review Registration</a>
-                <a href="bank_teller_history.html" class="nav-item">Transaction</a>
+                <a href="teller/deposit" class="nav-item">Deposit</a>
+                <a href="teller/withdraw" class="nav-item">Withdraw</a>
+                <a href="register" class="nav-item">Review Registration</a>
+                <a href="teller/history" class="nav-item">Transaction</a>
             </div>
 
             <!-- Logout Section -->
             <div class="nav-logout">
-                <a href="./bank_teller_login.html">
+                <a href="login/teller">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
@@ -95,6 +96,6 @@
     <div id="notification_container" class="notification-container"></div>
 
     <!-- JavaScript -->
-    <script src="./js/search_account.js"></script>
+    <script src="js/search_account.js"></script>
 </body>
 </html>

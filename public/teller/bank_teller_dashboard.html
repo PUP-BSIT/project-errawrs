@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Teller Dashboard</title>
@@ -11,7 +12,7 @@
     <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/bank_teller_dashboard.css">
+    <link rel="stylesheet" href="css/bank_teller_dashboard.css">
 </head>
 <body>
     <div class="container">
@@ -23,27 +24,27 @@
             </div>
             
             <div class="user-profile">
-                <a href="bank_teller_view_profile.html">
+                <a href="user/profile">
                     <div class="user-avatar dynamic-avatar"></div></a>
                 <div class="user-name"></div>
             </div>
             
             <div class="nav-menu">
                 <div class="nav-selected">Dashboard</div>
-                <a href="bank_teller_search_account.html" 
+                <a href="user/account" 
                       class="nav-item">Search Account</a>
-                <a href="bank_teller_deposit.html" 
+                <a href="teller/deposit" 
                       class="nav-item">Deposit</a>
-                <a href="bank_teller_withdraw.html" 
+                <a href="teller/withdraw" 
                       class="nav-item">Withdraw</a>
-                <a href="bank_teller_review_registration.html"
+                <a href="register"
                       class="nav-item">Review Registration</a>
-                <a href="bank_teller_history.html" 
+                <a href="teller/history" 
                       class="nav-item">Transaction</a>
             </div>
             
             <div class="nav-logout">
-                <a href="./bank_teller_login.html">
+                <a href="login/teller">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
@@ -63,7 +64,7 @@
                 <div class="registration-section">
                     <div class="section-header">
                         <h2>Recent Registration Requests</h2>
-                        <a href="bank_teller_review_registration.html" class="btn-view-all">View All</a>
+                        <a href="register" class="btn-view-all">View All</a>
                     </div>
                     <div class="registration-list" id="recent_registrations">
                         <!-- Registration items will be injected here by JS -->
@@ -135,6 +136,6 @@
         </div>
     </div>
     <div id="notification_container" class="notification-container"></div>
-    <script src="./js/teller_dashboard.js"></script>
+    <script src="js/teller_dashboard.js"></script>
 </body>
 </html>

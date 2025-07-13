@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - User Accounts</title>
@@ -19,7 +20,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="./css/user_account.css" />
+        <link rel="stylesheet" href="css/user_account.css" />
     </head>
     <body>
         <!-- Toast Container (Top Right, consistent with manage tellers) -->
@@ -37,25 +38,25 @@
                 <nav class="sidebar-nav">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="dashboard.html" class="nav-link">
+                            <a href="admin/dashboard" class="nav-link">
                                 <i class="fas fa-home"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="manage_tellers.html" class="nav-link">
+                            <a href="admin/tellers" class="nav-link">
                                 <i class="fas fa-users"></i>
                                 <span>Tellers</span>
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="user_accounts.html" class="nav-link">
+                            <a href="admin/users" class="nav-link">
                                 <i class="fas fa-user-circle"></i>
                                 <span>User Accounts</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="transactions.html" class="nav-link">
+                            <a href="admin/transactions" class="nav-link">
                                 <i class="fas fa-exchange-alt"></i>
                                 <span>Transactions</span>
                             </a>
@@ -101,8 +102,8 @@
             </div>
         </main>
         <!-- Scripts -->
-        <script src="./js/config.js"></script>
-        <script src="./js/user_accounts.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/user_accounts.js"></script>
         <!-- User Detail Card (hidden by default) -->
         <div id="user_detail_card" style="display:none;">
           <div class="user-detail-center-wrapper">

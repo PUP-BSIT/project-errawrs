@@ -97,7 +97,7 @@ export function showOtpModal(phoneNumber, onVerified) {
 
     // Call send OTP API only if timer is not running
     if (resendCountdown <= 0) {
-        fetch('/project-errawrs/src/api/auth/send_otp.php', {
+        fetch(API_ENDPOINTS.SEND_OTP, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -131,7 +131,7 @@ export function showOtpModal(phoneNumber, onVerified) {
             showLoading();
             
             // Call verify OTP API
-            fetch('/project-errawrs/src/api/auth/verify_otp.php', {
+            fetch(API_ENDPOINTS.VERIFY_OTP, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -172,7 +172,7 @@ export function showOtpModal(phoneNumber, onVerified) {
         resendBtn.onclick = (e) => {
             e.preventDefault();
             if (resendCountdown > 0 || isLoading) return;
-            fetch('/project-errawrs/src/api/auth/send_otp.php', {
+            fetch(API_ENDPOINTS.SEND_OTP, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

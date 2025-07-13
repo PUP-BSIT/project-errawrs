@@ -2,27 +2,30 @@
 function getApiBaseUrl() {
     const hostname = window.location.hostname;
     const protocol = window.location.protocol;
+    const pathname = window.location.pathname;
+    
+    // Check pathname first for project subdirectories
+    if (pathname.includes('/project-errawrs/')) {
+        return '/project-errawrs/api';
+    }
     
     // Check if we're on localhost
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return '/project-errawrs/src/api';
+        return '/api';
     }
     
     // Check if we're on the development site
     if (hostname === 'dev.stackovercash.site') {
-        return '/src/api'; // Assuming the project is at the root
+        return '/api'; // Assuming the project is at the root
     }
     
-    // For production or other environments, try to detect the path
-    const pathname = window.location.pathname;
-    if (pathname.includes('/project-errawrs/')) {
-        return '/project-errawrs/src/api';
-    } else if (pathname.includes('/public/')) {
-        // If we're in public directory, go up to src/api
-        return '/src/api';
+    // For production or other environments
+    if (pathname.includes('/public/')) {
+        // If we're in public directory, go up to api
+        return '/api';
     } else {
         // Default fallback
-        return '/src/api';
+        return '/api';
     }
 }
 
@@ -33,27 +36,27 @@ console.log('Current hostname:', window.location.hostname);
 console.log('Current pathname:', window.location.pathname);
 
 const API_ENDPOINTS = {
-    LOGIN: `${API_BASE_URL}/auth/login.php`,
-    LOGOUT: `${API_BASE_URL}/auth/logout.php`,
-    SEND_OTP: `${API_BASE_URL}/auth/send_otp.php`,
-    VERIFY_OTP: `${API_BASE_URL}/auth/verify_otp.php`,
-    SUBMIT_REGISTRATION: `${API_BASE_URL}/user/submit_registration.php`,
-    SESSION_CHECK: `${API_BASE_URL}/auth/session_check.php`,
-    GET_ACCOUNTS: `${API_BASE_URL}/user/accounts.php`,
-    FUND_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
-    INTERNAL_TRANSFER: `${API_BASE_URL}/user/fund_transfer.php`,
-    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/external_transfer.php`,
-    GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions.php`,
+    LOGIN: `${API_BASE_URL}/auth/login`,
+    LOGOUT: `${API_BASE_URL}/auth/logout`,
+    SEND_OTP: `${API_BASE_URL}/auth/send-otp`,
+    VERIFY_OTP: `${API_BASE_URL}/auth/verify-otp`,
+    SUBMIT_REGISTRATION: `${API_BASE_URL}/user/register`,
+    SESSION_CHECK: `${API_BASE_URL}/auth/session-check`,
+    GET_ACCOUNTS: `${API_BASE_URL}/user/accounts`,
+    FUND_TRANSFER: `${API_BASE_URL}/user/transactions/transfer`,
+    INTERNAL_TRANSFER: `${API_BASE_URL}/user/transactions/transfer`,
+    EXTERNAL_TRANSFER: `${API_BASE_URL}/user/transactions/external-transfer`,
+    GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions`,
     GET_TRANSACTION_DETAILS: `${API_BASE_URL}/user/get_transaction_details.php`,
-    UPDATE_PROFILE: `${API_BASE_URL}/user/update_profile.php`,
-    CREATE_ADDITIONAL_ACCOUNT: `${API_BASE_URL}/user/create_additional_account.php`,
-    FORGOT_USERNAME: `${API_BASE_URL}/user/forgot_username.php`,
-    REQUEST_PASSWORD_RESET: `${API_BASE_URL}/user/request_password_reset.php`,
-    VERIFY_RESET_TOKEN: `${API_BASE_URL}/user/verify_reset_token.php`,
-    RESET_PASSWORD: `${API_BASE_URL}/user/reset_password.php`,
-    FINANCIAL_TIPS: `${API_BASE_URL}/user/financial-tips.php`,
-    CONTACT_SUBMIT: `${API_BASE_URL}/public/contact_mailer.php`,
-    TRANSFER_SUCCESS: `${API_BASE_URL}/user/transfer_success.php`,
+    UPDATE_PROFILE: `${API_BASE_URL}/user/profile`,
+    CREATE_ADDITIONAL_ACCOUNT: `${API_BASE_URL}/user/accounts/create`,
+    FORGOT_USERNAME: `${API_BASE_URL}/auth/forgot-username`,
+    REQUEST_PASSWORD_RESET: `${API_BASE_URL}/auth/request-password-reset`,
+    VERIFY_RESET_TOKEN: `${API_BASE_URL}/auth/verify-reset-token`,
+    RESET_PASSWORD: `${API_BASE_URL}/auth/reset-password`,
+    FINANCIAL_TIPS: `${API_BASE_URL}/user/financial-tips`,
+    CONTACT_SUBMIT: `${API_BASE_URL}/public/contact-mailer`,
+    TRANSFER_SUCCESS: `${API_BASE_URL}/user/transactions/success`,
 };
 
 // Backward compatibility - keep the old nested structure
@@ -96,16 +99,16 @@ function getRoutesBasePath() {
 
 const ROUTES_BASE_PATH = getRoutesBasePath();
 const ROUTES = {
-    USER_DASHBOARD: `${ROUTES_BASE_PATH}/user_dashboard.html`,
-    LOGIN: `${ROUTES_BASE_PATH}/login_account_holder.html`,
-    PROFILE: `${ROUTES_BASE_PATH}/profile.html`,
-    ACCOUNT: `${ROUTES_BASE_PATH}/account.html`,
-    TRANSACTION: `${ROUTES_BASE_PATH}/transaction.html`,
-    TRANSFER: `${ROUTES_BASE_PATH}/transfer.html`,
-    TRANSFER_SUCCESS: `${ROUTES_BASE_PATH}/transfer_success.html`,
-    TRANSFER_FAILED: `${ROUTES_BASE_PATH}/transfer_failed.html`,
-    CONTACT: `${ROUTES_BASE_PATH}/contact_us.html`,
-    REGISTRATION: `${ROUTES_BASE_PATH}/registration.html`,
+    USER_DASHBOARD: '/user/dashboard',
+    LOGIN: '/login',
+    PROFILE: '/user/profile',
+    ACCOUNT: '/user/account',
+    TRANSACTION: '/user/transactions',
+    TRANSFER: '/user/transfer',
+    TRANSFER_SUCCESS: '/user/transfer_success',
+    TRANSFER_FAILED: '/user/transfer_failed',
+    CONTACT: '/contact',
+    REGISTRATION: '/registration',
 };
 
 // Function to dynamically create notification

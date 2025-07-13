@@ -1,0 +1,289 @@
+<?php
+/**
+ * Web Routes for ERRAWRS Banking System
+ * 
+ * This file defines all web routes for the banking application frontend.
+ * Routes are organized by user type and functionality.
+ */
+
+// =====================================================
+// PUBLIC ROUTES (No Authentication Required)
+// =====================================================
+
+// Landing page and public pages
+$router->get('/', 'public/user/index.html');
+$router->get('/home', 'public/user/index.html');
+$router->get('/landing', 'public/user/index.html');
+
+// About and information pages
+$router->get('/about', 'public/user/about.html');
+$router->get('/contact', 'public/user/contact_us.html');
+$router->get('/privacy-policy', 'public/user/privacy_policy.html');
+
+// =====================================================
+// AUTHENTICATION ROUTES
+// =====================================================
+
+// Login pages
+$router->get('/login', 'public/user/login_account_holder.html');
+$router->get('/login/user', 'public/user/login_account_holder.html');
+$router->get('/login/teller', 'public/teller/bank_teller_login.html');
+$router->get('/login/admin', 'public/admin/login.html');
+
+// Registration pages
+$router->get('/register', 'public/user/registration.html');
+$router->get('/registration', 'public/user/registration.html');
+
+// Password management pages
+$router->get('/forgot-password', 'public/user/forgot_password.html');
+$router->get('/forgot-username', 'public/user/forgot_username.html');
+$router->get('/reset-password', 'public/user/reset_password.html');
+
+// =====================================================
+// USER ROUTES (Account Holders)
+// =====================================================
+
+// User dashboard and main pages
+$router->get('/user/dashboard', 'public/user/user_dashboard.html');
+$router->get('/user/account', 'public/user/account.html');
+$router->get('/user/profile', 'public/user/profile.html');
+$router->get('/user/transactions', 'public/user/transaction.html');
+
+// Transfer pages
+$router->get('/user/transfer', 'public/user/transfer.html');
+$router->get('/user/transfer/success', 'public/user/transfer_success.html');
+$router->get('/user/transfer/failed', 'public/user/transfer_failed.html');
+
+// =====================================================
+// TELLER ROUTES
+// =====================================================
+
+// Teller dashboard and main pages
+$router->get('/teller/dashboard', 'public/teller/bank_teller_dashboard.html');
+$router->get('/teller/search', 'public/teller/bank_teller_search_account.html');
+$router->get('/teller/deposit', 'public/teller/bank_teller_deposit.html');
+$router->get('/teller/withdraw', 'public/teller/bank_teller_withdraw.html');
+$router->get('/teller/history', 'public/teller/bank_teller_history.html');
+$router->get('/teller/profile', 'public/teller/bank_teller_view_profile.html');
+
+// Teller registration management
+$router->get('/teller/registrations', 'public/teller/bank_teller_review_registration.html');
+
+// Teller password management
+$router->get('/teller/set-password', 'public/teller/set_password.html');
+$router->get('/teller/reset-password', 'public/teller/reset_password.html');
+
+// =====================================================
+// ADMIN ROUTES
+// =====================================================
+
+// Admin dashboard and main pages
+$router->get('/admin/dashboard', 'public/admin/dashboard.html');
+$router->get('/admin/users', 'public/admin/user_accounts.html');
+$router->get('/admin/tellers', 'public/admin/manage_tellers.html');
+$router->get('/admin/transactions', 'public/admin/transactions.html');
+
+// =====================================================
+// ASSET ROUTES
+// =====================================================
+
+// CSS files
+$router->get('/css/{file}', function($file) {
+    $paths = [
+        "public/user/css/{$file}",
+        "public/teller/css/{$file}",
+        "public/admin/css/{$file}"
+    ];
+    foreach ($paths as $path) {
+        if (file_exists($path)) {
+            header('Content-Type: text/css');
+            readfile($path);
+            return;
+        }
+    }
+    http_response_code(404);
+    echo "CSS file not found";
+});
+
+// JavaScript files
+$router->get('/js/{file}', function($file) {
+    $path = "public/assets/js/{$file}";
+    if (file_exists($path)) {
+        header('Content-Type: application/javascript');
+        readfile($path);
+    } else {
+        http_response_code(404);
+        echo "JavaScript file not found";
+    }
+});
+
+// Image files
+$router->get('/images/{file}', function($file) {
+    $path = "public/assets/images/{$file}";
+    if (file_exists($path)) {
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $mimeTypes = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon'
+        ];
+        
+        if (isset($mimeTypes[$extension])) {
+            header("Content-Type: {$mimeTypes[$extension]}");
+            readfile($path);
+        } else {
+            http_response_code(404);
+            echo "Image file not found";
+        }
+    } else {
+        http_response_code(404);
+        echo "Image file not found";
+    }
+});
+
+// Favicon
+$router->get('/favicon.ico', function() {
+    $path = "public/assets/images/favicon.ico";
+    if (file_exists($path)) {
+        header('Content-Type: image/x-icon');
+        readfile($path);
+    } else {
+        http_response_code(404);
+    }
+});
+
+// Serve images for /assets/images/{file} as well
+$router->get('/assets/images/{file}', function($file) {
+    $path = "public/assets/images/{$file}";
+    if (file_exists($path)) {
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $mimeTypes = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon'
+        ];
+        if (isset($mimeTypes[$extension])) {
+            header("Content-Type: {$mimeTypes[$extension]}");
+            readfile($path);
+        } else {
+            http_response_code(404);
+            echo "Image file not found";
+        }
+    } else {
+        http_response_code(404);
+        echo "Image file not found";
+    }
+});
+
+// =====================================================
+// ROUTE GROUPS (for middleware)
+// =====================================================
+
+// Routes that require authentication
+$router->group(['middleware' => 'auth'], function($router) {
+    // User authenticated routes
+    $router->group(['prefix' => 'user', 'middleware' => 'user'], function($router) {
+        $router->get('/dashboard', 'public/user/user_dashboard.html');
+        $router->get('/account', 'public/user/account.html');
+        $router->get('/profile', 'public/user/profile.html');
+        $router->get('/transactions', 'public/user/transaction.html');
+        $router->get('/transfer', 'public/user/transfer.html');
+    });
+    
+    // Teller authenticated routes
+    $router->group(['prefix' => 'teller', 'middleware' => 'teller'], function($router) {
+        $router->get('/dashboard', 'public/teller/bank_teller_dashboard.html');
+        $router->get('/search', 'public/teller/bank_teller_search_account.html');
+        $router->get('/deposit', 'public/teller/bank_teller_deposit.html');
+        $router->get('/withdraw', 'public/teller/bank_teller_withdraw.html');
+        $router->get('/history', 'public/teller/bank_teller_history.html');
+        $router->get('/profile', 'public/teller/bank_teller_view_profile.html');
+        $router->get('/registrations', 'public/teller/bank_teller_review_registration.html');
+    });
+    
+    // Admin authenticated routes
+    $router->group(['prefix' => 'admin', 'middleware' => 'admin'], function($router) {
+        $router->get('/dashboard', 'public/admin/dashboard.html');
+        $router->get('/users', 'public/admin/user_accounts.html');
+        $router->get('/tellers', 'public/admin/manage_tellers.html');
+        $router->get('/transactions', 'public/admin/transactions.html');
+    });
+});
+
+// =====================================================
+// ERROR PAGES
+// =====================================================
+
+// 404 Not Found
+$router->notFound(function() {
+    http_response_code(404);
+    echo '<!DOCTYPE html>
+    <html>
+    <head>
+        <title>404 - Page Not Found</title>
+        <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            h1 { color: #e74c3c; }
+            .error-code { font-size: 72px; color: #95a5a6; }
+        </style>
+    </head>
+    <body>
+        <div class="error-code">404</div>
+        <h1>Page Not Found</h1>
+        <p>The page you are looking for does not exist.</p>
+        <a href="/">Go to Homepage</a>
+    </body>
+    </html>';
+});
+
+// 403 Forbidden
+$router->forbidden(function() {
+    http_response_code(403);
+    echo '<!DOCTYPE html>
+    <html>
+    <head>
+        <title>403 - Access Forbidden</title>
+        <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            h1 { color: #e74c3c; }
+            .error-code { font-size: 72px; color: #95a5a6; }
+        </style>
+    </head>
+    <body>
+        <div class="error-code">403</div>
+        <h1>Access Forbidden</h1>
+        <p>You do not have permission to access this page.</p>
+        <a href="/">Go to Homepage</a>
+    </body>
+    </html>';
+});
+
+// 500 Internal Server Error
+// $router->serverError(function() {
+//     http_response_code(500);
+//     echo '<!DOCTYPE html>
+//     <html>
+//     <head>
+//         <title>500 - Internal Server Error</title>
+//         <style>
+//             body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+//             h1 { color: #e74c3c; }
+//             .error-code { font-size: 72px; color: #95a5a6; }
+//         </style>
+//     </head>
+//     <body>
+//         <div class="error-code">500</div>
+//         <h1>Internal Server Error</h1>
+//         <p>Something went wrong on our end. Please try again later.</p>
+//         <a href="/">Go to Homepage</a>
+//     </body>
+//     </html>';
+// });
+
+return $router; 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Banking Dashboard</title>
@@ -12,9 +13,10 @@
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <link
             rel="stylesheet"
-            href="./css/user_dashboard.css?v=1.1"/>
+            href="/user/css/user_dashboard.css?v=1.1"/>
     </head>
     <body class="authenticated-page">
         <!-- Mobile Header -->
@@ -28,11 +30,11 @@
         </header>
         <!-- Move nav here: Topnav Dropdown Nav (now block, not floating) -->
         <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
-            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-            <a href="./transfer.html" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
-            <a href="./transaction.html" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
-            <a href="./account.html" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
-            <a href="./profile.html" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <a href="/user/dashboard" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="/user/transfer" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="/user/transactions" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="/user/account" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="/user/profile" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
             <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
         </nav>
         <!-- Mobile/Tablet Dropdown Nav moved above -->
@@ -58,31 +60,31 @@
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item active">
-                            <a href="./user_dashboard.html" class="nav-link" data-page="dashboard" aria-label="Dashboard">
+                            <a href="/user/dashboard" class="nav-link" data-page="dashboard" aria-label="Dashboard">
                                 <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transfer.html" class="nav-link" data-page="transfer" aria-label="Transfer funds">
+                            <a href="/user/transfer" class="nav-link" data-page="transfer" aria-label="Transfer funds">
                                 <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transaction.html" class="nav-link" data-page="transaction" aria-label="View transactions">
+                            <a href="/user/transactions" class="nav-link" data-page="transaction" aria-label="View transactions">
                                 <i class="fas fa-receipt" aria-hidden="true"></i>
                                 Transactions
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./account.html" class="nav-link" data-page="account" aria-label="Manage accounts">
+                            <a href="/user/account" class="nav-link" data-page="account" aria-label="Manage accounts">
                                 <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./profile.html" class="nav-link" data-page="profile" aria-label="User profile">
+                            <a href="/user/profile" class="nav-link" data-page="profile" aria-label="User profile">
                                 <i class="fas fa-user-circle" aria-hidden="true"></i>
                                 Profile
                             </a>
@@ -147,7 +149,7 @@
                             </div>
                         </div>
 
-                        <a href="./transfer.html" class="transfer-btn" id="transfer_now_btn">
+                        <a href="/user/transfer" class="transfer-btn" id="transfer_now_btn">
                             Transfer Now
                         </a>
                     </div>
@@ -182,14 +184,14 @@
         <div id="sidebar_overlay" class="sidebar-overlay hidden"></div>
 
         <!-- Load configuration first -->
-        <script src="./js/config.js"></script>
-        <script src="./js/auth-guard.js"></script>
-        <script src="./js/session-manager.js"></script>
+        <script src="/user/js/config.js"></script>
+        <script src="/user/js/auth-guard.js"></script>
+        <script src="/user/js/session-manager.js"></script>
         
         <!-- Load API and session management -->
-        <script src="./js/api.js"></script>
+        <script src="/user/js/api.js"></script>
         
         <!-- Load page-specific scripts -->
-        <script src="./js/user_dashboard.js"></script>
+        <script src="/user/js/user_dashboard.js"></script>
     </body>
 </html>

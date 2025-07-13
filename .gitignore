@@ -16,14 +16,12 @@ error.log
 error_log
 debug.log
 
-# Temporary files
 tmp/
 !tmp/.gitkeep
 /tmp/
 !/tmp/.gitkeep
 
-# Dependencies
 /vendor/
 
-# IDE files
 .vscode/
+# /public/.htaccess

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Transfer Successful - StackOvercash</title>
@@ -12,8 +13,9 @@
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="./css/user_dashboard.css"/>
-        <link rel="stylesheet" href="./css/transfer_success.css"/>
+        <link rel="icon" type="image/png" href="assets/images/soc-logo.png" />
+        <link rel="stylesheet" href="user/css/user_dashboard.css"/>
+        <link rel="stylesheet" href="user/css/transfer_success.css"/>
     </head>
     <body class="authenticated-page">
         <div class="dashboard-container">
@@ -39,7 +41,7 @@
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="./user_dashboard.html"
+                            <a href="user/dashboard"
                                 class="nav-link"
                                 data-page="dashboard"
                                 aria-label="Dashboard">
@@ -49,7 +51,7 @@
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="./transfer.html"
+                            <a href="user/transfer"
                                     class="nav-link"
                                     data-page="transfer"
                                     aria-label="Transfer funds">
@@ -59,7 +61,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./transaction.html"
+                            <a href="user/transactions"
                                     class="nav-link"
                                     data-page="transaction"
                                     aria-label="View transactions">
@@ -68,7 +70,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./account.html"
+                            <a href="user/account"
                                     class="nav-link"
                                     data-page="account"
                                     aria-label="Manage accounts">
@@ -78,7 +80,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./profile.html"
+                            <a href="user/profile"
                                     class="nav-link"
                                     data-page="profile"
                                     aria-label="User profile">
@@ -140,10 +142,10 @@
                     </div>
 
                     <div class="button-group">
-                        <a href="./transfer.html" class="back-button">
+                        <a href="user/transfer" class="back-button">
                             Back to Transfer
                         </a>
-                        <a href="./user_dashboard.html" class="dashboard-button">
+                        <a href="user/dashboard" class="dashboard-button">
                             Back to Dashboard
                         </a>
                     </div>
@@ -153,9 +155,9 @@
         
         <div class="notification-container"></div>
         
-        <script src="./js/config.js"></script>
-        <script src="./js/auth-guard.js"></script>
-        <script src="./js/session-manager.js"></script>
-        <script src="./js/transfer_success.js"></script>
+        <script src="user/js/config.js"></script>
+        <script src="user/js/auth-guard.js"></script>
+        <script src="user/js/session-manager.js"></script>
+        <script src="user/js/transfer_success.js"></script>
     </body>
 </html> 
