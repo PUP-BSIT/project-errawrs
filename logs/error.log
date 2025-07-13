@@ -20010,3 +20010,170 @@ Stack trace:
 [14-Jul-2025 02:29:42 Asia/Manila] Processed 2 transactions
 [14-Jul-2025 02:29:42 Asia/Manila] Connection closed
 [13-Jul-2025 20:29:42 Europe/Berlin] Logout request received. User: janedee
+[14-Jul-2025 02:34:27 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 02:34:28 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752431668
+            [last_activity] => 1752431668
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 02:34:28 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 02:34:28
+)
+
+[14-Jul-2025 02:34:28 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752431668
+            [last_activity] => 1752431668
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[13-Jul-2025 20:35:06 Europe/Berlin] Logout request received. User: janedee
+[14-Jul-2025 02:36:02 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 02:36:02 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752431762
+            [last_activity] => 1752431762
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 02:36:02 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 02:36:02
+)
+
+[14-Jul-2025 02:36:02 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752431762
+            [last_activity] => 1752431762
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
