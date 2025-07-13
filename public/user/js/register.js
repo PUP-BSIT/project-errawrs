@@ -8,7 +8,7 @@ import * as notifications from './register-notifications.js';
 import { submitRegistrationData } from './register-submit.js';
 import { initFileUpload, setOnFileChangeCallback } from './register-file-upload.js';
 import { hideLoading, hideOtpModal } from './register-otp-modal.js';
-import { API_ENDPOINTS } from '../config.js';
+import { API_ENDPOINTS } from './config.js';
 
 const FORM_VALIDATION = {
 	FIRST_NAME_MIN_LENGTH: 2,
@@ -243,11 +243,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtnStep1 = document.querySelector('#step_one_identification .btn-continue');
     function updateStep1NextBtn() {
         const idTypeValid = idTypeInput && idTypeInput.value !== '';
-        const idImageValid = idImageInput && idImageInput.files && idImageInput.files.length > 0;
+        const idImageValid =
+            idImageInput &&
+            idImageInput.files &&
+            idImageInput.files.length > 0 &&
+            idImageInput.files[0].size <= 500 * 1024; // 500 KB
         if (idTypeValid && idImageValid) {
             nextBtnStep1.disabled = false;
             nextBtnStep1.classList.remove('btn-disabled');
-					} else {
+        } else {
             nextBtnStep1.disabled = true;
             nextBtnStep1.classList.add('btn-disabled');
         }
@@ -300,7 +304,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				idImageInput.files &&
 				idImageInput.files.length > 0
 			) {
-				formData.append("id_image", idImageInput.files[0]);
+				const file = idImageInput.files[0];
+				const maxSize = 500 * 1024; // 500 KB
+				if (file.size > maxSize) {
+					notifications.showNotification('ID image file size must not exceed 500 KB.', 'error');
+					return; // Block submission
+				}
+				formData.append("id_image", file);
 			}
 
 			// Save formData for later submission after OTP

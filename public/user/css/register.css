@@ -1879,3 +1879,62 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         gap: 7px;
     }
 }
+
+/* Custom notification visibility and centering */
+.notification.custom-visible {
+    left: 50%;
+    right: auto;
+    top: 30px;
+    transform: translate(-50%, 0);
+    max-width: 90vw;
+    min-width: 320px;
+    z-index: 2000;
+    font-size: 1.15rem;
+    font-weight: bold;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    opacity: 1;
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #e74c3c;
+    padding: 0;
+}
+.notification.custom-visible.error, .notification.custom-visible.notification-error {
+    background: #fff0f0;
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+.notification.custom-visible .notification-content {
+    padding: 18px 24px 18px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.notification.custom-visible .notification-content i {
+    color: #e74c3c;
+    font-size: 1.5em;
+}
+.notification.custom-visible .notification-close {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 1.5em;
+    margin-left: auto;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: background 0.2s;
+}
+.notification.custom-visible .notification-close:hover {
+    background: #ffeaea;
+}
+@media (max-width: 600px) {
+    .notification.custom-visible {
+        min-width: 90vw;
+        font-size: 1em;
+        left: 50%;
+        top: 10px;
+        padding: 0;
+    }
+    .notification.custom-visible .notification-content {
+        padding: 12px 10px 12px 10px;
+    }
+}
