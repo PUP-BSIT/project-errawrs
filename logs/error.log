@@ -19284,3 +19284,10 @@ Stack trace:
 
 )
 
+[13-Jul-2025 22:51:56 Asia/Manila] Received login data: Array
+(
+    [username] => simonejakereyes
+    [password] => mvNIdfyRhHjlYIXs
+    [login_type] => user
+)
+
