@@ -25217,3 +25217,10 @@ Stack trace:
 )
 
 [13-Jul-2025 21:57:55 Europe/Berlin] Logout request received. User: T000002
+[13-Jul-2025 22:51:56 Asia/Manila] Received login data: Array
+(
+    [username] => simonejakereyes
+    [password] => mvNIdfyRhHjlYIXs
+    [login_type] => user
+)
+
