@@ -353,4 +353,115 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    // --- Country Searchable Dropdown Enhancement (Names Only, Static List) ---
+    const countrySelect = document.getElementById('country');
+    if (countrySelect) {
+        // Static country list (ISO 3166 common names)
+        const staticCountries = [
+            'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
+            'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
+            'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czechia',
+            'Democratic Republic of the Congo','Denmark','Djibouti','Dominica','Dominican Republic',
+            'Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
+            'Fiji','Finland','France',
+            'Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+            'Haiti','Honduras','Hungary',
+            'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy',
+            'Jamaica','Japan','Jordan',
+            'Kazakhstan','Kenya','Kiribati','Kuwait','Kyrgyzstan',
+            'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+            'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+            'Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway',
+            'Oman',
+            'Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal',
+            'Qatar',
+            'Romania','Russia','Rwanda',
+            'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+            'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
+            'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
+            'Vanuatu','Vatican City','Venezuela','Vietnam',
+            'Yemen',
+            'Zambia','Zimbabwe'
+        ];
+        // Create a wrapper and search input
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+        wrapper.style.width = '100%';
+        countrySelect.parentNode.insertBefore(wrapper, countrySelect);
+        wrapper.appendChild(countrySelect);
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Type to search country...';
+        searchInput.style.width = '100%';
+        searchInput.style.marginBottom = '8px';
+        searchInput.style.padding = '8px';
+        searchInput.style.borderRadius = '6px';
+        searchInput.style.border = '1px solid #ccc';
+        wrapper.insertBefore(searchInput, countrySelect);
+
+        // Dropdown for search results
+        const dropdown = document.createElement('div');
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = '40px';
+        dropdown.style.left = '0';
+        dropdown.style.right = '0';
+        dropdown.style.background = '#fff';
+        dropdown.style.border = '1px solid #ccc';
+        dropdown.style.borderRadius = '6px';
+        dropdown.style.zIndex = '1001';
+        dropdown.style.maxHeight = '200px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.display = 'none';
+        wrapper.appendChild(dropdown);
+
+        // Populate select with static list
+        wrapper._allCountries = staticCountries;
+        countrySelect.innerHTML = '<option value="">Select Country</option>' +
+            staticCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+
+        // Show dropdown with filtered results
+        searchInput.addEventListener('input', function() {
+            const filter = this.value.trim().toLowerCase();
+            const allCountries = wrapper._allCountries || [];
+            let filtered = allCountries;
+            if (filter) {
+                filtered = allCountries.filter(c =>
+                    c.toLowerCase().includes(filter)
+                );
+            }
+            dropdown.innerHTML = '';
+            if (filtered.length > 0 && filter) {
+                filtered.forEach(c => {
+                    const item = document.createElement('div');
+                    item.textContent = c;
+                    item.style.padding = '8px 12px';
+                    item.style.cursor = 'pointer';
+                    item.onmouseover = () => item.style.background = '#f0f0f0';
+                    item.onmouseout = () => item.style.background = '#fff';
+                    item.onclick = () => {
+                        searchInput.value = c;
+                        countrySelect.value = c;
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(item);
+                });
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Hide dropdown on blur
+        searchInput.addEventListener('blur', function() {
+            setTimeout(() => dropdown.style.display = 'none', 200);
+        });
+
+        // When user selects from dropdown, update search input
+        countrySelect.addEventListener('change', function() {
+            if (countrySelect.value) {
+                searchInput.value = countrySelect.value;
+            }
+        });
+    }
 });

@@ -19495,3 +19495,106 @@ Stack trace:
 [14-Jul-2025 00:17:35 Asia/Manila] Processed 2 transactions
 [14-Jul-2025 00:17:35 Asia/Manila] Connection closed
 [13-Jul-2025 18:17:37 Europe/Berlin] Logout request received. User: janedee
+[14-Jul-2025 01:30:46 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"registration"}
+[14-Jul-2025 01:30:46 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => registration
+)
+
+[14-Jul-2025 01:30:46 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 01:30:48 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 01:30:49 Asia/Manila] Send OTP - API Response: [{"message_id":251101497,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 453746","code":453746,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 01:30:46","updated_at":"2025-07-14 01:30:46"}]
+[14-Jul-2025 01:30:49 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 01:30:49 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251101497,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 453746","code":453746,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 01:30:46","updated_at":"2025-07-14 01:30:46"}]
+[14-Jul-2025 01:30:49 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 01:30:49 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: registration
+[14-Jul-2025 01:30:49 Asia/Manila] Session ID before storing: 3sa9n16mei8e572741t8oesg7s
+[14-Jul-2025 01:30:49 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 01:30:49 Asia/Manila] Session data before storing: Array
+(
+)
+
+[14-Jul-2025 01:30:49 Asia/Manila] OTP stored successfully
+[14-Jul-2025 01:30:49 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752427849
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 01:30:49 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752427849
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 02:12:53 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"registration"}
+[14-Jul-2025 02:12:53 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => registration
+)
+
+[14-Jul-2025 02:12:53 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 02:12:53 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 02:12:54 Asia/Manila] Send OTP - API Response: [{"message_id":251101789,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 529092","code":529092,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 02:12:52","updated_at":"2025-07-14 02:12:52"}]
+[14-Jul-2025 02:12:54 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 02:12:54 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251101789,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 529092","code":529092,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 02:12:52","updated_at":"2025-07-14 02:12:52"}]
+[14-Jul-2025 02:12:54 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 02:12:54 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: registration
+[14-Jul-2025 02:12:54 Asia/Manila] Session ID before storing: 3sa9n16mei8e572741t8oesg7s
+[14-Jul-2025 02:12:54 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 02:12:54 Asia/Manila] Session data before storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752427849
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 02:12:54 Asia/Manila] OTP stored successfully
+[14-Jul-2025 02:12:54 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752430374
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 02:12:54 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752430374
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
