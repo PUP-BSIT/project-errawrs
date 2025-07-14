@@ -32789,3 +32789,21 @@ Stack trace:
 [15-Jul-2025 02:44:25 Asia/Manila] Denial email sent successfully
 [15-Jul-2025 02:44:25 Asia/Manila] Transaction committed successfully
 [15-Jul-2025 02:44:25 Asia/Manila] Review process completed
+[15-Jul-2025 03:13:35 Asia/Manila] Starting registration review process
+[15-Jul-2025 03:13:35 Asia/Manila] Processing registration ID: 35, Action: deny
+[15-Jul-2025 03:13:36 Asia/Manila] Database connection established
+[15-Jul-2025 03:13:36 Asia/Manila] Transaction started
+[15-Jul-2025 03:13:36 Asia/Manila] Found registration for: Daniel Victorioso
+[15-Jul-2025 03:13:37 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 03:13:41 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 03:13:41 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 03:13:41 Asia/Manila] Review process completed
+[15-Jul-2025 03:15:48 Asia/Manila] Starting registration review process
+[15-Jul-2025 03:15:48 Asia/Manila] Processing registration ID: 36, Action: deny
+[15-Jul-2025 03:15:49 Asia/Manila] Database connection established
+[15-Jul-2025 03:15:49 Asia/Manila] Transaction started
+[15-Jul-2025 03:15:49 Asia/Manila] Found registration for: Daniel Victorioso
+[15-Jul-2025 03:15:49 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 03:15:53 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 03:15:53 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 03:15:53 Asia/Manila] Review process completed
