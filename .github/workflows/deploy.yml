@@ -77,7 +77,7 @@ jobs:
           echo "Starting deployment to development environment on ${REMOTE_HOST}..."
 
           # Backup .env file if it exists
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo mkdir -p ${ENV_BACKUP_PATH} && sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
 
           # Erase the whole deployment path (including hidden files)
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]*"
