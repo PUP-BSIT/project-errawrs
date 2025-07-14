@@ -3,48 +3,135 @@ function getQueryParam(name) {
     return url.searchParams.get(name);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const teller_email = getQueryParam('teller_email');
-    const messageDiv = document.getElementById('message');
-    const form = document.getElementById('setPasswordForm');
-    const emailInput = document.getElementById('teller_email');
+function togglePasswordVisibility(inputId, toggleId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleId);
+    if (!input || !toggle) return;
+    // Only change the type attribute, do not replace the input
+    if (input.type === "password") {
+        input.type = "text";
+        toggle.classList.remove("fa-eye-slash");
+        toggle.classList.add("fa-eye");
+    } else {
+        input.type = "password";
+        toggle.classList.remove("fa-eye");
+        toggle.classList.add("fa-eye-slash");
+    }
+    input.focus(); // Keep focus on the input
+}
+
+function showLoading() {
+    document.getElementById("loadingOverlay").classList.remove("hidden");
+}
+
+function hideLoading() {
+    document.getElementById("loadingOverlay").classList.add("hidden");
+}
+
+async function getTellerInfo(email) {
+    try {
+        const response = await fetch(
+            "/project-errawrs/src/api/teller/get_teller_info.php",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            }
+        );
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching teller info:", error);
+        return null;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const teller_email = getQueryParam("teller_email");
+    const messageDiv = document.getElementById("message");
+    const form = document.getElementById("setPasswordForm");
+    const emailLabel = document.getElementById("email_label");
+    const tellerNumberDisplay = document.getElementById(
+        "teller_number_display"
+    );
+
+    // Set up password visibility toggles
+    document
+        .getElementById("password_toggle")
+        .addEventListener("click", function () {
+            togglePasswordVisibility("password", "password_toggle");
+        });
+
+    document
+        .getElementById("confirm_password_toggle")
+        .addEventListener("click", function () {
+            togglePasswordVisibility(
+                "confirm_password",
+                "confirm_password_toggle"
+            );
+        });
 
     if (!teller_email) {
-        messageDiv.innerHTML = '<div class="error">Invalid or missing set password link. Please check your email or contact support.</div>';
+        messageDiv.innerHTML =
+            '<div class="error">Invalid or missing set password link. Please check your email or contact support.</div>';
     } else {
-        emailInput.value = teller_email;
-        form.classList.remove('hidden');
-        form.classList.add('block');
-        form.addEventListener('submit', async function(e) {
+        emailLabel.textContent = teller_email;
+        // Fetch and display teller number
+        getTellerInfo(teller_email)
+            .then((data) => {
+                if (data && data.success && data.teller_number) {
+                    tellerNumberDisplay.textContent = data.teller_number;
+                } else {
+                    tellerNumberDisplay.textContent = "Loading...";
+                }
+            })
+            .catch(() => {
+                tellerNumberDisplay.textContent = "Unable to load";
+            });
+
+        form.classList.remove("hidden");
+        form.classList.add("block");
+        form.addEventListener("submit", async function (e) {
             e.preventDefault();
-            const password = document.getElementById('password').value;
-            const confirm = document.getElementById('confirm_password').value;
+            const password = document.getElementById("password").value;
+            const confirm = document.getElementById("confirm_password").value;
             if (password !== confirm) {
-                messageDiv.innerHTML = '<div class="error">Passwords do not match.</div>';
+                messageDiv.innerHTML =
+                    '<div class="error">Passwords do not match.</div>';
                 return;
             }
             if (password.length < 8) {
-                messageDiv.innerHTML = '<div class="error">Password must be at least 8 characters.</div>';
+                messageDiv.innerHTML =
+                    '<div class="error">Password must be at least 8 characters.</div>';
                 return;
             }
-            messageDiv.innerHTML = 'Processing...';
+            showLoading();
             try {
-                const res = await fetch('/project-errawrs/src/api/teller/set_password.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ teller_email, password })
-                });
+                const res = await fetch(
+                    "/project-errawrs/src/api/teller/set_password.php",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ teller_email, password }),
+                    }
+                );
                 const data = await res.json();
+                hideLoading();
                 if (data.success) {
-                    messageDiv.innerHTML = '<div class="success">Your password has been set! You can now <a href="/project-errawrs/public/teller/bank_teller_login.html">log in</a>.</div>';
-                    form.classList.remove('block');
-                    form.classList.add('hidden');
+                    messageDiv.innerHTML =
+                        '<div class="success">Your password has been set! You can now <a href="/project-errawrs/public/teller/bank_teller_login.html">log in</a>.</div>';
+                    form.classList.remove("block");
+                    form.classList.add("hidden");
                 } else {
-                    messageDiv.innerHTML = `<div class="error">${data.message || 'Failed to set password.'}</div>`;
+                    messageDiv.innerHTML = `<div class="error">${
+                        data.message || "Failed to set password."
+                    }</div>`;
                 }
             } catch (err) {
-                messageDiv.innerHTML = '<div class="error">Server error. Please try again later.</div>';
+                hideLoading();
+                messageDiv.innerHTML =
+                    '<div class="error">Server error. Please try again later.</div>';
             }
         });
     }
-}); 
+});
