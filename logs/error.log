@@ -28126,3 +28126,86 @@ Stack trace:
 
 )
 
+[14-Jul-2025 16:13:47 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000001
+    [password] => 123456789ggerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 16:14:27 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => 123456789ggerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 16:14:33 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 16:14:34 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752480874
+            [last_activity] => 1752480874
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 16:14:34 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 16:14:34
+)
+
+[14-Jul-2025 16:14:34 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752480874
+            [last_activity] => 1752480874
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
