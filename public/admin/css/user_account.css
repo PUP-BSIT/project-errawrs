@@ -553,10 +553,6 @@ body {
   border: 1px solid #eee;
 }
 
-/* Default (mobile first, <1024px) */
-.user-detail-center-wrapper { max-width: 98vw; margin: 12px auto; }
-.user-card.detail { padding: 10px 2vw; }
-
 /* ID Image Modal Styles */
 .id-image-modal {
   display: none;
@@ -606,4 +602,35 @@ body {
 .view-id-image-btn:hover {
   background: var(--color-lime-green);
   color: #111;
+}
+.view-detail-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+}
+.view-detail-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0;
+    background: var(--color-mint);
+    color: #222;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.view-detail-btn i {
+    font-size: 1.1em;
+    margin-right: 6px;
+}
+.view-detail-btn:hover {
+    background: var(--color-lime-green);
+    color: #111;
 }
