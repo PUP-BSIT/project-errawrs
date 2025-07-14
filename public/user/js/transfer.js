@@ -504,7 +504,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const transferData = await transferResp.json();
 
                 if (!transferResp.ok || !transferData.success) {
-                    throw new Error(transferData.error || 'Failed to initiate transfer.');
+                    // If the error is the daily transfer limit, show both notification and alert
+                    if (transferData.error && transferData.error.includes('maximum of 3 transfers')) {
+                        showNotification(transferData.error, 'error');
+                        window.alert(transferData.error);
+                    } else {
+                        throw new Error(transferData.error || 'Failed to initiate transfer.');
+                    }
+                    return;
                 }
 
                 // Step 2: Send OTP (frontend triggers, backend should check session)

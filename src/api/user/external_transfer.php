@@ -348,6 +348,29 @@ try {
     $sourceAccount = getSourceAccountInfo($db, $requestData['source_account_no']);
     validateSourceAccount($sourceAccount, $requestData['transaction_amount']);
 
+    $userId = $sourceAccount['user_id'];
+
+    // DAILY TRANSFER LIMIT CHECK (internal + external)
+    $limitQuery = $db->prepare('
+        SELECT COUNT(*) as transfer_count
+        FROM transaction t
+        JOIN account a ON t.sender_account_id = a.account_id
+        WHERE a.user_id = ?
+          AND t.transaction_type IN ("transfer_internal", "transfer_external_out")
+          AND DATE(t.created_at) = CURDATE()
+    ');
+    $limitQuery->bind_param('i', $userId);
+    $limitQuery->execute();
+    $transferCount = $limitQuery->get_result()->fetch_assoc()['transfer_count'];
+    $limitQuery->close();
+    if ($transferCount >= 3) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'You have reached the maximum of 3 transfers for today.'
+        ]);
+        exit();
+    }
+
     $_SESSION['external_transfer'] = [
         'transaction_amount' => $requestData['transaction_amount'],
         'source_account_no' => $requestData['source_account_no'],

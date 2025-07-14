@@ -26110,3 +26110,1503 @@ Stack trace:
 
 )
 
+[14-Jul-2025 15:05:03 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 15:05:04 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752476704
+            [last_activity] => 1752476704
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 15:05:04 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 15:05:04
+)
+
+[14-Jul-2025 15:05:04 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752476704
+            [last_activity] => 1752476704
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:05:16 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752476704
+            [last_activity] => 1752476715
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:05:17 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:05:18 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:05:24 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752476704
+            [last_activity] => 1752476723
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:05:27 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:05:27 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:13:11 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] =>  kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 15:13:17 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 15:13:18 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752477198
+            [last_activity] => 1752477198
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 15:13:18 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 15:13:18
+)
+
+[14-Jul-2025 15:13:18 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752477198
+            [last_activity] => 1752477198
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:13:31 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752477198
+            [last_activity] => 1752477209
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:13:31 Asia/Manila] Processing transactions for user_id: 13
+[14-Jul-2025 15:13:31 Asia/Manila] Account filter: None
+[14-Jul-2025 15:13:31 Asia/Manila] Attempting database connection
+[14-Jul-2025 15:13:32 Asia/Manila] Database connection successful
+[14-Jul-2025 15:13:32 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[14-Jul-2025 15:13:32 Asia/Manila] Total transactions found: 12
+[14-Jul-2025 15:13:32 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[14-Jul-2025 15:13:33 Asia/Manila] Query executed successfully
+[14-Jul-2025 15:13:33 Asia/Manila] Processed 5 transactions
+[14-Jul-2025 15:13:33 Asia/Manila] Connection closed
+[14-Jul-2025 15:13:38 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752477198
+            [last_activity] => 1752477216
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:13:39 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:13:39 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:16:00 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752477198
+            [last_activity] => 1752477359
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:16:01 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:16:02 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 09:17:20 Europe/Berlin] Logout request received. User: janedee
+[14-Jul-2025 15:17:29 Asia/Manila] Received login data: Array
+(
+    [username] => danielvictorioso
+    [password] => mCmVHxZFrGxftEbV
+    [login_type] => user
+)
+
+[14-Jul-2025 15:17:30 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477450
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 15:17:30 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 15:17:30
+)
+
+[14-Jul-2025 15:17:30 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477450
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:17:40 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477459
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:17:41 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 15:17:42 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 15:17:43 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477462
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:17:43 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 15:17:43 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 15:17:43 Asia/Manila] Attempting database connection
+[14-Jul-2025 15:17:44 Asia/Manila] Database connection successful
+[14-Jul-2025 15:17:44 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 15:17:45 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 15:17:45 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 15:17:45 Asia/Manila] Query executed successfully
+[14-Jul-2025 15:17:45 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 15:17:45 Asia/Manila] Connection closed
+[14-Jul-2025 15:17:49 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477467
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:17:50 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 15:17:50 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 15:17:58 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477477
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:18:00 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 15:18:00 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 15:18:19 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477498
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:18:20 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 15:18:20 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 15:18:31 Asia/Manila] Send OTP - Raw request data: {"phone_number":"09876543210","purpose":"fund_transfer"}
+[14-Jul-2025 15:18:31 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[14-Jul-2025 15:18:31 Asia/Manila] Send OTP - Normalized phone: 09876543210
+[14-Jul-2025 15:18:32 Asia/Manila] Send OTP - Formatted phone for API: +639876543210
+[14-Jul-2025 15:18:34 Asia/Manila] Send OTP - API Response: [{"message_id":251134969,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639876543210","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 963912","code":963912,"sender_name":"ERRAWRS","network":"Unknown","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:18:31","updated_at":"2025-07-14 15:18:31"}]
+[14-Jul-2025 15:18:34 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 15:18:34 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251134969,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639876543210","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 963912","code":963912,"sender_name":"ERRAWRS","network":"Unknown","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:18:31","updated_at":"2025-07-14 15:18:31"}]
+[14-Jul-2025 15:18:34 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 15:18:34 Asia/Manila] Storing OTP - Phone: 09876543210, Purpose: fund_transfer
+[14-Jul-2025 15:18:34 Asia/Manila] Session ID before storing: vhit4fg2qr270fctlhululk56s
+[14-Jul-2025 15:18:34 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 15:18:34 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477502
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 100000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000005
+            [redirect_url] => http://localhost/user/transfer_success
+            [created_at] => 1752477510
+        )
+
+)
+
+[14-Jul-2025 15:18:34 Asia/Manila] OTP stored successfully
+[14-Jul-2025 15:18:34 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477502
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 100000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000005
+            [redirect_url] => http://localhost/user/transfer_success
+            [created_at] => 1752477510
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752477514
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[14-Jul-2025 15:18:34 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752477450
+            [last_activity] => 1752477502
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 100000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000005
+            [redirect_url] => http://localhost/user/transfer_success
+            [created_at] => 1752477510
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752477514
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[14-Jul-2025 09:18:45 Europe/Berlin] Logout request received. User: danielvictorioso
+[14-Jul-2025 15:19:56 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"registration"}
+[14-Jul-2025 15:19:56 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:19:56 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 15:19:57 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 15:19:58 Asia/Manila] Send OTP - API Response: [{"message_id":251135014,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 262973","code":262973,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:19:55","updated_at":"2025-07-14 15:19:55"}]
+[14-Jul-2025 15:19:58 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 15:19:58 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251135014,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 262973","code":262973,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:19:55","updated_at":"2025-07-14 15:19:55"}]
+[14-Jul-2025 15:19:58 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 15:19:58 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: registration
+[14-Jul-2025 15:19:58 Asia/Manila] Session ID before storing: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:19:58 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 15:19:58 Asia/Manila] Session data before storing: Array
+(
+)
+
+[14-Jul-2025 15:19:58 Asia/Manila] OTP stored successfully
+[14-Jul-2025 15:19:58 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:19:58 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639708070447","otp":"262973","purpose":"registration"}
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639708070447
+    [otp] => 262973
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - Purpose: registration
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:04 Asia/Manila] Verifying OTP - Input: 262973, Phone: +639708070447, Purpose: registration
+[14-Jul-2025 15:21:04 Asia/Manila] Session ID before verify: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:21:04 Asia/Manila] Session name before verify: PHPSESSID
+[14-Jul-2025 15:21:04 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:04 Asia/Manila] Invalid OTP
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[14-Jul-2025 15:21:04 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:51 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"registration"}
+[14-Jul-2025 15:21:51 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:21:51 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 15:21:51 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 15:21:53 Asia/Manila] Send OTP - API Response: [{"message_id":251135080,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 745099","code":745099,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:21:49","updated_at":"2025-07-14 15:21:49"}]
+[14-Jul-2025 15:21:53 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 15:21:53 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251135080,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 745099","code":745099,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:21:49","updated_at":"2025-07-14 15:21:49"}]
+[14-Jul-2025 15:21:53 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 15:21:53 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: registration
+[14-Jul-2025 15:21:53 Asia/Manila] Session ID before storing: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:21:53 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 15:21:53 Asia/Manila] Session data before storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477598
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:53 Asia/Manila] OTP stored successfully
+[14-Jul-2025 15:21:53 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:21:53 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639708070447","otp":"745099","purpose":"registration"}
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639708070447
+    [otp] => 745099
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - Purpose: registration
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:22:43 Asia/Manila] Verifying OTP - Input: 745099, Phone: +639708070447, Purpose: registration
+[14-Jul-2025 15:22:43 Asia/Manila] Session ID before verify: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:22:43 Asia/Manila] Session name before verify: PHPSESSID
+[14-Jul-2025 15:22:43 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:22:43 Asia/Manila] Invalid OTP
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[14-Jul-2025 15:22:43 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:12 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"registration"}
+[14-Jul-2025 15:29:12 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:29:12 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 15:29:12 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 15:29:15 Asia/Manila] Send OTP - API Response: [{"message_id":251135437,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 125471","code":125471,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:29:12","updated_at":"2025-07-14 15:29:12"}]
+[14-Jul-2025 15:29:15 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 15:29:15 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251135437,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 125471","code":125471,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:29:12","updated_at":"2025-07-14 15:29:12"}]
+[14-Jul-2025 15:29:15 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 15:29:15 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: registration
+[14-Jul-2025 15:29:15 Asia/Manila] Session ID before storing: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:29:15 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 15:29:15 Asia/Manila] Session data before storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752477713
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:15 Asia/Manila] OTP stored successfully
+[14-Jul-2025 15:29:15 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:15 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639708070447","otp":"125471","purpose":"registration"}
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639708070447
+    [otp] => 125471
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - Purpose: registration
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:31 Asia/Manila] Verifying OTP - Input: 125471, Phone: +639708070447, Purpose: registration
+[14-Jul-2025 15:29:31 Asia/Manila] Session ID before verify: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:29:31 Asia/Manila] Session name before verify: PHPSESSID
+[14-Jul-2025 15:29:31 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:31 Asia/Manila] Invalid OTP
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[14-Jul-2025 15:29:31 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639708070447","otp":"125471","purpose":"registration"}
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639708070447
+    [otp] => 125471
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - Purpose: registration
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:59 Asia/Manila] Verifying OTP - Input: 125471, Phone: +639708070447, Purpose: registration
+[14-Jul-2025 15:29:59 Asia/Manila] Session ID before verify: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:29:59 Asia/Manila] Session name before verify: PHPSESSID
+[14-Jul-2025 15:29:59 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:29:59 Asia/Manila] Invalid OTP
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[14-Jul-2025 15:29:59 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 2
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639708070447","otp":"125471","purpose":"registration"}
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639708070447
+    [otp] => 125471
+    [purpose] => registration
+)
+
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - Purpose: registration
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 2
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:30:05 Asia/Manila] Verifying OTP - Input: 125471, Phone: +639708070447, Purpose: registration
+[14-Jul-2025 15:30:05 Asia/Manila] Session ID before verify: em92ncqebu1d07mth58v0pfc7d
+[14-Jul-2025 15:30:05 Asia/Manila] Session name before verify: PHPSESSID
+[14-Jul-2025 15:30:05 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 2
+            [purpose] => registration
+        )
+
+)
+
+[14-Jul-2025 15:30:05 Asia/Manila] Invalid OTP
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[14-Jul-2025 15:30:05 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752478155
+            [attempts] => 3
+            [purpose] => registration
+        )
+
+)
+

@@ -137,6 +137,27 @@ try {
     $db = db_connect();
     $userId = $_SESSION['auth']['id'];
 
+    // DAILY TRANSFER LIMIT CHECK (internal + external)
+    $limitQuery = $db->prepare('
+        SELECT COUNT(*) as transfer_count
+        FROM transaction t
+        JOIN account a ON t.sender_account_id = a.account_id
+        WHERE a.user_id = ?
+          AND t.transaction_type IN ("transfer_internal", "transfer_external_out")
+          AND DATE(t.created_at) = CURDATE()
+    ');
+    $limitQuery->bind_param('i', $userId);
+    $limitQuery->execute();
+    $transferCount = $limitQuery->get_result()->fetch_assoc()['transfer_count'];
+    $limitQuery->close();
+    if ($transferCount >= 3) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'You have reached the maximum of 3 transfers for today.'
+        ]);
+        exit();
+    }
+
     // Validate source account ownership and balance
     $sourceValidationQuery = $db->prepare('SELECT account_id, balance, user_id FROM account WHERE account_number = ? AND user_id = ? AND status = "active"');
     $sourceValidationQuery->bind_param('si', $sourceAccountNo, $userId);
