@@ -29,22 +29,11 @@ server {
 
     # Root for static assets
     root /var/www/dev/project-errawrs/public;
-    index user/index.html;
+    index index.php index.html;
 
-    # Redirect root to /user/index.html
-    location = / {
-        return 302 /user/index.html;
-    }
-
-    # Serve static files for /user/ explicitly to ensure correct MIME types and path resolution
-    location /user/ {
-        alias /var/www/dev/project-errawrs/public/user/;
-        try_files $uri $uri/ =404;
-    }
-
-    # Serve static files directly
+    # Serve static files and route all other requests to index.php for PHP routing
     location / {
-        try_files $uri $uri/ =404;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     # API endpoints (PHP backend)
