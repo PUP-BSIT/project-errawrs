@@ -19,21 +19,12 @@ header('X-Debug-Auth-Type: ' . ($sessionManager->isAuthenticated() ? ($sessionMa
 
 // Set JSON header first before any output
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Access-Control-Allow-Credentials: true');
 
 // Function to handle errors
 function sendError($message, $code = 400) {
     error_log("List Tellers Error: " . $message);
     http_response_code($code);
     echo json_encode(['success' => false, 'message' => $message]);
-    exit();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
     exit();
 }
 

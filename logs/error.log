@@ -25224,3 +25224,5771 @@ Stack trace:
     [login_type] => user
 )
 
+[14-Jul-2025 04:26:38 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:27:04 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:28:00 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:32:56 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:33:04 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => admin123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:33:05 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752438785
+            [last_activity] => 1752438785
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:33:05 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:33:05
+)
+
+[14-Jul-2025 04:33:05 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752438785
+            [last_activity] => 1752438785
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:34:23 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:34:24 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752438864
+            [last_activity] => 1752438864
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:34:24 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:34:24
+)
+
+[14-Jul-2025 04:34:24 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752438864
+            [last_activity] => 1752438864
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:36:40 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:36:41 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439001
+            [last_activity] => 1752439001
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:36:41 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:36:41
+)
+
+[14-Jul-2025 04:36:41 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439001
+            [last_activity] => 1752439001
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:38:25 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:38:26 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439106
+            [last_activity] => 1752439106
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:38:26 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:38:26
+)
+
+[14-Jul-2025 04:38:26 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439106
+            [last_activity] => 1752439106
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:38:35 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:38:37 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439117
+            [last_activity] => 1752439117
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:38:37 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:38:37
+)
+
+[14-Jul-2025 04:38:37 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439117
+            [last_activity] => 1752439117
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:45:38 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:45:40 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439540
+            [last_activity] => 1752439540
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:45:40 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:45:40
+)
+
+[14-Jul-2025 04:45:40 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439540
+            [last_activity] => 1752439540
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:46:21 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:46:22 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439582
+            [last_activity] => 1752439582
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:46:22 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:46:22
+)
+
+[14-Jul-2025 04:46:22 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439582
+            [last_activity] => 1752439582
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:48:09 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:48:10 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439690
+            [last_activity] => 1752439690
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:48:10 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:48:10
+)
+
+[14-Jul-2025 04:48:10 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752439690
+            [last_activity] => 1752439690
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:50:05 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 04:50:05 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752439805
+            [last_activity] => 1752439805
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:50:05 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 04:50:05
+)
+
+[14-Jul-2025 04:50:05 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752439805
+            [last_activity] => 1752439805
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 04:56:34 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:56:35 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440195
+            [last_activity] => 1752440195
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:56:35 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:56:35
+)
+
+[14-Jul-2025 04:56:35 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440195
+            [last_activity] => 1752440195
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 22:56:47 Europe/Berlin] Logout request received. User: T000002
+[14-Jul-2025 04:56:53 Asia/Manila] Received login data: Array
+(
+    [teller_number] => admin
+    [password] => Admin@123
+    [login_type] => teller
+)
+
+[14-Jul-2025 04:56:59 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 04:57:00 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752440220
+            [last_activity] => 1752440220
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:57:00 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 04:57:00
+)
+
+[14-Jul-2025 04:57:00 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752440220
+            [last_activity] => 1752440220
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 04:57:12 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:57:12 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440232
+            [last_activity] => 1752440232
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:57:12 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:57:12
+)
+
+[14-Jul-2025 04:57:12 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440232
+            [last_activity] => 1752440232
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:57:35 Asia/Manila] Received login data: Array
+(
+    [username] => danielvictorioso
+    [password] => mCmVHxZFrGxftEbV
+    [login_type] => user
+)
+
+[14-Jul-2025 04:57:36 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440256
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 04:57:36 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 04:57:36
+)
+
+[14-Jul-2025 04:57:36 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440256
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:57:43 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440262
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:57:44 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 04:57:44 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 04:57:45 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440264
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:57:45 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 04:57:45 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 04:57:45 Asia/Manila] Attempting database connection
+[14-Jul-2025 04:57:46 Asia/Manila] Database connection successful
+[14-Jul-2025 04:57:46 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 04:57:46 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 04:57:46 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 04:57:47 Asia/Manila] Query executed successfully
+[14-Jul-2025 04:57:47 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 04:57:47 Asia/Manila] Connection closed
+[14-Jul-2025 04:58:17 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440296
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:58:18 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 04:58:18 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 04:58:18 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440296
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:58:18 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 04:58:18 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 04:58:18 Asia/Manila] Attempting database connection
+[14-Jul-2025 04:58:19 Asia/Manila] Database connection successful
+[14-Jul-2025 04:58:19 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 04:58:19 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 04:58:19 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 04:58:20 Asia/Manila] Query executed successfully
+[14-Jul-2025 04:58:20 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 04:58:20 Asia/Manila] Connection closed
+[14-Jul-2025 04:58:29 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 04:58:29 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440309
+            [last_activity] => 1752440309
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:58:29 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 04:58:29
+)
+
+[14-Jul-2025 04:58:29 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440309
+            [last_activity] => 1752440309
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 04:58:47 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440326
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:58:48 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 04:58:48 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 04:58:48 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440326
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:58:48 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 04:58:48 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 04:58:48 Asia/Manila] Attempting database connection
+[14-Jul-2025 04:58:49 Asia/Manila] Database connection successful
+[14-Jul-2025 04:58:49 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 04:58:49 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 04:58:49 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 04:58:50 Asia/Manila] Query executed successfully
+[14-Jul-2025 04:58:50 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 04:58:50 Asia/Manila] Connection closed
+[14-Jul-2025 04:59:17 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440356
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:59:18 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 04:59:18 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 04:59:18 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440356
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:59:18 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 04:59:18 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 04:59:18 Asia/Manila] Attempting database connection
+[14-Jul-2025 04:59:19 Asia/Manila] Database connection successful
+[14-Jul-2025 04:59:19 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 04:59:19 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 04:59:19 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 04:59:19 Asia/Manila] Query executed successfully
+[14-Jul-2025 04:59:19 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 04:59:19 Asia/Manila] Connection closed
+[14-Jul-2025 04:59:48 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440386
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:59:48 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 04:59:49 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 04:59:51 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440386
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 04:59:51 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 04:59:51 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 04:59:51 Asia/Manila] Attempting database connection
+[14-Jul-2025 04:59:52 Asia/Manila] Database connection successful
+[14-Jul-2025 04:59:52 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 04:59:52 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 04:59:52 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 04:59:53 Asia/Manila] Query executed successfully
+[14-Jul-2025 04:59:53 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 04:59:53 Asia/Manila] Connection closed
+[14-Jul-2025 05:00:17 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440416
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 05:00:18 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 05:00:18 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 05:00:18 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440416
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 05:00:18 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 05:00:18 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 05:00:18 Asia/Manila] Attempting database connection
+[14-Jul-2025 05:00:19 Asia/Manila] Database connection successful
+[14-Jul-2025 05:00:19 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 05:00:19 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 05:00:19 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 05:00:19 Asia/Manila] Query executed successfully
+[14-Jul-2025 05:00:19 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 05:00:19 Asia/Manila] Connection closed
+[14-Jul-2025 05:00:47 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440446
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 05:00:48 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 05:00:48 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 05:00:51 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752440256
+            [last_activity] => 1752440446
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 05:00:51 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 05:00:51 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 05:00:51 Asia/Manila] Attempting database connection
+[14-Jul-2025 05:00:51 Asia/Manila] Database connection successful
+[14-Jul-2025 05:00:51 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 05:00:52 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 05:00:52 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 05:00:52 Asia/Manila] Query executed successfully
+[14-Jul-2025 05:00:52 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 05:00:52 Asia/Manila] Connection closed
+[14-Jul-2025 05:05:53 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 05:05:54 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440754
+            [last_activity] => 1752440754
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:05:54 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:05:54
+)
+
+[14-Jul-2025 05:05:54 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752440754
+            [last_activity] => 1752440754
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:10:06 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000002
+    [password] => 123456789gerald
+    [login_type] => teller
+)
+
+[14-Jul-2025 05:10:06 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752441006
+            [last_activity] => 1752441006
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:10:06 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 05:10:06
+)
+
+[14-Jul-2025 05:10:06 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752441006
+            [last_activity] => 1752441006
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 05:14:52 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 05:14:53 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441293
+            [last_activity] => 1752441293
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:14:53 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:14:53
+)
+
+[14-Jul-2025 05:14:53 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441293
+            [last_activity] => 1752441293
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:16:16 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 05:16:17 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441377
+            [last_activity] => 1752441377
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:16:17 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:16:17
+)
+
+[14-Jul-2025 05:16:17 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441377
+            [last_activity] => 1752441377
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:21:52 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:21:53 Asia/Manila] Received login data: Array
+(
+    [username] => admin
+    [password] => Admin@123
+    [login_type] => admin
+)
+
+[14-Jul-2025 05:21:54 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441714
+            [last_activity] => 1752441714
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:21:54 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:21:54
+)
+
+[14-Jul-2025 05:21:54 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441714
+            [last_activity] => 1752441714
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:23:37 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:23:39 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441819
+            [last_activity] => 1752441819
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:23:39 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:23:39
+)
+
+[14-Jul-2025 05:23:39 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441819
+            [last_activity] => 1752441819
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:24:33 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:24:35 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441875
+            [last_activity] => 1752441875
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:24:35 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:24:35
+)
+
+[14-Jul-2025 05:24:35 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752441875
+            [last_activity] => 1752441875
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:27:08 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:27:10 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442030
+            [last_activity] => 1752442030
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:27:10 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:27:10
+)
+
+[14-Jul-2025 05:27:10 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442030
+            [last_activity] => 1752442030
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:29:49 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:29:51 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442191
+            [last_activity] => 1752442191
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:29:51 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:29:51
+)
+
+[14-Jul-2025 05:29:51 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442191
+            [last_activity] => 1752442191
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:30:23 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:30:24 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442224
+            [last_activity] => 1752442224
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:30:24 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:30:24
+)
+
+[14-Jul-2025 05:30:24 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442224
+            [last_activity] => 1752442224
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:38:53 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:38:55 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442735
+            [last_activity] => 1752442735
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:38:55 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:38:55
+)
+
+[14-Jul-2025 05:38:55 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442735
+            [last_activity] => 1752442735
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[13-Jul-2025 23:39:49 Europe/Berlin] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\project-errawrs\src\api\auth\login.php on line 7
+[14-Jul-2025 05:39:50 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442790
+            [last_activity] => 1752442790
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:39:50 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:39:50
+)
+
+[14-Jul-2025 05:39:50 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442790
+            [last_activity] => 1752442790
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:42:20 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442940
+            [last_activity] => 1752442940
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:42:20 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:42:20
+)
+
+[14-Jul-2025 05:42:20 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442940
+            [last_activity] => 1752442940
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:42:51 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442971
+            [last_activity] => 1752442971
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:42:51 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:42:51
+)
+
+[14-Jul-2025 05:42:51 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752442971
+            [last_activity] => 1752442971
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:43:38 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443018
+            [last_activity] => 1752443018
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:43:38 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:43:38
+)
+
+[14-Jul-2025 05:43:38 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443018
+            [last_activity] => 1752443018
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:52:33 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443553
+            [last_activity] => 1752443553
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:52:33 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:52:33
+)
+
+[14-Jul-2025 05:52:33 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443553
+            [last_activity] => 1752443553
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:54:05 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443645
+            [last_activity] => 1752443645
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:54:05 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:54:05
+)
+
+[14-Jul-2025 05:54:05 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443645
+            [last_activity] => 1752443645
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:54:18 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443658
+            [last_activity] => 1752443658
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:54:18 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:54:18
+)
+
+[14-Jul-2025 05:54:18 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443658
+            [last_activity] => 1752443658
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:56:30 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443790
+            [last_activity] => 1752443790
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:56:30 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:56:30
+)
+
+[14-Jul-2025 05:56:30 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443790
+            [last_activity] => 1752443790
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:56:43 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443803
+            [last_activity] => 1752443803
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 05:56:43 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 05:56:43
+)
+
+[14-Jul-2025 05:56:43 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752443803
+            [last_activity] => 1752443803
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 06:02:06 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444126
+            [last_activity] => 1752444126
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 06:02:06 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 06:02:06
+)
+
+[14-Jul-2025 06:02:06 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444126
+            [last_activity] => 1752444126
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 00:02:08 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:02:08 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:02:08 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:02:08 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:02:08 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:02:08 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:02:08 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:02:08 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:06:36 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:06:36 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:06:36 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:06:36 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:06:37 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:06:37 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:06:37 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:06:37 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:06:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:06:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:06:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:06:51 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:06:51 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:06:51 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:06:51 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:06:51 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:06:56 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:06:56 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:06:56 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:06:56 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:06:57 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:06:57 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:06:57 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:06:57 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:07:16 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:07:16 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:07:16 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:07:16 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:07:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:07:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:07:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:07:16 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:07:19 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:07:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:07:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:07:20 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:07:21 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:07:21 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:07:21 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:07:21 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:10:28 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:10:28 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:10:28 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:10:28 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => f3ostmev07lvli4knjj0kacffe
+)
+
+[14-Jul-2025 00:10:28 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:10:28 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444126
+    [last_activity] => 1752444126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:10:28 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:10:28 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:10:49 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444649
+            [last_activity] => 1752444649
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 06:10:49 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 06:10:49
+)
+
+[14-Jul-2025 06:10:49 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444649
+            [last_activity] => 1752444649
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 00:10:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:10:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:10:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:10:51 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => ehho72s2vf6b950ki6bb9u5q46
+)
+
+[14-Jul-2025 00:10:51 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:10:51 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444649
+    [last_activity] => 1752444649
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:10:51 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:10:51 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:12:12 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444732
+            [last_activity] => 1752444732
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 06:12:12 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 06:12:12
+)
+
+[14-Jul-2025 06:12:12 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752444732
+            [last_activity] => 1752444732
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 00:12:14 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:12:14 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 00:12:14 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 00:12:14 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:12:14 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:12:14 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 00:12:15 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:12:15 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752444732
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:12:15 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:12:15 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:13:40 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:13:40 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 00:13:40 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 00:13:41 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:13:41 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:13:41 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 00:13:43 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:13:43 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752444732
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:13:43 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:13:43 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:13:44 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:13:44 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 00:13:44 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 00:13:44 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:13:44 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:13:44 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 00:13:45 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:13:45 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752444732
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:13:45 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:13:45 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 00:13:46 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:13:46 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 00:13:46 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 00:13:46 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:13:46 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:13:46 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 00:13:46 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:13:46 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752444732
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:13:46 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:13:46 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:14:30 Asia/Manila] Raw input: {"teller_id":44}
+[14-Jul-2025 06:14:30 Asia/Manila] Create Teller Error: Missing required fields
+[14-Jul-2025 00:17:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 00:17:51 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 00:17:51 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 00:17:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 00:17:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 00:17:51 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 00:17:52 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 00:17:52 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752445071
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 00:17:52 Europe/Berlin] Is admin: true
+[14-Jul-2025 00:17:52 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:18:01 Asia/Manila] PHP Warning:  file_get_contents(C:\xampp\htdocs\project-errawrs\src\api\admin/../user/email-templates/registration-email.css): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\send_teller_reset_email.php on line 68
+[14-Jul-2025 06:25:03 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 06:25:03 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 06:25:03 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 06:25:03 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 06:25:03 Europe/Berlin] Session ID: 
+[14-Jul-2025 06:25:03 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 06:25:03 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 06:25:03 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752445080
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 06:25:03 Europe/Berlin] Is admin: true
+[14-Jul-2025 06:25:03 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:25:17 Asia/Manila] Teller reset password - Teller ID: 45
+[14-Jul-2025 12:25:18 Asia/Manila] Attempting to send reset email to: cscb.vpr.gerald@gmail.com
+[14-Jul-2025 12:25:22 Asia/Manila] Reset email sent successfully to: cscb.vpr.gerald@gmail.com
+[14-Jul-2025 06:36:26 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 06:36:26 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 06:36:26 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 06:36:26 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 06:36:26 Europe/Berlin] Session ID: 
+[14-Jul-2025 06:36:26 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 06:36:26 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 06:36:26 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752467431
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 06:36:26 Europe/Berlin] Is admin: true
+[14-Jul-2025 06:36:26 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:43:49 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 06:43:49 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 06:43:49 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 06:43:49 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 06:43:49 Europe/Berlin] Session ID: 
+[14-Jul-2025 06:43:49 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 06:43:50 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 06:43:50 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752468229
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 06:43:50 Europe/Berlin] Is admin: true
+[14-Jul-2025 06:43:50 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:43:55 Asia/Manila] Get Teller Error: Missing teller ID
+[14-Jul-2025 06:51:07 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 06:51:07 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 06:51:07 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 06:51:07 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 06:51:07 Europe/Berlin] Session ID: 
+[14-Jul-2025 06:51:07 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 06:51:07 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 06:51:07 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752468235
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 06:51:07 Europe/Berlin] Is admin: true
+[14-Jul-2025 06:51:07 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 06:59:59 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 06:59:59 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 06:59:59 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 06:59:59 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 06:59:59 Europe/Berlin] Session ID: 
+[14-Jul-2025 06:59:59 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:00:00 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:00:00 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752469199
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:00:00 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:00:00 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:00:39 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:00:39 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:04:08 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:04:08 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:05:07 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:05:07 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:05:07 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:05:07 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:05:07 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:05:07 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:05:07 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:05:07 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752469230
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:05:07 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:05:07 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:05:13 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:05:13 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:05:13 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:05:13 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:05:13 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:05:13 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:05:13 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:05:13 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752469507
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:05:13 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:05:13 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:09:39 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:09:39 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:09:39 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:09:39 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:09:39 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:09:39 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:09:40 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:09:40 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752469779
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:09:40 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:09:40 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:09:48 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:09:48 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:10:18 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:10:18 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:15:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:15:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:15:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:15:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:15:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:15:20 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:15:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:15:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752469779
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:15:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:15:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:15:24 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:15:24 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:22:25 Europe/Berlin] PHP Warning:  require_once(../../config/database.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:22:25 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required '../../config/database.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php:26
+Stack trace:
+#0 C:\xampp\htdocs\project-errawrs\src\core\Router.php(254): include()
+#1 C:\xampp\htdocs\project-errawrs\src\core\Router.php(134): Router->executeFileHandler('src/api/admin/t...', Array)
+#2 C:\xampp\htdocs\project-errawrs\public\index.php(45): Router->dispatch('POST', '/admin/tellers/...')
+#3 {main}
+  thrown in C:\xampp\htdocs\project-errawrs\src\api\admin\toggle_teller_status.php on line 26
+[14-Jul-2025 07:26:26 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:26:26 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:26:26 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:26:26 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:26:26 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:26:26 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:26:28 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:26:28 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752470786
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:26:28 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:26:28 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 07:28:08 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 07:28:08 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 07:28:08 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 07:28:08 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 07:28:08 Europe/Berlin] Session ID: 
+[14-Jul-2025 07:28:08 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => hiij12ghakha37m4vj0bgjodbf
+)
+
+[14-Jul-2025 07:28:09 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 07:28:09 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752444732
+    [last_activity] => 1752470888
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 07:28:09 Europe/Berlin] Is admin: true
+[14-Jul-2025 07:28:09 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:37:28 Asia/Manila] Login API Error: Teller account is inactive. Please contact administrator.
+[14-Jul-2025 13:37:42 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752471462
+            [last_activity] => 1752471462
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 13:37:42 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 13:37:42
+)
+
+[14-Jul-2025 13:37:42 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752471462
+            [last_activity] => 1752471462
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 07:38:24 Europe/Berlin] Logout request received. User: T000002
+[14-Jul-2025 13:44:48 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752471888
+            [last_activity] => 1752471888
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 13:44:48 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 13:44:48
+)
+
+[14-Jul-2025 13:44:48 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752471888
+            [last_activity] => 1752471888
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 10:08:45 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 10:08:45 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 10:08:45 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 10:08:45 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 10:08:45 Europe/Berlin] Session ID: 
+[14-Jul-2025 10:08:45 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => u1r76ke1q9umuk4h5bv9ialdmq
+)
+
+[14-Jul-2025 10:08:50 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 10:08:50 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752471888
+    [last_activity] => 1752471888
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 10:08:50 Europe/Berlin] Is admin: true
+[14-Jul-2025 10:08:50 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 16:11:29 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752480689
+            [last_activity] => 1752480689
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 16:11:29 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 16:11:29
+)
+
+[14-Jul-2025 16:11:29 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752480689
+            [last_activity] => 1752480689
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 10:11:31 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 10:11:31 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 10:11:31 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 10:11:31 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 10:11:31 Europe/Berlin] Session ID: 
+[14-Jul-2025 10:11:31 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => eog1c3hu5ml954bfnkmcq5jshu
+)
+
+[14-Jul-2025 10:11:31 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 10:11:31 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752480689
+    [last_activity] => 1752480689
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 10:11:31 Europe/Berlin] Is admin: true
+[14-Jul-2025 10:11:31 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 16:14:48 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752480888
+            [last_activity] => 1752480888
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 16:14:48 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 16:14:48
+)
+
+[14-Jul-2025 16:14:48 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752480888
+            [last_activity] => 1752480888
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 10:14:50 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 10:14:50 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 10:14:50 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 10:14:50 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 10:14:50 Europe/Berlin] Session ID: 
+[14-Jul-2025 10:14:50 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => t9ofce2pcm2j9hitm6n3jrde2s
+)
+
+[14-Jul-2025 10:14:52 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 10:14:52 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752480888
+    [last_activity] => 1752480888
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 10:14:52 Europe/Berlin] Is admin: true
+[14-Jul-2025 10:14:52 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 10:14:55 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 10:14:55 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 10:14:55 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 10:14:55 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 10:14:55 Europe/Berlin] Session ID: 
+[14-Jul-2025 10:14:55 Europe/Berlin] All cookies: Array
+(
+    [PHPSESSID] => h98qsgbshrqh0qn58c8kuamc1n
+    [STACKOVERCASH_SESSID] => soce54m59t3j2i22cvkvkausqu
+    [STACKOVERCASH_SESSID_ADMIN] => t9ofce2pcm2j9hitm6n3jrde2s
+)
+
+[14-Jul-2025 10:14:55 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 10:14:55 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752480888
+    [last_activity] => 1752480888
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 10:14:55 Europe/Berlin] Is admin: true
+[14-Jul-2025 10:14:55 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 17:36:09 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752485769
+            [last_activity] => 1752485769
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 17:36:09 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 17:36:09
+)
+
+[14-Jul-2025 17:36:09 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752485769
+            [last_activity] => 1752485769
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 11:36:11 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 11:36:11 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 11:36:11 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 11:36:11 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 11:36:11 Europe/Berlin] Session ID: 
+[14-Jul-2025 11:36:11 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_ADMIN] => 4h2lpakbu55i98vjign77alkl1
+)
+
+[14-Jul-2025 11:36:11 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 11:36:11 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752485769
+    [last_activity] => 1752485769
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 11:36:11 Europe/Berlin] Is admin: true
+[14-Jul-2025 11:36:11 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 11:36:15 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 11:36:15 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 11:36:15 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 11:36:15 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 11:36:15 Europe/Berlin] Session ID: 
+[14-Jul-2025 11:36:15 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_ADMIN] => 4h2lpakbu55i98vjign77alkl1
+)
+
+[14-Jul-2025 11:36:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 11:36:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752485769
+    [last_activity] => 1752485775
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 11:36:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 11:36:16 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 11:36:16 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 11:36:16 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 11:36:16 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 11:36:16 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 11:36:16 Europe/Berlin] Session ID: 
+[14-Jul-2025 11:36:16 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_ADMIN] => 4h2lpakbu55i98vjign77alkl1
+)
+
+[14-Jul-2025 11:36:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 11:36:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752485769
+    [last_activity] => 1752485775
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 11:36:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 11:36:16 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 18:08:46 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752487726
+            [last_activity] => 1752487726
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 18:08:46 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 18:08:46
+)
+
+[14-Jul-2025 18:08:46 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752487726
+            [last_activity] => 1752487726
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 12:08:47 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:08:47 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:08:47 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:08:47 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:08:47 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:08:47 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_ADMIN] => jjetfp8j7ve6q10be3cfr5n2kd
+)
+
+[14-Jul-2025 12:08:47 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:08:47 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752487726
+    [last_activity] => 1752487726
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:08:47 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:08:47 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:08:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:08:51 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:08:51 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:08:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:08:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:08:51 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_ADMIN] => jjetfp8j7ve6q10be3cfr5n2kd
+)
+
+[14-Jul-2025 12:08:52 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:08:52 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752487726
+    [last_activity] => 1752487731
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:08:52 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:08:52 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:09:09 Europe/Berlin] Logout request received. User: admin
+[14-Jul-2025 12:09:12 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:09:12 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:09:12 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:09:12 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:09:12 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:09:12 Europe/Berlin] All cookies: Array
+(
+)
+
+[14-Jul-2025 12:09:12 Europe/Berlin] Is authenticated: false
+[14-Jul-2025 12:09:12 Europe/Berlin] ❌ Not authenticated
+[14-Jul-2025 18:09:27 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487767
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 18:09:27 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 18:09:27
+)
+
+[14-Jul-2025 18:09:27 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487767
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 18:09:35 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487773
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 18:09:35 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 18:09:36 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 18:09:36 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487773
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 18:09:36 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 18:09:36 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 18:09:36 Asia/Manila] Attempting database connection
+[14-Jul-2025 18:09:36 Asia/Manila] Database connection successful
+[14-Jul-2025 18:09:36 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 18:09:37 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 18:09:37 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 18:09:37 Asia/Manila] Query executed successfully
+[14-Jul-2025 18:09:37 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 18:09:37 Asia/Manila] Connection closed
+[14-Jul-2025 18:09:43 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752487783
+            [last_activity] => 1752487783
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 18:09:43 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 18:09:43
+)
+
+[14-Jul-2025 18:09:43 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752487783
+            [last_activity] => 1752487783
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 12:10:02 Europe/Berlin] Logout request received. User: T000002
+[14-Jul-2025 18:10:07 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487806
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 18:10:08 Asia/Manila] Fetching accounts for user ID: 14
+[14-Jul-2025 18:10:08 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[14-Jul-2025 18:10:08 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752487767
+            [last_activity] => 1752487806
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 18:10:08 Asia/Manila] Processing transactions for user_id: 14
+[14-Jul-2025 18:10:08 Asia/Manila] Account filter: 544250000002
+[14-Jul-2025 18:10:08 Asia/Manila] Attempting database connection
+[14-Jul-2025 18:10:09 Asia/Manila] Database connection successful
+[14-Jul-2025 18:10:09 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[14-Jul-2025 18:10:09 Asia/Manila] Total transactions found: 7
+[14-Jul-2025 18:10:09 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[14-Jul-2025 18:10:09 Asia/Manila] Query executed successfully
+[14-Jul-2025 18:10:09 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 18:10:09 Asia/Manila] Connection closed
+[14-Jul-2025 18:10:17 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752487817
+            [last_activity] => 1752487817
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[14-Jul-2025 18:10:17 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-14 18:10:17
+)
+
+[14-Jul-2025 18:10:17 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752487817
+            [last_activity] => 1752487817
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[14-Jul-2025 12:10:22 Europe/Berlin] Logout request received. User: T000002
+[14-Jul-2025 12:10:33 Europe/Berlin] Logout request received. User: danielvictorioso
+[14-Jul-2025 18:15:44 Asia/Manila] Login API Error: Password and login type are required
+[14-Jul-2025 18:19:45 Asia/Manila] Login API Error: Password and login type are required
+[14-Jul-2025 18:29:47 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752488987
+            [last_activity] => 1752488987
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 18:29:47 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-14 18:29:47
+)
+
+[14-Jul-2025 18:29:47 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752488987
+            [last_activity] => 1752488987
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[14-Jul-2025 12:29:48 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:29:48 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:29:48 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:29:48 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:29:48 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:29:48 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:29:48 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:29:48 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752488987
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:29:48 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:29:48 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:29:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:29:51 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:29:51 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:29:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:29:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:29:51 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:29:51 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:29:51 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752488987
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:29:51 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:29:51 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:29:52 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:29:52 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:29:52 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:29:52 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:29:52 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:29:52 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:29:53 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:29:53 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752488991
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:29:53 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:29:53 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:29:55 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:29:55 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:29:55 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:29:55 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:29:55 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:29:55 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:29:56 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:29:56 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752488995
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:29:56 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:29:56 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:30:03 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:30:03 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:30:03 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:30:03 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:30:03 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:30:03 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:30:03 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:30:03 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752489003
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:30:03 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:30:03 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:30:07 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:30:07 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:30:07 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:30:07 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:30:07 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:30:07 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:30:09 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:30:09 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752489007
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:30:09 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:30:09 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:30:15 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:30:15 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:30:15 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:30:15 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:30:15 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:30:15 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:30:15 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:30:15 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752489014
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:30:15 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:30:15 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:40:19 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:40:19 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:40:19 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:40:19 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:40:19 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:40:19 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:40:19 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:40:19 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752489036
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:40:19 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:40:19 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 12:56:14 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 12:56:14 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 12:56:14 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 12:56:14 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 12:56:14 Europe/Berlin] Session ID: 
+[14-Jul-2025 12:56:14 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 12:56:15 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 12:56:15 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752490574
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 12:56:15 Europe/Berlin] Is admin: true
+[14-Jul-2025 12:56:15 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:06:12 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:06:12 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:06:12 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:06:12 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:06:12 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:06:12 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:06:12 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:06:12 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752490590
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:06:12 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:06:12 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:06:18 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:06:18 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:06:18 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:06:18 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:06:18 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:06:18 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:06:18 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:06:18 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752491172
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:06:18 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:06:18 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:09:17 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:09:17 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:09:17 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:09:17 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:09:17 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:09:17 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:09:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:09:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752491219
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:09:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:09:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:13:53 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:13:53 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:13:53 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:13:53 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:13:53 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:13:53 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:13:53 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:13:53 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752491359
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:13:53 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:13:53 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:20:45 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:20:45 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:20:45 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:20:45 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:20:45 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:20:45 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:20:45 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:20:45 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752491633
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:20:45 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:20:45 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 13:22:10 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 13:22:10 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 13:22:10 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 13:22:10 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 13:22:10 Europe/Berlin] Session ID: 
+[14-Jul-2025 13:22:10 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => istrqrum1h40rdr6uucr0dsuth
+    [STACKOVERCASH_SESSID_ADMIN] => uilu6j83c8q4k01r9hp704sb4q
+)
+
+[14-Jul-2025 13:22:10 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 13:22:10 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752488987
+    [last_activity] => 1752492045
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 13:22:10 Europe/Berlin] Is admin: true
+[14-Jul-2025 13:22:10 Europe/Berlin] ✅ Admin session check successful

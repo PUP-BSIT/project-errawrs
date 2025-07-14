@@ -36,13 +36,40 @@ class SessionManager {
             ini_set('session.gc_maxlifetime', 3600); // 1 hour
             ini_set('session.cookie_lifetime', 0); // Until browser closes
 
-            // Session name
-            session_name('STACKOVERCASH_SESSID');
+            // Session name (dynamic by subdomain)
+            session_name($this->getSessionName());
+
+            // Set cookie params for all subdomains
+            session_set_cookie_params([
+                'domain' => $this->getCookieDomain(),
+                'path' => '/',
+                'secure' => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
             
             session_start();
         }
 
         $this->isInitialized = true;
+    }
+
+    private function getCookieDomain() {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (strpos($host, '.local') !== false) {
+            return '.stackovercash.site.local';
+        }
+        return '.stackovercash.site';
+    }
+
+    private function getSessionName() {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (strpos($host, 'admin.') === 0) {
+            return 'STACKOVERCASH_SESSID_ADMIN';
+        } elseif (strpos($host, 'teller.') === 0) {
+            return 'STACKOVERCASH_SESSID_TELLER';
+        }
+        return 'STACKOVERCASH_SESSID';
     }
 
     public function storeOTP(string $otp, string $phone, string $purpose = 'general'): bool {

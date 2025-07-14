@@ -13,9 +13,6 @@ ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../logs/error.log');
 
-// Start session
-session_start();
-
 // Load the Router class
 require_once __DIR__ . '/../src/core/Router.php';
 
