@@ -81,7 +81,8 @@ jobs:
 
           # Erase the whole deployment path (including hidden files)
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]*"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}"
+          # Ensure directory exists and is owned by ubuntu for scp
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R ${REMOTE_USER}:${REMOTE_USER} ${DEPLOY_PATH}"
 
           # Copy new files from the runner to the deployment path
           echo "Copying files from runner to ${REMOTE_HOST}:${DEPLOY_PATH}/"
