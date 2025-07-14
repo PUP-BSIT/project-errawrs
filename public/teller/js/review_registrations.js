@@ -98,7 +98,15 @@ function applySearchFilter() {
                 );
             });
         }
+
+    // Sort by status if 'all' is selected
+    if (regReviewState.currentStatus === 'all') {
+        const statusOrder = { 'pending': 0, 'approved': 1, 'rejected': 2 };
+        regReviewState.filteredRegistrations.sort((a, b) => {
+            return (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3);
+        });
     }
+}
 
 // Get registrations for the current page
 function getPaginatedRegistrations() {
@@ -263,14 +271,67 @@ function updatePagination() {
     const pageNumbers = document.getElementById('page-numbers');
     if (pageNumbers) {
         let html = '';
-        for (let i = 1; i <= totalPages; i++) {
+        const currentPage = regReviewState.currentPage;
+        const maxVisible = 5;
+
+        // Always show first page
+        if (totalPages <= maxVisible + 1) {
+            // Show all pages if not too many
+            for (let i = 1; i <= totalPages; i++) {
+                html +=
+                    '<button class="page-number ' +
+                    (i === currentPage ? 'active' : '') +
+                    '" onclick="goToPage(' +
+                    i +
+                    ')">' +
+                    i +
+                    '</button>';
+            }
+        } else {
+            // Show first page
             html +=
                 '<button class="page-number ' +
-                (i === regReviewState.currentPage ? 'active' : '') +
+                (1 === currentPage ? 'active' : '') +
+                '" onclick="goToPage(1)">1</button>';
+
+            let start = Math.max(2, currentPage - 1);
+            let end = Math.min(totalPages - 1, currentPage + 1);
+
+            if (currentPage <= 3) {
+                start = 2;
+                end = 5;
+            } else if (currentPage >= totalPages - 2) {
+                start = totalPages - 4;
+                end = totalPages - 1;
+            }
+
+            if (start > 2) {
+                html += '<span class="pagination-ellipsis">...</span>';
+            }
+
+            for (let i = start; i <= end; i++) {
+                html +=
+                    '<button class="page-number ' +
+                    (i === currentPage ? 'active' : '') +
+                    '" onclick="goToPage(' +
+                    i +
+                    ')">' +
+                    i +
+                    '</button>';
+            }
+
+            if (end < totalPages - 1) {
+                html += '<span class="pagination-ellipsis">...</span>';
+            }
+
+            // Show last page
+            html +=
+                '<button class="page-number ' +
+                (totalPages === currentPage ? 'active' : '') +
                 '" onclick="goToPage(' +
-                i +
+                totalPages +
                 ')">' +
-                i +
+                totalPages +
                 '</button>';
         }
         pageNumbers.innerHTML = html;
@@ -398,10 +459,9 @@ function viewDetails(registrationId) {
             '<h2>ID Document</h2>' +
             '<div class="id-preview-section">' +
             '<div class="id-preview-container">' +
-            '<img src="' + card.dataset.idImage + '" alt="ID Document" class="id-preview-image">' +
+            '<button class="btn btn-view-image" onclick="showImageOverlay(\'' + card.dataset.idImage + '\')">' +
+            '<i class="fas fa-image"></i> View Image</button>' +
             '</div>' +
-            '<div class="id-preview-note">' +
-            '<i class="fas fa-search-plus"></i> Click to zoom</div>' +
             '</div></div>' +
             (details.status === 'pending'
                 ? '<div class="section">' +
@@ -613,6 +673,23 @@ function showNotification(message, type = 'info') {
         }, 5000);
 }
 
+// Add overlay logic at the end of the file
+function showImageOverlay(imageUrl) {
+    const overlay = document.getElementById('image_overlay');
+    const overlayImg = document.getElementById('overlay_image');
+    if (overlay && overlayImg) {
+        overlayImg.src = imageUrl;
+        overlay.classList.remove('hidden');
+    }
+}
+function closeImageOverlay() {
+    const overlay = document.getElementById('image_overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        document.getElementById('overlay_image').src = '';
+    }
+}
+
 // Initialize RegistrationReview when DOM is ready
 let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
@@ -632,9 +709,19 @@ document.addEventListener('DOMContentLoaded', () => {
             avatarElement.textContent = initial;
         }
     }
+    const overlay = document.getElementById('image_overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeImageOverlay();
+            }
+        });
+    }
 });
 
 window.handleAction = handleAction;
 window.viewDetails = viewDetails;
 window.goBack = goBack;
-window.goToPage = goToPage; 
+window.goToPage = goToPage;
+window.showImageOverlay = showImageOverlay;
+window.closeImageOverlay = closeImageOverlay; 
