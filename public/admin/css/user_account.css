@@ -1,4 +1,3 @@
-/* Reset and Base Styles */
 :root {
     --color-primary-black: #111111;
     --color-lime-green: #b6ff4a;
@@ -7,7 +6,7 @@
     --color-white: #ffffff;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
-    --color-red: #ff4d4d;
+    --color-red: #e74c3c;
 }
 
 * {
@@ -112,6 +111,17 @@ body {
     color: var(--color-red);
 }
 
+.nav-item.logout-item .nav-link {
+    color: var(--color-red);
+}
+.nav-item.logout-item .nav-link i {
+    color: var(--color-red);
+}
+.nav-item.logout-item .nav-link:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--color-red);
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
@@ -182,9 +192,9 @@ body {
     gap: 1.5rem;
     height: 100%;
     align-content: start;
-    width: fit-content; /* Allow container to fit content */
-    min-width: 380px; /* Minimum width for single card */
-    max-width: calc(380px * 3 + 1.5rem * 2); /* Maximum width for three cards with gaps */
+    width: fit-content;
+    min-width: 380px; 
+    max-width: calc(380px * 3 + 1.5rem * 2); 
 }
 
 .user-cards.loading {
@@ -281,9 +291,9 @@ body {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
-    padding: 1rem 25px 1.5rem; /* Adjusted padding */
+    padding: 1rem 25px 1.5rem;
     flex-shrink: 0;
-    margin-top: 20px; /* Move up slightly */
+    margin-top: 20px; 
 }
 
 .pagination button {
@@ -546,30 +556,6 @@ body {
 /* Default (mobile first, <1024px) */
 .user-detail-center-wrapper { max-width: 98vw; margin: 12px auto; }
 .user-card.detail { padding: 10px 2vw; }
-
-/* 1024x768 */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .user-detail-center-wrapper { max-width: 700px; margin: 24px auto; }
-  .user-card.detail { padding: 18px 18px 16px 18px; }
-}
-
-/* 1280x1024 */
-@media (min-width: 1280px) and (max-width: 1365px) {
-  .user-detail-center-wrapper { max-width: 750px; margin: 32px auto; }
-  .user-card.detail { padding: 24px 24px 18px 24px; }
-}
-
-/* 1366x768 */
-@media (min-width: 1366px) and (max-width: 1919px) {
-  .user-detail-center-wrapper { max-width: 800px; margin: 40px auto; }
-  .user-card.detail { padding: 28px 28px 20px 28px; }
-}
-
-/* 1920x1080 and up */
-@media (min-width: 1920px) {
-  .user-detail-center-wrapper { max-width: 900px; margin: 56px auto; }
-  .user-card.detail { padding: 36px 36px 28px 36px; }
-}
 
 /* ID Image Modal Styles */
 .id-image-modal {

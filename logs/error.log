@@ -33806,3 +33806,1421 @@ Stack trace:
 [15-Jul-2025 03:30:06 Asia/Manila] Query executed successfully
 [15-Jul-2025 03:30:06 Asia/Manila] Processed 5 transactions
 [15-Jul-2025 03:30:06 Asia/Manila] Connection closed
+[14-Jul-2025 22:21:40 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:21:40 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:21:40 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:21:40 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:21:40 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:21:40 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:21:41 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:21:41 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524449
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:21:41 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:21:41 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:21:42 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:21:42 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:21:42 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:21:42 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:21:42 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:21:42 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:21:44 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:21:44 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524502
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:21:44 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:21:44 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:21:44 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:21:44 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:21:44 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:21:44 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:21:44 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:21:44 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:21:46 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:21:46 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524502
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:21:46 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:21:46 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:23:31 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:23:31 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:23:31 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:23:31 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:23:31 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:23:31 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:23:32 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:23:32 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524611
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:23:32 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:23:32 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:23:32 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:23:32 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:23:32 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:23:32 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:23:32 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:23:32 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:23:34 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:23:34 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524611
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:23:34 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:23:34 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:26:51 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:26:51 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:26:51 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:26:51 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:26:51 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:26:51 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:26:53 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:26:53 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524811
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:26:53 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:26:53 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:26:53 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:26:53 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:26:53 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:26:53 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:26:53 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:26:53 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:26:55 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:26:55 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524811
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:26:55 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:26:55 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:06 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:06 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:06 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:06 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:06 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:06 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:08 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:08 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524811
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:08 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:08 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:08 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:08 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:08 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:08 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:08 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:08 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:12 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:12 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524890
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:12 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:12 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:12 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:12 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:12 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:12 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:12 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:12 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524895
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:16 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:16 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:16 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:16 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:16 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:16 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:16 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524896
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:17 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:17 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:17 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:17 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:17 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:17 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524896
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:17 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:17 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:17 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:17 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:17 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:17 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524896
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:17 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:17 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:17 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:17 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:17 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:17 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524896
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:28:17 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:28:17 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:28:17 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:28:17 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:28:17 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:28:17 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:28:17 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524896
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:28:17 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:28:17 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:29:15 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:29:15 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:29:15 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:29:15 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:29:15 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:29:15 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:29:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:29:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524955
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:29:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:29:16 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 04:30:11 Asia/Manila] Starting registration review process
+[15-Jul-2025 04:30:11 Asia/Manila] Processing registration ID: 37, Action: deny
+[15-Jul-2025 04:30:12 Asia/Manila] Database connection established
+[15-Jul-2025 04:30:12 Asia/Manila] Transaction started
+[15-Jul-2025 04:30:12 Asia/Manila] Found registration for: Daniel Victorioso
+[15-Jul-2025 04:30:12 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 04:30:16 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 04:30:17 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 04:30:17 Asia/Manila] Review process completed
+[14-Jul-2025 22:30:32 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:30:32 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:30:32 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:30:32 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:30:32 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:30:32 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:30:33 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:30:33 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752524955
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:30:33 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:30:33 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:30:33 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:30:33 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:30:33 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:30:33 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:30:33 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:30:33 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:30:34 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:30:34 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:30:34 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:30:34 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:30:34 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:30:34 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:30:36 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:30:36 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525035
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:30:36 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:30:36 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:30:36 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:30:36 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525035
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:30:36 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:30:36 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:30:36 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:30:36 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:30:36 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:30:36 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:30:36 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:30:36 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:30:39 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:30:39 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525036
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:30:39 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:30:39 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:01 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:01 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:01 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:01 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:01 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:01 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:02 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:02 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525061
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:02 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:02 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:03 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:03 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:03 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:03 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:03 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:03 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:04 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:04 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525063
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:04 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:04 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:04 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:04 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:04 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:04 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:04 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:04 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:06 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:06 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525063
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:06 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:06 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:06 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:06 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:06 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:06 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:06 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:06 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:09 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:09 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525068
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:09 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:09 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:09 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:09 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:09 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:09 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:09 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:09 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:09 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:09 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525068
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:09 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:09 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:34 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:34 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:34 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:34 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:34 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:34 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:35 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:35 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525094
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:35 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:35 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:35 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:35 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:35 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:35 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:35 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:35 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:36 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:36 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525095
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:36 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:36 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:36 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:36 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:36 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:36 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:36 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:36 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:40 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:40 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525099
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:40 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:40 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:40 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:40 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:40 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:40 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:40 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:40 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:42 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:42 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525101
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:42 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:42 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:42 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:42 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:42 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:42 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:42 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:42 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:43 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525102
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:43 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:43 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:43 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:43 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:43 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:43 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:43 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:43 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525102
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:43 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:43 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:43 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:43 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:43 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:43 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:43 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:43 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525102
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:43 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:43 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:57 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:57 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:57 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:57 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:57 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:57 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:58 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:58 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525117
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:58 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:58 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:58 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:58 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:58 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:58 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:58 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:58 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:31:58 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:31:58 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525117
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:31:58 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:31:58 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:31:58 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:31:58 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:31:58 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:31:58 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:31:58 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:31:58 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:00 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:00 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525119
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:00 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:00 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:00 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:00 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:00 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:00 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:00 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:00 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:02 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:02 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525120
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:02 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:02 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:02 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:02 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:02 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:02 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:02 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:02 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:03 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:03 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525122
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:03 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:03 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:03 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:03 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:03 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:03 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:03 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:03 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:03 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:03 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:03 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:03 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:03 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:03 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:04 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:04 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525123
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:04 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:04 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:05 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:05 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525124
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:05 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:05 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:05 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:05 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:05 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:05 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:05 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:05 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:08 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:08 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:08 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:08 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:08 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:08 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:10 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:10 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525126
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:10 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:10 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:11 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:11 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:11 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:11 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:11 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:11 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:14 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:14 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525132
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:14 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:14 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:16 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:16 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525132
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:16 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:16 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:16 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:16 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:16 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:16 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:16 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:16 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:20 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:20 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:20 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:20 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:32:20 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:32:20 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:32:20 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:32:20 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:32:20 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:32:20 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:32:20 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525136
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:32:20 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:32:20 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 04:32:46 Asia/Manila] Starting registration review process
+[15-Jul-2025 04:32:46 Asia/Manila] Processing registration ID: 38, Action: deny
+[15-Jul-2025 04:32:47 Asia/Manila] Database connection established
+[15-Jul-2025 04:32:47 Asia/Manila] Transaction started
+[15-Jul-2025 04:32:47 Asia/Manila] Found registration for: Daniel Victorioso
+[15-Jul-2025 04:32:48 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 04:32:52 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 04:32:52 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 04:32:52 Asia/Manila] Review process completed
+[14-Jul-2025 22:33:12 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:33:12 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:33:12 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:33:12 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:33:12 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:33:12 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:33:13 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:33:13 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525192
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:33:13 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:33:13 Europe/Berlin] ✅ Admin session check successful
+[14-Jul-2025 22:33:13 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[14-Jul-2025 22:33:13 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[14-Jul-2025 22:33:13 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[14-Jul-2025 22:33:13 Europe/Berlin] Session name: PHPSESSID
+[14-Jul-2025 22:33:13 Europe/Berlin] Session ID: 
+[14-Jul-2025 22:33:13 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => 9tclagdahjq2f0vkci82g68ftg
+    [STACKOVERCASH_SESSID] => p3ktr06kkl42t4umoqo191j1fv
+    [STACKOVERCASH_SESSID_ADMIN] => dahgo69m3nikec3r78l81d2j99
+)
+
+[14-Jul-2025 22:33:15 Europe/Berlin] Is authenticated: true
+[14-Jul-2025 22:33:15 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752522084
+    [last_activity] => 1752525192
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[14-Jul-2025 22:33:15 Europe/Berlin] Is admin: true
+[14-Jul-2025 22:33:15 Europe/Berlin] ✅ Admin session check successful

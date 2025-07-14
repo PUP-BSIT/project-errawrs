@@ -7,7 +7,7 @@
     --color-white: #ffffff;
     --color-mint: #7ed957;
     --color-gray: #a3a3a3;
-    --color-red: #ff4d4d;
+    --color-red: #e74c3c;
 }
 
 * {
@@ -854,26 +854,13 @@ body {
     border-color: #3498db;
 }
 
-/* Responsive Teller Detail Card (matches user detail card) */
-.user-detail-center-wrapper { max-width: 98vw; margin: 12px auto; }
-.user-card.detail { padding: 10px 2vw; }
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .user-detail-center-wrapper { max-width: 700px; margin: 24px auto; }
-  .user-card.detail { padding: 18px 18px 16px 18px; }
+.nav-item.logout-item .nav-link {
+    color: var(--color-red);
 }
-
-@media (min-width: 1280px) and (max-width: 1365px) {
-  .user-detail-center-wrapper { max-width: 750px; margin: 32px auto; }
-  .user-card.detail { padding: 24px 24px 18px 24px; }
+.nav-item.logout-item .nav-link i {
+    color: var(--color-red);
 }
-
-@media (min-width: 1366px) and (max-width: 1919px) {
-  .user-detail-center-wrapper { max-width: 800px; margin: 40px auto; }
-  .user-card.detail { padding: 28px 28px 20px 28px; }
-}
-
-@media (min-width: 1920px) {
-  .user-detail-center-wrapper { max-width: 900px; margin: 56px auto; }
-  .user-card.detail { padding: 36px 36px 28px 36px; }
+.nav-item.logout-item .nav-link:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--color-red);
 }
