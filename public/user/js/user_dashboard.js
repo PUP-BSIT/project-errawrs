@@ -349,6 +349,24 @@ function updateAccountDisplay() {
     setupAccountDropdown(user_accounts, window.selectedAccountNumber);
 }
 
+// Add dropdown state management
+function setupDropdownStateManagement() {
+    // Add click event listener to document to close dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+        const dropdownContainer = document.querySelector('.dropdown-container');
+        const accountControls = document.querySelector('.account-controls');
+        
+        if (dropdownContainer && dropdownContainer.classList.contains('active')) {
+            // Check if click is outside dropdown and account controls
+            if (!dropdownContainer.contains(event.target) && 
+                !accountControls?.contains(event.target)) {
+                dropdownContainer.classList.remove('active');
+                document.body.classList.remove('dropdown-open');
+            }
+        }
+    });
+}
+
 // Initialize dashboard
 async function init_dashboard() {
     try {
@@ -376,6 +394,7 @@ async function init_dashboard() {
         // Set up UI interactions
         setup_smooth_animations();
         setup_profile_edit();
+        setupDropdownStateManagement();
 
         // Set up logout handler
         if (logout_btn) {
@@ -712,12 +731,43 @@ function setupAccountDropdown(accounts, selectedAccountNumber) {
         return accountMaskState[account.account_number] !== false ? 'fa-eye' : 'fa-eye-slash';
     }
 
-    function renderDropdown() {
-        dropdownList.innerHTML = '';
+    // --- Portal Dropdown Logic ---
+    let floatingDropdown = null;
+    let outsideClickHandler = null;
+
+    function closeFloatingDropdown() {
+        if (floatingDropdown && floatingDropdown.parentNode) {
+            floatingDropdown.parentNode.removeChild(floatingDropdown);
+            floatingDropdown = null;
+        }
+        if (outsideClickHandler) {
+            document.removeEventListener('mousedown', outsideClickHandler);
+            outsideClickHandler = null;
+        }
+        dropdownTrigger.classList.remove('active');
+        document.body.classList.remove('dropdown-open');
+    }
+
+    function openFloatingDropdown() {
+        closeFloatingDropdown(); // Ensure only one
+        // Create dropdown
+        floatingDropdown = document.createElement('div');
+        floatingDropdown.className = 'account-dropdown-list';
+        floatingDropdown.style.position = 'fixed';
+        floatingDropdown.style.background = '#fff';
+        floatingDropdown.style.borderRadius = '0 0 18px 18px';
+        floatingDropdown.style.boxShadow = '0 8px 32px rgba(0,0,0,0.18)';
+        floatingDropdown.style.zIndex = '9999';
+        floatingDropdown.style.overflowY = 'auto';
+        floatingDropdown.style.maxHeight = '320px';
+        floatingDropdown.style.border = 'none';
+        // Render options
         accounts.forEach(account => {
-            if (account.account_number === window.selectedAccountNumber) return; // Always use window.selectedAccountNumber
             const option = document.createElement('div');
             option.className = 'account-dropdown-option';
+            if (account.account_number === window.selectedAccountNumber) {
+                option.classList.add('selected');
+            }
             const isMasked = accountMaskState[account.account_number] !== false;
             option.innerHTML = `
                 <span class="account-type">${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} Account</span>
@@ -728,13 +778,43 @@ function setupAccountDropdown(accounts, selectedAccountNumber) {
                 updateAccountDropdownDisplay(account);
                 update_balance_display(account.balance);
                 fetchRecentTransactions(account.account_number);
-                dropdownList.classList.add('hidden');
-                dropdownTrigger.classList.remove('active');
+                closeFloatingDropdown();
                 renderDropdown(); // Re-render so previous account is available again
             });
-            dropdownList.appendChild(option);
+            floatingDropdown.appendChild(option);
         });
-        if (dropdownList.children.length === 0) dropdownList.classList.add('hidden');
+        document.body.appendChild(floatingDropdown);
+        // Position below trigger, aligned with balance card or centered on mobile
+        const card = document.querySelector('.balance-card');
+        const cardRect = card.getBoundingClientRect();
+        const triggerRect = dropdownTrigger.getBoundingClientRect();
+        let dropdownWidth, left, top;
+        top = triggerRect.bottom;
+        if (window.innerWidth <= 768) {
+            dropdownWidth = cardRect.width;
+            left = cardRect.left;
+            floatingDropdown.style.borderRadius = '18px';
+        } else {
+            dropdownWidth = cardRect.width;
+            left = cardRect.left;
+            floatingDropdown.style.borderRadius = '0 0 18px 18px';
+        }
+        floatingDropdown.style.left = left + 'px';
+        floatingDropdown.style.top = top + 'px';
+        floatingDropdown.style.width = dropdownWidth + 'px';
+        // Outside click closes
+        outsideClickHandler = function(e) {
+            if (!floatingDropdown.contains(e.target) && !dropdownTrigger.contains(e.target)) {
+                closeFloatingDropdown();
+            }
+        };
+        document.addEventListener('mousedown', outsideClickHandler);
+        dropdownTrigger.classList.add('active');
+        document.body.classList.add('dropdown-open');
+    }
+
+    function renderDropdown() {
+        // No-op: dropdown is now rendered in body
     }
 
     function updateAccountDropdownDisplay(account) {
@@ -770,36 +850,23 @@ function setupAccountDropdown(accounts, selectedAccountNumber) {
         updateAccountDropdownDisplay(acc);
     };
 
-    // Show/hide dropdown
+    // Show/hide floating dropdown
     dropdownArrow.onclick = (e) => {
         e.stopPropagation();
-        if (accounts.length <= 1) return;
-        dropdownList.classList.toggle('hidden');
-        dropdownTrigger.classList.toggle('active');
+        if (dropdownTrigger.classList.contains('active')) {
+            closeFloatingDropdown();
+        } else {
+            openFloatingDropdown();
+        }
     };
     dropdownTrigger.onclick = (e) => {
         e.stopPropagation();
-        if (accounts.length <= 1) return;
-        dropdownList.classList.toggle('hidden');
-        dropdownTrigger.classList.toggle('active');
-    };
-    // Hide dropdown on outside click
-    document.addEventListener('click', (e) => {
-        if (!dropdownList.classList.contains('hidden')) {
-            dropdownList.classList.add('hidden');
-            dropdownTrigger.classList.remove('active');
+        if (dropdownTrigger.classList.contains('active')) {
+            closeFloatingDropdown();
+        } else {
+            openFloatingDropdown();
         }
-    });
-    // Prevent closing when clicking inside
-    dropdownList.onclick = (e) => e.stopPropagation();
-    // Hide dropdown/arrow if only one account
-    if (accounts.length <= 1) {
-        dropdownTrigger.style.cursor = 'default';
-        dropdownArrow.style.display = 'none';
-        dropdownList.classList.add('hidden');
-    } else {
-        dropdownArrow.style.display = 'flex';
-    }
+    };
 }
 
 // --- END OF FILE ---

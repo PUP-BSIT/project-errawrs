@@ -399,6 +399,7 @@ body {
     position: relative;
     overflow: hidden;
     transform: translateY(-20px);
+    overflow: visible !important;
 }
 
 .account-display-container {
@@ -1416,7 +1417,16 @@ select#dashboard_account_select option {
     margin-bottom: 24px;
   }
   .transfer-btn {
-    padding: 16px 0;
+    width: 90vw !important;
+    max-width: 220px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 10px 0 !important;
+    font-size: 0.95rem !important;
+    border-radius: 14px !important;
+    display: block;
+    box-sizing: border-box !important;
   }
   .main-header.mobile-header {
     min-height: 48px;
@@ -1545,14 +1555,17 @@ select#dashboard_account_select option {
   }
   /* Make balance card and dropdown even wider and more readable on mobile */
   .balance-card {
-    width: 96vw !important;
-    max-width: 98vw !important;
+    width: 90vw !important;
+    max-width: 240px !important;
     min-width: 0 !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    padding: 24px 4vw 28px 4vw !important;
+    padding: 10px 8px 14px 8px !important;
+    border-radius: 16px !important;
     box-sizing: border-box !important;
-    border-radius: 20px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .account-dropdown-container {
     width: 100% !important;
@@ -1591,9 +1604,7 @@ select#dashboard_account_select option {
     box-sizing: border-box !important;
   }
   .balance-amount {
-    font-size: 2.1rem !important;
-    padding: 0 2vw !important;
-    word-break: break-word !important;
+    font-size: 1.1rem !important;
     text-align: center !important;
   }
   .account-dropdown-trigger {
@@ -1637,21 +1648,21 @@ select#dashboard_account_select option {
     margin-bottom: 2px !important;
   }
   .account-dropdown-icons-row {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin-top: 6px !important;
-    width: 100% !important;
-    justify-content: flex-start !important;
-  }
-  .account-eye-icon, .account-dropdown-arrow {
-    margin: 0 !important;
-    position: static !important;
-    display: flex !important;
-    align-items: center !important;
-    font-size: 1.3rem !important;
-  }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-left: 12px;
+    margin-top: 0;
+}
+.account-eye-icon,
+.account-dropdown-arrow {
+    margin: 0;
+    position: static;
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+}
 }
 
 /* Utility classes for inline styles moved from HTML */
@@ -1670,6 +1681,7 @@ select#dashboard_account_select option {
   width: 100%;
   margin-bottom: 18px;
 }
+
 .account-dropdown-trigger {
   display: flex;
   align-items: center;
@@ -1685,9 +1697,11 @@ select#dashboard_account_select option {
   transition: background 0.18s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+
 .account-dropdown-trigger:hover, .account-dropdown-trigger.active {
   background: rgba(255,255,255,0.22);
 }
+
 .account-dropdown-arrow {
   margin-left: auto;
   display: flex;
@@ -1696,45 +1710,338 @@ select#dashboard_account_select option {
   color: #fff;
   transition: transform 0.2s;
 }
+
 .account-dropdown-trigger.active .account-dropdown-arrow {
   transform: rotate(180deg);
 }
+
 .account-dropdown-list {
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 0 0 18px 18px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-  z-index: 1002; /* Increased z-index for visibility */
+  z-index: 1002;
   margin-top: 6px;
   padding: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid #e0e0e0; /* Add border for contrast */
+  border: 1px solid #e0e0e0;
+  max-height: 320px;
+  overflow-y: auto;
 }
+
 .account-dropdown-list.hidden {
   display: none;
 }
+
 .account-dropdown-option {
   padding: 16px 20px;
   font-size: 1.1rem;
-  color: #222 !important; /* Always dark text for visibility */
+  color: #222 !important;
   background: #fff;
   cursor: pointer;
   border-bottom: 1px solid #f0f0f0;
   transition: background 0.18s, color 0.18s;
   text-align: left;
 }
+
 .account-dropdown-option:last-child {
   border-bottom: none;
 }
-.account-dropdown-option:hover, .account-dropdown-option.active {
+
+.account-dropdown-option:hover, .account-dropdown-option.selected {
   background: #b6ff4a;
   color: #111 !important;
 }
+
 .account-dropdown-list, .account-dropdown-list * {
   color: #111 !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .account-dropdown-list {
+    max-height: 280px;
+    border-radius: 0 0 16px 16px;
+    margin-top: 4px;
+  }
+  
+  .account-dropdown-option {
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+
+  /* Mobile style for transactions card */
+  .transactions-card {
+    width: 92vw !important;
+    max-width: 260px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 14px 8px 16px 8px !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+    margin-bottom: 32px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Notification Styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notification {
+    background: var(--color-white);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+    max-width: 300px;
+}
+
+.notification.success {
+    border-left: 4px solid var(--color-success);
+}
+
+.notification.error {
+    border-left: 4px solid var(--color-error);
+}
+
+.notification.warning {
+    border-left: 4px solid var(--color-warning);
+}
+
+.notification.info {
+    border-left: 4px solid var(--color-info);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile notification adjustments */
+@media (max-width: 768px) {
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .notification {
+        max-width: none;
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Accessibility improvements */
+.account-dropdown-trigger:focus,
+.transfer-btn:focus,
+.nav-link:focus {
+    outline: 2px solid var(--color-lime-green);
+    outline-offset: 2px;
+}
+
+/* Smooth transitions */
+.account-dropdown-trigger,
+.transfer-btn,
+.nav-link,
+.logout-btn {
+    transition: all 0.3s ease;
+}
+
+/* Additional Responsive Design */
+@media (max-width: 1200px) {
+    .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .welcome-title {
+        font-size: 36px;
+    }
+    
+    .balance-card {
+        max-width: 480px;
+        min-width: 400px;
+        padding: 40px 44px 44px 44px;
+    }
+    
+    .balance-amount {
+        font-size: 48px;
+    }
+    
+    .transfer-btn {
+        max-width: 480px;
+        min-width: 400px;
+        padding: 20px 40px;
+    }
+}
+
+/* Hide Transfer Now button when dropdown is open */
+body.dropdown-open .transfer-btn {
+  z-index: 1 !important;
+  position: relative;
+}
+
+/* Additional responsive improvements for very small screens */
+@media (max-width: 480px) {
+    .balance-card {
+        padding: 24px 16px;
+        margin-bottom: 20px;
+    }
+    
+    .balance-amount {
+        font-size: 32px;
+    }
+    
+    .welcome-title {
+        font-size: 24px;
+    }
+    
+    .transactions-card {
+        padding: 20px 12px !important;
+        min-height: 200px;
+    }
+    
+    .transaction-date,
+    .transaction-amount {
+        font-size: 16px;
+    }
+    
+    .header-tag {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    
+    .transactions-title {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .transfer-btn {
+        padding: 18px 20px;
+        font-size: 15px;
+    }
+    
+    .account-item {
+        padding: 10px;
+        margin-bottom: 6px;
+    }
+    
+    .account-type {
+        font-size: 11px;
+    }
+    
+    .account-number {
+        font-size: 12px;
+    }
+}
+
+/* Ensure proper spacing for transaction items */
+.transaction-item {
+    padding: 16px 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+/* Improve transaction amount styling */
+.transaction-amount.positive {
+    color: var(--color-success);
+    font-weight: 700;
+}
+
+.transaction-amount.negative {
+    color: var(--color-error);
+    font-weight: 700;
+}
+
+/* Add hover effects for better interactivity */
+.account-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.account-item.selected {
+    background: rgba(182, 255, 74, 0.2);
+    border: 2px solid var(--color-lime-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(182, 255, 74, 0.3);
+}
+
+.account-item.selected .account-number {
+    color: var(--color-lime-green);
+    font-weight: 700;
+}
+
+.transfer-btn:hover {
+    background-color: #5a5a5a;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Ensure proper z-index for dropdown */
+.dropdown-container {
+    z-index: 1000;
+}
+
+.account-dropdown-list {
+  z-index: 2000 !important;
+  position: absolute;
+}
+
+@media (min-width: 769px) {
+  .account-dropdown-icons-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-left: 18px;
+    margin-top: 0;
+    height: 36px;
+  }
+  .account-eye-icon,
+  .account-dropdown-arrow {
+    margin: 0;
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
+  }
 }
