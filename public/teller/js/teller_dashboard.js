@@ -434,27 +434,25 @@ async function handleRegistration(registrationId, action) {
  */
 function initializeUI() {
     // Update name in sidebar and greeting section
-    const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     
-    let fullName = '';
-    
-    if (tellerInfo.first_name && tellerInfo.last_name) {
-        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+    let firstName = '';
+    if (tellerInfo.first_name) {
+        firstName = tellerInfo.first_name;
     } else if (tellerInfo.name) {
-        fullName = tellerInfo.name;
+        // If only a full name is available, use the first word as first name
+        firstName = tellerInfo.name.split(' ')[0];
     }
     
-    // Update all name elements
-    userNameElements.forEach(el => el.textContent = fullName);
+    // Only update greeting and avatar, not sidebar username
     if (nameTextElement) {
-        nameTextElement.textContent = fullName + "!";
+        nameTextElement.textContent = firstName + "!";
     }
     
     // Set avatar initial
-    if (avatarElement && fullName) {
-        const initial = fullName.trim().charAt(0).toUpperCase();
+    if (avatarElement && firstName) {
+        const initial = firstName.trim().charAt(0).toUpperCase();
         avatarElement.textContent = initial;
     }
 }
