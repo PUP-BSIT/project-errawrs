@@ -146,6 +146,36 @@ try {
             if ($registration['request_type'] === 'add_account') {
                 // Only add a new account for the existing user
                 $user_id = $registration['user_id'];
+
+                // Check account type limits before creating account
+                $accountType = $registration['account_type'];
+                $accountLimitQuery = $db->prepare('SELECT account_type, status FROM account WHERE user_id = ? AND status = "active"');
+                $accountLimitQuery->bind_param('i', $user_id);
+                $accountLimitQuery->execute();
+                $accounts = $accountLimitQuery->get_result()->fetch_all(MYSQLI_ASSOC);
+                $accountLimitQuery->close();
+                $savingsCount = 0;
+                $creditCount = 0;
+                foreach ($accounts as $acct) {
+                    if ($acct['account_type'] === 'savings') $savingsCount++;
+                    if ($acct['account_type'] === 'credit') $creditCount++;
+                }
+                if ($accountType === 'savings' && $savingsCount >= 2) {
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'User can only have a maximum of 2 active savings accounts.'
+                    ]);
+                    $db->rollback();
+                    exit();
+                }
+                if ($accountType === 'credit' && $creditCount >= 1) {
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'User can only have a maximum of 1 active credit account.'
+                    ]);
+                    $db->rollback();
+                    exit();
+                }
                 
                 // Get user details for email
                 $userStmt = $db->prepare('SELECT first_name, last_name, email FROM user WHERE user_id = ?');

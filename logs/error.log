@@ -27610,3 +27610,519 @@ Stack trace:
 
 )
 
+[14-Jul-2025 15:57:52 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 15:57:53 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479873
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 15:57:53 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 15:57:53
+)
+
+[14-Jul-2025 15:57:53 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479873
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:58:05 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479884
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:58:07 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:58:07 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:58:09 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479884
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:58:09 Asia/Manila] Processing transactions for user_id: 13
+[14-Jul-2025 15:58:09 Asia/Manila] Account filter: 544250000001
+[14-Jul-2025 15:58:09 Asia/Manila] Attempting database connection
+[14-Jul-2025 15:58:10 Asia/Manila] Database connection successful
+[14-Jul-2025 15:58:10 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 13, 544250000001
+[14-Jul-2025 15:58:10 Asia/Manila] Total transactions found: 12
+[14-Jul-2025 15:58:10 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 544250000001, 2, 0
+[14-Jul-2025 15:58:11 Asia/Manila] Query executed successfully
+[14-Jul-2025 15:58:11 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 15:58:11 Asia/Manila] Connection closed
+[14-Jul-2025 15:58:34 Asia/Manila] Received login data: Array
+(
+    [teller_number] => T000001
+    [password] => errawrs123
+    [login_type] => teller
+)
+
+[14-Jul-2025 15:58:41 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479920
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:58:42 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:58:43 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:58:43 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479920
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:58:43 Asia/Manila] Processing transactions for user_id: 13
+[14-Jul-2025 15:58:43 Asia/Manila] Account filter: 544250000001
+[14-Jul-2025 15:58:43 Asia/Manila] Attempting database connection
+[14-Jul-2025 15:58:44 Asia/Manila] Database connection successful
+[14-Jul-2025 15:58:44 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 13, 544250000001
+[14-Jul-2025 15:58:45 Asia/Manila] Total transactions found: 12
+[14-Jul-2025 15:58:45 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 544250000001, 2, 0
+[14-Jul-2025 15:58:45 Asia/Manila] Query executed successfully
+[14-Jul-2025 15:58:45 Asia/Manila] Processed 2 transactions
+[14-Jul-2025 15:58:45 Asia/Manila] Connection closed
+[14-Jul-2025 15:59:25 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479963
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:59:26 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 15:59:26 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 15:59:43 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"create_account"}
+[14-Jul-2025 15:59:43 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => create_account
+)
+
+[14-Jul-2025 15:59:43 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[14-Jul-2025 15:59:43 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[14-Jul-2025 15:59:45 Asia/Manila] Send OTP - API Response: [{"message_id":251137368,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 319226","code":319226,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:59:42","updated_at":"2025-07-14 15:59:42"}]
+[14-Jul-2025 15:59:45 Asia/Manila] Send OTP - API HTTP Code: 200
+[14-Jul-2025 15:59:45 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251137368,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639708070447","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 319226","code":319226,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-14 15:59:42","updated_at":"2025-07-14 15:59:42"}]
+[14-Jul-2025 15:59:45 Asia/Manila] Send OTP - Generated OTP: 123456
+[14-Jul-2025 15:59:45 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: create_account
+[14-Jul-2025 15:59:45 Asia/Manila] Session ID before storing: t474rf74i22jducgf6sm5vgrgl
+[14-Jul-2025 15:59:45 Asia/Manila] Session name before storing: PHPSESSID
+[14-Jul-2025 15:59:45 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479966
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 15:59:45 Asia/Manila] OTP stored successfully
+[14-Jul-2025 15:59:45 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479966
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752479985
+            [attempts] => 0
+            [purpose] => create_account
+        )
+
+)
+
+[14-Jul-2025 15:59:45 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752479873
+            [last_activity] => 1752479966
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09708070447
+            [created_at] => 1752479985
+            [attempts] => 0
+            [purpose] => create_account
+        )
+
+)
+
