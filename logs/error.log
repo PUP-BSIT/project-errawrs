@@ -19284,3 +19284,843 @@ Stack trace:
 
 )
 
+[14-Jul-2025 08:15:58 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752451538
+            [last_activity] => 1752452157
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:15:58 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:15:59 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:22:19 Asia/Manila] Received login data: Array
+(
+    [username] => janedee
+    [password] => kdfmDtCtfscVEyXT
+    [login_type] => user
+)
+
+[14-Jul-2025 08:22:20 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452540
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[14-Jul-2025 08:22:20 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-14 08:22:20
+)
+
+[14-Jul-2025 08:22:20 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452540
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:22:26 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452545
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:22:27 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:22:28 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:22:29 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452548
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:22:29 Asia/Manila] Processing transactions for user_id: 13
+[14-Jul-2025 08:22:29 Asia/Manila] Account filter: 0000000001
+[14-Jul-2025 08:22:29 Asia/Manila] Attempting database connection
+[14-Jul-2025 08:22:29 Asia/Manila] Database connection successful
+[14-Jul-2025 08:22:29 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 13, 0000000001
+[14-Jul-2025 08:22:30 Asia/Manila] Total transactions found: 0
+[14-Jul-2025 08:22:30 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 0000000001, 2, 0
+[14-Jul-2025 08:22:30 Asia/Manila] Query executed successfully
+[14-Jul-2025 08:22:30 Asia/Manila] Processed 0 transactions
+[14-Jul-2025 08:22:30 Asia/Manila] Connection closed
+[14-Jul-2025 08:22:32 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452551
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:22:33 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:22:33 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:22:59 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452578
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:23:00 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:23:00 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:24:13 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452652
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:24:13 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:24:14 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:25:41 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452740
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:25:42 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:25:43 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:26:51 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452810
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:26:53 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:26:53 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:28:21 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452900
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:28:22 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:28:22 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:28:27 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452906
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:28:27 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:28:28 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:28:39 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452918
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:28:40 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:28:40 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:28:45 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752452924
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:28:46 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:28:46 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:30:56 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752453055
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:30:57 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:30:57 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:31:51 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752453110
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:31:51 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:31:52 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[14-Jul-2025 08:35:15 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752452540
+            [last_activity] => 1752453314
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[14-Jul-2025 08:35:16 Asia/Manila] Fetching accounts for user ID: 13
+[14-Jul-2025 08:35:16 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+

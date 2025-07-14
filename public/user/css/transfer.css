@@ -345,7 +345,7 @@ select option,
     font-weight: 800;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 48px;
+    margin: 48px auto 0 auto;
     box-shadow: 0 2px 12px rgba(182,255,74,0.10);
 }
 
@@ -782,7 +782,6 @@ select option,
     text-overflow: unset;
     min-width: 0;
     max-width: 100%;
-    vertical-align: top;
     padding-right: 0;
     word-break: break-word;
   }
@@ -835,7 +834,7 @@ select option,
     align-items: flex-start;
     width: 100%;
     padding: 0 8px;
-    margin-bottom: 12px;
+    margin-bottom: 30px;
     box-sizing: border-box;
   }
   .back-button {
@@ -1037,7 +1036,6 @@ select option,
     margin-right: auto;
   }
 } 
-
 /* Center the radio options */
 .panel-body {
   display: flex;
@@ -1051,9 +1049,23 @@ select option,
   width: 100%;
 }
 
-/* Center the stepper/SELECT BANK text and move it a bit to the right */
+.radio-option {
+  margin-left: 32px;
+  margin-right: 0;
+}
+
 .panel-header-steps {
   justify-content: center;
   text-align: center;
   margin-left: -8px;
+} 
+
+@media (max-width: 425px) {
+  .next-btn {
+    width: 80%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
 } 
