@@ -25,14 +25,14 @@ jobs:
           # Set correct permissions
           chmod 600 ~/.ssh/aws_key ~/.ssh/aws_key_sim ~/.ssh/aws_key_ivan ~/.ssh/aws_key_gerald
           # Add host to known_hosts to avoid interactive prompts
-          ssh-keyscan -H ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: Deploy to Production (main branch)
         if: github.ref == 'refs/heads/main'
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           DEPLOY_PATH=/var/www/html/project-errawrs
           ENV_BACKUP_PATH=/tmp/errawrs_env_backup_prod
 
@@ -70,7 +70,7 @@ jobs:
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           DEPLOY_PATH=/var/www/dev/project-errawrs
           ENV_BACKUP_PATH=/tmp/errawrs_env_backup_dev
 
@@ -107,7 +107,7 @@ jobs:
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             DEPLOY_PATH=/var/www/html/project-errawrs
@@ -130,12 +130,12 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "✅ Successfully deployed to PRODUCTION environment"
-            echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com/project-errawrs"
+            echo "🌐 URL: http://ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com/project-errawrs"
             echo "📧 Email functionality: PHPMailer configured and ready"
             echo "📁 File uploads: Directory structure created and secured"
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "✅ Successfully deployed to DEVELOPMENT environment"
-            echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com (dev site)"
+            echo "🌐 URL: http://ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com (dev site)"
             echo "📧 Email functionality: PHPMailer configured and ready"
             echo "📁 File uploads: Directory structure created and secured"
           fi
