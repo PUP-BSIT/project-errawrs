@@ -7,7 +7,7 @@
  */
 
 $host = $_SERVER['HTTP_HOST'] ?? '';
-if (strpos($host, 'teller.') === 0) {
+if (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
     // Teller subdomain routes
     $router->get('/', 'public/teller/bank_teller_login.html');
     $router->get('/login', 'public/teller/bank_teller_login.html');
@@ -35,7 +35,7 @@ if (strpos($host, 'teller.') === 0) {
     // Asset and error routes remain the same
     return $router;
 }
-if (strpos($host, 'admin.') === 0) {
+if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
     // Admin subdomain routes
     $router->get('/', 'public/admin/login.html');
     $router->get('/login', 'public/admin/login.html');

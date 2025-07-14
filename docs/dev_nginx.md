@@ -1,16 +1,16 @@
-# Nginx Configuration for dev.stackovercash.site
+# Nginx Configuration for dev.stackovercash.site, dev-teller.stackovercash.site, dev-admin.stackovercash.site
 
 ## Full Configuration
 
 server {
     listen 80;
-    server_name dev.stackovercash.site;
-    return 301 https://$server_name$request_uri;
+    server_name dev.stackovercash.site dev-teller.stackovercash.site dev-admin.stackovercash.site;
+    return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name dev.stackovercash.site;
+    server_name dev.stackovercash.site dev-teller.stackovercash.site dev-admin.stackovercash.site;
 
     # SSL configuration
     ssl_certificate /etc/letsencrypt/live/daniel.stackovercash.site/fullchain.pem;
@@ -56,7 +56,7 @@ server {
             fastcgi_pass unix:/run/php/php-fpm.sock;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             include fastcgi_params;
-            add_header 'Access-Control-Allow-Origin' 'https://dev.stackovercash.site' always;
+            add_header 'Access-Control-Allow-Origin' 'https://$host' always;
             add_header 'Access-Control-Allow-Credentials' 'true' always;
         }
     }
