@@ -1,0 +1,170 @@
+/* Admin Email Template Styles - Shared across all admin email templates */
+body {
+    background: #f3ffe1;
+    font-family: "Montserrat", Arial, sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+.main-panel {
+    background: #111111;
+    max-width: 500px;
+    margin: 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    padding: 0 0 24px 0;
+    text-align: center;
+}
+
+.brand-name {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    letter-spacing: -1px;
+    padding-top: 28px;
+    padding-bottom: 16px;
+    margin-top: 32px;
+}
+
+.brand-name .white {
+    color: #fff;
+}
+
+.brand-name .green {
+    color: #b6ff4a;
+}
+
+.email-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 32px 28px 24px 28px;
+    max-width: 440px;
+    margin: 0 auto 18px auto;
+    text-align: left;
+}
+
+.headline {
+    color: #111;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.subtitle {
+    color: #6c757d;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.info-box {
+    background: #eaffd6;
+    border-left: 4px solid #7ED957;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+}
+
+.reg-id {
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+.reg-id-green {
+    color: #39d353;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-block;
+    background: #b6ff4a;
+    color: #111;
+    padding: 6px 16px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.timeline-section {
+    margin-bottom: 24px;
+}
+
+.timeline-section h3 {
+    color: #222;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.timeline-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.timeline-list li {
+    margin-bottom: 10px;
+    padding-left: 0;
+    position: relative;
+    color: #333;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.timeline-list li:before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #39d353;
+    border-radius: 50%;
+    margin-top: 7px;
+    flex-shrink: 0;
+}
+
+.important-note {
+    background: #d4edda;
+    border-left: 4px solid #7ED957;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    color: #065F46;
+    font-size: 0.98rem;
+}
+
+.support {
+    text-align: center;
+    margin-top: 18px;
+    color: #6c757d;
+    font-size: 0.98rem;
+}
+
+.support a {
+    color: #39d353;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer {
+    text-align: center;
+    color: #b6ff4a;
+    font-size: 0.95rem;
+    margin-top: 18px;
+    padding-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+    .main-panel {
+        max-width: 98vw;
+        margin: 10px auto;
+    }
+    .email-card {
+        max-width: 98vw;
+        padding: 18px 4vw 18px 4vw;
+    }
+} 

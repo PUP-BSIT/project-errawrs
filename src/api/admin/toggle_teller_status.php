@@ -8,9 +8,6 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Set JSON header first before any output
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
 // Function to handle errors
@@ -26,7 +23,7 @@ function sendError($message, $code = 400, $details = null) {
 }
 
 try {
-    require_once '../../config/database.php';
+    require_once __DIR__ . '/../../config/database.php';
 } catch (Exception $e) {
     sendError('Configuration error: ' . $e->getMessage(), 500);
 }
@@ -41,19 +38,11 @@ if (!$session->isAuthorizedAdmin()) {
     sendError('Unauthorized access', 401);
 }
 
-// Get and validate input data
-$input = file_get_contents("php://input");
-if (!$input) {
-    sendError('No input data received');
-}
+// Get teller_id from URL parameter
+$teller_id = intval(route_param(0)); // First parameter from URL path
 
-$data = json_decode($input, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    sendError('Invalid JSON: ' . json_last_error_msg());
-}
-
-if (!isset($data['teller_id'])) {
-    sendError('Missing teller ID');
+if (!$teller_id || $teller_id <= 0) {
+    sendError('Invalid or missing teller ID');
 }
 
 try {
@@ -66,7 +55,7 @@ try {
         throw new Exception($conn->error);
     }
     
-    $stmt->bind_param("i", $data['teller_id']);
+    $stmt->bind_param("i", $teller_id);
     if (!$stmt->execute()) {
         throw new Exception($stmt->error);
     }
@@ -85,7 +74,7 @@ try {
         throw new Exception($conn->error);
     }
     
-    $stmt->bind_param("si", $new_status, $data['teller_id']);
+    $stmt->bind_param("si", $new_status, $teller_id);
     if (!$stmt->execute()) {
         throw new Exception($stmt->error);
     }

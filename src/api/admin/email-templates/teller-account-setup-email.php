@@ -1,0 +1,55 @@
+<?php
+/**
+ * Teller Account Setup Email Template
+ * This file contains the HTML email template for teller account setup
+ */
+
+function getTellerAccountSetupEmailTemplate($firstName, $lastName, $tellerNumber, $setPasswordLink) {
+    // Load shared CSS
+    $cssPath = __DIR__ . '/admin-email-styles.css';
+    $css = file_get_contents($cssPath);
+    $css = '<style>' . $css . '</style>';
+
+    $html = '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Teller Account Setup - StackOvercash</title>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap" rel="stylesheet">
+        ' . $css . '
+    </head>
+    <body>
+        <div class="main-panel">
+            <div class="brand-name"><span class="white">Stack</span><span class="green">Overcash</span></div>
+            <div class="email-card">
+                <div class="headline">Teller Account Created – Set Your Password</div>
+                <div class="subtitle">Dear ' . htmlspecialchars($firstName) . ' ' . htmlspecialchars($lastName) . ',</div>
+                <div class="info-box">
+                    <div class="reg-id"><strong>Teller Number:</strong> <span class="reg-id-green">' . htmlspecialchars($tellerNumber) . '</span></div>
+                    <div class="status-badge">Account Setup Required</div>
+                </div>
+                <div class="timeline-section">
+                    <h3>Next Steps</h3>
+                    <ul class="timeline-list">
+                        <li>Your teller account has been created at StackOvercash.</li>
+                        <li>To activate your account, please set your password using the link below.</li>
+                    </ul>
+                </div>
+                <div class="important-note">
+                    <strong>Action Required:</strong> <br>
+                    <a href="' . htmlspecialchars($setPasswordLink) . '" style="display:inline-block;background:#b6ff4a;color:#111;padding:10px 24px;border-radius:8px;font-weight:600;text-decoration:none;margin-top:10px;">Set Your Password</a>
+                </div>
+            </div>
+            <div class="footer">
+                Welcome to StackOvercash.<br>
+                We look forward to working with you!
+            </div>
+        </div>
+    </body>
+    </html>';
+
+    return $html;
+}
+?> 

@@ -7,7 +7,7 @@
  */
 
 $host = $_SERVER['HTTP_HOST'] ?? '';
-if (strpos($host, 'teller.') === 0) {
+if (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
     // Teller subdomain routes
     $router->get('/', 'public/teller/bank_teller_login.html');
     $router->get('/login', 'public/teller/bank_teller_login.html');
@@ -35,7 +35,7 @@ if (strpos($host, 'teller.') === 0) {
     // Asset and error routes remain the same
     return $router;
 }
-if (strpos($host, 'admin.') === 0) {
+if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
     // Admin subdomain routes
     $router->get('/', 'public/admin/login.html');
     $router->get('/login', 'public/admin/login.html');
@@ -43,6 +43,102 @@ if (strpos($host, 'admin.') === 0) {
     $router->get('/users', 'public/admin/user_accounts.html');
     $router->get('/tellers', 'public/admin/manage_tellers.html');
     $router->get('/transactions', 'public/admin/transactions.html');
+    
+    // API routes for admin subdomain (same as main domain)
+    $router->get('/api/auth/admin-session-check', 'src/api/auth/admin_session_check.php');
+    $router->get('/api/admin/info', 'src/api/admin/info.php');
+    $router->get('/api/admin/dashboard', 'src/api/admin/dashboard_stats.php');
+    $router->get('/api/admin/tellers', 'src/api/admin/list_tellers.php');
+    $router->post('/api/admin/tellers', 'src/api/admin/create_teller.php');
+    $router->get('/api/admin/tellers/{id}', 'src/api/admin/get_teller.php');
+    $router->put('/api/admin/tellers/{id}', 'src/api/admin/update.php');
+    $router->post('/api/admin/tellers/{id}/toggle-status', 'src/api/admin/toggle_teller_status.php');
+    $router->post('/api/admin/tellers/{id}/reset-password', 'src/api/admin/send_teller_reset_email.php');
+    $router->get('/api/admin/users', 'src/api/admin/list_users.php');
+    $router->get('/api/admin/users/{id}', 'src/api/admin/get_user.php');
+    $router->get('/api/admin/transactions', 'src/api/admin/get_transactions.php');
+    $router->post('/api/auth/login', 'src/api/auth/login.php');
+    $router->post('/api/auth/logout', 'src/api/auth/logout.php');
+    
+    // API config file
+    $router->get('/api_config.js', 'public/api_config.js');
+    
+    // CSS files for admin subdomain
+    $router->get('/css/{file}', function($file) {
+        $path = "public/admin/css/{$file}";
+        if (file_exists($path)) {
+            header('Content-Type: text/css');
+            readfile($path);
+        } else {
+            http_response_code(404);
+            echo "CSS file not found";
+        }
+    });
+    
+    // JavaScript files for admin subdomain
+    $router->get('/js/{file}', function($file) {
+        $path = "public/admin/js/{$file}";
+        if (file_exists($path)) {
+            header('Content-Type: application/javascript');
+            readfile($path);
+        } else {
+            http_response_code(404);
+            echo "JavaScript file not found";
+        }
+    });
+    
+    // Image files for admin subdomain
+    $router->get('/images/{file}', function($file) {
+        $path = "public/assets/images/{$file}";
+        if (file_exists($path)) {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $mimeTypes = [
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                'ico' => 'image/x-icon'
+            ];
+            
+            if (isset($mimeTypes[$extension])) {
+                header("Content-Type: {$mimeTypes[$extension]}");
+                readfile($path);
+            } else {
+                http_response_code(404);
+                echo "Image file not found";
+            }
+        } else {
+            http_response_code(404);
+            echo "Image file not found";
+        }
+    });
+    
+    // Assets images for admin subdomain
+    $router->get('/assets/images/{file}', function($file) {
+        $path = "public/assets/images/{$file}";
+        if (file_exists($path)) {
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $mimeTypes = [
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                'ico' => 'image/x-icon'
+            ];
+            if (isset($mimeTypes[$extension])) {
+                header("Content-Type: {$mimeTypes[$extension]}");
+                readfile($path);
+            } else {
+                http_response_code(404);
+                echo "Image file not found";
+            }
+        } else {
+            http_response_code(404);
+            echo "Image file not found";
+        }
+    });
     
     // Favicon for admin subdomain
     $router->get('/favicon.ico', function() {
@@ -55,7 +151,6 @@ if (strpos($host, 'admin.') === 0) {
         }
     });
     
-    // Asset and error routes remain the same
     return $router;
 }
 
@@ -217,6 +312,16 @@ $router->get('/assets/images/{file}', function($file) {
         http_response_code(404);
         echo "Image file not found";
     }
+});
+
+// Serve the test email templates preview file
+$router->get('/test_email_templates.php', function() {
+    require __DIR__ . '/../public/test_email_templates.php';
+    exit;
+});
+$router->get('/test-email-templates', function() {
+    require __DIR__ . '/../public/test_email_templates.php';
+    exit;
 });
 
 // =====================================================

@@ -1,29 +1,63 @@
-// State management for transactions
+import { API_ENDPOINTS } from '/api_config.js';
+
 let currentPage = 1;
 const itemsPerPage = 10;
 let totalPages = 1;
 
 // DOM Elements
-const transactionContent = document.querySelector('.transactions-content');
-const searchInput = document.querySelector('.search-input');
-const searchBtn = document.querySelector('.search-btn');
-const paginationContainer = document.querySelector('.transaction-pagination');
+let transactionContent;
+let searchInput;
+let searchBtn;
+let paginationContainer;
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    loadTransactions();
-    
-    searchBtn.addEventListener('click', () => {
-        currentPage = 1;
-        loadTransactions();
-    });
+    transactionContent = document.querySelector('.transactions-content');
+    searchInput = document.querySelector('.search-input');
+    searchBtn = document.querySelector('.search-btn');
+    paginationContainer = document.querySelector('.transaction-pagination');
 
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+    loadTransactions();
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
             currentPage = 1;
             loadTransactions();
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                currentPage = 1;
+                loadTransactions();
+            }
+        });
+    }
+
+    // Logout logic
+    const logoutBtn = document.getElementById('logout_btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await fetch(API_ENDPOINTS.USER_LOGOUT, { method: 'POST', credentials: 'include' });
+            } catch (err) {}
+            sessionStorage.clear();
+            window.location.href = '/login';
+        });
+    }
+
+    // Session check on page load
+    (async function() {
+        try {
+            const res = await fetch(API_ENDPOINTS.ADMIN_SESSION_CHECK, { credentials: 'include' });
+            const data = await res.json();
+            if (!data.success) {
+                window.location.href = '/login';
+            }
+        } catch (e) {
+            window.location.href = '/login';
         }
-    });
+    })();
 });
 
 window.addEventListener('pageshow', function(event) {
@@ -32,47 +66,17 @@ window.addEventListener('pageshow', function(event) {
     }
 });
 
-// Logout logic
-const logoutBtn = document.getElementById('logout_btn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            await fetch('/project-errawrs/src/api/auth/logout.php', {
-                method: 'POST',
-                credentials: 'include'
-            });
-        } catch (err) {}
-        sessionStorage.clear();
-        window.location.href = '/project-errawrs/public/admin/login.html';
-    });
-}
-// Session check on page load
-(async function() {
-    try {
-        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
-        const data = await res.json();
-        if (!data.success) {
-            window.location.href = '/project-errawrs/public/admin/login.html';
-        }
-    } catch (e) {
-        window.location.href = '/project-errawrs/public/admin/login.html';
-    }
-})();
-
-// Load transactions from the API
 async function loadTransactions() {
     try {
-        const searchQuery = searchInput.value ? searchInput.value.trim() : '';
+        const searchQuery = searchInput && searchInput.value ? searchInput.value.trim() : '';
         const statusFilter = '';
-        		const url = `${APP_CONFIG.getApiUrl('admin/get_transactions.php')}?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
+        const url = `${API_ENDPOINTS.ADMIN_GET_TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
         console.log('Fetching transactions from:', url);
         const response = await fetch(url, {
             credentials: 'include'
         });
 
         const data = await response.json();
-        
         if (!data.success) {
             throw new Error(data.message || 'Failed to load transactions');
         }
@@ -80,26 +84,20 @@ async function loadTransactions() {
         totalPages = data.total_pages;
         displayTransactions(data.transactions);
         updatePagination();
-
     } catch (error) {
         console.error('Error loading transactions:', error);
         showError('Failed to load transactions. Please try again later.');
     }
 }
 
-// Display transactions in the UI
 function displayTransactions(transactions) {
-    // Create transaction list container if it doesn't exist
     let transactionList = document.querySelector('.transaction-list');
     if (!transactionList) {
         transactionList = document.createElement('div');
         transactionList.className = 'transaction-list';
         transactionContent.insertBefore(transactionList, document.querySelector('.transaction-pagination'));
     }
-
-    // Clear existing transactions
     transactionList.innerHTML = '';
-
     if (transactions.length === 0) {
         transactionList.innerHTML = `
             <div class="no-transactions">
@@ -108,26 +106,17 @@ function displayTransactions(transactions) {
         `;
         return;
     }
-
-    // Add each transaction
     transactions.forEach(transaction => {
         const transactionEl = document.createElement('div');
         transactionEl.className = 'transaction-item';
-        
         const transactionType = formatTransactionType(transaction.transaction_type);
         const amount = formatAmount(transaction.amount);
         const date = formatDate(transaction.transaction_date);
-
-        // Handle sender and receiver display based on transaction type
         let senderDisplay = transaction.sender_account_number || 'N/A';
         let receiverDisplay = transaction.receiver_account_number || 'N/A';
-
-        // If teller_full_name is present, show it as the sender (for teller-initiated transactions)
         if (transaction.teller_full_name) {
             senderDisplay = transaction.teller_full_name;
         }
-
-        // For external transfers, the external account should be the sender or receiver
         if (transaction.external_bank_code && transaction.external_account_number) {
             if (transaction.transaction_type === 'transfer_external_in') {
                 senderDisplay = `${transaction.external_bank_code} - ${transaction.external_account_number}`;
@@ -135,7 +124,6 @@ function displayTransactions(transactions) {
                 receiverDisplay = `${transaction.external_bank_code} - ${transaction.external_account_number}`;
             }
         }
-
         transactionEl.innerHTML = `
             <div class="transaction-icon">
                 <i class="fas ${getTransactionIcon(transaction.transaction_type)}"></i>
@@ -160,25 +148,21 @@ function displayTransactions(transactions) {
                 </div>
             </div>
         `;
-
         transactionList.appendChild(transactionEl);
     });
 }
 
-// Update pagination controls
 function updatePagination() {
     paginationContainer.innerHTML = '';
-    
     // Previous button
     const prevBtn = createPaginationButton('prev', '<i class="fas fa-chevron-left"></i>', currentPage > 1);
     paginationContainer.appendChild(prevBtn);
-
     // Page numbers
     for (let i = 1; i <= totalPages; i++) {
         if (
-            i === 1 || // First page
-            i === totalPages || // Last page
-            (i >= currentPage - 1 && i <= currentPage + 1) // Pages around current page
+            i === 1 ||
+            i === totalPages ||
+            (i >= currentPage - 1 && i <= currentPage + 1)
         ) {
             const pageBtn = createPaginationButton('page', i, true, i === currentPage);
             paginationContainer.appendChild(pageBtn);
@@ -186,25 +170,21 @@ function updatePagination() {
             (i === currentPage - 2 && currentPage > 3) ||
             (i === currentPage + 2 && currentPage < totalPages - 2)
         ) {
-            // Add dots for skipped pages
             const dots = document.createElement('span');
             dots.className = 'pagination-dots';
             dots.textContent = '...';
             paginationContainer.appendChild(dots);
         }
     }
-
     // Next button
     const nextBtn = createPaginationButton('next', '<i class="fas fa-chevron-right"></i>', currentPage < totalPages);
     paginationContainer.appendChild(nextBtn);
 }
 
-// Create pagination button helper
 function createPaginationButton(type, content, enabled, isActive = false) {
     const button = document.createElement('button');
     button.className = `pagination-btn${isActive ? ' active' : ''}`;
     button.innerHTML = content;
-    
     if (!enabled) {
         button.disabled = true;
     } else {
@@ -219,11 +199,9 @@ function createPaginationButton(type, content, enabled, isActive = false) {
             loadTransactions();
         });
     }
-    
     return button;
 }
 
-// Utility functions
 function getTransactionIcon(type) {
     const iconMap = {
         'deposit': 'fa-arrow-down',
@@ -234,7 +212,6 @@ function getTransactionIcon(type) {
 }
 
 function formatTransactionType(type) {
-    // Convert snake_case to Title Case with spaces
     return type
         .split('_')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -258,11 +235,9 @@ function formatDate(dateString) {
     });
 }
 
-// Toast notification helpers (copied and adapted from manage_tellers.js)
 function showToast(message, type = 'info') {
     const container = document.querySelector('.toast-container');
     if (!container) return;
-
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `
@@ -273,16 +248,12 @@ function showToast(message, type = 'info') {
         </button>
     `;
     container.appendChild(toast);
-
-    // Add close button functionality
     const closeBtn = toast.querySelector('.toast-close');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             toast.remove();
         });
     }
-
-    // Auto remove after 5 seconds
     setTimeout(() => {
         if (toast && toast.parentElement) {
             toast.remove();
@@ -303,7 +274,6 @@ function getToastIcon(type) {
     }
 }
 
-// Replace showError to use toast
 function showError(message, debugInfo = null) {
     let fullMessage = `${message}`;
     if (debugInfo) {
