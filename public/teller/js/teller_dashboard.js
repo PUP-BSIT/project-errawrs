@@ -434,7 +434,6 @@ async function handleRegistration(registrationId, action) {
  */
 function initializeUI() {
     // Update name in sidebar and greeting section
-    const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     
@@ -446,8 +445,7 @@ function initializeUI() {
         fullName = tellerInfo.name;
     }
     
-    // Update all name elements
-    userNameElements.forEach(el => el.textContent = fullName);
+    // Only update greeting and avatar, not sidebar username
     if (nameTextElement) {
         nameTextElement.textContent = fullName + "!";
     }

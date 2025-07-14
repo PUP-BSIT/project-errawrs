@@ -609,7 +609,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     loadRegistrations();
     const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
-    const userNameElement = document.querySelector('.user-name');
     const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
     if (tellerInfo) {
         let fullName = '';
@@ -617,9 +616,6 @@ document.addEventListener('DOMContentLoaded', () => {
             fullName = tellerInfo.first_name + ' ' + tellerInfo.last_name;
         } else if (tellerInfo.name) {
             fullName = tellerInfo.name;
-        }
-        if (userNameElement && fullName) {
-            userNameElement.textContent = fullName;
         }
         if (avatarElement && fullName) {
             const initial = fullName.trim().charAt(0).toUpperCase();

@@ -23,34 +23,22 @@ let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    updateTellerInfo();
+    updateTellerAvatar();
     initializeApplication();
 });
 
-// Update teller information in the UI
-function updateTellerInfo() {
-    const userNameElement = document.querySelector(".user-name");
+// Update teller avatar initial in the UI
+function updateTellerAvatar() {
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     let fullName = '';
-    
     if (tellerInfo.first_name && tellerInfo.last_name) {
         fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-        userNameElement.textContent = fullName;
     } else if (tellerInfo.name) {
         fullName = tellerInfo.name;
-        userNameElement.textContent = tellerInfo.name;
     }
-    
-    // Set avatar initial
     if (avatarElement && fullName) {
         const initial = fullName.trim().charAt(0).toUpperCase();
         avatarElement.textContent = initial;
-    }
-    
-    // Set initial items per page in select
-    const perPageSelect = document.getElementById("per-page-select");
-    if (perPageSelect) {
-        perPageSelect.value = selectedItemCount.toString();
     }
 }
 
