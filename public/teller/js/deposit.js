@@ -12,17 +12,14 @@ const MAX_DEPOSIT_AMOUNT = 500000;
 if (!tellerInfo) {
     window.location.href = './bank_teller_login.html';
 } else {
-    // Display teller name when page loads
-    const userNameElements = document.querySelectorAll('.user-name');
+    // Display teller avatar initial only
     const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
     let fullName = '';
     
     if (tellerInfo.first_name && tellerInfo.last_name) {
         fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-        userNameElements.forEach(el => el.textContent = fullName);
     } else if (tellerInfo.name) {
         fullName = tellerInfo.name;
-        userNameElements.forEach(el => el.textContent = tellerInfo.name);
     }
     
     // Set avatar initial

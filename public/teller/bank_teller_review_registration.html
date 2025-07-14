@@ -27,9 +27,7 @@
                 <a href="/profile">
                     <div class="user-avatar dynamic-avatar"></div>
                 </a>
-                <div class="user-name">
-                    <!-- Teller name will be inserted here by JavaScript -->
-                </div>
+                <!-- Removed the username display here -->
             </div>
             
             <div class="nav-menu">
@@ -37,7 +35,7 @@
                 <a href="/search" class="nav-item">Search Account</a>
                 <a href="/deposit" class="nav-item">Deposit</a>
                 <a href="/withdraw" class="nav-item">Withdraw</a>
-                <div class="nav-selected">Review Registration</div>
+                <div class="nav-selected">Registration</div>
                 <a href="/history" class="nav-item">Transaction</a>
             </div>
             
@@ -104,6 +102,13 @@
                 <button id="confirm_action_btn" class="btn">Confirm</button>
                 <button id="cancel_action_btn" class="btn btn-cancel">Cancel</button>
             </div>
+        </div>
+    </div>
+    <!-- Image Overlay for ID Document -->
+    <div id="image_overlay" class="image-overlay hidden">
+        <div class="image-overlay-content">
+            <span class="close-image-overlay" onclick="closeImageOverlay()">&times;</span>
+            <img id="overlay_image" src="" alt="ID Document" />
         </div>
     </div>
     <script type="module" src="/teller/js/review_registrations.js"></script>
