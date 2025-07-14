@@ -1,7 +1,16 @@
 // File upload logic for registration
 
+import { showNotification } from './register-notifications.js';
+
 export function handleFileSelect(file, onPreview) {
+    // File type check
     if (!file.type.match("image.*")) return false;
+    // File size check: max 500 KB
+    const maxSize = 500 * 1024; // 500 KB
+    if (file.size > maxSize) {
+        showNotification('ID image file size must not exceed 500 KB.', 'error');
+        return false;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
         onPreview({ data: e.target.result, name: file.name, type: file.type });
@@ -37,13 +46,27 @@ export function initFileUpload() {
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
-            handleFileSelect(file, (img) => {
+            // Only allow files up to 500 KB
+            const maxSize = 500 * 1024; // 500 KB
+            if (file.size > maxSize) {
+                showNotification('ID image file size must not exceed 500 KB.', 'error');
+                fileInput.value = "";
+                previewInfo.classList.add('hidden');
+                container.classList.remove('has-file');
+                return;
+            }
+            const valid = handleFileSelect(file, (img) => {
                 currentImage = img;
                 fileNameDisplay.textContent = img.name;
                 previewInfo.classList.remove('hidden');
                 container.classList.add('has-file');
                 if (onFileChangeCallback) onFileChangeCallback();
             });
+            if (!valid) {
+                fileInput.value = "";
+                previewInfo.classList.add('hidden');
+                container.classList.remove('has-file');
+            }
         } else {
             if (onFileChangeCallback) onFileChangeCallback();
         }

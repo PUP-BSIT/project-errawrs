@@ -43,6 +43,18 @@ function validateFileUpload() {
         echo json_encode(['success' => false, 'error' => 'ID image is required']);
         exit();
     }
+    // File size check: 300 KB - 500 KB
+    $fileSize = $_FILES['id_image']['size'];
+    $minSize = 300 * 1024; // 300 KB in bytes
+    $maxSize = 500 * 1024; // 500 KB in bytes
+    if ($fileSize < $minSize || $fileSize > $maxSize) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'ID image file size must be between 300 KB and 500 KB.'
+        ]);
+        exit();
+    }
 }
 
 function validateRequiredFields($input) {
