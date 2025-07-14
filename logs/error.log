@@ -32807,3 +32807,1002 @@ Stack trace:
 [15-Jul-2025 03:15:53 Asia/Manila] Denial email sent successfully
 [15-Jul-2025 03:15:53 Asia/Manila] Transaction committed successfully
 [15-Jul-2025 03:15:53 Asia/Manila] Review process completed
+[15-Jul-2025 03:24:38 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521078
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 03:24:38 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 03:24:38
+)
+
+[15-Jul-2025 03:24:38 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521078
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:24:43 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521082
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:24:43 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:24:43 Asia/Manila] Account filter: None
+[15-Jul-2025 03:24:43 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:24:44 Asia/Manila] Database connection successful
+[15-Jul-2025 03:24:44 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:24:44 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:24:44 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:24:45 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:24:45 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:24:45 Asia/Manila] Connection closed
+[15-Jul-2025 03:24:49 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521088
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:24:49 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:24:49 Asia/Manila] Account filter: None
+[15-Jul-2025 03:24:49 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:24:50 Asia/Manila] Database connection successful
+[15-Jul-2025 03:24:50 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:24:50 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:24:50 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 20, 0
+[15-Jul-2025 03:24:50 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:24:50 Asia/Manila] Processed 12 transactions
+[15-Jul-2025 03:24:50 Asia/Manila] Connection closed
+[15-Jul-2025 03:24:54 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521090
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:24:54 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:24:54 Asia/Manila] Account filter: None
+[15-Jul-2025 03:24:54 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:24:55 Asia/Manila] Database connection successful
+[15-Jul-2025 03:24:55 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:24:55 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:24:55 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:24:56 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:24:56 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:24:56 Asia/Manila] Connection closed
+[15-Jul-2025 03:24:57 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521090
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:24:57 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:24:57 Asia/Manila] Account filter: None
+[15-Jul-2025 03:24:57 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:24:57 Asia/Manila] Database connection successful
+[15-Jul-2025 03:24:57 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:24:58 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:24:58 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 5
+[15-Jul-2025 03:24:58 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:24:58 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:24:58 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:00 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521090
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:00 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:00 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:00 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:01 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:01 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:01 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:01 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 10
+[15-Jul-2025 03:25:01 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:01 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 03:25:01 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:03 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521090
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:03 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:03 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:03 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:04 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:04 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:04 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:04 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 5
+[15-Jul-2025 03:25:05 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:05 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:05 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:15 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521090
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:15 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:15 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:15 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:16 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:16 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:16 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:16 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:25:16 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:16 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:16 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:17 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521116
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:17 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:17 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:17 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:18 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:18 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:18 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:18 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 5
+[15-Jul-2025 03:25:19 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:19 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:19 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:22 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521116
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:22 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:22 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:22 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:22 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:22 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:23 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:23 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:25:23 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:23 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:23 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:25 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521116
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:25 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:25 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:25 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:25 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:25 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:26 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:26 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 5
+[15-Jul-2025 03:25:26 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:26 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:26 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:32 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521116
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:32 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:32 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:32 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:32 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:32 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:33 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:33 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:25:33 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:33 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:33 Asia/Manila] Connection closed
+[15-Jul-2025 03:25:44 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521116
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:25:44 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:25:44 Asia/Manila] Account filter: None
+[15-Jul-2025 03:25:44 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:25:44 Asia/Manila] Database connection successful
+[15-Jul-2025 03:25:44 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:25:45 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:25:45 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 5
+[15-Jul-2025 03:25:45 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:25:45 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:25:45 Asia/Manila] Connection closed
+[15-Jul-2025 03:30:05 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752521078
+            [last_activity] => 1752521404
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 03:30:05 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 03:30:05 Asia/Manila] Account filter: None
+[15-Jul-2025 03:30:05 Asia/Manila] Attempting database connection
+[15-Jul-2025 03:30:06 Asia/Manila] Database connection successful
+[15-Jul-2025 03:30:06 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 03:30:06 Asia/Manila] Total transactions found: 12
+[15-Jul-2025 03:30:06 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 03:30:06 Asia/Manila] Query executed successfully
+[15-Jul-2025 03:30:06 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 03:30:06 Asia/Manila] Connection closed

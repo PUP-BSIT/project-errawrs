@@ -14,7 +14,8 @@ let totalItems = 0;
 let totalPages = 0;
 let lastFetchTime = null;
 const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
-const DISPLAY_ITEMS_PER_PAGE = 5; // Maximum items to display per page
+// Remove DISPLAY_ITEMS_PER_PAGE
+// const DISPLAY_ITEMS_PER_PAGE = 5; // Maximum items to display per page
 
 // Table data storage
 let tableData = [];
@@ -106,13 +107,8 @@ function processTransactionData(data) {
     filteredData = [...tableData];
     totalItems = data.pagination.total_records;
     
-    // Calculate pages based on the fetched data and display limit
-    totalPages = Math.ceil(filteredData.length / DISPLAY_ITEMS_PER_PAGE);
-    
-    // Only one page if selected count is 5 or less
-    if (selectedItemCount <= DISPLAY_ITEMS_PER_PAGE) {
-        totalPages = 1;
-    }
+    // Calculate pages based on the fetched data and selectedItemCount
+    totalPages = Math.ceil(totalItems / selectedItemCount);
     
     lastFetchTime = new Date().getTime();
     
@@ -186,7 +182,7 @@ function updatePaginationDisplay() {
     const pageNumbersContainer = document.getElementById("page-numbers");
     pageNumbersContainer.innerHTML = "";
 
-    totalPages = Math.ceil(filteredData.length / DISPLAY_ITEMS_PER_PAGE);
+    totalPages = Math.ceil(totalItems / selectedItemCount);
 
     if (totalPages <= 0) {
         return;
@@ -254,15 +250,12 @@ function updateNavigationButtons(displayPages) {
 function updateShowingText() {
     const showingText = document.getElementById("showing-text");
     if (showingText) {
-        if (filteredData.length === 0) {
-            showingText.textContent = "Showing 0 to 0 of 0 entries";
+        if (totalItems === 0) {
+            showingText.textContent = "Showing 0 of 0";
         } else {
-            const startItem = ((currentPage - 1) * DISPLAY_ITEMS_PER_PAGE) + 1;
-            const endItem = Math.min(startItem + DISPLAY_ITEMS_PER_PAGE - 1, 
-                                   filteredData.length);
-            showingText.textContent = 
-                `Showing ${startItem} to ${String(endItem).padStart(2, "0")} ` +
-                `of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+            const start = (currentPage - 1) * selectedItemCount + 1;
+            const end = Math.min(start + selectedItemCount - 1, totalItems);
+            showingText.textContent = `Showing ${start} to ${end} of ${totalItems}`;
         }
     }
 }
@@ -286,9 +279,8 @@ function addEllipsis() {
 
 // Get current page data
 function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * DISPLAY_ITEMS_PER_PAGE;
-    const endIndex = Math.min(startIndex + DISPLAY_ITEMS_PER_PAGE, 
-                             filteredData.length);
+    const startIndex = (currentPage - 1) * selectedItemCount;
+    const endIndex = Math.min(startIndex + selectedItemCount, filteredData.length);
     return filteredData.slice(startIndex, endIndex);
 }
 
