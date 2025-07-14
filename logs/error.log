@@ -31878,3 +31878,1686 @@ Stack trace:
 
 [14-Jul-2025 13:22:10 Europe/Berlin] Is admin: true
 [14-Jul-2025 13:22:10 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 02:11:24 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:11:24 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:11:24 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - API Response: [{"message_id":251158501,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639918454024","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 515863","code":515863,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-15 02:11:28","updated_at":"2025-07-15 02:11:28"}]
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - API HTTP Code: 200
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251158501,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639918454024","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 515863","code":515863,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-15 02:11:28","updated_at":"2025-07-15 02:11:28"}]
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - Generated OTP: 123456
+[15-Jul-2025 02:11:26 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:11:26 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:11:26 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:11:26 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 02:11:26 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:11:26 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:11:26 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"515863","purpose":"registration"}
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 515863
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:11:53 Asia/Manila] Verifying OTP - Input: 515863, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:11:53 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:11:53 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:11:53 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:11:53 Asia/Manila] Invalid OTP
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:11:53 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:12:05 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:12:05 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:12:05 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516686
+            [attempts] => 1
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:12:05 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:12:05 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:12:20 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:12:20 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:12:20 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:12:20 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:12:20 Asia/Manila] No OTP session found
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:12:20 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:13:23 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:13:23 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:13:23 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - API Response: [{"message_id":251158507,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639918454024","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 252035","code":252035,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-15 02:13:26","updated_at":"2025-07-15 02:13:26"}]
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - API HTTP Code: 200
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - Full Semaphore API Response: [{"message_id":251158507,"user_id":55947,"user":"danielvictorioso.acd@gmail.com","account_id":55808,"account":"Errawrs","recipient":"639918454024","message":"Your OTP is 123456. DO NOT SHARE THIS TO ANYONE.\nYour One Time Password is 252035","code":252035,"sender_name":"ERRAWRS","network":"Smart","status":"Pending","type":"Otp","source":"Api","created_at":"2025-07-15 02:13:26","updated_at":"2025-07-15 02:13:26"}]
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - Generated OTP: 123456
+[15-Jul-2025 02:13:24 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:13:24 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:13:24 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:13:24 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:13:24 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:13:24 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516804
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:13:24 Asia/Manila] Send OTP - Session data after storing OTP: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516804
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516804
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:13:41 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:13:41 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:13:41 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752516804
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:13:41 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:13:41 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:28:14 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:28:14 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:28:14 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:28:14 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:28:14 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:28:14 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:28:14 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:28:14 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:28:14 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:28:14 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 693765
+            [phone_number] => 09918454024
+            [created_at] => 1752517694
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:31:21 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:31:21 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:31:21 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:31:21 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:31:22 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:31:22 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:31:22 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:31:22 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 693765
+            [phone_number] => 09918454024
+            [created_at] => 1752517694
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:31:22 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:31:22 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 883739
+            [phone_number] => 09918454024
+            [created_at] => 1752517882
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"883739","purpose":"registration"}
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 883739
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 883739
+            [phone_number] => 09918454024
+            [created_at] => 1752517882
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] Verifying OTP - Input: 883739, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:31:36 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:31:36 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:31:36 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 883739
+            [phone_number] => 09918454024
+            [created_at] => 1752517882
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:31:36 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:31:36 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:36:04 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:36:04 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:36:04 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:36:04 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:36:04 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:36:04 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:36:04 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:36:04 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:04 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:36:04 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518164
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518164
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:36:14 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:36:14 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:36:14 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518164
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:36:14 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:14 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:23 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:36:23 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:36:23 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:36:23 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:23 Asia/Manila] No OTP session found
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:36:23 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:33 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:36:33 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:36:33 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:36:33 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:33 Asia/Manila] No OTP session found
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:36:33 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:44 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:36:44 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:36:44 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:36:44 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:36:44 Asia/Manila] No OTP session found
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:36:44 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:37:16 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:37:16 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:37:16 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:37:16 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:37:16 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:37:16 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:37:16 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:37:16 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:37:16 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:37:16 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518236
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518236
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:37:20 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:37:20 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:37:20 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518236
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:37:20 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:37:20 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:40:55 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:40:55 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:40:55 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:40:55 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:40:55 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:40:55 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:40:55 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:40:56 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:40:56 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:40:56 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518456
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518456
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:41:07 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:41:07 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:41:07 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518456
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] OTP verified successfully
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 02:41:07 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 02:41:07 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 02:41:10 Asia/Manila] PHP Warning:  file_get_contents(C:\xampp\htdocs\project-errawrs\src\api\user/email-templates/registration-email.css): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\user\submit_registration.php on line 203
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+)
+
+[15-Jul-2025 02:41:52 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 02:41:52 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:41:52 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 02:41:52 Asia/Manila] Full session data before verify: Array
+(
+)
+
+[15-Jul-2025 02:41:52 Asia/Manila] No OTP session found
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 02:41:52 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+)
+
+[15-Jul-2025 02:41:57 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 02:41:57 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 02:41:57 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 02:41:57 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 02:41:57 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 02:41:57 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 02:41:57 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 02:41:57 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 02:41:57 Asia/Manila] OTP stored successfully
+[15-Jul-2025 02:41:57 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518517
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:06:16 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 03:06:16 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:06:16 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 03:06:16 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 03:06:16 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 03:06:16 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:06:16 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 03:06:16 Asia/Manila] Session data before storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752518517
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:06:16 Asia/Manila] OTP stored successfully
+[15-Jul-2025 03:06:16 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752519976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752519976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:06:22 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:06:22 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:06:22 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752519976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] OTP verified successfully
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 03:06:22 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:06:22 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 03:06:25 Asia/Manila] PHP Warning:  file_get_contents(C:\xampp\htdocs\project-errawrs\src\api\user/email-templates/registration-email.css): Failed to open stream: No such file or directory in C:\xampp\htdocs\project-errawrs\src\api\user\submit_registration.php on line 203
+[15-Jul-2025 03:11:55 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 03:11:55 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:11:55 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 03:11:55 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 03:11:55 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 03:11:55 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:11:55 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 03:11:55 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 03:11:55 Asia/Manila] OTP stored successfully
+[15-Jul-2025 03:11:55 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520315
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520315
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:11:59 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:11:59 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:11:59 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520315
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] OTP verified successfully
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 03:11:59 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:11:59 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 03:12:00 Asia/Manila] Registration Request Error: A registration with this phone number is already pending. Please wait for approval or contact support.
+[15-Jul-2025 03:12:49 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:12:49 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:12:49 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:12:49 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:12:49 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:12:49 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:12:49 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:12:49 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:12:49 Asia/Manila] No OTP session found
+[15-Jul-2025 03:12:49 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 03:12:50 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:12:57 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:12:57 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:12:57 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:12:57 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:12:57 Asia/Manila] No OTP session found
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 03:12:57 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:13:00 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 03:13:00 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:13:00 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 03:13:00 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 03:13:00 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 03:13:00 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:13:00 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 03:13:00 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:13:00 Asia/Manila] OTP stored successfully
+[15-Jul-2025 03:13:00 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520380
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520380
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:13:06 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:13:06 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:13:06 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520380
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] OTP verified successfully
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 03:13:06 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:13:06 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 03:13:08 Asia/Manila] Registration Request Error: A registration with this phone number is already pending. Please wait for approval or contact support.
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:02 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:14:02 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:14:02 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:14:02 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:02 Asia/Manila] No OTP session found
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 03:14:02 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:07 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:14:07 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:14:07 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:14:07 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:07 Asia/Manila] No OTP session found
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 03:14:07 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:12 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:14:12 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:14:12 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:14:12 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:12 Asia/Manila] No OTP session found
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 03:14:12 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:49 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 03:14:49 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:14:49 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 03:14:50 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 03:14:50 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 03:14:50 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:14:50 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 03:14:50 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:50 Asia/Manila] OTP stored successfully
+[15-Jul-2025 03:14:50 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520490
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520490
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:14:53 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:14:53 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:14:53 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:14:53 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520490
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:14:53 Asia/Manila] OTP verified successfully
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:53 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 03:14:54 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:14:54 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 03:22:55 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 03:22:55 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:22:55 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 03:22:55 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 03:22:55 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 03:22:56 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:22:56 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 03:22:56 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 03:22:56 Asia/Manila] OTP stored successfully
+[15-Jul-2025 03:22:56 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 03:23:01 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 03:23:01 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 03:23:01 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752520976
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] OTP verified successfully
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 03:23:01 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 03:23:01 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 04:29:14 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 04:29:15 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:29:15 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 04:29:15 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 04:29:15 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 04:29:15 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:29:15 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 04:29:15 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 04:29:15 Asia/Manila] OTP stored successfully
+[15-Jul-2025 04:29:15 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752524955
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752524955
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 04:29:18 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:29:18 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 04:29:18 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752524955
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] OTP verified successfully
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 04:29:18 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:29:18 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 04:29:20 Asia/Manila] Registration Request Error: A registration with this phone number is already pending. Please wait for approval or contact support.
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:17 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 04:30:17 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:30:17 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 04:30:17 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:17 Asia/Manila] No OTP session found
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - SessionManager verifyOTP result: false
+[15-Jul-2025 04:30:17 Asia/Manila] Verify OTP - Verification failed. Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:21 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 04:30:21 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:30:21 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 04:30:21 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 04:30:21 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 04:30:21 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:30:21 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 04:30:21 Asia/Manila] Session data before storing: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:21 Asia/Manila] OTP stored successfully
+[15-Jul-2025 04:30:21 Asia/Manila] Session data after storing: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525021
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525021
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 04:30:25 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:30:25 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 04:30:25 Asia/Manila] Full session data before verify: Array
+(
+    [otp_verified] => 1
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525021
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] OTP verified successfully
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 04:30:25 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:30:25 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 04:33:27 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 04:33:27 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:33:27 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 04:33:27 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 04:33:27 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 04:33:27 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:33:27 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 04:33:27 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 04:33:27 Asia/Manila] OTP stored successfully
+[15-Jul-2025 04:33:27 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525207
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525207
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 04:33:31 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 04:33:31 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 04:33:31 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752525207
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] OTP verified successfully
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 04:33:31 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 04:33:31 Asia/Manila] Submit Registration - OTP verified flag: 1

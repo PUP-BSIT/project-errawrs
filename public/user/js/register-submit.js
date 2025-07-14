@@ -27,7 +27,14 @@ export async function submitRegistrationData(formData, apiEndpoint, onSuccess) {
             credentials: 'include',
             body: submitFormData,
         });
-        const data = await response.json();
+        const responseText = await response.text();
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (e) {
+            showNotification("Invalid server response: " + responseText, 'error');
+            return false;
+        }
         if (!response.ok || !data.success) {
             showNotification(data.error || "Registration failed. Please try again.", 'error');
             return false;
