@@ -161,14 +161,13 @@ body {
 
 /* Main Content */
 .main-content {
-    flex: 1;
     margin-left: 250px;
     padding: 24px 32px;
     min-height: 100vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    width: calc(100vw - 250px); 
+    width: 1270px; 
     box-sizing: border-box;
 }
 

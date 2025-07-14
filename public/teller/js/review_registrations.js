@@ -248,7 +248,7 @@ const html = registrations
                   'onclick="handleAction(' +
                   reg.registration_id +
                   ', \'deny\')">' +
-                  '<i class="fas fa-times"></i> Deny</button>' +
+                  '<i class="fas fa-times"></i> Deny Registration</button>' +
                   '</div>'
                 : '') +
             '<button class="btn btn-view btn-view-details" ' +
@@ -358,16 +358,21 @@ function updatePagination() {
 
 // Show details view for a registration
 function viewDetails(registrationId) {
-        try {
+    // Remove any existing details view before showing a new one
+    const oldDetails = document.querySelector('.registration-details-view');
+    if (oldDetails) oldDetails.remove();
+
+    // Hide all relevant elements
+    document.querySelectorAll('.filter-section, .applications-grid, .pagination-container, .registration-container').forEach(el => {
+        if (el) el.classList.add('hidden');
+    });
+    try {
         const card = document.querySelector(
             '[data-registration-id="' + registrationId + '"]'
         );
             if (!card) {
                 throw new Error('Registration card not found');
             }
-            document.querySelector('.filter-section').classList.add('hidden');
-            document.querySelector('.applications-grid').classList.add('hidden');
-            document.querySelector('.pagination-container').classList.add('hidden');
             const detailsContainer = document.createElement('div');
             detailsContainer.className = 'registration-details-view';
             const details = {
@@ -476,7 +481,7 @@ function viewDetails(registrationId) {
                   'onclick="handleAction(\'' +
                   details.id +
                   '\', \'deny\')">' +
-                  '<i class="fas fa-times"></i> Reject Application</button>' +
+                  '<i class="fas fa-times"></i> Deny Registration</button>' +
                   '</div></div>'
                 : '') +
             '</div></div>';
@@ -488,14 +493,14 @@ function viewDetails(registrationId) {
 
 // Go back to the main list from details view
 function goBack() {
-        const detailsView = document.querySelector('.registration-details-view');
-        if (detailsView) {
-            detailsView.remove();
-        }
-        document.querySelector('.filter-section').classList.remove('hidden');
-        document.querySelector('.applications-grid').classList.remove('hidden');
-        document.querySelector('.pagination-container').classList.remove('hidden');
+    const detailsView = document.querySelector('.registration-details-view');
+    if (detailsView) {
+        detailsView.remove();
     }
+    document.querySelectorAll('.filter-section, .applications-grid, .pagination-container, .registration-container').forEach(el => {
+        if (el) el.classList.remove('hidden');
+    });
+}
 
 // View only pending applications
 function viewPending() {
@@ -594,7 +599,7 @@ function confirmAction(action) {
         confirmBtn.className =
             'btn btn-' + (action === 'approve' ? 'approve' : 'deny');
         confirmBtn.textContent =
-            action === 'approve' ? 'Approve' : 'Deny';
+            action === 'approve' ? 'Approve' : 'Deny Registration';
             modal.classList.add('active');
             const handleConfirm = () => {
                 modal.classList.remove('active');
@@ -635,6 +640,7 @@ async function reviewRegistration(registrationId, action, reason = '') {
             throw new Error(data.error || 'Unknown error');
         }
         showNotification('Registration updated successfully', 'success');
+        goBack();
         loadRegistrations();
     } catch (error) {
         showNotification(error.message, 'error');
