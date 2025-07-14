@@ -94,7 +94,7 @@ jobs:
 
           # Set proper permissions for development
           echo "Setting proper permissions..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && [ -f ${DEPLOY_PATH}/.env ] && sudo chmod 600 ${DEPLOY_PATH}/.env || true && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && [ -f ${DEPLOY_PATH}/.env ] && sudo chmod 600 ${DEPLOY_PATH}/.env || true && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo mkdir -p ${DEPLOY_PATH}/public/uploads/ && sudo chmod -R 755 ${DEPLOY_PATH}/public/uploads/"
 
           # Clear PHP opcache (server cache)
           echo "Clearing PHP opcache..."
