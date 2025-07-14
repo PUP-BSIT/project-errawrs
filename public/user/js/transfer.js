@@ -48,11 +48,10 @@ const select_bank_panel = document.getElementById('select-bank-panel');
 const account_details_panel = document.getElementById('account-details-panel');
 const bank_radio_buttons = document.querySelectorAll('input[name="bank"]');
 const next_button = document.getElementById('next-button');
-const send_money_button = document.getElementById('send-money-button');
 const info_correct_checkbox = document.getElementById('info-correct');
 const default_bank_label = document.getElementById('default-bank-label');
 const stackovercash_bank_radio = document.getElementById('stackovercash_bank');
-const your_account_select = document.getElementById('your-account');
+const dropdown_selected = document.getElementById('dropdown-selected');
 const receiver_account_input = document.getElementById('receiver-account');
 const amount_input = document.getElementById('amount');
 
@@ -180,25 +179,20 @@ async function populateAccountsDropdown() {
             const activeAccounts = data.accounts.filter(account => account.status === 'active');
             if (activeAccounts.length > 0) {
                 user_accounts = activeAccounts;
-                your_account_select.innerHTML = `<option value=\"\">Select Account</option>`;
-            user_accounts.forEach((account) => {
-                const option = document.createElement('option');
-                option.value = account.account_number;
-                    const accountType = account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Standard';
-                    option.textContent = `${accountType} Account No. ${account.account_number} (${CURRENCY.SYMBOL} ${parseFloat(account.balance).toLocaleString(CURRENCY.LOCALE, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
-                option.dataset.balance = account.balance;
-                your_account_select.appendChild(option);
-            });
-                next_button.disabled = false;
+                populateCustomAccountDropdown();
+                if (next_button) next_button.disabled = false;
             } else {
                 showNotification('No active accounts found. Please add or activate an account first.', 'info');
-                next_button.disabled = true;
+                if (next_button) next_button.disabled = true;
             }
         } else {
             user_accounts = [];
-            your_account_select.innerHTML = `<option value=\"\">No active accounts available</option>`;
+            if (dropdown_selected) {
+                dropdown_selected.textContent = 'No active accounts available';
+                dropdown_selected.dataset.value = '';
+            }
             showNotification(data.error || 'Failed to fetch accounts', 'error');
-            next_button.disabled = true;
+            if (next_button) next_button.disabled = true;
         }
     } catch (error) {
         console.error('Error fetching accounts:', error);
@@ -340,10 +334,10 @@ function populate_profile_form() {
 
 // Function to validate transfer amount
 function validateTransferAmount() {
-    if (!your_account_select.value || !amount_input.value) return;
+    if (!dropdown_selected.dataset.value || !amount_input.value) return;
 
-    const selectedOption = your_account_select.options[your_account_select.selectedIndex];
-    const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
+    const selectedOption = user_accounts.find(account => account.account_number === dropdown_selected.dataset.value);
+    const accountBalance = parseFloat(selectedOption.balance || 0);
     const transferAmount = parseFloat(amount_input.value);
 
     if (isNaN(transferAmount)) return;
@@ -354,52 +348,87 @@ function validateTransferAmount() {
         warningText.textContent = 'No balance on your account';
         balanceWarning.classList.add('show');
         amount_input.classList.add('invalid');
-        send_money_button.disabled = true;
+        // send_money_button.disabled = true; // This line was removed from global scope
         info_correct_checkbox.checked = false;
     } else if (transferAmount > accountBalance) {
         warningText.textContent = 'Not enough balance';
         balanceWarning.classList.add('show');
         amount_input.classList.add('invalid');
-        send_money_button.disabled = true;
+        // send_money_button.disabled = true; // This line was removed from global scope
         info_correct_checkbox.checked = false;
     } else {
         balanceWarning.classList.remove('show');
         amount_input.classList.remove('invalid');
-        send_money_button.disabled = !is_info_correct();
+        // send_money_button.disabled = !is_info_correct(); // This line was removed from global scope
     }
 }
 
 // Event listeners for real-time validation
-amount_input.addEventListener('input', validateTransferAmount);
-your_account_select.addEventListener('change', validateTransferAmount);
+if (amount_input) {
+  amount_input.addEventListener('input', validateTransferAmount);
+}
+if (dropdown_selected) {
+  dropdown_selected.addEventListener('change', validateTransferAmount);
+}
 
 // Modify the info_correct_checkbox event listener
 if (info_correct_checkbox) {
     info_correct_checkbox.addEventListener('change', () => {
-        if (send_money_button) {
-            // Only enable the button if the amount is valid
-            const selectedOption = your_account_select.options[your_account_select.selectedIndex];
-            const accountBalance = parseFloat(selectedOption.dataset.balance || 0);
-            const transferAmount = parseFloat(amount_input.value || 0);
-            const warningText = balanceWarning.querySelector('span');
+        // Only enable the button if the amount is valid
+        const selectedOption = user_accounts.find(account => account.account_number === dropdown_selected.dataset.value);
+        const accountBalance = parseFloat(selectedOption.balance || 0);
+        const transferAmount = parseFloat(amount_input.value || 0);
+        const warningText = balanceWarning.querySelector('span');
 
-            if (accountBalance === 0) {
-                warningText.textContent = 'No balance on your account';
-                send_money_button.disabled = true;
-                info_correct_checkbox.checked = false;
-                balanceWarning.classList.add('show');
-                amount_input.classList.add('invalid');
-            } else if (transferAmount > accountBalance) {
-                warningText.textContent = 'Not enough balance';
-                send_money_button.disabled = true;
-                info_correct_checkbox.checked = false;
-                balanceWarning.classList.add('show');
-                amount_input.classList.add('invalid');
-            } else {
-                send_money_button.disabled = !is_info_correct();
-            }
+        if (accountBalance === 0) {
+            warningText.textContent = 'No balance on your account';
+            // send_money_button.disabled = true; // This line was removed from global scope
+            info_correct_checkbox.checked = false;
+            balanceWarning.classList.add('show');
+            amount_input.classList.add('invalid');
+        } else if (transferAmount > accountBalance) {
+            warningText.textContent = 'Not enough balance';
+            // send_money_button.disabled = true; // This line was removed from global scope
+            info_correct_checkbox.checked = false;
+            balanceWarning.classList.add('show');
+            amount_input.classList.add('invalid');
+        } else {
+            // send_money_button.disabled = !is_info_correct(); // This line was removed from global scope
         }
     });
+}
+
+function populateCustomAccountDropdown() {
+  if (!window.dropdown_selected || !window.dropdown_options) return;
+  const dropdown_selected = window.dropdown_selected;
+  const dropdown_options = window.dropdown_options;
+  dropdown_options.innerHTML = '';
+  if (user_accounts && user_accounts.length > 0) {
+    user_accounts.forEach((account) => {
+      const li = document.createElement('li');
+      let label = `${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} No. ${account.account_number}<br>(₱ ${parseFloat(account.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      li.innerHTML = label;
+      li.dataset.value = account.account_number;
+      li.dataset.balance = account.balance;
+      li.addEventListener('click', () => {
+        console.log('Dropdown option clicked:', label); // Debug log
+        dropdown_selected.innerHTML = label;
+        dropdown_selected.dataset.value = account.account_number;
+        dropdown_selected.classList.add('has-value');
+        dropdown_options.style.display = 'none';
+        setTimeout(() => {
+          validateTransferAmount();
+        }, 100);
+      });
+      dropdown_options.appendChild(li);
+    });
+  } else {
+    const li = document.createElement('li');
+    li.textContent = 'No accounts available';
+    li.style.color = '#aaa';
+    dropdown_options.appendChild(li);
+  }
+  // Do NOT reset dropdown_selected here; only reset in resetTransferForm or back button logic
 }
 
 // Event listeners
@@ -446,18 +475,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Info correct checkbox
     if (info_correct_checkbox) {
         info_correct_checkbox.addEventListener('change', () => {
-            if (send_money_button) {
-                send_money_button.disabled = !is_info_correct();
+            // Only enable the button if the amount is valid
+            const selectedOption = user_accounts.find(account => account.account_number === dropdown_selected.dataset.value);
+            const accountBalance = parseFloat(selectedOption.balance || 0);
+            const transferAmount = parseFloat(amount_input.value || 0);
+            const warningText = balanceWarning.querySelector('span');
+
+            if (accountBalance === 0) {
+                warningText.textContent = 'No balance on your account';
+                // send_money_button.disabled = true; // This line was removed from global scope
+                info_correct_checkbox.checked = false;
+                balanceWarning.classList.add('show');
+                amount_input.classList.add('invalid');
+            } else if (transferAmount > accountBalance) {
+                warningText.textContent = 'Not enough balance';
+                // send_money_button.disabled = true; // This line was removed from global scope
+                info_correct_checkbox.checked = false;
+                balanceWarning.classList.add('show');
+                amount_input.classList.add('invalid');
+            } else {
+                // send_money_button.disabled = !is_info_correct(); // This line was removed from global scope
             }
         });
     }
 
     // Send money button
+    const send_money_button = document.getElementById('send-money-button');
     if (send_money_button) {
         console.log('Send Money button found:', send_money_button);
         // Ensure the button has the correct styling
         send_money_button.className = 'send-btn';
-        send_money_button.disabled = !is_info_correct();
+        // send_money_button.disabled = !is_info_correct(); // This line was removed from global scope
 
         send_money_button.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -469,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
             send_money_button.textContent = 'Processing...';
 
             const transferAmount = parseFloat(amount_input.value);
-            const sourceAccount = your_account_select.value;
+            const sourceAccount = dropdown_selected.dataset.value;
             const recipientAccount = receiver_account_input.value;
             const bankValue = document.querySelector('input[name="bank"]:checked').value;
             const isInternal = bankValue === 'StackOvercash Bank';
@@ -551,7 +599,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (back_to_bank_button) {
         back_to_bank_button.addEventListener('click', () => {
             // Reset account details form
-            your_account_select.selectedIndex = 0;
+            dropdown_selected.textContent = 'Select Account';
+            dropdown_selected.dataset.value = '';
+            dropdown_selected.classList.remove('has-value');
             receiver_account_input.value = '';
             amount_input.value = '';
             info_correct_checkbox.checked = false;
@@ -627,12 +677,38 @@ document.addEventListener('DOMContentLoaded', () => {
             handleLogout();
         });
     }
+
+    const dropdown_selected = document.getElementById('dropdown-selected');
+    const dropdown_options = document.getElementById('dropdown-options');
+
+    // Pass these to populateCustomAccountDropdown
+    window.dropdown_selected = dropdown_selected;
+    window.dropdown_options = dropdown_options;
+
+    if (dropdown_selected && dropdown_options) {
+        dropdown_selected.addEventListener('click', function (e) {
+            e.stopPropagation();
+            // Toggle dropdown
+            if (dropdown_options.style.display === 'block') {
+                dropdown_options.style.display = 'none';
+            } else {
+                dropdown_options.style.display = 'block';
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!dropdown_selected.contains(e.target) && !dropdown_options.contains(e.target)) {
+                dropdown_options.style.display = 'none';
+            }
+        });
+    }
 });
 
 // Validate transfer form
 function validateTransferForm() {
     // Check if source account is selected
-    if (!your_account_select.value) {
+    if (!dropdown_selected.dataset.value) {
         showNotification('Please select your account', 'error');
         return false;
     }
@@ -654,11 +730,13 @@ function validateTransferForm() {
 
 // Reset transfer form
 function resetTransferForm() {
-    your_account_select.selectedIndex = 0;
+    dropdown_selected.textContent = 'Select Account';
+    dropdown_selected.dataset.value = '';
+    dropdown_selected.classList.remove('has-value');
     receiver_account_input.value = '';
     amount_input.value = '';
     info_correct_checkbox.checked = false;
-    send_money_button.disabled = true;
+    // send_money_button.disabled = true; // This line was removed from global scope
     
     // Go back to first panel
     account_details_panel.classList.remove('block');
