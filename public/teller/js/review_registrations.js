@@ -635,6 +635,7 @@ async function reviewRegistration(registrationId, action, reason = '') {
             throw new Error(data.error || 'Unknown error');
         }
         showNotification('Registration updated successfully', 'success');
+        goBack();
         loadRegistrations();
     } catch (error) {
         showNotification(error.message, 'error');

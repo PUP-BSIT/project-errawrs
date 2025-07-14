@@ -32718,3 +32718,74 @@ Stack trace:
 
 [14-Jul-2025 13:22:10 Europe/Berlin] Is admin: true
 [14-Jul-2025 13:22:10 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 02:43:10 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752518590
+            [last_activity] => 1752518590
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[15-Jul-2025 02:43:10 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-15 02:43:10
+)
+
+[15-Jul-2025 02:43:10 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752518590
+            [last_activity] => 1752518590
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+
+[15-Jul-2025 02:44:19 Asia/Manila] Starting registration review process
+[15-Jul-2025 02:44:19 Asia/Manila] Processing registration ID: 34, Action: deny
+[15-Jul-2025 02:44:20 Asia/Manila] Database connection established
+[15-Jul-2025 02:44:20 Asia/Manila] Transaction started
+[15-Jul-2025 02:44:20 Asia/Manila] Found registration for: Daniel Victorioso
+[15-Jul-2025 02:44:21 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 02:44:25 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 02:44:25 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 02:44:25 Asia/Manila] Review process completed
