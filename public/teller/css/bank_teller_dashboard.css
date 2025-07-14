@@ -459,12 +459,8 @@ body {
     gap: 24px;
     padding: 0;
     max-width: 100%;
-    position: sticky;
     top: 20px;
     z-index: 10;
-    background: linear-gradient(135deg, 
-                var(--color-bg-gradient-start) 0%, 
-                var(--color-bg-gradient-end) 100%);
     padding: 20px 0;
     margin: 20px 0;
     border-radius: 16px;
@@ -822,4 +818,11 @@ body {
     min-width: 0;
     z-index: auto;
     overflow: visible;
+}
+
+.registration-list .no-data {
+    text-align: center;
+    margin: 20px auto;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
 }

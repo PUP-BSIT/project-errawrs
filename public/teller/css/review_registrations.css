@@ -302,6 +302,8 @@ body {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto 32px auto;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 /* Make each card fill its grid cell and remove margin-bottom */
@@ -360,6 +362,12 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+}
+
+/* Applications grid: 2 cards per page - removed duplicate */
+/* Remove showing-text styles */
+.showing-text {
+    display: none;
 }
 
 /* Registration Card */
@@ -471,6 +479,13 @@ body {
 .detail-item span {
     color: var(--color-primary-black);
     font-weight: 500;
+}
+
+.detail-item.email span {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    display: inline-block;
+    max-width: 100%;
 }
 
 /* Status badge absolute at top right */
@@ -1087,6 +1102,7 @@ body {
     flex: 1;
 }
 
+/* Prevent registration cards from overlapping/touching parent container */
 .registration-container {
     width: 100%;
     max-width: 1200px;
@@ -1094,6 +1110,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Changed from center to flex-start */
+    padding: 0 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
 }
 
 .no-applications {
@@ -1266,4 +1286,34 @@ body {
 /* Utility class for hiding elements via JS */
 .hidden {
     display: none;
+}
+
+/* Center the no applications message */
+.applications-grid.empty-state {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+}
+
+/* Center a single registration card */
+.applications-grid.single-card {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+.applications-grid.single-card .registration-card {
+    max-width: 500px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .registration-container {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .registration-card {
+        margin: 0 2px;
+    }
 }

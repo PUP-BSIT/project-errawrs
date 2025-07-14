@@ -110,9 +110,17 @@ function getPaginatedRegistrations() {
 
 // Display registration cards (all design is handled by CSS classes)
 function displayRegistrations(registrations) {
-        const container = document.querySelector('.applications-grid');
-        if (!container) return;
-        if (!registrations.length) {
+    const container = document.querySelector('.applications-grid');
+    if (!container) return;
+    // Add or remove the single-card class
+    if (registrations.length === 1) {
+        container.classList.add('single-card');
+    } else {
+        container.classList.remove('single-card');
+    }
+    // Add or remove the empty-state class
+    if (!registrations.length) {
+        container.classList.add('empty-state');
         container.innerHTML =
             '<div class="no-applications">' +
             '<i class="fas fa-inbox fa-3x"></i>' +
@@ -128,122 +136,124 @@ function displayRegistrations(registrations) {
                   '</button>'
                 : '') +
             '</div>';
-            return;
-        }
-    const html = registrations
-        .map(reg => {
-            return (
-                '<div class="registration-card" ' +
-                'data-registration-id="' + reg.registration_id + '" ' +
-                'data-dob="' + (reg.date_of_birth || '') + '" ' +
-                'data-street="' + (reg.street_address || '') + '" ' +
-                'data-city="' + (reg.city || '') + '" ' +
-                'data-country="' + (reg.country || '') + '" ' +
-                'data-zip-code="' + (reg.zip_code || '') + '" ' +
-                'data-id-image="' + (reg.id_image || '') + '" ' +
-                'data-request-type="' + (reg.request_type || '') + '" ' +
-                'data-account-type="' + (reg.account_type || '') + '">' +
-                '<div class="status-badge status-badge-absolute ' +
-                reg.status + '" title="Application Status">' +
-                '<i class="fas ' +
-                (reg.status === 'pending'
-                    ? 'fa-clock'
-                    : reg.status === 'approved'
-                    ? 'fa-check-circle'
-                    : 'fa-times-circle') +
-                '"></i> ' +
-                reg.status.charAt(0).toUpperCase() +
-                reg.status.slice(1) +
-                '</div>' +
-                '<div class="card-left">' +
-                '<div class="registration-header">' +
-                '<div class="applicant-info">' +
-                '<h3 class="applicant-name">' +
-                reg.first_name +
-                ' ' +
-                reg.last_name +
-                '</h3>' +
-                '<div class="meta-info">' +
-                '<span class="application-date" title="Application Date">' +
-                '<i class="far fa-calendar-alt"></i> ' +
-                new Date(reg.created_at).toLocaleDateString() +
-                '</span>' +
-                '<span class="application-id" title="Application ID">' +
-                '<i class="fas fa-hashtag"></i> ' +
-                reg.registration_id +
-                '</span>' +
-                '<span class="request-type-badge" title="Request Type">' +
-                '<i class="fas fa-info-circle"></i> ' +
-                (reg.request_type
-                    ? reg.request_type.replace('_', ' ').toUpperCase()
-                    : 'N/A') +
-                '</span>' +
-                (reg.request_type === 'add_account'
-                    ? '<span class="account-type-badge" ' +
-                      'title="Account Type">' +
-                      '<i class="fas fa-university"></i> ' +
-                      (reg.account_type
-                          ? reg.account_type.charAt(0).toUpperCase() +
-                            reg.account_type.slice(1)
-                          : 'N/A') +
-                      '</span>'
-                    : '') +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="registration-details">' +
-                '<div class="detail-row">' +
-                '<div class="detail-item email">' +
-                '<i class="far fa-envelope"></i> ' +
-                '<span>' + reg.email + '</span>' +
-                '</div>' +
-                '<div class="detail-item phone">' +
-                '<i class="fas fa-phone"></i> ' +
-                '<span>' + reg.phone_number + '</span>' +
-                '</div>' +
-                '</div>' +
-                '<div class="detail-row">' +
-                '<div class="detail-item id-type">' +
-                '<i class="fas fa-id-card"></i> ' +
-                '<span>' + reg.id_type + '</span>' +
-                '</div>' +
-                '<div class="detail-item nationality">' +
-                '<i class="fas fa-globe"></i> ' +
-                '<span>' + reg.nationality + '</span>' +
-                '</div>' +
-                '</div>' +
-                (reg.status !== 'pending'
-                    ? '<div class="update-info">' +
-                      '<i class="far fa-clock"></i> Last updated ' +
-                      getTimeAgo(new Date(reg.updated_at)) +
-                      '</div>'
-                    : '') +
-                '</div>' +
-                (reg.status === 'pending'
-                    ? '<div class="action-buttons-row">' +
-                      '<button class="btn btn-approve" ' +
-                      'onclick="handleAction(' +
-                      reg.registration_id +
-                      ', \'approve\')">' +
-                      '<i class="fas fa-check"></i> Approve</button>' +
-                      '<button class="btn btn-deny" ' +
-                      'onclick="handleAction(' +
-                      reg.registration_id +
-                      ', \'deny\')">' +
-                      '<i class="fas fa-times"></i> Deny</button>' +
-                      '</div>'
-                    : '') +
-                '<button class="btn btn-view btn-view-details" ' +
-                'onclick="viewDetails(' +
-                reg.registration_id +
-                ')"><i class="fas fa-eye"></i> View Details</button>' +
-                '</div>' +
-                '</div>'
-            );
-        })
-        .join('');
-        container.innerHTML = html;
+        return;
+    } else {
+        container.classList.remove('empty-state');
     }
+const html = registrations
+    .map(reg => {
+        return (
+            '<div class="registration-card" ' +
+            'data-registration-id="' + reg.registration_id + '" ' +
+            'data-dob="' + (reg.date_of_birth || '') + '" ' +
+            'data-street="' + (reg.street_address || '') + '" ' +
+            'data-city="' + (reg.city || '') + '" ' +
+            'data-country="' + (reg.country || '') + '" ' +
+            'data-zip-code="' + (reg.zip_code || '') + '" ' +
+            'data-id-image="' + (reg.id_image || '') + '" ' +
+            'data-request-type="' + (reg.request_type || '') + '" ' +
+            'data-account-type="' + (reg.account_type || '') + '">' +
+            '<div class="status-badge status-badge-absolute ' +
+            reg.status + '" title="Application Status">' +
+            '<i class="fas ' +
+            (reg.status === 'pending'
+                ? 'fa-clock'
+                : reg.status === 'approved'
+                ? 'fa-check-circle'
+                : 'fa-times-circle') +
+            '"></i> ' +
+            reg.status.charAt(0).toUpperCase() +
+            reg.status.slice(1) +
+            '</div>' +
+            '<div class="card-left">' +
+            '<div class="registration-header">' +
+            '<div class="applicant-info">' +
+            '<h3 class="applicant-name">' +
+            reg.first_name +
+            ' ' +
+            reg.last_name +
+            '</h3>' +
+            '<div class="meta-info">' +
+            '<span class="application-date" title="Application Date">' +
+            '<i class="far fa-calendar-alt"></i> ' +
+            new Date(reg.created_at).toLocaleDateString() +
+            '</span>' +
+            '<span class="application-id" title="Application ID">' +
+            '<i class="fas fa-hashtag"></i> ' +
+            reg.registration_id +
+            '</span>' +
+            '<span class="request-type-badge" title="Request Type">' +
+            '<i class="fas fa-info-circle"></i> ' +
+            (reg.request_type
+                ? reg.request_type.replace('_', ' ').toUpperCase()
+                : 'N/A') +
+            '</span>' +
+            (reg.request_type === 'add_account'
+                ? '<span class="account-type-badge" ' +
+                  'title="Account Type">' +
+                  '<i class="fas fa-university"></i> ' +
+                  (reg.account_type
+                      ? reg.account_type.charAt(0).toUpperCase() +
+                        reg.account_type.slice(1)
+                      : 'N/A') +
+                  '</span>'
+                : '') +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="registration-details">' +
+            '<div class="detail-row">' +
+            '<div class="detail-item email">' +
+            '<i class="far fa-envelope"></i> ' +
+            '<span>' + reg.email + '</span>' +
+            '</div>' +
+            '<div class="detail-item phone">' +
+            '<i class="fas fa-phone"></i> ' +
+            '<span>' + reg.phone_number + '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="detail-row">' +
+            '<div class="detail-item id-type">' +
+            '<i class="fas fa-id-card"></i> ' +
+            '<span>' + reg.id_type + '</span>' +
+            '</div>' +
+            '<div class="detail-item nationality">' +
+            '<i class="fas fa-globe"></i> ' +
+            '<span>' + reg.nationality + '</span>' +
+            '</div>' +
+            '</div>' +
+            (reg.status !== 'pending'
+                ? '<div class="update-info">' +
+                  '<i class="far fa-clock"></i> Last updated ' +
+                  getTimeAgo(new Date(reg.updated_at)) +
+                  '</div>'
+                : '') +
+            '</div>' +
+            (reg.status === 'pending'
+                ? '<div class="action-buttons-row">' +
+                  '<button class="btn btn-approve" ' +
+                  'onclick="handleAction(' +
+                  reg.registration_id +
+                  ', \'approve\')">' +
+                  '<i class="fas fa-check"></i> Approve</button>' +
+                  '<button class="btn btn-deny" ' +
+                  'onclick="handleAction(' +
+                  reg.registration_id +
+                  ', \'deny\')">' +
+                  '<i class="fas fa-times"></i> Deny</button>' +
+                  '</div>'
+                : '') +
+            '<button class="btn btn-view btn-view-details" ' +
+            'onclick="viewDetails(' +
+            reg.registration_id +
+            ')"><i class="fas fa-eye"></i> View Details</button>' +
+            '</div>' +
+            '</div>'
+        );
+    })
+    .join('');
+    container.innerHTML = html;
+}
 
 // Update pagination controls
 function updatePagination() {
