@@ -125,7 +125,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking .env file...' && ls -la .env && echo '✅ .env file verified'"
           
           # Check if uploads directory exists
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking uploads directory...' && ls -la src/api/user/uploads/ && echo '✅ Uploads directory verified'"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "cd ${DEPLOY_PATH} && echo 'Checking uploads directory...' && ls -la public/uploads/ && echo '✅ Uploads directory verified'"
 
       - name: Deployment Summary
         run: |

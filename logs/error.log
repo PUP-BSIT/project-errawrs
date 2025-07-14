@@ -32718,3 +32718,148 @@ Stack trace:
 
 [14-Jul-2025 13:22:10 Europe/Berlin] Is admin: true
 [14-Jul-2025 13:22:10 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 05:06:06 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639918454024","purpose":"registration"}
+[15-Jul-2025 05:06:06 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639918454024
+    [purpose] => registration
+)
+
+[15-Jul-2025 05:06:06 Asia/Manila] Send OTP - Normalized phone: 09918454024
+[15-Jul-2025 05:06:06 Asia/Manila] Send OTP - Formatted phone for API: +639918454024
+[15-Jul-2025 05:06:06 Asia/Manila] Storing OTP - Phone: 09918454024, Purpose: registration
+[15-Jul-2025 05:06:06 Asia/Manila] Session ID before storing: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 05:06:06 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 05:06:06 Asia/Manila] Session data before storing: Array
+(
+)
+
+[15-Jul-2025 05:06:06 Asia/Manila] OTP stored successfully
+[15-Jul-2025 05:06:06 Asia/Manila] Session data after storing: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752527166
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Raw request data: {"phone_number":"+639918454024","otp":"123456","purpose":"registration"}
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Input data: Array
+(
+    [phone_number] => +639918454024
+    [otp] => 123456
+    [purpose] => registration
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Purpose: registration
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752527166
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] Verifying OTP - Input: 123456, Phone: +639918454024, Purpose: registration
+[15-Jul-2025 05:06:10 Asia/Manila] Session ID before verify: istrqrum1h40rdr6uucr0dsuth
+[15-Jul-2025 05:06:10 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 05:06:10 Asia/Manila] Full session data before verify: Array
+(
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09918454024
+            [created_at] => 1752527166
+            [attempts] => 0
+            [purpose] => registration
+        )
+
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] OTP verified successfully
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Successful verification for phone: +639918454024
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 05:06:10 Asia/Manila] Submit Registration - Session data: Array
+(
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 05:06:10 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 05:06:28 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752527188
+            [last_activity] => 1752527188
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+)
+
+[15-Jul-2025 05:06:28 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-15 05:06:28
+)
+
+[15-Jul-2025 05:06:28 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 45
+            [identifier] => T000002
+            [type] => teller
+            [logged_in_at] => 1752527188
+            [last_activity] => 1752527188
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [phone_number] => 
+            [email] => cscb.vpr.gerald@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 45
+            [teller_number] => T000002
+            [first_name] => Gerald
+            [last_name] => Mamasalanang
+            [email] => cscb.vpr.gerald@gmail.com
+            [status] => active
+        )
+
+)
+

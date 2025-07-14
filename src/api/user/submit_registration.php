@@ -146,7 +146,7 @@ function insertRegistrationRequest($db, $input) {
 }
 
 function createUploadDirectory($registrationId) {
-    $uploadDir = __DIR__ . '/../../../uploads/registration/' . $registrationId;
+    $uploadDir = __DIR__ . '/../../../public/uploads/registration/' . $registrationId;
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
@@ -172,6 +172,7 @@ function processFileUpload($uploadDir, $registrationId, $idType) {
         throw new Exception('Failed to upload file');
     }
 
+    // Return the path relative to public/ for web access
     return 'uploads/registration/' . $registrationId . '/' . $filename;
 }
 
