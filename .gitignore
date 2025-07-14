@@ -24,4 +24,4 @@ tmp/
 /vendor/
 
 .vscode/
-# /public/.htaccess
+/public/.htaccess
