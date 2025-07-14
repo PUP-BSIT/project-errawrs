@@ -4,7 +4,7 @@
     
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" href="../../assets/images/soc-logo.png" />
+        <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <title>StackOvercash - Admin Dashboard</title>
         <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
         <meta http-equiv="Pragma" content="no-cache">
@@ -21,7 +21,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="css/dashboard.css" />
+        <link rel="stylesheet" href="/admin/css/dashboard.css" />
     </head>
     <body>
         <!-- Sidebar -->
@@ -36,25 +36,25 @@
             <nav class="sidebar-nav">
                 <ul class="nav-list">
                     <li class="nav-item active">
-                        <a href="admin/dashboard" class="nav-link">
+                        <a href="/dashboard" class="nav-link">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin/tellers" class="nav-link">
+                        <a href="/tellers" class="nav-link">
                             <i class="fas fa-users"></i>
                             <span>Tellers</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin/users" class="nav-link">
+                        <a href="/users" class="nav-link">
                             <i class="fas fa-user-circle"></i>
                             <span>User Accounts</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="admin/transactions" class="nav-link">
+                        <a href="/transactions" class="nav-link">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Transactions</span>
                         </a>
@@ -160,7 +160,6 @@
             </div>
         </main>
         <!-- Scripts -->
-        <script src="js/config.js"></script>
-        <script src="js/dashboard.js"></script>
+        <script type="module" src="/admin/js/dashboard.js"></script>
     </body>
 </html> 

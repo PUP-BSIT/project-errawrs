@@ -25,59 +25,41 @@ jobs:
           # Set correct permissions
           chmod 600 ~/.ssh/aws_key ~/.ssh/aws_key_sim ~/.ssh/aws_key_ivan ~/.ssh/aws_key_gerald
           # Add host to known_hosts to avoid interactive prompts
-          ssh-keyscan -H ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
+          ssh-keyscan -H ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com >> ~/.ssh/known_hosts
 
       - name: Deploy to Production (main branch)
         if: github.ref == 'refs/heads/main'
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           DEPLOY_PATH=/var/www/html/project-errawrs
-          TMP_PATH=/tmp/errawrs_deploy_prod
           ENV_BACKUP_PATH=/tmp/errawrs_env_backup_prod
 
           echo "Starting deployment to production environment on ${REMOTE_HOST}..."
 
-          # Ensure temporary paths exist
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH}"
-
-          # Backup necessary files and directories
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/vendor ]; then sudo cp -r ${DEPLOY_PATH}/vendor ${ENV_BACKUP_PATH}/vendor.bak; fi"
+          # Backup .env file if it exists
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.json ]; then sudo cp ${DEPLOY_PATH}/composer.json ${ENV_BACKUP_PATH}/composer.json.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
 
-          # Clean the deployment directory (remove all files/folders including hidden ones)
+          # Erase the whole deployment path (including hidden files)
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]*"
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}"
 
-          echo "Cleaned deployment path ${DEPLOY_PATH}."
-
-          # Copy new files from the runner to the temporary path on EC2
-          echo "Copying files from runner to ${REMOTE_HOST}:${TMP_PATH}/"
-          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${TMP_PATH}/
+          # Copy new files from the runner to the deployment path
+          echo "Copying files from runner to ${REMOTE_HOST}:${DEPLOY_PATH}/"
+          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${DEPLOY_PATH}/
           echo "File copy complete."
 
-          # Move new files into the deployment path and set permissions
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
-          echo "Moved files to deployment path and set permissions."
-
-          # Restore backups
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/vendor.bak ]; then sudo mv ${ENV_BACKUP_PATH}/vendor.bak ${DEPLOY_PATH}/vendor; fi"
+          # Restore .env file
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/composer.json.bak ]; then sudo mv ${ENV_BACKUP_PATH}/composer.json.bak ${DEPLOY_PATH}/composer.json; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/composer.lock.bak ]; then sudo mv ${ENV_BACKUP_PATH}/composer.lock.bak ${DEPLOY_PATH}/composer.lock; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/uploads.bak ]; then sudo mv ${ENV_BACKUP_PATH}/uploads.bak ${DEPLOY_PATH}/src/api/user/uploads; fi"
-
-          # Set up uploads directory (ensure exists)
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
 
           # Set proper permissions for production
           echo "Setting proper permissions..."
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
+
+          # Clear PHP opcache (server cache)
+          echo "Clearing PHP opcache..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "php -r 'if(function_exists(\'opcache_reset\')){opcache_reset(); echo \"OPcache reset.\\n\";}else{echo \"OPcache not enabled.\\n\";}';"
 
           # Clean up temporary backup path
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${ENV_BACKUP_PATH}"
@@ -88,62 +70,45 @@ jobs:
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           DEPLOY_PATH=/var/www/dev/project-errawrs
-          TIMESTAMP=$(date +%s)
-          TMP_PATH=/tmp/errawrs_deploy_dev_$TIMESTAMP
-          ENV_BACKUP_PATH=/tmp/errawrs_env_backup_dev_$TIMESTAMP
+          ENV_BACKUP_PATH=/tmp/errawrs_env_backup_dev
 
           echo "Starting deployment to development environment on ${REMOTE_HOST}..."
 
-          # Ensure temporary paths exist and have correct permissions for the ubuntu user
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "mkdir -p ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chown -R ${REMOTE_USER}:${REMOTE_USER} ${TMP_PATH} ${ENV_BACKUP_PATH} && sudo chmod -R 700 ${TMP_PATH} ${ENV_BACKUP_PATH}"
+          # Backup .env file if it exists
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo mkdir -p ${ENV_BACKUP_PATH} && sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
 
-          # Backup necessary files and directories
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/vendor ]; then sudo cp -r ${DEPLOY_PATH}/vendor ${ENV_BACKUP_PATH}/vendor.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/.env ]; then sudo cp ${DEPLOY_PATH}/.env ${ENV_BACKUP_PATH}/.env.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.json ]; then sudo cp ${DEPLOY_PATH}/composer.json ${ENV_BACKUP_PATH}/composer.json.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${DEPLOY_PATH}/composer.lock ]; then sudo cp ${DEPLOY_PATH}/composer.lock ${ENV_BACKUP_PATH}/composer.lock.bak; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${DEPLOY_PATH}/src/api/user/uploads ]; then sudo cp -r ${DEPLOY_PATH}/src/api/user/uploads ${ENV_BACKUP_PATH}/uploads.bak; fi"
+          # Erase the whole deployment path (including hidden files)
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]*"
+          # Ensure directory exists and is owned by ubuntu for scp
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R ${REMOTE_USER}:${REMOTE_USER} ${DEPLOY_PATH}"
 
-          # Clean the deployment directory (remove all files/folders including hidden ones)
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${DEPLOY_PATH}/* ${DEPLOY_PATH}/.[^.]* && sudo mkdir -p ${DEPLOY_PATH} && sudo chown -R www-data:www-data ${DEPLOY_PATH}"
-
-          echo "Cleaned deployment path ${DEPLOY_PATH}."
-
-          # Copy new files from the runner to the temporary path on EC2
-          echo "Copying files from runner to ${REMOTE_HOST}:${TMP_PATH}/"
-          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${TMP_PATH}/
+          # Copy new files from the runner to the deployment path
+          echo "Copying files from runner to ${REMOTE_HOST}:${DEPLOY_PATH}/"
+          scp -o StrictHostKeyChecking=no -i ${SSH_KEY} -r ./* ${REMOTE_USER}@${REMOTE_HOST}:${DEPLOY_PATH}/
           echo "File copy complete."
 
-          # Move new files into the deployment path and set permissions
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mv ${TMP_PATH}/* ${DEPLOY_PATH}/ && sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod -R 755 ${DEPLOY_PATH}"
-          echo "Moved files to deployment path and set permissions."
-
-          # Restore backups
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/vendor.bak ]; then sudo mv ${ENV_BACKUP_PATH}/vendor.bak ${DEPLOY_PATH}/vendor; fi"
+          # Restore .env file
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/.env.bak ]; then sudo mv ${ENV_BACKUP_PATH}/.env.bak ${DEPLOY_PATH}/.env; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/composer.json.bak ]; then sudo mv ${ENV_BACKUP_PATH}/composer.json.bak ${DEPLOY_PATH}/composer.json; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -f ${ENV_BACKUP_PATH}/composer.lock.bak ]; then sudo mv ${ENV_BACKUP_PATH}/composer.lock.bak ${DEPLOY_PATH}/composer.lock; fi"
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "if [ -d ${ENV_BACKUP_PATH}/uploads.bak ]; then sudo mv ${ENV_BACKUP_PATH}/uploads.bak ${DEPLOY_PATH}/src/api/user/uploads; fi"
-
-          # Set up uploads directory (ensure exists)
-          echo "Setting up uploads directory..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo mkdir -p ${DEPLOY_PATH}/src/api/user/uploads/registration"
 
           # Set proper permissions for development
           echo "Setting proper permissions..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && sudo chmod 600 ${DEPLOY_PATH}/.env && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo chmod -R 755 ${DEPLOY_PATH}/src/api/user/uploads/"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo chown -R www-data:www-data ${DEPLOY_PATH} && [ -f ${DEPLOY_PATH}/.env ] && sudo chmod 600 ${DEPLOY_PATH}/.env || true && sudo chmod -R 755 ${DEPLOY_PATH}/public ${DEPLOY_PATH}/src ${DEPLOY_PATH}/vendor && sudo mkdir -p ${DEPLOY_PATH}/public/uploads/ && sudo chmod -R 755 ${DEPLOY_PATH}/public/uploads/"
 
-          # Clean up temporary paths
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${TMP_PATH} ${ENV_BACKUP_PATH}"
+          # Clear PHP opcache (server cache)
+          echo "Clearing PHP opcache..."
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "php -r \"if(function_exists('opcache_reset')){opcache_reset(); echo 'OPcache reset.\\n';}else{echo 'OPcache not enabled.\\n';}\""
+
+          # Clean up temporary backup path
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${ENV_BACKUP_PATH}"
           echo "Cleaned up temporary directories for development."
 
       - name: Verify Deployment
         run: |
           SSH_KEY=~/.ssh/aws_key
           REMOTE_USER=ubuntu
-          REMOTE_HOST=ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com
+          REMOTE_HOST=ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com
           
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             DEPLOY_PATH=/var/www/html/project-errawrs
@@ -166,12 +131,12 @@ jobs:
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "✅ Successfully deployed to PRODUCTION environment"
-            echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com/project-errawrs"
+            echo "🌐 URL: http://ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com/project-errawrs"
             echo "📧 Email functionality: PHPMailer configured and ready"
             echo "📁 File uploads: Directory structure created and secured"
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "✅ Successfully deployed to DEVELOPMENT environment"
-            echo "🌐 URL: http://ec2-54-206-115-2.ap-southeast-2.compute.amazonaws.com (dev site)"
+            echo "🌐 URL: http://ec2-54-206-163-49.ap-southeast-2.compute.amazonaws.com (dev site)"
             echo "📧 Email functionality: PHPMailer configured and ready"
             echo "📁 File uploads: Directory structure created and secured"
           fi

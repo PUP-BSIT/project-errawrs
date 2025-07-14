@@ -11,7 +11,7 @@
     <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/bank_teller_deposit.css">
+    <link rel="stylesheet" href="/teller/css/bank_teller_deposit.css">
 </head>
 <body>
     <div class="container">
@@ -24,25 +24,23 @@
             </div>
             
             <div class="user-profile">
-                <a href="user/profile">
+                <a href="/profile">
                     <div class="user-avatar dynamic-avatar"></div>
                 </a>
-                <div class="user-name">
-                    <!-- Teller name will be inserted here by JavaScript -->
-                </div>
+                <!-- Removed the username display here -->
             </div>
             
             <div class="nav-menu">
-                <a href="teller/dashboard" class="nav-item">Dashboard</a>
-                <a href="user/account" class="nav-item">Search Account</a>
+                <a href="/dashboard" class="nav-item">Dashboard</a>
+                <a href="/search" class="nav-item">Search Account</a>
                 <div class="nav-selected">Deposit</div>
-                <a href="teller/withdraw" class="nav-item">Withdraw</a>
-                <a href="register" class="nav-item">Review Registration</a>
-                <a href="teller/history" class="nav-item">Transaction</a>
+                <a href="/withdraw" class="nav-item">Withdraw</a>
+                <a href="/registrations" class="nav-item">Review Registration</a>
+                <a href="/history" class="nav-item">Transaction</a>
             </div>
             
             <div class="nav-logout">
-                <a href="login/teller">
+                <a href="/login" onclick="tellerLogout(); return false;">
                     Log out <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </div>
@@ -195,6 +193,7 @@
             </div>
         </div>
     </div>
-    <script src="js/deposit.js"></script>
+    <script type="module" src="/teller/js/deposit.js"></script>
+    <script type="module" src="/teller/js/logout.js"></script>
 </body>
 </html> 

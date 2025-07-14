@@ -97,6 +97,7 @@
 body {
     background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
     min-height: 100vh;
+    /* Remove any display: flex or vertical alignment here */
 }
 
 /* ============================================================================
@@ -107,6 +108,7 @@ body {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    /* Remove any vertical alignment or margin that could push sidebar down */
 }
 
 .main-content {
@@ -145,7 +147,7 @@ body {
     color: var(--color-white);
     display: flex;
     flex-direction: column;
-    padding: var(--spacing-xxl) var(--spacing-xl);
+    padding: 32px 24px;
     position: fixed;
     top: 0;
     left: 0;
@@ -155,7 +157,7 @@ body {
 
 /* Logo */
 .logo {
-    margin-bottom: var(--spacing-xxxl);
+    margin-bottom: 40px;
 }
 
 .logo h1 {
@@ -175,7 +177,7 @@ body {
 /* User Profile */
 .user-profile {
     text-align: center;
-    margin-bottom: var(--spacing-xxxl);
+    margin-bottom: 48px;
 }
 
 .user-avatar {

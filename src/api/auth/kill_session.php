@@ -14,6 +14,7 @@
 require_once __DIR__ . '/../../config/SessionManager.php';
 
 // Start session if not already started
+session_name('STACKOVERCASH_SESSID');
 session_start();
 
 // Set JSON response headers

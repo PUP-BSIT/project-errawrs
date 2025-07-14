@@ -1,13 +1,4 @@
 <?php
-  // Handle preflight OPTIONS request
-  if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-      header("Access-Control-Allow-Origin: *");
-      header("Access-Control-Allow-Methods: POST, OPTIONS");
-      header("Access-Control-Allow-Headers: Content-Type, Authorization");
-      header("Access-Control-Max-Age: 3600");
-      exit();
-  }
-
   // Set the project root path
   define('PROJECT_ROOT', realpath(__DIR__ . '/../../..'));
 
@@ -31,11 +22,7 @@
   $sessionManager = SessionManager::getInstance();
 
   // Set JSON header first before any output
-  header("Access-Control-Allow-Origin: *");
-  header("Access-Control-Allow-Methods: POST");
-  header("Access-Control-Allow-Headers: Content-Type, Authorization");
   header("Content-Type: application/json");
-  header("Access-Control-Allow-Credentials: true");
 
   // Function to handle errors
   function sendError($message, $code = 400) {
@@ -145,24 +132,11 @@
       $teller_id = $db->insert_id;
 
       // Send verification email
-      $templatePath = PROJECT_ROOT . '/src/api/user/email-templates/teller-account-setup-email.html';
-      $template = file_get_contents($templatePath);
-      $cssPath = PROJECT_ROOT . '/src/api/user/email-templates/registration-email.css';
-      $css = file_get_contents($cssPath);
       $set_password_link = getBaseUrl() . '/teller/set_password.html?teller_email=' . urlencode($data['email']);
-      $htmlBody = str_replace([
-        '{{FIRST_NAME}}',
-        '{{LAST_NAME}}',
-        '{{TELLER_NUMBER}}',
-        '{{SET_PASSWORD_LINK}}',
-        '<link rel="stylesheet" href="registration-email.css">'
-      ], [
-        htmlspecialchars($data['first_name']),
-        htmlspecialchars($data['last_name']),
-        htmlspecialchars($teller_number),
-        $set_password_link,
-        '<style>' . $css . '</style>'
-      ], $template);
+      
+      // Include and use the PHP email template
+      require_once __DIR__ . '/email-templates/teller-account-setup-email.php';
+      $htmlBody = getTellerAccountSetupEmailTemplate($data['first_name'], $data['last_name'], $teller_number, $set_password_link);
       $mail = new PHPMailer\PHPMailer\PHPMailer(true);
       $mail->isSMTP();
       $mail->Host = $_ENV['GMAIL_HOST'];

@@ -9,10 +9,6 @@ ini_set('display_errors', 0);
 
 // Set JSON header first before any output
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Credentials: true');
 
 // Function to handle errors
 function sendError($message, $code = 400) {
@@ -28,21 +24,12 @@ try {
     sendError('Configuration error: ' . $e->getMessage(), 500);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 // Check if user is logged in and is an admin
 if (!$session->isAuthorizedAdmin()) {
     sendError('Unauthorized access', 401);
 }
 
-if (!isset($_GET['id'])) {
-    sendError('Missing teller ID');
-}
-
-$teller_id = intval($_GET['id']);
+$teller_id = intval(route_param(0)); // First parameter from URL path
 if ($teller_id <= 0) {
     sendError('Invalid teller ID');
 }

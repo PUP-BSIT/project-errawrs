@@ -1,22 +1,11 @@
+import { API_ENDPOINTS } from '/api_config.js';
+
 // Get teller info from session storage
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 if (!tellerInfo || !tellerInfo.teller_number) {
     console.error("No teller info found in session storage");
-    window.location.href = "./bank_teller_login.html";
+    window.location.href = "/login";
 }
-
-// Configuration - Dynamic base URL detection
-function getBaseURL() {
-    const host = window.location.hostname;
-    if (host === 'dev-teller.stackovercash.site' || 
-        host === 'teller.stackovercash.site') {
-        return '/api';
-    }
-    return '/project-errawrs/src/api';
-}
-
-// Get the API base URL
-const API_BASE_URL = getBaseURL();
 
 // Global variables
 let currentPage = 1;
@@ -34,46 +23,23 @@ let selectedRows = new Set();
 
 // Initialize application when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    updateTellerInfo();
-    setupLogout();
+    updateTellerAvatar();
     initializeApplication();
 });
 
-// Update teller information in the UI
-function updateTellerInfo() {
-    const userNameElement = document.querySelector(".user-name");
+// Update teller avatar initial in the UI
+function updateTellerAvatar() {
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     let fullName = '';
-    
     if (tellerInfo.first_name && tellerInfo.last_name) {
         fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
-        userNameElement.textContent = fullName;
     } else if (tellerInfo.name) {
         fullName = tellerInfo.name;
-        userNameElement.textContent = tellerInfo.name;
     }
-    
-    // Set avatar initial
     if (avatarElement && fullName) {
         const initial = fullName.trim().charAt(0).toUpperCase();
         avatarElement.textContent = initial;
     }
-    
-    // Set initial items per page in select
-    const perPageSelect = document.getElementById("per-page-select");
-    if (perPageSelect) {
-        perPageSelect.value = selectedItemCount.toString();
-    }
-}
-
-// Setup logout functionality
-function setupLogout() {
-    document.querySelector('.nav-logout a').addEventListener('click', 
-        function(e) {
-            e.preventDefault();
-            sessionStorage.removeItem('tellerInfo');
-            window.location.href = './bank_teller_login.html';
-        });
 }
 
 // Initialize the application
@@ -100,7 +66,7 @@ function setupAutoRefresh() {
 // Fetch transaction history from the server
 async function fetchTransactionHistory() {
     try {
-        const url = `${API_BASE_URL}/teller/get_transaction_history.php?` +
+        const url = `${API_ENDPOINTS.TELLER_TRANSACTIONS}?` +
                    `teller_number=${encodeURIComponent(tellerInfo.teller_number)}` +
                    `&page=${currentPage}&limit=${selectedItemCount}`;
         
@@ -276,9 +242,11 @@ function updateNavigationButtons(displayPages) {
 
     if (prevBtn) {
         prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = goToPreviousPage;
     }
     if (nextBtn) {
         nextBtn.disabled = currentPage === displayPages;
+        nextBtn.onclick = goToNextPage;
     }
 }
 
@@ -575,3 +543,5 @@ function selectAllVisibleRows() {
         });
     });
 }
+
+window.changeItemsPerPage = changeItemsPerPage;

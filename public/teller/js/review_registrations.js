@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '/api_config.js';
+
 // State object to hold all registration review data
 const regReviewState = {
     currentPage: 1,
@@ -6,16 +8,6 @@ const regReviewState = {
     allRegistrations: [],
     filteredRegistrations: []
 };
-
-// Get the base URL for API requests
-function getBaseURL() {
-        const protocol = window.location.protocol;
-        const host = window.location.host;
-        if (host === 'dev-teller.stackovercash.site') {
-        return protocol + '//' + host + '/api';
-        }
-    return protocol + '//' + host + '/project-errawrs/src/api';
-    }
 
 // Set up event listeners for filter and search
 function setupEventListeners() {
@@ -53,8 +45,7 @@ function setupEventListeners() {
 // Load registrations from the server
 async function loadRegistrations() {
         try {
-        const baseUrl = getBaseURL();
-        const url = new URL(baseUrl + '/teller/get_registrations.php');
+        const url = new URL(API_ENDPOINTS?.TELLER_REGISTRATIONS || '/api/teller/registrations', window.location.origin);
         url.searchParams.append('status', regReviewState.currentStatus);
             url.searchParams.append('page', 1);
             url.searchParams.append('per_page', 1000);
@@ -107,7 +98,15 @@ function applySearchFilter() {
                 );
             });
         }
+
+    // Sort by status if 'all' is selected
+    if (regReviewState.currentStatus === 'all') {
+        const statusOrder = { 'pending': 0, 'approved': 1, 'rejected': 2 };
+        regReviewState.filteredRegistrations.sort((a, b) => {
+            return (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3);
+        });
     }
+}
 
 // Get registrations for the current page
 function getPaginatedRegistrations() {
@@ -119,9 +118,17 @@ function getPaginatedRegistrations() {
 
 // Display registration cards (all design is handled by CSS classes)
 function displayRegistrations(registrations) {
-        const container = document.querySelector('.applications-grid');
-        if (!container) return;
-        if (!registrations.length) {
+    const container = document.querySelector('.applications-grid');
+    if (!container) return;
+    // Add or remove the single-card class
+    if (registrations.length === 1) {
+        container.classList.add('single-card');
+    } else {
+        container.classList.remove('single-card');
+    }
+    // Add or remove the empty-state class
+    if (!registrations.length) {
+        container.classList.add('empty-state');
         container.innerHTML =
             '<div class="no-applications">' +
             '<i class="fas fa-inbox fa-3x"></i>' +
@@ -137,148 +144,217 @@ function displayRegistrations(registrations) {
                   '</button>'
                 : '') +
             '</div>';
-            return;
-        }
-    const html = registrations
-        .map(reg => {
-            return (
-                '<div class="registration-card" ' +
-                'data-registration-id="' + reg.registration_id + '" ' +
-                'data-dob="' + (reg.date_of_birth || '') + '" ' +
-                'data-street="' + (reg.street_address || '') + '" ' +
-                'data-city="' + (reg.city || '') + '" ' +
-                'data-country="' + (reg.country || '') + '" ' +
-                'data-zip-code="' + (reg.zip_code || '') + '" ' +
-                'data-id-image="' + (reg.id_image || '') + '" ' +
-                'data-request-type="' + (reg.request_type || '') + '" ' +
-                'data-account-type="' + (reg.account_type || '') + '">' +
-                '<div class="status-badge status-badge-absolute ' +
-                reg.status + '" title="Application Status">' +
-                '<i class="fas ' +
-                (reg.status === 'pending'
-                    ? 'fa-clock'
-                    : reg.status === 'approved'
-                    ? 'fa-check-circle'
-                    : 'fa-times-circle') +
-                '"></i> ' +
-                reg.status.charAt(0).toUpperCase() +
-                reg.status.slice(1) +
-                '</div>' +
-                '<div class="card-left">' +
-                '<div class="registration-header">' +
-                '<div class="applicant-info">' +
-                '<h3 class="applicant-name">' +
-                reg.first_name +
-                ' ' +
-                reg.last_name +
-                '</h3>' +
-                '<div class="meta-info">' +
-                '<span class="application-date" title="Application Date">' +
-                '<i class="far fa-calendar-alt"></i> ' +
-                new Date(reg.created_at).toLocaleDateString() +
-                '</span>' +
-                '<span class="application-id" title="Application ID">' +
-                '<i class="fas fa-hashtag"></i> ' +
-                reg.registration_id +
-                '</span>' +
-                '<span class="request-type-badge" title="Request Type">' +
-                '<i class="fas fa-info-circle"></i> ' +
-                (reg.request_type
-                    ? reg.request_type.replace('_', ' ').toUpperCase()
-                    : 'N/A') +
-                '</span>' +
-                (reg.request_type === 'add_account'
-                    ? '<span class="account-type-badge" ' +
-                      'title="Account Type">' +
-                      '<i class="fas fa-university"></i> ' +
-                      (reg.account_type
-                          ? reg.account_type.charAt(0).toUpperCase() +
-                            reg.account_type.slice(1)
-                          : 'N/A') +
-                      '</span>'
-                    : '') +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="registration-details">' +
-                '<div class="detail-row">' +
-                '<div class="detail-item email">' +
-                '<i class="far fa-envelope"></i> ' +
-                '<span>' + reg.email + '</span>' +
-                '</div>' +
-                '<div class="detail-item phone">' +
-                '<i class="fas fa-phone"></i> ' +
-                '<span>' + reg.phone_number + '</span>' +
-                '</div>' +
-                '</div>' +
-                '<div class="detail-row">' +
-                '<div class="detail-item id-type">' +
-                '<i class="fas fa-id-card"></i> ' +
-                '<span>' + reg.id_type + '</span>' +
-                '</div>' +
-                '<div class="detail-item nationality">' +
-                '<i class="fas fa-globe"></i> ' +
-                '<span>' + reg.nationality + '</span>' +
-                '</div>' +
-                '</div>' +
-                (reg.status !== 'pending'
-                    ? '<div class="update-info">' +
-                      '<i class="far fa-clock"></i> Last updated ' +
-                      getTimeAgo(new Date(reg.updated_at)) +
-                      '</div>'
-                    : '') +
-                '</div>' +
-                (reg.status === 'pending'
-                    ? '<div class="action-buttons-row">' +
-                      '<button class="btn btn-approve" ' +
-                      'onclick="handleAction(' +
-                      reg.registration_id +
-                      ', \'approve\')">' +
-                      '<i class="fas fa-check"></i> Approve</button>' +
-                      '<button class="btn btn-deny" ' +
-                      'onclick="handleAction(' +
-                      reg.registration_id +
-                      ', \'deny\')">' +
-                      '<i class="fas fa-times"></i> Deny</button>' +
-                      '</div>'
-                    : '') +
-                '<button class="btn btn-view btn-view-details" ' +
-                'onclick="viewDetails(' +
-                reg.registration_id +
-                ')"><i class="fas fa-eye"></i> View Details</button>' +
-                '</div>' +
-                '</div>'
-            );
-        })
-        .join('');
-        container.innerHTML = html;
+        return;
+    } else {
+        container.classList.remove('empty-state');
     }
+const html = registrations
+    .map(reg => {
+        return (
+            '<div class="registration-card" ' +
+            'data-registration-id="' + reg.registration_id + '" ' +
+            'data-dob="' + (reg.date_of_birth || '') + '" ' +
+            'data-street="' + (reg.street_address || '') + '" ' +
+            'data-city="' + (reg.city || '') + '" ' +
+            'data-country="' + (reg.country || '') + '" ' +
+            'data-zip-code="' + (reg.zip_code || '') + '" ' +
+            'data-id-image="' + (reg.id_image || '') + '" ' +
+            'data-request-type="' + (reg.request_type || '') + '" ' +
+            'data-account-type="' + (reg.account_type || '') + '">' +
+            '<div class="status-badge status-badge-absolute ' +
+            reg.status + '" title="Application Status">' +
+            '<i class="fas ' +
+            (reg.status === 'pending'
+                ? 'fa-clock'
+                : reg.status === 'approved'
+                ? 'fa-check-circle'
+                : 'fa-times-circle') +
+            '"></i> ' +
+            reg.status.charAt(0).toUpperCase() +
+            reg.status.slice(1) +
+            '</div>' +
+            '<div class="card-left">' +
+            '<div class="registration-header">' +
+            '<div class="applicant-info">' +
+            '<h3 class="applicant-name">' +
+            reg.first_name +
+            ' ' +
+            reg.last_name +
+            '</h3>' +
+            '<div class="meta-info">' +
+            '<span class="application-date" title="Application Date">' +
+            '<i class="far fa-calendar-alt"></i> ' +
+            new Date(reg.created_at).toLocaleDateString() +
+            '</span>' +
+            '<span class="application-id" title="Application ID">' +
+            '<i class="fas fa-hashtag"></i> ' +
+            reg.registration_id +
+            '</span>' +
+            '<span class="request-type-badge" title="Request Type">' +
+            '<i class="fas fa-info-circle"></i> ' +
+            (reg.request_type
+                ? reg.request_type.replace('_', ' ').toUpperCase()
+                : 'N/A') +
+            '</span>' +
+            (reg.request_type === 'add_account'
+                ? '<span class="account-type-badge" ' +
+                  'title="Account Type">' +
+                  '<i class="fas fa-university"></i> ' +
+                  (reg.account_type
+                      ? reg.account_type.charAt(0).toUpperCase() +
+                        reg.account_type.slice(1)
+                      : 'N/A') +
+                  '</span>'
+                : '') +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="registration-details">' +
+            '<div class="detail-row">' +
+            '<div class="detail-item email">' +
+            '<i class="far fa-envelope"></i> ' +
+            '<span>' + reg.email + '</span>' +
+            '</div>' +
+            '<div class="detail-item phone">' +
+            '<i class="fas fa-phone"></i> ' +
+            '<span>' + reg.phone_number + '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="detail-row">' +
+            '<div class="detail-item id-type">' +
+            '<i class="fas fa-id-card"></i> ' +
+            '<span>' + reg.id_type + '</span>' +
+            '</div>' +
+            '<div class="detail-item nationality">' +
+            '<i class="fas fa-globe"></i> ' +
+            '<span>' + reg.nationality + '</span>' +
+            '</div>' +
+            '</div>' +
+            (reg.status !== 'pending'
+                ? '<div class="update-info">' +
+                  '<i class="far fa-clock"></i> Last updated ' +
+                  getTimeAgo(new Date(reg.updated_at)) +
+                  '</div>'
+                : '') +
+            '</div>' +
+            (reg.status === 'pending'
+                ? '<div class="action-buttons-row">' +
+                  '<button class="btn btn-approve" ' +
+                  'onclick="handleAction(' +
+                  reg.registration_id +
+                  ', \'approve\')">' +
+                  '<i class="fas fa-check"></i> Approve</button>' +
+                  '<button class="btn btn-deny" ' +
+                  'onclick="handleAction(' +
+                  reg.registration_id +
+                  ', \'deny\')">' +
+                  '<i class="fas fa-times"></i> Deny</button>' +
+                  '</div>'
+                : '') +
+            '<button class="btn btn-view btn-view-details" ' +
+            'onclick="viewDetails(' +
+            reg.registration_id +
+            ')"><i class="fas fa-eye"></i> View Details</button>' +
+            '</div>' +
+            '</div>'
+        );
+    })
+    .join('');
+    container.innerHTML = html;
+}
 
 // Update pagination controls
 function updatePagination() {
     const totalPages =
         Math.ceil(regReviewState.filteredRegistrations.length /
             regReviewState.itemsPerPage) || 1;
-        const pageNumbers = document.getElementById('page-numbers');
-        if (pageNumbers) {
-            let html = '';
+    const pageNumbers = document.getElementById('page-numbers');
+    if (pageNumbers) {
+        let html = '';
+        const currentPage = regReviewState.currentPage;
+        const maxVisible = 5;
+
+        // Always show first page
+        if (totalPages <= maxVisible + 1) {
+            // Show all pages if not too many
             for (let i = 1; i <= totalPages; i++) {
+                html +=
+                    '<button class="page-number ' +
+                    (i === currentPage ? 'active' : '') +
+                    '" onclick="goToPage(' +
+                    i +
+                    ')">' +
+                    i +
+                    '</button>';
+            }
+        } else {
+            // Show first page
             html +=
                 '<button class="page-number ' +
-                (i === regReviewState.currentPage ? 'active' : '') +
-                '" onclick="goToPage(' +
-                i +
-                ')">' +
-                i +
-                '</button>';
+                (1 === currentPage ? 'active' : '') +
+                '" onclick="goToPage(1)">1</button>';
+
+            let start = Math.max(2, currentPage - 1);
+            let end = Math.min(totalPages - 1, currentPage + 1);
+
+            if (currentPage <= 3) {
+                start = 2;
+                end = 5;
+            } else if (currentPage >= totalPages - 2) {
+                start = totalPages - 4;
+                end = totalPages - 1;
             }
-            pageNumbers.innerHTML = html;
+
+            if (start > 2) {
+                html += '<span class="pagination-ellipsis">...</span>';
+            }
+
+            for (let i = start; i <= end; i++) {
+                html +=
+                    '<button class="page-number ' +
+                    (i === currentPage ? 'active' : '') +
+                    '" onclick="goToPage(' +
+                    i +
+                    ')">' +
+                    i +
+                    '</button>';
+            }
+
+            if (end < totalPages - 1) {
+                html += '<span class="pagination-ellipsis">...</span>';
+            }
+
+            // Show last page
+            html +=
+                '<button class="page-number ' +
+                (totalPages === currentPage ? 'active' : '') +
+                '" onclick="goToPage(' +
+                totalPages +
+                ')">' +
+                totalPages +
+                '</button>';
         }
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-    if (prevBtn) prevBtn.disabled = regReviewState.currentPage === 1;
-    if (nextBtn) nextBtn.disabled = regReviewState.currentPage === totalPages;
+        pageNumbers.innerHTML = html;
     }
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    if (prevBtn) {
+        prevBtn.disabled = regReviewState.currentPage === 1;
+        prevBtn.onclick = function() {
+            if (regReviewState.currentPage > 1) {
+                goToPage(regReviewState.currentPage - 1);
+            }
+        };
+    }
+    if (nextBtn) {
+        nextBtn.disabled = regReviewState.currentPage === totalPages;
+        nextBtn.onclick = function() {
+            if (regReviewState.currentPage < totalPages) {
+                goToPage(regReviewState.currentPage + 1);
+            }
+        };
+    }
+}
 
 // Show details view for a registration
 function viewDetails(registrationId) {
@@ -383,10 +459,9 @@ function viewDetails(registrationId) {
             '<h2>ID Document</h2>' +
             '<div class="id-preview-section">' +
             '<div class="id-preview-container">' +
-            '<img src="' + card.dataset.idImage + '" alt="ID Document" class="id-preview-image">' +
+            '<button class="btn btn-view-image" onclick="showImageOverlay(\'' + card.dataset.idImage + '\')">' +
+            '<i class="fas fa-image"></i> View Image</button>' +
             '</div>' +
-            '<div class="id-preview-note">' +
-            '<i class="fas fa-search-plus"></i> Click to zoom</div>' +
             '</div></div>' +
             (details.status === 'pending'
                 ? '<div class="section">' +
@@ -490,47 +565,7 @@ async function handleAction(registrationId, action) {
             }
             return;
         }
-        const response = await fetch(
-            getBaseURL() + '/teller/review_registration.php',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    registration_id: registrationId,
-                    action: action,
-                }),
-            }
-        );
-            const responseText = await response.text();
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch (e) {
-            throw new Error('Invalid response from server');
-            }
-            if (!response.ok || !data.success) {
-            throw new Error(
-                data.error || data.details || 'Failed to process registration'
-            );
-            }
-        closeConfirmationModal();
-            const appModal = document.getElementById('application_modal');
-            if (appModal) {
-                appModal.classList.add('hidden');
-            }
-        showNotification(
-            'Application successfully ' +
-                (action === 'approve' ? 'approved' : 'denied'),
-                'success'
-            );
-        if (detailsView) {
-            detailsView.remove();
-            document.querySelector('.filter-section').classList.remove('hidden');
-            document.querySelector('.applications-grid').classList.remove('hidden');
-            document.querySelector('.pagination-container').classList.remove('hidden');
-        }
-        await loadRegistrations();
+        await reviewRegistration(registrationId, action);
         } catch (error) {
         showNotification(error.message, 'error');
     } finally {
@@ -586,6 +621,26 @@ function closeConfirmationModal() {
         modal.classList.remove('active');
     }
 
+// Update review/approve/reject registration API call
+async function reviewRegistration(registrationId, action, reason = '') {
+    try {
+        const response = await fetch(API_ENDPOINTS?.TELLER_REVIEW_REGISTRATION || '/api/teller/registrations/review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ registration_id: registrationId, action, reason })
+        });
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Unknown error');
+        }
+        showNotification('Registration updated successfully', 'success');
+        loadRegistrations();
+    } catch (error) {
+        showNotification(error.message, 'error');
+    }
+}
+
 // Go to a specific page
 function goToPage(page) {
     regReviewState.currentPage = page;
@@ -618,13 +673,29 @@ function showNotification(message, type = 'info') {
         }, 5000);
 }
 
+// Add overlay logic at the end of the file
+function showImageOverlay(imageUrl) {
+    const overlay = document.getElementById('image_overlay');
+    const overlayImg = document.getElementById('overlay_image');
+    if (overlay && overlayImg) {
+        overlayImg.src = imageUrl;
+        overlay.classList.remove('hidden');
+    }
+}
+function closeImageOverlay() {
+    const overlay = document.getElementById('image_overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        document.getElementById('overlay_image').src = '';
+    }
+}
+
 // Initialize RegistrationReview when DOM is ready
 let registrationReview;
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     loadRegistrations();
     const tellerInfo = JSON.parse(sessionStorage.getItem('tellerInfo'));
-    const userNameElement = document.querySelector('.user-name');
     const avatarElement = document.querySelector('.user-avatar.dynamic-avatar');
     if (tellerInfo) {
         let fullName = '';
@@ -633,12 +704,24 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (tellerInfo.name) {
             fullName = tellerInfo.name;
         }
-        if (userNameElement && fullName) {
-            userNameElement.textContent = fullName;
-        }
         if (avatarElement && fullName) {
             const initial = fullName.trim().charAt(0).toUpperCase();
             avatarElement.textContent = initial;
         }
     }
-}); 
+    const overlay = document.getElementById('image_overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeImageOverlay();
+            }
+        });
+    }
+});
+
+window.handleAction = handleAction;
+window.viewDetails = viewDetails;
+window.goBack = goBack;
+window.goToPage = goToPage;
+window.showImageOverlay = showImageOverlay;
+window.closeImageOverlay = closeImageOverlay; 

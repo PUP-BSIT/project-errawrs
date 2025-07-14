@@ -2,6 +2,8 @@
    BANK TELLER DASHBOARD JAVASCRIPT
    ======================================== */
 
+import { API_ENDPOINTS } from '/api_config.js';
+
 // ========================================
 // GLOBAL VARIABLES & CONFIGURATION
 // ========================================
@@ -12,7 +14,7 @@ const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
 // Validate teller session
 if (!tellerInfo || !tellerInfo.teller_number) {
     console.error("No teller info found in session storage");
-    window.location.href = "./bank_teller_login.html";
+    window.location.href = "/login";
 }
 
 // Keep track of last known values to detect changes
@@ -31,18 +33,6 @@ let searchTimeout = null;
 // ========================================
 // UTILITY FUNCTIONS
 // ========================================
-
-/**
- * Dynamically detect the base URL for API calls
- * @returns {string} The appropriate API base URL
- */
-function getBaseURL() {
-    const host = window.location.hostname;
-    return host === 'dev-teller.stackovercash.site' ? '/api' : '/project-errawrs/src/api';
-}
-
-// Get the API base URL
-const API_BASE_URL = getBaseURL();
 
 /**
  * Display notification messages to the user
@@ -180,7 +170,7 @@ function setupSearch() {
 async function performSearch(searchTerm) {
     try {
         const data = await makeApiRequest(
-            `${API_BASE_URL}/teller/search_account.php?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`
+            `${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(searchTerm)}&teller_number=${tellerInfo.teller_number}`
         );
 
         const searchResults = document.getElementById('search_results');
@@ -244,7 +234,7 @@ async function performSearch(searchTerm) {
 async function fetchDashboardSummary() {
     try {
         const data = await makeApiRequest(
-            `${API_BASE_URL}/teller/get_dashboard_summary.php?teller_number=${tellerInfo.teller_number}`
+            `${API_ENDPOINTS.TELLER_DASHBOARD}?teller_number=${tellerInfo.teller_number}`
         );
 
         if (data.success) {
@@ -303,7 +293,9 @@ function updateDashboardSummary(summary) {
  */
 async function loadRecentRegistrations() {
     try {
-        const data = await makeApiRequest(`${API_BASE_URL}/teller/get_registrations.php`);
+        const data = await makeApiRequest(
+            `${API_ENDPOINTS.TELLER_REGISTRATIONS}?teller_number=${tellerInfo.teller_number}`
+        );
 
         if (!data.success) {
             throw new Error(data.message || data.error || 'Failed to load registrations');
@@ -405,7 +397,7 @@ async function handleRegistration(registrationId, action) {
     `;
     
     try {
-        const data = await makeApiRequest(`${API_BASE_URL}/teller/review_registration.php`, {
+        const data = await makeApiRequest(`${API_ENDPOINTS.TELLER_REVIEW_REGISTRATION}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -442,27 +434,25 @@ async function handleRegistration(registrationId, action) {
  */
 function initializeUI() {
     // Update name in sidebar and greeting section
-    const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     
-    let fullName = '';
-    
-    if (tellerInfo.first_name && tellerInfo.last_name) {
-        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+    let firstName = '';
+    if (tellerInfo.first_name) {
+        firstName = tellerInfo.first_name;
     } else if (tellerInfo.name) {
-        fullName = tellerInfo.name;
+        // If only a full name is available, use the first word as first name
+        firstName = tellerInfo.name.split(' ')[0];
     }
     
-    // Update all name elements
-    userNameElements.forEach(el => el.textContent = fullName);
+    // Only update greeting and avatar, not sidebar username
     if (nameTextElement) {
-        nameTextElement.textContent = fullName + "!";
+        nameTextElement.textContent = firstName + "!";
     }
     
     // Set avatar initial
-    if (avatarElement && fullName) {
-        const initial = fullName.trim().charAt(0).toUpperCase();
+    if (avatarElement && firstName) {
+        const initial = firstName.trim().charAt(0).toUpperCase();
         avatarElement.textContent = initial;
     }
 }
@@ -471,12 +461,7 @@ function initializeUI() {
  * Set up event listeners for user interactions
  */
 function setupEventListeners() {
-    // Handle logout
-    document.querySelector('.nav-logout a').addEventListener('click', function(e) {
-        e.preventDefault();
-        sessionStorage.removeItem('tellerInfo');
-        window.location.href = './bank_teller_login.html';
-    });
+    // No logout logic needed here; handled by logout.js
 }
 
 /**

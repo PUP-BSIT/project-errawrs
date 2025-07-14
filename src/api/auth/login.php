@@ -1,4 +1,18 @@
 <?php
+// Set session name based on login_type BEFORE any require_once, session_start, or SessionManager
+$rawInput = file_get_contents('php://input');
+$input = json_decode($rawInput, true);
+if (isset($input['login_type'])) {
+    if ($input['login_type'] === 'admin') {
+        session_name('STACKOVERCASH_SESSID_ADMIN');
+    } elseif ($input['login_type'] === 'teller') {
+        session_name('STACKOVERCASH_SESSID_TELLER');
+    } else {
+        session_name('STACKOVERCASH_SESSID');
+    }
+} else {
+    session_name('STACKOVERCASH_SESSID');
+}
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/SessionManager.php';
 
@@ -16,17 +30,7 @@ function isLocalEnvironment() {
 }
 
 function setEnvironmentHeaders() {
-    if (isLocalEnvironment()) {
-        header('Access-Control-Allow-Origin: http://localhost');
-    } else {
-        header('Access-Control-Allow-Origin: https://stackovercash.site, ' .
-               'https://dev-teller.stackovercash.site');
-    }
-    
     header('Content-Type: application/json; charset=utf-8');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization');
-    header('Access-Control-Allow-Credentials: true');
 }
 
 function handleError($message, $code = 400, $logError = true) {
@@ -45,38 +49,15 @@ function handleError($message, $code = 400, $logError = true) {
 }
 
 function validateHttpMethod() {
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-        http_response_code(200);
-        exit();
-    }
-
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode([
             'success' => false,
             'error' => 'Method not allowed',
-            'allowed_methods' => ['POST', 'OPTIONS']
+            'allowed_methods' => ['POST']
         ]);
         exit();
     }
-}
-
-function getInputData() {
-    $input = file_get_contents('php://input');
-    if (empty($input)) {
-        handleError('No input data received');
-    }
-
-    $data = json_decode($input, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        handleError('Invalid JSON data: ' . json_last_error_msg());
-    }
-
-    if (DEBUG) {
-        error_log("Received login data: " . print_r($data, true));
-    }
-
-    return $data;
 }
 
 function validateRequiredFields($data) {
@@ -251,7 +232,7 @@ try {
         throw new Exception('Database connection failed');
     }
 
-    $data = getInputData();
+    $data = $input;
     validateRequiredFields($data);
 
     $loginType = strtolower(trim($data['login_type']));
