@@ -1235,3 +1235,15 @@ body {
     padding-left: 2.5rem;
     padding-right: 1rem;
 }
+
+/* Larger icon size in user/teller cards - target both possible locations */
+.user-card .user-header .user-info i,
+.user-card .user-header i {
+    font-size: 2rem !important;
+}
+
+/* Increase font size of the select search type element */
+.search-type-select {
+    font-size: 1.25rem;
+    height: 48px;
+}
