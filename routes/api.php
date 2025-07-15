@@ -67,6 +67,7 @@ $router->get('/user/financial-tips', 'src/api/user/financial-tips.php');
 $router->post('/teller/set-password', 'src/api/teller/set_password.php');
 $router->post('/teller/request-password-reset', 'src/api/teller/request_password_reset.php');
 $router->post('/teller/process-password-reset', 'src/api/teller/process_password_reset.php');
+$router->post('/teller/get_teller_info', 'src/api/teller/get_teller_info.php');
 
 // Account operations
 $router->get('/teller/search-account', 'src/api/teller/search_account.php');
