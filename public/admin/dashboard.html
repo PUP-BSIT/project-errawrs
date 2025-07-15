@@ -118,42 +118,23 @@
                 <!-- Search Section -->
                 <section class="content-section search-section active">
                     <div class="search-container">
-                        <!-- Teller Search -->
-                        <div class="search-column">
-                            <div class="search-box-container">
-                                <h2>Search Tellers</h2>
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="teller_search" placeholder="Search tellers by name, ID or email...">
-                                </div>
+                        <div class="search-column" style="width: 100%;">
+                          <div class="search-box-container">
+                            <h2>Search Accounts</h2>
+                            <div class="search-box unified-search-box">
+                              <select id="search_type" class="search-type-select">
+                                <option value="teller">Teller Account</option>
+                                <option value="user">User Account</option>
+                              </select>
+                              <div class="search-input-wrapper">
+                                <input type="text" id="unified_search" placeholder="Search teller by name, ID or email...">
+                                <i class="fas fa-search search-input-icon"></i>
+                              </div>
                             </div>
-                            <div id="teller_results" class="results-container">
-                                <!-- Loading State -->
-                                <div class="loading-state" style="display: none;">
-                                    <i class="fas fa-spinner fa-spin"></i>
-                                    <p>Loading tellers...</p>
-                                </div>
-                                <!-- Results will be displayed here -->
-                            </div>
-                        </div>
-
-                        <!-- User Account Search -->
-                        <div class="search-column" id="search_user">
-                            <div class="search-box-container">
-                                <h2>Search User Accounts</h2>
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="user_search" placeholder="Search users by name or account number...">
-                                </div>
-                            </div>
-                            <div id="user_results" class="results-container">
-                                <!-- Loading State -->
-                                <div class="loading-state" style="display: none;">
-                                    <i class="fas fa-spinner fa-spin"></i>
-                                    <p>Loading accounts...</p>
-                                </div>
-                                <!-- Results will be displayed here -->
-                            </div>
+                          </div>
+                          <div id="unified_results" class="results-container">
+                            <!-- Results will be displayed here -->
+                          </div>
                         </div>
                     </div>
                 </section>
