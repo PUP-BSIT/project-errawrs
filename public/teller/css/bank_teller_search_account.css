@@ -1,12 +1,3 @@
-/* ============================================================================
-   BANK TELLER SEARCH ACCOUNT - MAIN STYLESHEET
-   This file contains all styles for the bank teller search account page
-   ============================================================================ */
-
-/* ============================================================================
-   CSS VARIABLES (COLORS, FONTS, SPACING)
-   ============================================================================ */
-
 :root {
     /* Primary Colors */
     --color-primary-black: #111111;
@@ -83,10 +74,6 @@
     --z-index-overlay: 9999;
 }
 
-/* ============================================================================
-   RESET AND BASE STYLES
-   ============================================================================ */
-
 * {
     margin: 0;
     padding: 0;
@@ -97,12 +84,7 @@
 body {
     background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
     min-height: 100vh;
-    /* Remove any display: flex or vertical alignment here */
 }
-
-/* ============================================================================
-   LAYOUT CONTAINERS
-   ============================================================================ */
 
 .container {
     display: flex;
@@ -282,9 +264,6 @@ body {
     font-size: 1.2rem;
 }
 
-/* ============================================================================
-   SEARCH CONTAINER
-   ============================================================================ */
 
 .search-container {
     width: 100%;
@@ -354,10 +333,6 @@ body {
 .clear-search-btn:hover {
     color: var(--color-red);
 }
-
-/* ============================================================================
-   ACCOUNT CONTAINER AND CARDS
-   ============================================================================ */
 
 .account-container {
     width: 100%;
@@ -546,10 +521,6 @@ body {
     font-size: var(--font-size-large);
 }
 
-/* ============================================================================
-   LOADING INDICATORS
-   ============================================================================ */
-
 #loading_indicator {
     position: absolute;
     top: 100%;
@@ -620,10 +591,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* ============================================================================
-   NOTIFICATIONS
-   ============================================================================ */
-
 .notification-container {
     position: fixed;
     top: var(--spacing-lg);
@@ -659,10 +626,6 @@ body {
     }
 }
 
-/* ============================================================================
-   UTILITY CLASSES
-   ============================================================================ */
-
 .clear-search-btn-hidden {
     display: none;
 }
@@ -687,83 +650,81 @@ body {
     display: none;
 }
 
-/* ============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================ */
-
-/* Mobile S (max-width: 320px) */
-@media (max-width: 320px) {
-    .sidebar {
-        width: 200px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .main-content {
-        margin-left: 200px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .account-container {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .account-info {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .card-actions {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
+/* Modal Overlay Styles */
+.confirmation-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.6);
+    z-index: 10001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Mobile M (min-width: 321px and max-width: 375px) */
-@media (min-width: 321px) and (max-width: 375px) {
-    .account-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .card-actions {
-        flex-direction: column;
-    }
+.confirmation-modal-content {
+    min-width: 320px;
+    text-align: center;
+    background: var(--color-white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 4px 24px var(--color-shadow-heavy);
+    padding: 32px 32px 24px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Mobile L (min-width: 376px and max-width: 425px) */
-@media (min-width: 376px) and (max-width: 425px) {
-    .account-container {
-        grid-template-columns: 1fr;
-    }
+.confirmation-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary-black);
+    margin-bottom: 24px;
 }
 
-/* Tablet (min-width: 426px and max-width: 768px) */
-@media (min-width: 426px) and (max-width: 768px) {
-    .sidebar {
-        width: 220px;
-    }
-    
-    .main-content {
-        margin-left: 220px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .account-container {
-        grid-template-columns: 1fr;
-        max-width: 600px;
-    }
+.confirmation-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
 }
 
-/* Laptop (min-width: 769px and max-width: 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .account-container {
-        max-width: 900px;
-    }
+.confirm-btn, .cancel-btn {
+    padding: 14px 32px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.confirm-btn {
+    background: var(--color-mint);
+    color: #fff;
+}
+.cancel-btn {
+    background: var(--color-red);
+    color: #fff;
 }
 
-/* Above (min-width: 1025px) */
-@media (min-width: 1025px) {
-    .account-container {
-        max-width: 1200px;
-    }
+.processing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    padding: 24px 0;
+}
+.processing-container .spinner {
+    width: 40px;
+    height: 40px;
+    border-top: 4px solid var(--color-mint) !important;
+    border-width: 4px !important;
+}
+.processing-text {
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--color-primary-black);
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <title>StackOvercash - User Accounts</title>
         <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
         <meta http-equiv="Pragma" content="no-cache">
@@ -12,13 +12,13 @@
         <!-- Google Fonts -->
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"/>
-
+            rel="stylesheet"
+        />
         <!-- Font Awesome -->
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
         <!-- Custom CSS -->
         <link rel="stylesheet" href="/admin/css/user_account.css" />
     </head>
@@ -34,33 +34,32 @@
                         <span class="logo-overcash">Overcash</span>
                     </div>
                 </div>
-                
                 <nav class="sidebar-nav">
                     <ul class="nav-list">
-                                            <li class="nav-item">
-                        <a href="/dashboard" class="nav-link">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/tellers" class="nav-link">
-                            <i class="fas fa-users"></i>
-                            <span>Tellers</span>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="/users" class="nav-link">
-                            <i class="fas fa-user-circle"></i>
-                            <span>User Accounts</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/transactions" class="nav-link">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Transactions</span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="/dashboard" class="nav-link">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/tellers" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                <span>Tellers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="/users" class="nav-link">
+                                <i class="fas fa-user-circle"></i>
+                                <span>User Accounts</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/transactions" class="nav-link">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Transactions</span>
+                            </a>
+                        </li>
                         <li class="nav-item logout-item">
                             <a href="#" id="logout_btn" class="nav-link">
                                 <i class="fas fa-sign-out-alt"></i>
@@ -78,23 +77,22 @@
             <div class="page-content">
                 <!-- Header Actions -->
                 <div class="content-header">
-                    <h1 class="page-title">Total Users: 
-                          <span id="total_tellers_count">0</span>
+                    <h1 class="page-title">
+                        Total Users: 
+                        <span id="total_tellers_count">0</span>
                     </h1>
-                    
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="search_user" placeholder="Search users by name, or account number">
+                        <input type="text" id="search_user" 
+                            placeholder="Search users by name, or account number">
                     </div>
                 </div>
-
                 <!-- User Cards Container -->
                 <div class="user-cards-wrapper">
                     <div class="user-cards" id="user_cards">
                         <!-- Cards will be loaded dynamically -->
                     </div>
                 </div>
-
                 <!-- Pagination -->
                 <div class="pagination" id="pagination">
                     <!-- Pagination will be loaded dynamically -->
@@ -113,23 +111,68 @@
               <hr class="user-detail-divider" />
               <div class="user-detail-content-grid">
                 <div class="user-detail-fields">
-                  <div class="user-detail-row"><span class="user-detail-label">User ID</span><span id="ud_user_id" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Username</span><span id="ud_username" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">First Name</span><span id="ud_first_name" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Last Name</span><span id="ud_last_name" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Phone Number</span><span id="ud_phone_number" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Date of Birth</span><span id="ud_date_of_birth" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Nationality</span><span id="ud_nationality" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Email</span><span id="ud_email" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Created At</span><span id="ud_created_at" class="user-detail-value"></span></div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">User ID</span>
+                    <span id="ud_user_id" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Username</span>
+                    <span id="ud_username" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">First Name</span>
+                    <span id="ud_first_name" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Last Name</span>
+                    <span id="ud_last_name" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Phone Number</span>
+                    <span id="ud_phone_number" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Date of Birth</span>
+                    <span id="ud_date_of_birth" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Nationality</span>
+                    <span id="ud_nationality" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Email</span>
+                    <span id="ud_email" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Created At</span>
+                    <span id="ud_created_at" class="user-detail-value"></span>
+                  </div>
                 </div>
                 <div class="user-detail-fields">
-                  <div class="user-detail-row"><span class="user-detail-label">Street</span><span id="ud_street" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">City</span><span id="ud_city" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Zip Code</span><span id="ud_zip_code" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">Country</span><span id="ud_country" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">ID Type</span><span id="ud_id_type" class="user-detail-value"></span></div>
-                  <div class="user-detail-row"><span class="user-detail-label">ID Image</span><span id="ud_id_image" class="user-detail-value"></span></div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Street</span>
+                    <span id="ud_street" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">City</span>
+                    <span id="ud_city" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Zip Code</span>
+                    <span id="ud_zip_code" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">Country</span>
+                    <span id="ud_country" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">ID Type</span>
+                    <span id="ud_id_type" class="user-detail-value"></span>
+                  </div>
+                  <div class="user-detail-row">
+                    <span class="user-detail-label">ID Image</span>
+                    <span id="ud_id_image" class="user-detail-value"></span>
+                  </div>
                 </div>
               </div>
             </div>

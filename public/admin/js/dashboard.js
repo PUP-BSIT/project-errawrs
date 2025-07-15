@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDashboardStats();
     setupSidebarToggle();
     setupUnifiedSearch();
+    setupUnifiedSearch();
 });
 
 function setupEventListeners() {
@@ -34,7 +35,7 @@ function setupEventListeners() {
             profileBtn.addEventListener('click', () => {
                 const dropdown = document.querySelector('.dropdown-content');
                 if (dropdown) {
-                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                    dropdown.classList.toggle('show');
                 }
             });
         }
@@ -44,7 +45,8 @@ function setupEventListeners() {
         if (dashboardLink) {
             dashboardLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(item => 
+                      item.classList.remove('active'));
                 e.target.closest('.nav-item').classList.add('active');
                 hideAllSections();
                 const dashboardSection = document.querySelector('.dashboard-section');
@@ -188,6 +190,18 @@ function formatNumber(number) {
         return new Intl.NumberFormat().format(number);
     }
 
+function formatDate(dateString) {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 async function handleLogout(e) {
         e.preventDefault();
         try {
@@ -241,7 +255,8 @@ async function handleTellerSearch(searchTerm, resultsContainer = unifiedResults)
             <div class="loading-state">
                 <p>Searching tellers...</p>
             </div>`;
-        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=
+            ${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Failed to fetch tellers');
         const data = await response.json();
         if (!data.success) {
@@ -296,7 +311,8 @@ async function handleUserSearch(searchTerm, resultsContainer = unifiedResults) {
             <div class="loading-state">
                 <p>Searching accounts...</p>
             </div>`;
-        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=
+            ${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Failed to fetch users');
         const data = await response.json();
         if (!data.success) {
@@ -358,18 +374,6 @@ async function handleUserSearch(searchTerm, resultsContainer = unifiedResults) {
 function hideAllSections() {
     document.querySelectorAll('.content-section').forEach(section => {
         section.classList.remove('active');
-    });
-}
-
-function formatDate(dateString) {
-    if (!dateString) return 'Never';
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
     });
 }
 

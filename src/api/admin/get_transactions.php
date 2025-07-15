@@ -50,13 +50,16 @@ try {
 
     // Add search query
     if (!empty($search_query)) {
-        $sql_conditions[] = "(t.transaction_id LIKE ? OR su.username LIKE ? OR ru.username LIKE ? OR sa.account_number LIKE ? OR ra.account_number LIKE ?)";
+        $sql_conditions[] = "(t.transaction_id LIKE ? OR su.username LIKE ? OR ru.username LIKE ? OR sa.account_number LIKE ? OR ra.account_number LIKE ? OR teller.first_name LIKE ? OR teller.last_name LIKE ? OR CONCAT(teller.first_name, ' ', teller.last_name) LIKE ?)";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
         $sql_params[] = "%" . $search_query . "%";
-        $sql_types .= 'sssss';
+        $sql_params[] = "%" . $search_query . "%";
+        $sql_params[] = "%" . $search_query . "%";
+        $sql_params[] = "%" . $search_query . "%";
+        $sql_types .= 'ssssssss';
     }
 
     $where_clause = '';
@@ -70,6 +73,7 @@ try {
                   LEFT JOIN user su ON sa.user_id = su.user_id
                   LEFT JOIN account ra ON t.receiver_account_id = ra.account_id
                   LEFT JOIN user ru ON ra.user_id = ru.user_id
+                  LEFT JOIN teller ON t.teller_id = teller.teller_id
                   " . $where_clause;
     
     $count_stmt = $conn->prepare($count_sql);

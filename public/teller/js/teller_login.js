@@ -138,6 +138,7 @@ async function handleLogin(event) {
 function handleForgotPassword() {
     showInfo("Please contact your administrator to reset your password.");
 }
+window.handleForgotPassword = handleForgotPassword;
 
 // Add configuration check when page loads
 document.addEventListener('DOMContentLoaded', async function() {

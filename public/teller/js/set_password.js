@@ -31,7 +31,7 @@ function hideLoading() {
 async function getTellerInfo(email) {
     try {
         const response = await fetch(
-            "/project-errawrs/src/api/teller/get_teller_info.php",
+            "/api/teller/get_teller_info",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
             showLoading();
             try {
                 const res = await fetch(
-                    "/project-errawrs/src/api/teller/set_password.php",
+                    "/api/teller/set-password",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideLoading();
                 if (data.success) {
                     messageDiv.innerHTML =
-                        '<div class="success">Your password has been set! You can now <a href="/project-errawrs/public/teller/bank_teller_login.html">log in</a>.</div>';
+                        '<div class="success">Your password has been set! You can now <a href="/teller/bank_teller_login.html">log in</a>.</div>';
                     form.classList.remove("block");
                     form.classList.add("hidden");
                 } else {
