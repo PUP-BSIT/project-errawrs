@@ -15,6 +15,10 @@ define('DEBUG', true);
 define('ALLOWED_FILE_EXTENSIONS', ['jpg', 'jpeg', 'png', 'pdf']);
 define('PHONE_REGEX', '/^\+639\d{9}$/');
 
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+
 if (DEBUG) {
     error_log("Submit Registration - Session data: " . print_r($_SESSION, true));
     error_log("Submit Registration - OTP verified flag: " . 
@@ -43,15 +47,14 @@ function validateFileUpload() {
         echo json_encode(['success' => false, 'error' => 'ID image is required']);
         exit();
     }
-    // File size check: 300 KB - 500 KB
+    // File size check: must be less than 500 KB
     $fileSize = $_FILES['id_image']['size'];
-    $minSize = 300 * 1024; // 300 KB in bytes
     $maxSize = 500 * 1024; // 500 KB in bytes
-    if ($fileSize < $minSize || $fileSize > $maxSize) {
+    if ($fileSize >= $maxSize) {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'error' => 'ID image file size must be between 300 KB and 500 KB.'
+            'error' => 'ID image file size must be less than 500 KB.'
         ]);
         exit();
     }
@@ -143,7 +146,7 @@ function insertRegistrationRequest($db, $input) {
 }
 
 function createUploadDirectory($registrationId) {
-    $uploadDir = __DIR__ . '/../../../uploads/registration/' . $registrationId;
+    $uploadDir = __DIR__ . '/../../../public/uploads/registration/' . $registrationId;
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
@@ -169,6 +172,7 @@ function processFileUpload($uploadDir, $registrationId, $idType) {
         throw new Exception('Failed to upload file');
     }
 
+    // Return the path relative to public/ for web access
     return 'uploads/registration/' . $registrationId . '/' . $filename;
 }
 
@@ -200,9 +204,8 @@ function prepareEmailTemplate($firstName, $lastName, $registrationId) {
     $emailTemplate = file_get_contents(
         __DIR__ . '/email-templates/registration-email.html'
     );
-    $emailCSS = file_get_contents(
-        __DIR__ . '/email-templates/registration-email.css'
-    );
+    $cssPath = __DIR__ . '/email-templates/email-template.css';
+    $emailCSS = file_exists($cssPath) ? file_get_contents($cssPath) : '';
     
     $emailTemplate = str_replace('{{FIRST_NAME}}', $firstName, $emailTemplate);
     $emailTemplate = str_replace('{{LAST_NAME}}', $lastName, $emailTemplate);
@@ -230,6 +233,7 @@ function sendConfirmationEmail($email, $firstName, $lastName, $registrationId) {
     $mail->send();
 }
 
+ob_clean();
 validateHttpMethod();
 validateOtpVerification();
 validateFileUpload();
@@ -283,4 +287,3 @@ try {
 } finally {
     if (isset($db)) $db->close();
 }
-?>

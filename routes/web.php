@@ -198,6 +198,7 @@ $router->get('/user/transactions', 'public/user/transaction.html');
 $router->get('/user/transfer', 'public/user/transfer.html');
 $router->get('/user/transfer/success', 'public/user/transfer_success.html');
 $router->get('/user/transfer/failed', 'public/user/transfer_failed.html');
+$router->get('/user/transfer_success', 'public/user/transfer_success.html');
 
 
 // =====================================================
