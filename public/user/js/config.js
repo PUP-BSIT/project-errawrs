@@ -1,30 +1,23 @@
-// Auto-detect the correct base URL for different environments
 function getApiBaseUrl() {
     const hostname = window.location.hostname;
     const protocol = window.location.protocol;
     const pathname = window.location.pathname;
-    
-    // Check pathname first for project subdirectories
     if (pathname.includes('/project-errawrs/')) {
         return '/project-errawrs/api';
     }
-    
-    // Check if we're on localhost
+
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
         return '/api';
     }
-    
+
     // Check if we're on the development site
     if (hostname === 'dev.stackovercash.site') {
-        return '/api'; // Assuming the project is at the root
+        return '/api';
     }
-    
     // For production or other environments
     if (pathname.includes('/public/')) {
-        // If we're in public directory, go up to api
         return '/api';
     } else {
-        // Default fallback
         return '/api';
     }
 }
@@ -48,7 +41,7 @@ const API_ENDPOINTS = {
     EXTERNAL_TRANSFER: `${API_BASE_URL}/user/transactions/external-transfer`,
     GET_TRANSACTIONS: `${API_BASE_URL}/user/transactions`,
     GET_TRANSACTION_DETAILS: `${API_BASE_URL}/user/get_transaction_details.php`,
-    UPDATE_PROFILE: `${API_BASE_URL}/user/profile`,
+    UPDATE_PROFILE: `${API_BASE_URL}/user/update_profile.php`,
     CREATE_ADDITIONAL_ACCOUNT: `${API_BASE_URL}/user/accounts/create`,
     FORGOT_USERNAME: `${API_BASE_URL}/auth/forgot-username`,
     REQUEST_PASSWORD_RESET: `${API_BASE_URL}/auth/request-password-reset`,
@@ -73,7 +66,7 @@ API_ENDPOINTS.AUTH = {
 API_ENDPOINTS.USER = {
     TRANSACTIONS: API_ENDPOINTS.GET_TRANSACTIONS,
     ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
-    CREATE_ADDITIONAL_ACCOUNT: API_ENDPOINTS.CREATE_ADDITIONAL_ACCOUNT
+    CREATE_ADDITIONAL_ACCOUNT: API_ENDPOINTS.CREATE_ADDITIONAL_ACCOUNT,
 };
 
 // Function to get the correct base path for routes
@@ -114,14 +107,15 @@ const ROUTES = {
 
 // Function to dynamically create notification
 function createNotification(message, type = 'info', duration = 5000) {
-    const container = document.querySelector('.notification-container') || document.body;
+    const container =
+        document.querySelector('.notification-container') || document.body;
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     container.appendChild(notification);
     setTimeout(() => notification.remove(), duration);
-} 
+}
 window.ROUTES = ROUTES;
 window.API_ENDPOINTS = API_ENDPOINTS;
 window.API_BASE_URL = API_BASE_URL;
-console.log('config.js loaded, ROUTES =', window.ROUTES); 
+console.log('config.js loaded, ROUTES =', window.ROUTES);

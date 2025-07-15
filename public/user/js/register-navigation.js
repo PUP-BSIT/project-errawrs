@@ -20,7 +20,14 @@ export function updatePaginationDots(dots, currentContactPage) {
 }
 
 // New: Contact page navigation logic
-export function goToContactPage(page, formPages, setCurrentContactPage, updatePagination, saveFormData, collectFormData) {
+export function goToContactPage(
+    page,
+    formPages,
+    setCurrentContactPage,
+    updatePagination,
+    saveFormData,
+    collectFormData
+) {
     if (page < 1 || page > formPages.length) return;
     formPages.forEach((el, idx) => {
         el.classList.toggle('active', idx + 1 === page);
@@ -41,11 +48,16 @@ export function setupPaginationDots(dots, goToContactPageFn) {
 }
 
 // New: Main step navigation logic
-export function goToMainStep(step, steps, setCurrentStep, updateStepIndicators) {
+export function goToMainStep(
+    step,
+    steps,
+    setCurrentStep,
+    updateStepIndicators
+) {
     if (step < 1 || step > steps.length) return;
     steps.forEach((el, idx) => {
         el.classList.toggle('active', idx + 1 === step);
     });
     setCurrentStep(step);
     updateStepIndicators();
-} 
+}

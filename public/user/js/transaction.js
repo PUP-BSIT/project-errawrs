@@ -1,8 +1,3 @@
-// Use the API_ENDPOINTS from config.js instead of the old API object structure
-
-// No need to redefine ROUTES as it's already declared in session-manager.js
-
-// Element IDs
 const ELEMENT_ID = {
     TRANSACTION_TABLE_BODY: 'transaction-table-body',
     PREVIOUS_PAGE_BUTTON: 'previous-page-button',
@@ -13,10 +8,9 @@ const ELEMENT_ID = {
     GO_BUTTON: 'go-button',
     USER_AVATAR_CONTAINER: 'user_avatar_container',
     USER_NAME: 'user_name',
-    WELCOME_USER_NAME: 'welcome_user_name'
+    WELCOME_USER_NAME: 'welcome_user_name',
 };
 
-// CSS Classes
 const CLASS = {
     NOTIFICATION: 'notification',
     SUCCESS: 'success',
@@ -27,7 +21,7 @@ const CLASS = {
     PAGE_NUMBER: 'page-number',
     ACTIVE: 'active',
     CENTERED: 'centered',
-    PADDED: 'padded'
+    PADDED: 'padded',
 };
 
 // Icons
@@ -35,7 +29,7 @@ const ICON = {
     SUCCESS: 'fas fa-check-circle',
     ERROR: 'fas fa-times-circle',
     INFO: 'fas fa-info-circle',
-    BELL: 'fas fa-bell'
+    BELL: 'fas fa-bell',
 };
 
 // Text Content
@@ -47,25 +41,25 @@ const TEXT = {
     TRANSACTIONS_ERROR: 'Error fetching transactions',
     SHOWING_ZERO: 'Showing 0 of 0',
     NA: 'N/A',
-    UNKNOWN: 'Unknown'
+    UNKNOWN: 'Unknown',
 };
 
 // Currency
 const CURRENCY = {
     SYMBOL: '₱',
-    LOCALE: 'en-US'
+    LOCALE: 'en-US',
 };
 
 // Timing (in milliseconds)
 const TIMING = {
     NOTIFICATION_DURATION: 3000,
-    REDIRECT_DELAY: 2000
+    REDIRECT_DELAY: 2000,
 };
 
 // Pagination defaults
 const PAGINATION = {
     DEFAULT_ITEMS_PER_PAGE: 10,
-    DEFAULT_PAGE: 1
+    DEFAULT_PAGE: 1,
 };
 
 // DOM Elements
@@ -75,30 +69,20 @@ const transaction_table_body = document.getElementById(
 const previous_page_button = document.getElementById(
     ELEMENT_ID.PREVIOUS_PAGE_BUTTON
 );
-const next_page_button = document.getElementById(
-    ELEMENT_ID.NEXT_PAGE_BUTTON
-);
-const page_numbers_container = document.getElementById(
-    ELEMENT_ID.PAGE_NUMBERS
-);
+const next_page_button = document.getElementById(ELEMENT_ID.NEXT_PAGE_BUTTON);
+const page_numbers_container = document.getElementById(ELEMENT_ID.PAGE_NUMBERS);
 const items_per_page_select = document.getElementById(
     ELEMENT_ID.ITEMS_PER_PAGE
 );
-const showing_info_span = document.getElementById(
-    ELEMENT_ID.SHOWING_INFO
-);
-const go_button = document.getElementById(
-    ELEMENT_ID.GO_BUTTON
-);
+const showing_info_span = document.getElementById(ELEMENT_ID.SHOWING_INFO);
+const go_button = document.getElementById(ELEMENT_ID.GO_BUTTON);
 
 // DOM Elements for Profile Edit
 const user_avatar_container = document.getElementById(
     ELEMENT_ID.USER_AVATAR_CONTAINER
 );
-// DOM Elements for Sidebar Profile Info (assuming they exist in transaction.html)
-const user_name_element = document.getElementById(
-    ELEMENT_ID.USER_NAME
-);
+
+const user_name_element = document.getElementById(ELEMENT_ID.USER_NAME);
 const welcome_user_name_element = document.getElementById(
     ELEMENT_ID.WELCOME_USER_NAME
 ); // Assuming this element might be on transaction page for consistency
@@ -106,19 +90,27 @@ const welcome_user_name_element = document.getElementById(
 // State for Pagination
 let currentPage = PAGINATION.DEFAULT_PAGE;
 let itemsPerPage = parseInt(
-    items_per_page_select ? items_per_page_select.value : PAGINATION.DEFAULT_ITEMS_PER_PAGE,
+    items_per_page_select
+        ? items_per_page_select.value
+        : PAGINATION.DEFAULT_ITEMS_PER_PAGE,
     10
 );
 let totalTransactions = 0;
 let totalPages = 0;
 
+// Utility: detect mobile
+function isMobile() {
+    return window.innerWidth <= 600;
+}
+
 // State
 let user_data = null;
 let transactions = [];
 
-// Function to show a notification (Assuming this is a shared function or needs to be added)
 function showNotification(message, type) {
-    const notification_container = document.querySelector('.notification-container');
+    const notification_container = document.querySelector(
+        '.notification-container'
+    );
     if (!notification_container) return;
 
     const notification = document.createElement('div');
@@ -158,20 +150,17 @@ async function fetchUserData() {
         const data = await response.json();
 
         if (data.success && data.authenticated) {
-            user_data = data.user; // Store user data in state
-            // Update displayed name and initial if elements exist
+            user_data = data.user;
+
             if (user_name_element)
                 user_name_element.textContent =
                     `${user_data.first_name} ${user_data.last_name}`.trim();
             if (welcome_user_name_element)
                 welcome_user_name_element.textContent = user_data.first_name;
-            display_user_initial(); // Update the initial
+            display_user_initial();
         } else {
-            showNotification(
-                data.error || TEXT.SESSION_EXPIRED,
-                CLASS.ERROR
-            );
-            // Redirect to login page if not authenticated
+            showNotification(data.error || TEXT.SESSION_EXPIRED, CLASS.ERROR);
+
             setTimeout(() => {
                 window.location.href = ROUTES.LOGIN;
             }, TIMING.REDIRECT_DELAY);
@@ -184,26 +173,34 @@ async function fetchUserData() {
 
 // Fetch transaction data from API
 async function fetchTransactions() {
+    // On mobile, always use 3 per page
+    if (isMobile()) {
+        itemsPerPage = 3;
+        if (items_per_page_select) items_per_page_select.value = 3;
+    } else {
+        itemsPerPage = parseInt(
+            items_per_page_select
+                ? items_per_page_select.value
+                : PAGINATION.DEFAULT_ITEMS_PER_PAGE,
+            10
+        );
+    }
     try {
-        // Assuming API endpoint /api/user/transactions that supports pagination
         const response = await fetch(
             `${API_ENDPOINTS.USER.TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}`
         );
         const data = await response.json();
 
         if (data.success) {
-            totalTransactions = data.total || 0; // Assuming API returns total count
+            totalTransactions = data.total || 0;
             totalPages = Math.ceil(totalTransactions / itemsPerPage);
-            renderTransactions(data.transactions || []); // Assuming API returns 'transactions' array
+            renderTransactions(data.transactions || []);
             updatePaginationInfo();
             updatePaginationButtons();
-            renderPageNumbers(); // Render page number links
+            renderPageNumbers();
         } else {
-            showNotification(
-                data.error || TEXT.FETCH_ERROR,
-                CLASS.ERROR
-            );
-            renderTransactions([]); // Clear table on error
+            showNotification(data.error || TEXT.FETCH_ERROR, CLASS.ERROR);
+            renderTransactions([]);
             totalTransactions = 0;
             totalPages = 0;
             updatePaginationInfo();
@@ -213,7 +210,7 @@ async function fetchTransactions() {
     } catch (error) {
         showNotification(TEXT.TRANSACTIONS_ERROR, CLASS.ERROR);
         console.error('Error:', error);
-        renderTransactions([]); // Clear table on error
+        renderTransactions([]);
         totalTransactions = 0;
         totalPages = 0;
         updatePaginationInfo();
@@ -226,7 +223,7 @@ async function fetchTransactions() {
 function renderTransactions(transactions) {
     if (!transaction_table_body) return;
 
-    transaction_table_body.innerHTML = ''; // Clear existing rows
+    transaction_table_body.innerHTML = '';
 
     if (transactions.length === 0) {
         transaction_table_body.innerHTML = `
@@ -251,38 +248,48 @@ function renderTransactions(transactions) {
             }
         } else if (transaction.type === 'transfer_external_out') {
             let bank = 'StackOvercash Bank';
-            if (transaction.external_bank_code === 'Blinders') bank = 'Techy Blinders Bank';
-            else if (transaction.external_bank_code === 'Dragon') bank = 'Dragon Fly Bank';
-            description = `Sent money to ${transaction.external_account_number || transaction.receiver_account_number} (${bank})`;
+            if (transaction.external_bank_code === 'Blinders')
+                bank = 'Techy Blinders Bank';
+            else if (transaction.external_bank_code === 'Dragon')
+                bank = 'Dragon Fly Bank';
+            description = `Sent money to ${
+                transaction.external_account_number ||
+                transaction.receiver_account_number
+            } (${bank})`;
         } else if (transaction.type === 'transfer_external_in') {
-            description = `Received money from ${transaction.external_account_number || transaction.sender_account_number}`;
+            description = `Received money from ${
+                transaction.external_account_number ||
+                transaction.sender_account_number
+            }`;
         } else if (transaction.type === 'deposit') {
             description = `Deposit`;
         } else if (transaction.type === 'withdrawal') {
             description = `Withdraw`;
         }
-        // Always show the user's own account number in the Account Number column
         const userAccount = transaction.account_number || TEXT.NA;
         row.innerHTML = `
-            <td>${transaction.date || TEXT.NA}</td>
-            <td>${userAccount}</td>
-            <td class="${amountClass}">${CURRENCY.SYMBOL} ${amount.toLocaleString(CURRENCY.LOCALE, {
+            <td data-label="Date">${transaction.date || TEXT.NA}</td>
+            <td data-label="Account Number">${userAccount}</td>
+            <td data-label="Amount" class="${amountClass}">${
+            CURRENCY.SYMBOL
+        } ${amount.toLocaleString(CURRENCY.LOCALE, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}</td>
-            <td>${description}</td>
-            <td>${transaction.transaction_id || TEXT.NA}</td>
+            <td data-label="Description">${description}</td>
+            <td data-label="Reference Number">${
+                transaction.transaction_id || TEXT.NA
+            }</td>
         `;
         transaction_table_body.appendChild(row);
     });
 }
 
-// Update pagination information text (e.g., "Showing 1 to 10 of 50")
 function updatePaginationInfo() {
     if (!showing_info_span) return;
 
     const start = (currentPage - 1) * itemsPerPage + 1;
-    const end = Math.min(start + itemsPerPage - 1, totalTransactions); // Correct calculation for end item
+    const end = Math.min(start + itemsPerPage - 1, totalTransactions);
 
     if (totalTransactions === 0) {
         showing_info_span.textContent = TEXT.SHOWING_ZERO;
@@ -298,7 +305,7 @@ function updatePaginationButtons() {
     }
     if (next_page_button) {
         next_page_button.disabled =
-            currentPage === totalPages || totalPages === 0; // Disable next if on last page or no pages
+            currentPage === totalPages || totalPages === 0;
     }
 }
 
@@ -306,7 +313,7 @@ function updatePaginationButtons() {
 function renderPageNumbers() {
     if (!page_numbers_container) return;
 
-    page_numbers_container.innerHTML = ''; // Clear existing page numbers
+    page_numbers_container.innerHTML = '';
 
     // Display a limited number of page links around the current page
     const maxPageLinks = 5; // Max number of page links to show
@@ -325,9 +332,8 @@ function renderPageNumbers() {
             pageLink.classList.add(CLASS.ACTIVE);
         }
         pageLink.textContent = i;
-        pageLink.dataset.page = i; // Store page number in data attribute
-        pageLink.addEventListener('click', handlePageClick); // Add click listener
-        page_numbers_container.appendChild(pageLink);
+        pageLink.dataset.page = i;
+        pageLink.addEventListener('click', handlePageClick);
     }
 }
 
@@ -341,7 +347,7 @@ function handlePageClick(event) {
         page !== currentPage
     ) {
         currentPage = page;
-        fetchTransactions(); // Fetch data for the new page
+        fetchTransactions();
     }
 }
 
@@ -368,16 +374,13 @@ if (next_page_button) {
 if (items_per_page_select) {
     items_per_page_select.addEventListener('change', () => {
         itemsPerPage = parseInt(items_per_page_select.value, 10);
-        currentPage = 1; // Reset to first page when items per page changes
+        currentPage = 1;
         fetchTransactions();
     });
 }
 
-// Event listener for Go button (if implemented for jumping to a specific page)
-// Assuming a text input for page number next to the Go button in HTML if this is used
-// If not used, this listener can be removed or the button hidden
 if (go_button) {
-    const page_number_input = document.getElementById('page_number_input'); // Assuming this ID exists in HTML
+    const page_number_input = document.getElementById('page_number_input');
 
     if (page_number_input) {
         go_button.addEventListener('click', () => {
@@ -393,20 +396,20 @@ if (go_button) {
             }
         });
     } else {
-        // If no input field for GO, remove or disable GO button functionality
-        go_button.classList.add(CLASS.HIDDEN); // Assuming a class for hidden
+        go_button.classList.add(CLASS.HIDDEN);
     }
 }
-
-// Function to display user initial in the avatar circle
+// Function to display user initial in avatar container
 function display_user_initial() {
     if (!user_avatar_container) return;
-    
-    // Use first_name and last_name directly from user_data
-    const userName = user_data.first_name && user_data.last_name 
-        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
-        : (user_name_element ? user_name_element.textContent.trim() : 'User');
-    
+
+    const userName =
+        user_data.first_name && user_data.last_name
+            ? `${user_data.first_name} ${user_data.last_name}`.trim()
+            : user_name_element
+            ? user_name_element.textContent.trim()
+            : 'User';
+
     const initial = userName.charAt(0).toUpperCase();
     user_avatar_container.textContent = initial;
 }
@@ -432,14 +435,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         // Close dropdown when clicking a nav link or logout
-        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
-            el.addEventListener('click', () => {
-                topnavDropdown.classList.remove('open');
+        topnavDropdown
+            .querySelectorAll('.nav-link, .logout-btn')
+            .forEach((el) => {
+                el.addEventListener('click', () => {
+                    topnavDropdown.classList.remove('open');
+                });
             });
-        });
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+            if (
+                topnavDropdown.classList.contains('open') &&
+                !topnavDropdown.contains(e.target) &&
+                e.target !== hamburgerBtn
+            ) {
                 topnavDropdown.classList.remove('open');
             }
         });
@@ -457,13 +466,13 @@ async function handleLogout() {
     try {
         // Clear relevant items from localStorage
         localStorage.removeItem('user');
-        localStorage.removeItem('account'); // Assuming account data is also stored
-        localStorage.removeItem('token'); // If you are using tokens
+        localStorage.removeItem('account');
+        localStorage.removeItem('token');
 
         // Call backend logout API
-        await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
+        await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
             method: 'POST',
-            credentials: 'same-origin'
+            credentials: 'same-origin',
         });
 
         // Redirect to login page after successful logout
@@ -471,7 +480,10 @@ async function handleLogout() {
     } catch (error) {
         console.error('Error during logout:', error);
         // Show a notification that logout might not have been clean
-        showNotification('Logout might not have been fully successful.', CLASS.WARNING);
+        showNotification(
+            'Logout might not have been fully successful.',
+            CLASS.WARNING
+        );
         // Redirect anyway after a short delay
         setTimeout(() => {
             window.location.href = './index.html';
@@ -483,8 +495,7 @@ async function handleLogout() {
 const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
-        // Prevent the default navigation to ensure our handleLogout function completes
-        event.preventDefault(); 
+        event.preventDefault();
         handleLogout();
     });
 }

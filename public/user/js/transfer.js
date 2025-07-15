@@ -1,6 +1,3 @@
-// Add transfer-specific API endpoints
-
-// Text Constants
 const TEXT = {
     TRANSFER_SUCCESS: 'Transfer completed successfully!',
     TRANSFER_FAILED: 'Transfer failed. Please try again.',
@@ -10,7 +7,7 @@ const TEXT = {
     OTP_ERROR: 'Error verifying OTP. Please try again.',
     LOGOUT_ERROR: 'Logout might not have been fully successful.',
     SESSION_EXPIRED: 'Session expired. Please log in again.',
-    USER_DATA_ERROR: 'Error fetching user data. Please try again later.'
+    USER_DATA_ERROR: 'Error fetching user data. Please try again later.',
 };
 
 // CSS Classes
@@ -21,7 +18,7 @@ const CLASS = {
     INFO: 'info',
     SHOW: 'show',
     INVALID: 'invalid',
-    HIDDEN: 'hidden'
+    HIDDEN: 'hidden',
 };
 
 // Element IDs
@@ -29,18 +26,18 @@ const ELEMENT_ID = {
     OTP_MODAL: 'otp-verification-modal',
     OTP_INPUT: 'otp-input',
     VERIFY_OTP_BUTTON: 'verify-otp-button',
-    CANCEL_OTP_BUTTON: 'cancel-otp-button'
+    CANCEL_OTP_BUTTON: 'cancel-otp-button',
 };
 
 // Account Status
 const ACCOUNT_STATUS = {
-    ACTIVE: 'active'
+    ACTIVE: 'active',
 };
 
 // Currency
 const CURRENCY = {
     SYMBOL: '₱',
-    LOCALE: 'en-US'
+    LOCALE: 'en-US',
 };
 
 // DOM Elements
@@ -73,7 +70,9 @@ const edit_first_name_input = document.getElementById('edit_first_name');
 const edit_last_name_input = document.getElementById('edit_last_name');
 const edit_username_input = document.getElementById('edit_username');
 const edit_password_input = document.getElementById('edit_password');
-const edit_confirm_password_input = document.getElementById('edit_confirm_password');
+const edit_confirm_password_input = document.getElementById(
+    'edit_confirm_password'
+);
 const edit_phone_number_input = document.getElementById('edit_phone_number');
 
 // DOM Elements for Sidebar Profile Info (assuming they exist in transfer.html)
@@ -87,7 +86,9 @@ let current_transfer_payload = {}; // To hold transfer data during OTP verificat
 
 // Function to show a notification (Assuming this is shared or implemented here)
 function showNotification(message, type) {
-    const notification_container = document.querySelector('.notification-container');
+    const notification_container = document.querySelector(
+        '.notification-container'
+    );
     if (!notification_container) return;
 
     const notification = document.createElement('div');
@@ -99,7 +100,7 @@ function showNotification(message, type) {
         error: 'fas fa-times-circle',
         info: 'fas fa-info-circle',
         warning: 'fas fa-exclamation-circle',
-        default: 'fas fa-bell'
+        default: 'fas fa-bell',
     };
 
     let icon = ICON[type] || ICON.default;
@@ -123,8 +124,8 @@ async function fetchUserData() {
             method: 'GET',
             credentials: 'include',
             headers: {
-                'Accept': 'application/json'
-            }
+                Accept: 'application/json',
+            },
         });
 
         if (!response.ok) {
@@ -142,10 +143,7 @@ async function fetchUserData() {
                 welcome_user_name_element.textContent = user_data.first_name;
             display_user_initial();
         } else {
-            showNotification(
-                data.error || TEXT.SESSION_EXPIRED,
-                CLASS.ERROR
-            );
+            showNotification(data.error || TEXT.SESSION_EXPIRED, CLASS.ERROR);
             // Redirect to login page if not authenticated
             setTimeout(() => {
                 window.location.href = ROUTES.LOGIN;
@@ -164,8 +162,8 @@ async function populateAccountsDropdown() {
             method: 'GET',
             credentials: 'include',
             headers: {
-                'Accept': 'application/json'
-            }
+                Accept: 'application/json',
+            },
         });
 
         if (!response.ok) {
@@ -177,7 +175,9 @@ async function populateAccountsDropdown() {
         console.log('API response for accounts:', data);
 
         if (data.success && data.accounts.length > 0) {
-            const activeAccounts = data.accounts.filter(account => account.status === 'active');
+            const activeAccounts = data.accounts.filter(
+                (account) => account.status === 'active'
+            );
             if (activeAccounts.length > 0) {
                 user_accounts = activeAccounts;
                 populateCustomAccountDropdown();
@@ -197,7 +197,10 @@ async function populateAccountsDropdown() {
         }
     } catch (error) {
         console.error('Error fetching accounts:', error);
-        showNotification('Error loading accounts. Please try again.', CLASS.ERROR);
+        showNotification(
+            'Error loading accounts. Please try again.',
+            CLASS.ERROR
+        );
     }
 }
 
@@ -228,12 +231,15 @@ function update_default_label() {
 // Function to display user initial in the avatar circle
 function display_user_initial() {
     if (!user_avatar_container) return;
-    
+
     // Use first_name and last_name directly from user_data
-    const userName = user_data.first_name && user_data.last_name 
-        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
-        : (user_name_element ? user_name_element.textContent.trim() : 'User');
-    
+    const userName =
+        user_data.first_name && user_data.last_name
+            ? `${user_data.first_name} ${user_data.last_name}`.trim()
+            : user_name_element
+            ? user_name_element.textContent.trim()
+            : 'User';
+
     const initial = userName.charAt(0).toUpperCase();
     user_avatar_container.textContent = initial;
 }
@@ -344,7 +350,7 @@ function validateTransferAmount() {
     if (isNaN(transferAmount)) return;
 
     const warningText = balanceWarning.querySelector('span');
-    
+
     if (accountBalance === 0) {
         warningText.textContent = 'No balance on your account';
         balanceWarning.classList.add('show');
@@ -484,16 +490,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Animate transition
                 select_bank_panel.classList.add('fade-out');
                 select_bank_panel.classList.remove('fade-in');
-                
+
                 setTimeout(() => {
                     select_bank_panel.classList.remove('block');
                     select_bank_panel.classList.add('hidden');
                     account_details_panel.classList.remove('hidden');
                     account_details_panel.classList.add('block');
-                    
+
                     // Trigger reflow
                     account_details_panel.offsetHeight;
-                    
+
                     // Reset and animate account details panel
                     account_details_panel.classList.remove('fade-out');
                     account_details_panel.classList.add('fade-in');
@@ -551,7 +557,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const transferAmount = parseFloat(amount_input.value);
             const sourceAccount = dropdown_selected.dataset.value;
             const recipientAccount = receiver_account_input.value;
-            const bankValue = document.querySelector('input[name="bank"]:checked').value;
+            const bankValue = document.querySelector(
+                'input[name="bank"]:checked'
+            ).value;
             const isInternal = bankValue === 'StackOvercash Bank';
 
             current_transfer_payload = {
@@ -562,40 +570,55 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             if (!isInternal) {
-                current_transfer_payload.recipient_bank_code = getBankCode(bankValue);
+                current_transfer_payload.recipient_bank_code =
+                    getBankCode(bankValue);
             }
 
             try {
                 // Ensure user data with phone number is available
                 if (!user_data || !user_data.phone_number) {
-                    throw new Error("User phone number is not available. Please ensure your profile is complete.");
+                    throw new Error(
+                        'User phone number is not available. Please ensure your profile is complete.'
+                    );
                 }
 
                 // Step 1: Initiate transfer (store details in session, do NOT finalize)
                 const transferResp = await fetch(
-                    isInternal ? API_ENDPOINTS.INTERNAL_TRANSFER : API_ENDPOINTS.EXTERNAL_TRANSFER,
+                    isInternal
+                        ? API_ENDPOINTS.INTERNAL_TRANSFER
+                        : API_ENDPOINTS.EXTERNAL_TRANSFER,
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
                         credentials: 'include',
-                        body: JSON.stringify(current_transfer_payload)
+                        body: JSON.stringify(current_transfer_payload),
                     }
                 );
                 const transferData = await transferResp.json();
 
                 if (!transferResp.ok || !transferData.success) {
-                    throw new Error(transferData.error || 'Failed to initiate transfer.');
+                    throw new Error(
+                        transferData.error || 'Failed to initiate transfer.'
+                    );
                 }
 
                 // Step 2: Send OTP (frontend triggers, backend should check session)
                 const otpResp = await fetch(API_ENDPOINTS.AUTH.SEND_OTP, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
                     credentials: 'include',
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         phone_number: user_data.phone_number,
-                        purpose: isInternal ? 'fund_transfer' : 'external_transfer' 
-                    })
+                        purpose: isInternal
+                            ? 'fund_transfer'
+                            : 'external_transfer',
+                    }),
                 });
                 const otpData = await otpResp.json();
                 if (!otpResp.ok || !otpData.success) {
@@ -607,14 +630,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     transfer_details: {
                         amount: transferAmount,
                         source_account: sourceAccount,
-                        recipient_account: recipientAccount
+                        recipient_account: recipientAccount,
                     },
                     isInternal: isInternal,
-                    phone_number: user_data.phone_number
+                    phone_number: user_data.phone_number,
                 });
-
             } catch (error) {
-                console.error('Error during transfer initiation or OTP:', error);
+                console.error(
+                    'Error during transfer initiation or OTP:',
+                    error
+                );
                 showNotification(error.message, 'error');
             } finally {
                 send_money_button.disabled = false;
@@ -639,22 +664,22 @@ document.addEventListener('DOMContentLoaded', () => {
             info_correct_checkbox.checked = false;
             balanceWarning.classList.remove('show');
             amount_input.classList.remove('invalid');
-            
+
             // Switch panels with animation
             account_details_panel.classList.remove('fade-in');
             account_details_panel.classList.add('fade-out');
             account_details_panel.classList.add('slide-left');
             account_details_panel.classList.remove('slide-right');
-            
+
             setTimeout(() => {
                 account_details_panel.classList.remove('block');
                 account_details_panel.classList.add('hidden');
                 select_bank_panel.classList.remove('hidden');
                 select_bank_panel.classList.add('block');
-                
+
                 // Trigger reflow
                 select_bank_panel.offsetHeight;
-                
+
                 // Animate select bank panel
                 select_bank_panel.classList.remove('fade-out');
                 select_bank_panel.classList.add('fade-in');
@@ -672,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.transform = 'translateX(0)';
         }
     };
-    
+
     addTransitionStyle(select_bank_panel);
     addTransitionStyle(account_details_panel);
 
@@ -690,14 +715,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         // Close dropdown when clicking a nav link or logout
-        topnavDropdown.querySelectorAll('.nav-link, .logout-btn').forEach(el => {
-            el.addEventListener('click', () => {
-                topnavDropdown.classList.remove('open');
+        topnavDropdown
+            .querySelectorAll('.nav-link, .logout-btn')
+            .forEach((el) => {
+                el.addEventListener('click', () => {
+                    topnavDropdown.classList.remove('open');
+                });
             });
-        });
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-            if (topnavDropdown.classList.contains('open') && !topnavDropdown.contains(e.target) && e.target !== hamburgerBtn) {
+            if (
+                topnavDropdown.classList.contains('open') &&
+                !topnavDropdown.contains(e.target) &&
+                e.target !== hamburgerBtn
+            ) {
                 topnavDropdown.classList.remove('open');
             }
         });
@@ -738,19 +769,23 @@ function validateTransferForm() {
         showNotification('Please select your account', 'error');
         return false;
     }
-    
+
     // Check if recipient account is entered
     if (!receiver_account_input.value) {
         showNotification('Please enter recipient account number', 'error');
         return false;
     }
-    
+
     // Check if amount is entered and valid
-    if (!amount_input.value || isNaN(parseFloat(amount_input.value)) || parseFloat(amount_input.value) <= 0) {
+    if (
+        !amount_input.value ||
+        isNaN(parseFloat(amount_input.value)) ||
+        parseFloat(amount_input.value) <= 0
+    ) {
         showNotification(TEXT.INVALID_AMOUNT, 'error');
         return false;
     }
-    
+
     return true;
 }
 
@@ -777,19 +812,25 @@ function showTransferReceipt(data) {
     const receiptModal = document.createElement('div');
     receiptModal.classList.add('modal');
     receiptModal.id = 'receipt-modal';
-    
+
     // Format amount with 2 decimal places
-    const formattedAmount = parseFloat(data.amount).toLocaleString(CURRENCY.LOCALE, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-    
+    const formattedAmount = parseFloat(data.amount).toLocaleString(
+        CURRENCY.LOCALE,
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }
+    );
+
     // Format new balance with 2 decimal places
-    const formattedBalance = parseFloat(data.new_balance).toLocaleString(CURRENCY.LOCALE, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-    
+    const formattedBalance = parseFloat(data.new_balance).toLocaleString(
+        CURRENCY.LOCALE,
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }
+    );
+
     receiptModal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
@@ -812,15 +853,23 @@ function showTransferReceipt(data) {
                     </div>
                     <div class="receipt-item">
                         <span class="label">To Account:</span>
-                        <span class="value">${data.recipient_account || data.external_account_number || 'N/A'}</span>
+                        <span class="value">${
+                            data.recipient_account ||
+                            data.external_account_number ||
+                            'N/A'
+                        }</span>
                     </div>
                     <div class="receipt-item">
                         <span class="label">Amount:</span>
-                        <span class="value">${CURRENCY.SYMBOL} ${formattedAmount}</span>
+                        <span class="value">${
+                            CURRENCY.SYMBOL
+                        } ${formattedAmount}</span>
                     </div>
                     <div class="receipt-item">
                         <span class="label">New Balance:</span>
-                        <span class="value">${CURRENCY.SYMBOL} ${formattedBalance}</span>
+                        <span class="value">${
+                            CURRENCY.SYMBOL
+                        } ${formattedBalance}</span>
                     </div>
                 </div>
             </div>
@@ -829,24 +878,24 @@ function showTransferReceipt(data) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(receiptModal);
-    
+
     // Show modal
     receiptModal.style.display = 'block';
-    
+
     // Close modal on X click
     const closeBtn = receiptModal.querySelector('.close');
     closeBtn.addEventListener('click', () => {
         receiptModal.remove();
     });
-    
+
     // Close modal on button click
     const closeButton = receiptModal.querySelector('#close-receipt');
     closeButton.addEventListener('click', () => {
         receiptModal.remove();
     });
-    
+
     // Close modal on outside click
     window.addEventListener('click', (event) => {
         if (event.target === receiptModal) {
@@ -861,13 +910,15 @@ function showOTPVerificationModal(data) {
     const otpModal = document.createElement('div');
     otpModal.classList.add('modal');
     otpModal.id = 'otp-verification-modal';
-    
+
     // Format amount with 2 decimal places
-    const formattedAmount = parseFloat(data.transfer_details.amount).toLocaleString(CURRENCY.LOCALE, {
+    const formattedAmount = parseFloat(
+        data.transfer_details.amount
+    ).toLocaleString(CURRENCY.LOCALE, {
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 2,
     });
-    
+
     otpModal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
@@ -906,37 +957,46 @@ function showOTPVerificationModal(data) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(otpModal);
-    
+
     // Explicitly set the modal to display as a block (floating window)
     otpModal.style.display = 'block';
-    
+
     // Get elements
     const closeBtn = otpModal.querySelector('.close');
     const verifyButton = otpModal.querySelector('#verify-otp-button');
     const cancelButton = otpModal.querySelector('#cancel-otp-button');
     const otpInput = otpModal.querySelector('#otp-input');
     const otpError = otpModal.querySelector('#otp-error');
-    
+
     // Close modal on X click
     closeBtn.addEventListener('click', () => {
         otpModal.remove();
     });
-    
+
     // Close modal on Cancel button click
     cancelButton.addEventListener('click', async () => {
         try {
-            const resp = await fetch(API_ENDPOINTS.INTERNAL_TRANSFER.replace('fund_transfer.php', 'cancel_transfer.php'), {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Accept': 'application/json' }
-            });
+            const resp = await fetch(
+                API_ENDPOINTS.INTERNAL_TRANSFER.replace(
+                    'fund_transfer.php',
+                    'cancel_transfer.php'
+                ),
+                {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { Accept: 'application/json' },
+                }
+            );
             const data = await resp.json();
             if (data.success) {
                 showNotification('Transfer cancelled.', 'info');
             } else {
-                showNotification(data.error || 'Failed to cancel transfer.', 'error');
+                showNotification(
+                    data.error || 'Failed to cancel transfer.',
+                    'error'
+                );
             }
         } catch (err) {
             showNotification('Failed to cancel transfer.', 'error');
@@ -944,7 +1004,7 @@ function showOTPVerificationModal(data) {
             otpModal.remove();
         }
     });
-    
+
     // Verify OTP button click
     verifyButton.addEventListener('click', async () => {
         const otp = otpInput.value.trim();
@@ -960,13 +1020,18 @@ function showOTPVerificationModal(data) {
             // Step 1: Verify OTP
             const verifyResp = await fetch(API_ENDPOINTS.AUTH.VERIFY_OTP, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
                 credentials: 'include',
-                body: JSON.stringify({ 
-                    otp, 
+                body: JSON.stringify({
+                    otp,
                     phone_number: data.phone_number,
-                    purpose: data.isInternal ? 'fund_transfer' : 'external_transfer'
-                })
+                    purpose: data.isInternal
+                        ? 'fund_transfer'
+                        : 'external_transfer',
+                }),
             });
 
             const verifyData = await verifyResp.json();
@@ -974,37 +1039,56 @@ function showOTPVerificationModal(data) {
             if (verifyData.success) {
                 // Step 2: Finalize transfer (backend checks session for OTP and pending transfer)
                 const finalizeResp = await fetch(
-                    data.isInternal ? API_ENDPOINTS.INTERNAL_TRANSFER : API_ENDPOINTS.EXTERNAL_TRANSFER,
+                    data.isInternal
+                        ? API_ENDPOINTS.INTERNAL_TRANSFER
+                        : API_ENDPOINTS.EXTERNAL_TRANSFER,
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
                         credentials: 'include',
-                        body: JSON.stringify({}) // No need to send payload again; backend uses session
+                        body: JSON.stringify({}), // No need to send payload again; backend uses session
                     }
                 );
                 const finalizeData = await finalizeResp.json();
 
                 if (finalizeData.success && finalizeData.transaction_id) {
                     otpModal.remove();
-                    showNotification(finalizeData.message || TEXT.TRANSFER_SUCCESS, 'success');
+                    showNotification(
+                        finalizeData.message || TEXT.TRANSFER_SUCCESS,
+                        'success'
+                    );
                     // Use redirect_url from backend if provided, else from payload
-                    const redirectUrl = finalizeData.redirect_url || current_transfer_payload.redirect_url;
+                    const redirectUrl =
+                        finalizeData.redirect_url ||
+                        current_transfer_payload.redirect_url;
                     const url = new URL(redirectUrl, window.location.origin);
                     url.searchParams.set('fund_transfer_success', 'true');
-                    url.searchParams.set('transaction_id', finalizeData.transaction_id);
+                    url.searchParams.set(
+                        'transaction_id',
+                        finalizeData.transaction_id
+                    );
                     window.location.href = url.href;
                 } else {
                     // On failure, redirect with error_message param
-                    const redirectUrl = (finalizeData && finalizeData.redirect_url) || current_transfer_payload.redirect_url;
+                    const redirectUrl =
+                        (finalizeData && finalizeData.redirect_url) ||
+                        current_transfer_payload.redirect_url;
                     const url = new URL(redirectUrl, window.location.origin);
-                    url.searchParams.set('error_message', (finalizeData && finalizeData.error) || TEXT.TRANSFER_FAILED);
+                    url.searchParams.set(
+                        'error_message',
+                        (finalizeData && finalizeData.error) ||
+                            TEXT.TRANSFER_FAILED
+                    );
                     window.location.href = url.href;
                 }
             } else {
-                otpError.textContent = verifyData.error || TEXT.OTP_VERIFICATION_FAILED;
+                otpError.textContent =
+                    verifyData.error || TEXT.OTP_VERIFICATION_FAILED;
                 otpError.style.display = 'block';
             }
-
         } catch (error) {
             console.error('Error during verification or transfer:', error);
             otpError.textContent = error.message;
@@ -1014,14 +1098,14 @@ function showOTPVerificationModal(data) {
             verifyButton.textContent = 'Verify OTP';
         }
     });
-    
+
     // Close modal on outside click
     window.addEventListener('click', (event) => {
         if (event.target === otpModal) {
             otpModal.remove();
         }
     });
-    
+
     // Focus on OTP input
     otpInput.focus();
 }
@@ -1035,12 +1119,12 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If using tokens
 
         // Call backend logout API
-        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
+        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
             method: 'POST',
             credentials: 'include',
             headers: {
-                'Accept': 'application/json'
-            }
+                Accept: 'application/json',
+            },
         });
 
         if (!response.ok) {
@@ -1065,7 +1149,7 @@ const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
         // Prevent the default navigation to ensure our handleLogout function completes
-        event.preventDefault(); 
+        event.preventDefault();
         handleLogout();
     });
 }

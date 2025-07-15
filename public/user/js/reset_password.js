@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('reset_password_form');
-    const notificationContainer = document.querySelector('.notification-container');
+    const notificationContainer = document.querySelector(
+        '.notification-container'
+    );
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
     if (!token) {
-        showNotification('No reset token found. Please request a new reset link.', 'error');
+        showNotification(
+            'No reset token found. Please request a new reset link.',
+            'error'
+        );
         return;
     }
 
@@ -18,17 +23,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(API_ENDPOINTS.VERIFY_RESET_TOKEN, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: token })
+                body: JSON.stringify({ token: token }),
             });
             const result = await response.json();
             if (result.success) {
                 // Form is already visible by default, no need to change classes
                 console.log('Token verified successfully');
             } else {
-                showNotification(result.error || 'Invalid or expired token.', 'error');
+                showNotification(
+                    result.error || 'Invalid or expired token.',
+                    'error'
+                );
             }
         } catch (error) {
-            showNotification('An error occurred while verifying your request. Please try again.', 'error');
+            showNotification(
+                'An error occurred while verifying your request. Please try again.',
+                'error'
+            );
         }
     }
 
@@ -39,7 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const submitButton = form.querySelector('button[type="submit"]');
 
         if (password.length < 8) {
-            showNotification('Password must be at least 8 characters long.', 'error');
+            showNotification(
+                'Password must be at least 8 characters long.',
+                'error'
+            );
             return;
         }
 
@@ -55,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(API_ENDPOINTS.RESET_PASSWORD, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: token, password: password })
+                body: JSON.stringify({ token: token, password: password }),
             });
 
             const result = await response.json();
@@ -63,15 +77,25 @@ document.addEventListener('DOMContentLoaded', function () {
             if (result.success) {
                 // Hide form after successful reset
                 form.style.display = 'none';
-                showNotification(result.message + ' You will be redirected to the login page shortly.', 'success');
+                showNotification(
+                    result.message +
+                        ' You will be redirected to the login page shortly.',
+                    'success'
+                );
                 setTimeout(() => {
                     window.location.href = './login_account_holder.html';
                 }, 5000);
             } else {
-                showNotification(result.error || 'An unexpected error occurred.', 'error');
+                showNotification(
+                    result.error || 'An unexpected error occurred.',
+                    'error'
+                );
             }
         } catch (error) {
-            showNotification('A network error occurred. Please try again.', 'error');
+            showNotification(
+                'A network error occurred. Please try again.',
+                'error'
+            );
         } finally {
             submitButton.disabled = false;
             submitButton.textContent = 'Confirm Reset';
@@ -89,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Password visibility toggles
-    document.querySelectorAll('.password-toggle').forEach(button => {
+    document.querySelectorAll('.password-toggle').forEach((button) => {
         button.addEventListener('click', function () {
             const targetId = this.dataset.target;
             const passwordInput = document.getElementById(targetId);
@@ -106,4 +130,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-}); 
+});
+
+// Show session expired notification if redirected with ?expired=true
+if (window.location.search.includes('expired=true')) {
+    document.addEventListener('DOMContentLoaded', function () {
+        showNotification(
+            'Session expired. You were logged out due to inactivity. Please log in again to continue.',
+            'error'
+        );
+    });
+}

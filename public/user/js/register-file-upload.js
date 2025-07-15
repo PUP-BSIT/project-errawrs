@@ -1,10 +1,8 @@
-// File upload logic for registration
-
 import { showNotification } from './register-notifications.js';
 
 export function handleFileSelect(file, onPreview) {
     // File type check
-    if (!file.type.match("image.*")) return false;
+    if (!file.type.match('image.*')) return false;
     // File size check: max 500 KB
     const maxSize = 500 * 1024; // 500 KB
     if (file.size > maxSize) {
@@ -20,7 +18,7 @@ export function handleFileSelect(file, onPreview) {
 }
 
 export function clearFilePreview(fileInput, previewContainer) {
-    if (fileInput) fileInput.value = "";
+    if (fileInput) fileInput.value = '';
     if (previewContainer) previewContainer.classList.add('hidden');
 }
 
@@ -49,8 +47,11 @@ export function initFileUpload() {
             // Only allow files up to 500 KB
             const maxSize = 500 * 1024; // 500 KB
             if (file.size > maxSize) {
-                showNotification('ID image file size must not exceed 500 KB.', 'error');
-                fileInput.value = "";
+                showNotification(
+                    'ID image file size must not exceed 500 KB.',
+                    'error'
+                );
+                fileInput.value = '';
                 previewInfo.classList.add('hidden');
                 container.classList.remove('has-file');
                 return;
@@ -63,7 +64,7 @@ export function initFileUpload() {
                 if (onFileChangeCallback) onFileChangeCallback();
             });
             if (!valid) {
-                fileInput.value = "";
+                fileInput.value = '';
                 previewInfo.classList.add('hidden');
                 container.classList.remove('has-file');
             }
@@ -85,14 +86,16 @@ export function initFileUpload() {
             // Close modal logic
             const closeBtn = document.getElementById('close_image_preview');
             closeBtn.onclick = () => modal.classList.remove('active');
-            modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            };
         };
     }
 
     // Upload again button
     if (uploadAgainBtn) {
         uploadAgainBtn.onclick = () => {
-            fileInput.value = "";
+            fileInput.value = '';
             fileInput.click();
         };
     }
@@ -101,10 +104,10 @@ export function initFileUpload() {
     if (removeBtn) {
         removeBtn.onclick = () => {
             currentImage = null;
-            fileInput.value = "";
+            fileInput.value = '';
             previewInfo.classList.add('hidden');
             container.classList.remove('has-file');
             if (onFileChangeCallback) onFileChangeCallback();
         };
     }
-} 
+}

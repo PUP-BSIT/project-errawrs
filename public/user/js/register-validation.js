@@ -1,5 +1,3 @@
-// Registration validation functions
-
 export function validateName(input, minLength) {
     const nameRegex = /^[A-Za-z\s\-]+$/;
     return input.value.length >= minLength && nameRegex.test(input.value);

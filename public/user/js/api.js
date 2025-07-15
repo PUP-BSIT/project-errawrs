@@ -1,4 +1,3 @@
-// Global API object that extends API_ENDPOINTS from config.js
 const API = {
     // Authentication endpoints
     AUTH: {
