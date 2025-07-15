@@ -35,10 +35,18 @@ if (!$teller_id || $teller_id <= 0) {
 // Helper to get base URL
 function getBaseUrl() {
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
-        return 'http://localhost/project-errawrs/public';
+    // Always use local if .local or localhost is anywhere in the host
+    if (strpos($host, '.local') !== false || strpos($host, 'localhost') !== false) {
+        return 'http://stackovercash.site.local';
     }
-    return 'https://dev.stackovercash.site';
+    if (strpos($host, 'dev-admin.') === 0) {
+        return 'https://dev.stackovercash.site';
+    } elseif (strpos($host, 'admin.') === 0) {
+        return 'https://stackovercash.site';
+    } else {
+        // Default to production
+        return 'https://stackovercash.site';
+    }
 }
 
 try {
