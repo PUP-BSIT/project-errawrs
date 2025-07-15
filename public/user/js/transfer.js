@@ -704,7 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
 
     // Mobile/tablet nav logic
     if (hamburgerBtn && topnavDropdown) {
@@ -731,13 +730,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ) {
                 topnavDropdown.classList.remove('open');
             }
-        });
-    }
-    // Mobile logout button uses same handler
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            handleLogout();
         });
     }
 
@@ -1108,50 +1100,6 @@ function showOTPVerificationModal(data) {
     
     // Focus on OTP input
     otpInput.focus();
-}
-
-// Function to handle logout
-async function handleLogout() {
-    try {
-        // Clear relevant items from localStorage
-        localStorage.removeItem('user');
-        localStorage.removeItem('account'); // Assuming account data is also stored
-        localStorage.removeItem('token'); // If using tokens
-
-        // Call backend logout API
-        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                Accept: 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Redirect to login page after successful logout
-        window.location.href = './index.html';
-    } catch (error) {
-        console.error('Error during logout:', error);
-        // Show a notification that logout might not have been clean
-        showNotification(TEXT.LOGOUT_ERROR, CLASS.WARNING);
-        // Redirect anyway after a short delay
-        setTimeout(() => {
-            window.location.href = './index.html';
-        }, 1500);
-    }
-}
-
-// Event listener for logout button
-const logout_btn = document.getElementById('logout_btn');
-if (logout_btn) {
-    logout_btn.addEventListener('click', (event) => {
-        // Prevent the default navigation to ensure our handleLogout function completes
-        event.preventDefault(); 
-        handleLogout();
-    });
 }
 
 // Map the selected bank label to the required code for external transfers
