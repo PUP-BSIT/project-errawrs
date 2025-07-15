@@ -46,20 +46,20 @@ function getRequestData() {
 }
 
 function validateRequiredFields($data) {
-    if (empty($data['phone_number'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Phone number is required.']);
-        exit();
-    }
-
-    if (empty($data['current_password'])) {
-        http_response_code(400);
-        echo json_encode([
-            'success' => false, 
-            'error' => 'Current password is required for confirmation.'
-        ]);
-        exit();
-    }
+    // Remove phone_number and current_password requirements
+    // if (empty($data['phone_number'])) {
+    //     http_response_code(400);
+    //     echo json_encode(['success' => false, 'error' => 'Phone number is required.']);
+    //     exit();
+    // }
+    // if (empty($data['current_password'])) {
+    //     http_response_code(400);
+    //     echo json_encode([
+    //         'success' => false, 
+    //         'error' => 'Current password is required for confirmation.'
+    //     ]);
+    //     exit();
+    // }
 }
 
 function extractProfileData($data) {
@@ -221,19 +221,23 @@ validateRequiredFields($profileData);
 try {
     $db = db_connect();
 
-    verifyCurrentPassword($db, $userId, $profileData['current_password']);
+    // Remove password verification for profile update
+    // verifyCurrentPassword($db, $userId, $profileData['current_password']);
 
     $updateData = buildUpdateFields($profileData);
     $fieldsToUpdate = $updateData['fields'];
     $types = $updateData['types'];
     $params = $updateData['params'];
 
+    // Move image upload logic above the empty fields check
     $idImageFilename = processIdImageUpload($requestData['id_image'], $userId);
+    error_log('ID image filename: ' . print_r($idImageFilename, true));
     if ($idImageFilename) {
         $fieldsToUpdate['id_image'] = $idImageFilename;
         $types .= 's';
         $params[] = $idImageFilename;
     }
+    error_log('Fields to update: ' . print_r($fieldsToUpdate, true));
 
     if (empty($fieldsToUpdate)) {
         echo json_encode(['success' => false, 'error' => 'No fields to update.']);
@@ -247,9 +251,18 @@ try {
     updateUserProfile($db, $query, $params, $types, $userId);
     updateSessionData($profileData['phone_number']);
 
+    // Fetch updated user data
+    $stmt = $db->prepare("SELECT user_id, username, first_name, last_name, email, phone_number, street, city, zip_code, country, id_type, id_image, created_at FROM user WHERE user_id = ?");
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
     echo json_encode([
         'success' => true,
-        'message' => 'Profile updated successfully'
+        'message' => 'Profile updated successfully',
+        'user' => $user
     ]);
 
 } catch (Exception $e) {

@@ -1,3 +1,5 @@
+// Notification logic for registration
+
 export function showNotification(message, type = 'info') {
     // Remove any existing notification
     const existing = document.querySelector('.notification.custom-visible');

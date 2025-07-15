@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+        <head>
+    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>StackOvercash - Registration</title>
@@ -9,14 +10,12 @@
         <!-- Google Fonts -->
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
+            rel="stylesheet"/>
 
         <!-- Font Awesome -->
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
         <!-- Custom CSS -->
         <link rel="stylesheet" href="user/css/styles.css" />
@@ -27,10 +26,7 @@
         <header>
             <div class="container-nav">
                 <div class="logo">
-                    <span class="logo-text"
-                        ><span class="white">Stack</span
-                        ><span class="green">Overcash</span></span
-                    >
+                    <span class="logo-text"><span class="white">Stack</span><span class="green">Overcash</span></span>
                 </div>
                 <nav>
                     <ul class="nav-links">
@@ -42,27 +38,19 @@
                 <a href="login" class="login-btn">Join Now</a>
                 <!-- Hamburger Icon (Font Awesome) -->
                 <button class="hamburger" aria-label="Open menu">
-                    <i class="fa fa-bars"></i>
+                  <i class="fa fa-bars"></i>
                 </button>
             </div>
             <!-- Mobile Menu Overlay -->
             <div class="mobile-menu-overlay">
-                <div class="mobile-menu">
-                    <div class="mobile-menu-header">
-                        <span class="logo">
-                            <span class="white">Stack</span
-                            ><span class="green">Overcash</span>
-                        </span>
-                        <button class="close-menu" aria-label="Close menu">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                    <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="contact">Contact Us</a></li>
-                        <li><a href="about">About Us</a></li>
-                    </ul>
-                    <a href="login" class="join-btn">Join Now</a>
+              <div class="mobile-menu">
+                <div class="mobile-menu-header">
+                  <span class="logo">
+                    <span class="white">Stack</span><span class="green">Overcash</span>
+                  </span>
+                  <button class="close-menu" aria-label="Close menu">
+                    <i class="fa fa-times"></i>
+                  </button>
                 </div>
                 <ul>
                   <li><a href="/home">Home</a></li>
@@ -107,88 +95,29 @@
                                     <h3>Identification Documents</h3>
                                     <div class="form-group">
                                         <label for="id_type">ID Type</label>
-                                        <select
-                                            id="id_type"
-                                            name="id_type"
-                                            required
-                                        >
-                                            <option value="">
-                                                Select ID Type
-                                            </option>
-                                            <option value="passport">
-                                                Passport
-                                            </option>
-                                            <option value="national_id">
-                                                National ID
-                                            </option>
-                                            <option value="drivers_license">
-                                                Driver's License
-                                            </option>
-                                            <option value="school_id">
-                                                School ID (for students)
-                                            </option>
+                                        <select id="id_type" name="id_type" required>
+                                            <option value="">Select ID Type</option>
+                                            <option value="passport">Passport</option>
+                                            <option value="national_id">National ID</option>
+                                            <option value="drivers_license">Driver's License</option>
+                                            <option value="school_id">School ID (for students)</option>
                                         </select>
                                     </div>
-
+                                    
                                     <div class="form-group">
-                                        <label for="id_image"
-                                            >Upload ID Image</label
-                                        >
-                                        <div
-                                            class="file-upload-container"
-                                            id="file_upload_container"
-                                        >
-                                            <label
-                                                class="file-upload-label"
-                                                for="id_image"
-                                            >
-                                                <i
-                                                    class="fas fa-cloud-upload-alt"
-                                                ></i>
-                                                Drag and drop your ID image here
-                                                or click to browse
+                                        <label for="id_image">Upload ID Image</label>
+                                        <div class="file-upload-container" id="file_upload_container">
+                                            <label class="file-upload-label" for="id_image">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                Drag and drop your ID image here or click to browse
                                             </label>
-                                            <input
-                                                type="file"
-                                                class="file-input"
-                                                id="id_image"
-                                                name="id_image"
-                                                accept="image/*"
-                                            />
-                                            <div
-                                                class="preview-info-compact hidden"
-                                            >
-                                                <span
-                                                    class="file-name-display"
-                                                ></span>
+                                            <input type="file" class="file-input" id="id_image" name="id_image" accept="image/*" />
+                                            <div class="preview-info-compact hidden">
+                                                <span class="file-name-display"></span>
                                                 <div class="preview-actions">
-                                                    <button
-                                                        type="button"
-                                                        class="btn-icon btn-view-image"
-                                                        title="Preview"
-                                                    >
-                                                        <i
-                                                            class="fas fa-eye"
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn-icon btn-upload-again"
-                                                        title="Upload Again"
-                                                    >
-                                                        <i
-                                                            class="fas fa-sync-alt"
-                                                        ></i>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn-icon btn-remove-image"
-                                                        title="Remove"
-                                                    >
-                                                        <i
-                                                            class="fas fa-trash"
-                                                        ></i>
-                                                    </button>
+                                                    <button type="button" class="btn-icon btn-view-image" title="Preview"><i class="fas fa-eye"></i></button>
+                                                    <button type="button" class="btn-icon btn-upload-again" title="Upload Again"><i class="fas fa-sync-alt"></i></button>
+                                                    <button type="button" class="btn-icon btn-remove-image" title="Remove"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,10 +125,7 @@
                                 </div>
 
                                 <div class="form-actions">
-                                    <button
-                                        type="button"
-                                        class="btn btn-continue"
-                                    >
+                                    <button type="button" class="btn btn-continue">
                                         Next <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
@@ -210,17 +136,12 @@
                         <div class="form-step" id="step_two_contact">
                             <form class="registration-form" id="contact_info_form">
                                 <!-- Page 1: Personal Information -->
-                                <div
-                                    class="form-page active"
-                                    id="contact_page_1"
-                                >
+                                <div class="form-page active" id="contact_page_1">
                                     <div class="form-section">
                                         <h3>Personal Information</h3>
-
+                                        
                                         <div class="form-group">
-                                            <label for="first_name"
-                                                >First Name</label
-                                            >
+                                            <label for="first_name">First Name</label>
                                             <input
                                                 type="text"
                                                 id="first_name"
@@ -229,14 +150,11 @@
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
                                                 required
-                                                autocomplete="given-name"
-                                            />
+                                                autocomplete="given-name"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="last_name"
-                                                >Surname</label
-                                            >
+                                            <label for="last_name">Surname</label>
                                             <input
                                                 type="text"
                                                 id="last_name"
@@ -245,52 +163,31 @@
                                                 pattern="[A-Za-z\s\-]+"
                                                 title="Please enter only letters, spaces, or hyphens"
                                                 required
-                                                autocomplete="family-name"
-                                            />
+                                                autocomplete="family-name"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="date_of_birth"
-                                                >Date of Birth</label
-                                            >
+                                            <label for="date_of_birth">Date of Birth</label>
                                             <input
                                                 type="date"
                                                 id="date_of_birth"
                                                 name="date_of_birth"
                                                 required
                                                 autocomplete="bday"
-                                                max="2006-12-31"
-                                            />
-                                            <div
-                                                id="age_warning"
-                                                class="warning-text"
-                                                style="display: none"
-                                            >
-                                                <i
-                                                    class="fas fa-exclamation-triangle"
-                                                ></i>
-                                                You must be at least 18 years
-                                                old to register.
+                                                max="2006-12-31"/>
+                                            <div id="age_warning" class="warning-text" style="display: none;">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                You must be at least 18 years old to register.
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button
-                                            type="button"
-                                            class="btn btn-back"
-                                            id="back_to_identification"
-                                        >
-                                            <i class="fas fa-arrow-left"></i>
-                                            Back
+                                        <button type="button" class="btn btn-back" id="back_to_identification">
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-continue"
-                                            id="to_contact_page_2"
-                                        >
-                                            Next
-                                            <i class="fas fa-arrow-right"></i>
+                                        <button type="button" class="btn btn-continue" id="to_contact_page_2">
+                                            Next <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -301,27 +198,20 @@
                                         <h3>Contact Information</h3>
                                         
                                         <div class="form-group">
-                                            <label for="email"
-                                                >Email Address</label
-                                            >
+                                            <label for="email">Email Address</label>
                                             <input
                                                 type="email"
                                                 id="email"
                                                 name="email"
                                                 placeholder="Enter your email address"
                                                 required
-                                                autocomplete="email"
-                                            />
+                                                autocomplete="email"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="phone_number"
-                                                >Phone Number</label
-                                            >
+                                            <label for="phone_number">Phone Number</label>
                                             <div class="phone-input-wrapper">
-                                                <span class="country-code"
-                                                    >+63</span
-                                                >
+                                                <span class="country-code">+63</span>
                                                 <input
                                                     type="tel"
                                                     id="phone_number"
@@ -334,57 +224,27 @@
                                                 />
                                             </div>
                                         </div>
-
+                                        
                                         <div class="form-group">
-                                            <label for="nationality"
-                                                >Nationality</label
-                                            >
-                                            <select
-                                                id="nationality"
-                                                name="nationality"
-                                                required
-                                            >
-                                                <option value="">
-                                                    Select Nationality
-                                                </option>
-                                                <option value="filipino">
-                                                    Filipino
-                                                </option>
-                                                <option value="american">
-                                                    American
-                                                </option>
-                                                <option value="canadian">
-                                                    Canadian
-                                                </option>
-                                                <option value="british">
-                                                    British
-                                                </option>
-                                                <option value="australian">
-                                                    Australian
-                                                </option>
-                                                <option value="other">
-                                                    Other
-                                                </option>
+                                            <label for="nationality">Nationality</label>
+                                            <select id="nationality" name="nationality" required>
+                                                <option value="">Select Nationality</option>
+                                                <option value="filipino">Filipino</option>
+                                                <option value="american">American</option>
+                                                <option value="canadian">Canadian</option>
+                                                <option value="british">British</option>
+                                                <option value="australian">Australian</option>
+                                                <option value="other">Other</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button
-                                            type="button"
-                                            class="btn btn-back"
-                                            id="back_to_contact_page_1"
-                                        >
-                                            <i class="fas fa-arrow-left"></i>
-                                            Back
+                                        <button type="button" class="btn btn-back" id="back_to_contact_page_1">
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
-                                        <button
-                                            type="button"
-                                            class="btn btn-continue"
-                                            id="to_contact_page_3"
-                                        >
-                                            Next
-                                            <i class="fas fa-arrow-right"></i>
+                                        <button type="button" class="btn btn-continue" id="to_contact_page_3">
+                                            Next <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -395,17 +255,14 @@
                                         <h3>Address Information</h3>
 
                                         <div class="form-group">
-                                            <label for="street"
-                                                >Street Address</label
-                                            >
+                                            <label for="street">Street Address</label>
                                             <input
                                                 type="text"
                                                 id="street"
                                                 name="street"
                                                 placeholder="Enter your street address"
                                                 required
-                                                autocomplete="address-line1"
-                                            />
+                                                autocomplete="address-line1"/>
                                         </div>
 
                                         <div class="form-group">
@@ -416,14 +273,11 @@
                                                 name="city"
                                                 placeholder="Enter your city"
                                                 required
-                                                autocomplete="address-level2"
-                                            />
+                                                autocomplete="address-level2"/>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="zip_code"
-                                                >Zip Code</label
-                                            >
+                                            <label for="zip_code">Zip Code</label>
                                             <input
                                                 type="text"
                                                 id="zip_code"
@@ -432,74 +286,37 @@
                                                 pattern="[0-9]{4,10}"
                                                 title="Please enter a valid zip code"
                                                 required
-                                                autocomplete="postal-code"
-                                            />
+                                                autocomplete="postal-code"/>
                                         </div>
 
                                         <div class="form-group">
                                             <label for="country">Country</label>
-                                            <select
-                                                id="country"
-                                                name="country"
-                                                required
-                                            >
-                                                <option value="">
-                                                    Select Country
-                                                </option>
-                                                <option value="philippines">
-                                                    Philippines
-                                                </option>
-                                                <option value="united_states">
-                                                    United States
-                                                </option>
-                                                <option value="canada">
-                                                    Canada
-                                                </option>
-                                                <option value="united_kingdom">
-                                                    United Kingdom
-                                                </option>
-                                                <option value="australia">
-                                                    Australia
-                                                </option>
-                                                <option value="other">
-                                                    Other
-                                                </option>
+                                            <select id="country" name="country" required>
+                                                <option value="">Select Country</option>
+                                                <option value="philippines">Philippines</option>
+                                                <option value="united_states">United States</option>
+                                                <option value="canada">Canada</option>
+                                                <option value="united_kingdom">United Kingdom</option>
+                                                <option value="australia">Australia</option>
+                                                <option value="other">Other</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-actions">
-                                        <button
-                                            type="button"
-                                            class="btn btn-back"
-                                            id="back_to_contact_page_2"
-                                        >
-                                            <i class="fas fa-arrow-left"></i>
-                                            Back
+                                        <button type="button" class="btn btn-back" id="back_to_contact_page_2">
+                                            <i class="fas fa-arrow-left"></i> Back
                                         </button>
-                                        <button
-                                            type="submit"
-                                            class="btn btn-continue"
-                                        >
-                                            Submit
-                                            <i class="fas fa-arrow-right"></i>
+                                        <button type="submit" class="btn btn-continue">
+                                            Submit <i class="fas fa-arrow-right"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <!-- Pagination Indicator -->
                                 <div class="form-pagination">
-                                    <div
-                                        class="pagination-dot active"
-                                        data-page="1"
-                                    ></div>
-                                    <div
-                                        class="pagination-dot"
-                                        data-page="2"
-                                    ></div>
-                                    <div
-                                        class="pagination-dot"
-                                        data-page="3"
-                                    ></div>
+                                    <div class="pagination-dot active" data-page="1"></div>
+                                    <div class="pagination-dot" data-page="2"></div>
+                                    <div class="pagination-dot" data-page="3"></div>
                                 </div>
                             </form>
                         </div>
@@ -508,17 +325,12 @@
                         <div class="form-step" id="step_three_processing">
                             <div class="form-header">
                                 <h2>Registration Successful</h2>
-                                <p>
-                                    Your registration has been submitted
-                                    successfully.
-                                </p>
+                                <p>Your registration has been submitted successfully.</p>
                             </div>
                             <div class="processing-container">
                                 <p class="processing-message">
-                                    Our team will review your application within
-                                    <strong>2-3 business days</strong>. You will
-                                    receive an email notification once your
-                                    account is approved.
+                                    Our team will review your application within <strong>2-3 business days</strong>.
+                                    You will receive an email notification once your account is approved.
                                 </p>
                                 <div class="form-actions">
                                     <a href="/home" class="btn btn-secondary">
@@ -533,15 +345,11 @@
         </main>
 
         <!-- OTP Verification Modal -->
-        <div id="otp_modal" class="modal-overlay" style="display: none">
+        <div id="otp_modal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3>Verify Your Phone</h3>
-                    <button
-                        type="button"
-                        class="modal-close"
-                        id="close_otp_modal"
-                    >
+                    <button type="button" class="modal-close" id="close_otp_modal">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -556,19 +364,14 @@
                                 maxlength="6"
                                 pattern="[0-9]{6}"
                                 required
-                                autocomplete="one-time-code"
-                            />
+                                autocomplete="one-time-code"/>
                         </div>
                         <div class="resend-link">
                             <span>Didn't receive the code?</span>
                             <a href="#" id="resend_otp">Resend code in 60s</a>
                         </div>
                         <div class="form-actions">
-                            <button
-                                type="submit"
-                                class="btn btn-continue"
-                                id="verify_otp_btn"
-                            >
+                            <button type="submit" class="btn btn-continue" id="verify_otp_btn">
                                 Verify
                             </button>
                         </div>
@@ -580,11 +383,7 @@
         <!-- Image Preview Modal -->
         <div id="image_preview_modal" class="image-modal-overlay">
             <div class="image-modal-content">
-                <button
-                    type="button"
-                    class="modal-close-btn"
-                    id="close_image_preview"
-                >
+                <button type="button" class="modal-close-btn" id="close_image_preview">
                     <i class="fas fa-times"></i>
                 </button>
                 <img src="" alt="ID Preview" />

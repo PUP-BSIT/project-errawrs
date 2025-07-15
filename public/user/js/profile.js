@@ -2,7 +2,7 @@
 const CONFIG = {
     ENDPOINTS: {
         SESSION_CHECK: API_ENDPOINTS.SESSION_CHECK,
-        UPDATE_PROFILE: API_ENDPOINTS.UPDATE_PROFILE,
+        UPDATE_PROFILE: '/api/user/profile', // Use correct endpoint
         GET_ACCOUNTS: API_ENDPOINTS.GET_ACCOUNTS,
         LOGOUT: API_ENDPOINTS.LOGOUT
     },
@@ -148,63 +148,34 @@ const FormValidator = {
         return true;
     },
     validateProfileData: (data) => {
-        const required = ['phone_number'];
         const userData = StateManager?.state?.userData || {};
-        const missing = required.filter(field => {
-            const formValue = data[field]?.trim();
-            const profileValue = userData[field]?.trim();
-            return !formValue && !profileValue;
-        });
-        
-        // Reset all form fields to default state
-        document.querySelectorAll('.form-input').forEach(input => {
-            input.classList.remove('error', 'success');
-        });
-
-        if (missing.length > 0) {
-            // Mark missing fields with error class
-            missing.forEach(field => {
-                const input = document.getElementById(`edit_${field}`);
-                if (input) input.classList.add('error');
-            });
-
+        let phone = (data.phone_number && data.phone_number.trim()) || (userData.phone_number && userData.phone_number.trim()) || '';
+        if (!phone) {
             NotificationManager.show(
-                `Please fill in all required fields: ${missing.map(field => field.replace('_', ' ')).join(', ')}`,
+                'Please fill in all required fields: phone number',
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
         }
-
-        // Phone number validation
-        // Accepts +639XXXXXXXXX, 09XXXXXXXXX, or 639XXXXXXXXX
-        let normalizedPhone = data.phone_number.trim();
-        // Remove all non-digit except leading +
-        normalizedPhone = normalizedPhone.replace(/[^\d+]/g, '');
-        if (normalizedPhone.startsWith('+63')) {
-            normalizedPhone = '0' + normalizedPhone.substring(3);
-        } else if (normalizedPhone.startsWith('63')) {
-            normalizedPhone = '0' + normalizedPhone.substring(2);
-        }
-        // Now normalizedPhone should be 09XXXXXXXXX
-        const phoneRegex = /^09\d{9}$/;
-        if (!phoneRegex.test(normalizedPhone)) {
-            const phoneInput = document.getElementById('edit_phone_number');
-            if (phoneInput) phoneInput.classList.add('error');
+        // Accept +639XXXXXXXXX, 09XXXXXXXXX, or 639XXXXXXXXX
+        const phoneRegex = /^(09\d{9}|\+639\d{9}|639\d{9})$/;
+        console.log('Validating phone:', phone);
+        if (!phoneRegex.test(phone)) {
+            NotificationManager.clearAll(); // Clear previous notifications
             NotificationManager.show(
                 'Please enter a valid Philippine phone number (e.g. 09XXXXXXXXX, +639XXXXXXXXX, or 639XXXXXXXXX)',
                 CONFIG.NOTIFICATION.TYPES.ERROR
             );
             return false;
         }
-        // Use normalizedPhone for sending to backend
-        data.phone_number = normalizedPhone;
-
-        // Mark all fields as success
-        required.forEach(field => {
-            const input = document.getElementById(`edit_${field}`);
-            if (input) input.classList.add('success');
-        });
-
+        // Normalize for backend (to +639XXXXXXXXX)
+        if (phone.startsWith('09')) {
+            data.phone_number = '+63' + phone.substring(1);
+        } else if (phone.startsWith('639')) {
+            data.phone_number = '+63' + phone.substring(2);
+        } else {
+            data.phone_number = phone;
+        }
         return true;
     }
 };
@@ -284,7 +255,7 @@ const StateManager = {
 const DOM = {
     userAvatarContainer: document.getElementById('user_avatar_container'),
     editProfileIcon: document.getElementById('edit_profile_icon'),
-    userNameElement: document.getElementById('user_name'),
+    userNameElement: document.getElementById('user_name'), // This now matches the sidebar span
     editFirstNameInput: document.getElementById('edit_first_name'),
     editLastNameInput: document.getElementById('edit_last_name'),
     editUsernameInput: document.getElementById('edit_username'),
@@ -324,6 +295,20 @@ const ProfileManager = {
                     userData: data.user,
                     isFormDirty: false
                 });
+                // If phone_number is missing, try to fetch by user id
+                if (!data.user.phone_number && data.user.user_id) {
+                    try {
+                        const resp = await fetch(`/api/user/profile?id=${data.user.user_id}`);
+                        const userById = await resp.json();
+                        if (userById && userById.user && userById.user.phone_number) {
+                            StateManager.setState({
+                                userData: { ...StateManager.state.userData, phone_number: userById.user.phone_number }
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('Failed to fetch phone number by user id', e);
+                    }
+                }
                 this.populateForm();
                 this.updateDisplay();
             } else {
@@ -400,7 +385,12 @@ const ProfileManager = {
         if (editIdTypeInput) editIdTypeInput.value = userData.id_type || 'passport';
         if (userData.id_image && document.getElementById('current_id_image')) {
             const img = document.getElementById('current_id_image');
-            img.src = `/src/api/user/uploads/registration/${userData.id_image}`;
+            if (userData.id_image.includes('/')) {
+                let imgPath = userData.id_image.startsWith('/') ? userData.id_image : '/' + userData.id_image;
+                img.src = imgPath + '?t=' + new Date().getTime();
+            } else if (userData.id) {
+                img.src = API.STATIC.UPLOADS_REGISTRATION(userData.id, userData.id_image) + '?t=' + new Date().getTime();
+            }
             img.style.display = 'block';
         } else if (document.getElementById('current_id_image')) {
             document.getElementById('current_id_image').style.display = 'none';
@@ -468,7 +458,7 @@ const ProfileManager = {
 
         const updatedProfileData = {
             email: DOM.editEmailInput?.value.trim() || '',
-            phone_number: DOM.editPhoneNumberInput?.value.trim() || '',
+            phone_number: (DOM.editPhoneNumberInput && DOM.editPhoneNumberInput.value.trim()) || StateManager.state.userData.phone_number || '',
             street: DOM.editStreetInput?.value.trim() || '',
             city: DOM.editCityInput?.value.trim() || '',
             zip_code: DOM.editZipCodeInput?.value.trim() || '',
@@ -477,6 +467,12 @@ const ProfileManager = {
             confirm_password: DOM.editConfirmPasswordInput?.value.trim() || null,
             id_type: DOM.editIdTypeInput?.value || null
         };
+
+        // Add this check to require phone number
+        if (!updatedProfileData.phone_number) {
+            NotificationManager.show('Phone number is required.', CONFIG.NOTIFICATION.TYPES.ERROR);
+            return;
+        }
 
         if (DOM.editIdImageInput && DOM.editIdImageInput.files && DOM.editIdImageInput.files[0]) {
             StateManager.state.idImageFile = DOM.editIdImageInput.files[0];
@@ -510,6 +506,30 @@ const ProfileManager = {
         modal.classList.remove('hidden');
         passwordInput.focus();
 
+        // If phone_number is missing, fetch it before enabling confirm
+        if (!StateManager.state.userData.phone_number && StateManager.state.userData.user_id) {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="spinner"></span> Loading...';
+            fetch(`/api/user/profile?id=${StateManager.state.userData.user_id}`)
+                .then(resp => resp.json())
+                .then(userById => {
+                    if (userById && userById.user && userById.user.phone_number) {
+                        StateManager.setState({
+                            userData: { ...StateManager.state.userData, phone_number: userById.user.phone_number }
+                        });
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerHTML = 'Confirm';
+                    } else {
+                        confirmBtn.disabled = true;
+                        confirmBtn.innerHTML = 'No phone number';
+                    }
+                })
+                .catch(() => {
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = 'Error loading phone';
+                });
+        }
+
         // Handler for confirm
         const onConfirm = async () => {
             const currentPassword = passwordInput.value.trim();
@@ -520,6 +540,10 @@ const ProfileManager = {
             }
             // Attach current password to payload
             updatedProfileData.current_password = currentPassword;
+            // Ensure phone_number is always set
+            if (!updatedProfileData.phone_number) {
+                updatedProfileData.phone_number = StateManager.state.userData.phone_number || '';
+            }
             modal.classList.add('hidden');
             confirmBtn.removeEventListener('click', onConfirm);
             cancelBtn.removeEventListener('click', onCancel);
@@ -539,6 +563,8 @@ const ProfileManager = {
         StateManager.setState({ isLoading: true });
         try {
             let response;
+            // Debug: log the payload being sent
+            console.log('Payload to backend:', updatedProfileData);
             if (StateManager.state.idImageFile) {
                 // Use FormData for file upload
                 const formData = new FormData();
@@ -546,15 +572,20 @@ const ProfileManager = {
                     formData.append(key, updatedProfileData[key]);
                 }
                 formData.append('id_image', StateManager.state.idImageFile);
+                // Debug: log all FormData entries
+                for (let pair of formData.entries()) {
+                    console.log('FormData:', pair[0]+ ': ' + pair[1]);
+                }
                 response = await fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
-                    method: 'POST',
+                    method: 'PUT', // Use PUT for update
                     body: formData,
                     credentials: 'include'
                 });
             } else {
-                // Use JSON for normal update
+                // Debug: log JSON payload
+                console.log('Submitting profile update (JSON):', updatedProfileData);
                 response = await fetch(CONFIG.ENDPOINTS.UPDATE_PROFILE, {
-                    method: 'POST',
+                    method: 'PUT', // Use PUT for update
                     body: JSON.stringify(updatedProfileData),
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
@@ -563,14 +594,16 @@ const ProfileManager = {
             const data = await response.json();
             StateManager.state.idImageFile = null; // Reset after upload
             if (data.success) {
+                console.log('Profile update response:', data);
                 NotificationManager.show(
                     'Profile updated successfully!',
                     CONFIG.NOTIFICATION.TYPES.SUCCESS
                 );
                 StateManager.setState({
-                    userData: { ...StateManager.state.userData, ...response.user },
+                    userData: { ...StateManager.state.userData, ...data.user },
                     isFormDirty: false
                 });
+                console.log('Updated userData:', StateManager.state.userData);
                 this.updateDisplay();
                 this.clearPasswordFields();
             } else {
@@ -597,8 +630,25 @@ const ProfileManager = {
         this.fetchProfile();
 
         // Attach event listeners
-        DOM.saveProfileButton.addEventListener('click', this.handleSave.bind(this));
-        DOM.resetProfileButton.addEventListener('click', this.handleCancel.bind(this));
+        DOM.saveProfileButton.disabled = true; // Disable Save initially
+        DOM.saveProfileButton.classList.add('loading'); // Add loading class
+        DOM.saveProfileButton.innerHTML = '<span class="spinner"></span> Loading...';
+        DOM.resetProfileButton.disabled = true;
+
+        // Listen for profile load completion
+        StateManager.subscribe((state) => {
+            if (state.userData && state.userData.phone_number) {
+                DOM.saveProfileButton.disabled = false;
+                DOM.saveProfileButton.classList.remove('loading');
+                DOM.saveProfileButton.innerHTML = 'Save';
+                DOM.resetProfileButton.disabled = false;
+            } else {
+                DOM.saveProfileButton.disabled = true;
+                DOM.saveProfileButton.classList.add('loading');
+                DOM.saveProfileButton.innerHTML = '<span class="spinner"></span> Loading...';
+                DOM.resetProfileButton.disabled = true;
+            }
+        });
         
         // Listen for input changes to enable/disable save button
         const formInputs = document.querySelectorAll('.form-input');
@@ -629,7 +679,11 @@ const ProfileManager = {
             DOM.viewIdImageBtn.onclick = function() {
                 const userData = StateManager.state.userData;
                 if (userData && userData.id_image) {
-                    DOM.idImagePreview.src = `/src/api/user/uploads/registration/${userData.id_image}`;
+                    if (userData.id_image.includes('/')) {
+                        DOM.idImagePreview.src = userData.id_image.startsWith('/') ? userData.id_image : '/' + userData.id_image;
+                    } else if (userData.id) {
+                        DOM.idImagePreview.src = API.STATIC.UPLOADS_REGISTRATION(userData.id, userData.id_image);
+                    }
                     DOM.idImageModal.classList.remove('hidden');
                 } else {
                     NotificationManager.show('No ID image uploaded.', CONFIG.NOTIFICATION.TYPES.INFO);

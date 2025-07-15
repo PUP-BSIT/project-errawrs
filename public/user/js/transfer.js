@@ -231,15 +231,15 @@ function update_default_label() {
 // Function to display user initial in the avatar circle
 function display_user_initial() {
     if (!user_avatar_container) return;
-
+    
     // Use first_name and last_name directly from user_data
     const userName =
         user_data.first_name && user_data.last_name
-            ? `${user_data.first_name} ${user_data.last_name}`.trim()
+        ? `${user_data.first_name} ${user_data.last_name}`.trim() 
             : user_name_element
             ? user_name_element.textContent.trim()
             : 'User';
-
+    
     const initial = userName.charAt(0).toUpperCase();
     user_avatar_container.textContent = initial;
 }
@@ -350,7 +350,7 @@ function validateTransferAmount() {
     if (isNaN(transferAmount)) return;
 
     const warningText = balanceWarning.querySelector('span');
-
+    
     if (accountBalance === 0) {
         warningText.textContent = 'No balance on your account';
         balanceWarning.classList.add('show');
@@ -490,16 +490,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Animate transition
                 select_bank_panel.classList.add('fade-out');
                 select_bank_panel.classList.remove('fade-in');
-
+                
                 setTimeout(() => {
                     select_bank_panel.classList.remove('block');
                     select_bank_panel.classList.add('hidden');
                     account_details_panel.classList.remove('hidden');
                     account_details_panel.classList.add('block');
-
+                    
                     // Trigger reflow
                     account_details_panel.offsetHeight;
-
+                    
                     // Reset and animate account details panel
                     account_details_panel.classList.remove('fade-out');
                     account_details_panel.classList.add('fade-in');
@@ -613,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Accept: 'application/json',
                     },
                     credentials: 'include',
-                    body: JSON.stringify({
+                    body: JSON.stringify({ 
                         phone_number: user_data.phone_number,
                         purpose: isInternal
                             ? 'fund_transfer'
@@ -664,22 +664,22 @@ document.addEventListener('DOMContentLoaded', () => {
             info_correct_checkbox.checked = false;
             balanceWarning.classList.remove('show');
             amount_input.classList.remove('invalid');
-
+            
             // Switch panels with animation
             account_details_panel.classList.remove('fade-in');
             account_details_panel.classList.add('fade-out');
             account_details_panel.classList.add('slide-left');
             account_details_panel.classList.remove('slide-right');
-
+            
             setTimeout(() => {
                 account_details_panel.classList.remove('block');
                 account_details_panel.classList.add('hidden');
                 select_bank_panel.classList.remove('hidden');
                 select_bank_panel.classList.add('block');
-
+                
                 // Trigger reflow
                 select_bank_panel.offsetHeight;
-
+                
                 // Animate select bank panel
                 select_bank_panel.classList.remove('fade-out');
                 select_bank_panel.classList.add('fade-in');
@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.transform = 'translateX(0)';
         }
     };
-
+    
     addTransitionStyle(select_bank_panel);
     addTransitionStyle(account_details_panel);
 
@@ -718,10 +718,10 @@ document.addEventListener('DOMContentLoaded', () => {
         topnavDropdown
             .querySelectorAll('.nav-link, .logout-btn')
             .forEach((el) => {
-                el.addEventListener('click', () => {
-                    topnavDropdown.classList.remove('open');
-                });
+            el.addEventListener('click', () => {
+                topnavDropdown.classList.remove('open');
             });
+        });
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (
@@ -769,13 +769,13 @@ function validateTransferForm() {
         showNotification('Please select your account', 'error');
         return false;
     }
-
+    
     // Check if recipient account is entered
     if (!receiver_account_input.value) {
         showNotification('Please enter recipient account number', 'error');
         return false;
     }
-
+    
     // Check if amount is entered and valid
     if (
         !amount_input.value ||
@@ -785,7 +785,7 @@ function validateTransferForm() {
         showNotification(TEXT.INVALID_AMOUNT, 'error');
         return false;
     }
-
+    
     return true;
 }
 
@@ -812,25 +812,25 @@ function showTransferReceipt(data) {
     const receiptModal = document.createElement('div');
     receiptModal.classList.add('modal');
     receiptModal.id = 'receipt-modal';
-
+    
     // Format amount with 2 decimal places
     const formattedAmount = parseFloat(data.amount).toLocaleString(
         CURRENCY.LOCALE,
         {
-            minimumFractionDigits: 2,
+        minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }
     );
-
+    
     // Format new balance with 2 decimal places
     const formattedBalance = parseFloat(data.new_balance).toLocaleString(
         CURRENCY.LOCALE,
         {
-            minimumFractionDigits: 2,
+        minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }
     );
-
+    
     receiptModal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
@@ -878,24 +878,24 @@ function showTransferReceipt(data) {
             </div>
         </div>
     `;
-
+    
     document.body.appendChild(receiptModal);
-
+    
     // Show modal
     receiptModal.style.display = 'block';
-
+    
     // Close modal on X click
     const closeBtn = receiptModal.querySelector('.close');
     closeBtn.addEventListener('click', () => {
         receiptModal.remove();
     });
-
+    
     // Close modal on button click
     const closeButton = receiptModal.querySelector('#close-receipt');
     closeButton.addEventListener('click', () => {
         receiptModal.remove();
     });
-
+    
     // Close modal on outside click
     window.addEventListener('click', (event) => {
         if (event.target === receiptModal) {
@@ -910,7 +910,7 @@ function showOTPVerificationModal(data) {
     const otpModal = document.createElement('div');
     otpModal.classList.add('modal');
     otpModal.id = 'otp-verification-modal';
-
+    
     // Format amount with 2 decimal places
     const formattedAmount = parseFloat(
         data.transfer_details.amount
@@ -918,7 +918,7 @@ function showOTPVerificationModal(data) {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     });
-
+    
     otpModal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
@@ -957,24 +957,24 @@ function showOTPVerificationModal(data) {
             </div>
         </div>
     `;
-
+    
     document.body.appendChild(otpModal);
-
+    
     // Explicitly set the modal to display as a block (floating window)
     otpModal.style.display = 'block';
-
+    
     // Get elements
     const closeBtn = otpModal.querySelector('.close');
     const verifyButton = otpModal.querySelector('#verify-otp-button');
     const cancelButton = otpModal.querySelector('#cancel-otp-button');
     const otpInput = otpModal.querySelector('#otp-input');
     const otpError = otpModal.querySelector('#otp-error');
-
+    
     // Close modal on X click
     closeBtn.addEventListener('click', () => {
         otpModal.remove();
     });
-
+    
     // Close modal on Cancel button click
     cancelButton.addEventListener('click', async () => {
         try {
@@ -984,8 +984,8 @@ function showOTPVerificationModal(data) {
                     'cancel_transfer.php'
                 ),
                 {
-                    method: 'POST',
-                    credentials: 'include',
+                method: 'POST',
+                credentials: 'include',
                     headers: { Accept: 'application/json' },
                 }
             );
@@ -1004,7 +1004,7 @@ function showOTPVerificationModal(data) {
             otpModal.remove();
         }
     });
-
+    
     // Verify OTP button click
     verifyButton.addEventListener('click', async () => {
         const otp = otpInput.value.trim();
@@ -1025,8 +1025,8 @@ function showOTPVerificationModal(data) {
                     Accept: 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    otp,
+                body: JSON.stringify({ 
+                    otp, 
                     phone_number: data.phone_number,
                     purpose: data.isInternal
                         ? 'fund_transfer'
@@ -1098,14 +1098,14 @@ function showOTPVerificationModal(data) {
             verifyButton.textContent = 'Verify OTP';
         }
     });
-
+    
     // Close modal on outside click
     window.addEventListener('click', (event) => {
         if (event.target === otpModal) {
             otpModal.remove();
         }
     });
-
+    
     // Focus on OTP input
     otpInput.focus();
 }
@@ -1119,7 +1119,7 @@ async function handleLogout() {
         localStorage.removeItem('token'); // If using tokens
 
         // Call backend logout API
-        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
+        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, { 
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -1149,7 +1149,7 @@ const logout_btn = document.getElementById('logout_btn');
 if (logout_btn) {
     logout_btn.addEventListener('click', (event) => {
         // Prevent the default navigation to ensure our handleLogout function completes
-        event.preventDefault();
+        event.preventDefault(); 
         handleLogout();
     });
 }

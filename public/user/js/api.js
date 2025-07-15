@@ -21,5 +21,10 @@ const API = {
     },
     
     // Content endpoints
-    CONTENT: {}
+    CONTENT: {},
+
+    // Static asset endpoints
+    STATIC: {
+        UPLOADS_REGISTRATION: (userId, file) => `${window.STATIC_ASSET_BASE_URL}/uploads/registration/${userId}/${file}`
+    }
 }; 

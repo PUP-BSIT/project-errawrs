@@ -31,20 +31,14 @@
     box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
     margin: 0;
     padding: 0;
 }
 
 body {
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    background: linear-gradient(
-        135deg,
-        var(--color-bg-gradient-start) 0%,
-        var(--color-bg-gradient-end) 100%
-    );
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
     min-height: 100vh;
     color: var(--color-primary-black);
 }
@@ -82,12 +76,8 @@ header {
     font-size: 1.6rem;
 }
 
-.white {
-    color: #fff;
-}
-.green {
-    color: #b6ff4a;
-}
+.white { color: #fff; }
+.green { color: #b6ff4a; }
 
 nav {
     flex: 1 1 auto;
@@ -116,8 +106,7 @@ nav {
     height: 100%;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
+.nav-links a:hover, .nav-links a.active {
     color: #b6ff4a;
     opacity: 1;
     text-decoration: none;
@@ -149,6 +138,7 @@ nav {
     text-decoration: none;
 }
 
+/* --- CONTAINER: Match Contact Page Content Container --- */
 .container {
     width: 95%;
     max-width: 1150px;
@@ -176,23 +166,23 @@ nav {
 .breadcrumb {
     margin-bottom: 24px;
     font-size: 14px;
-    color: #4b5563;
+    color: #4B5563;
 }
 
 .breadcrumb-link {
-    color: #2563eb;
+    color: #2563EB;
     text-decoration: none;
     font-weight: 500;
 }
 
 .breadcrumb-link:hover {
-    color: #1d4ed8;
+    color: #1D4ED8;
     text-decoration: underline;
 }
 
 .breadcrumb-separator {
     margin: 0 8px;
-    color: #6b7280;
+    color: #6B7280;
 }
 
 .breadcrumb-current {
@@ -244,8 +234,8 @@ nav {
 /* Step Indicators - Vertical */
 .step-indicators {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column; /* Vertical alignment */
+    align-items: flex-start; /* Align steps to the left */
     justify-content: flex-start;
     margin-right: 10px; /* Reduced space between steps and form */
     margin-top: 90px; /* Adjusted margin-top to align with form content */
@@ -253,23 +243,23 @@ nav {
     background: transparent;
     box-shadow: none;
     border: none;
-    min-width: 80px;
-    flex-shrink: 0;
+    min-width: 80px; /* Adjusted minimum width */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .step {
     display: flex;
-    align-items: center;
-    gap: 15px;
+    align-items: center; /* Align circle and label horizontally */
+    gap: 15px; /* Space between circle and label */
     opacity: 0.6;
     transition: all 0.3s ease;
-    margin-bottom: 20px;
-    cursor: pointer;
+    margin-bottom: 20px; /* Space between steps */
+    cursor: pointer; /* Indicate clickable steps */
 }
 
 .step.active {
     opacity: 1;
-    transform: translateX(5px);
+    transform: translateX(5px); /* Slight movement for active step */
 }
 
 .step.complete .step-number {
@@ -290,7 +280,7 @@ nav {
     font-weight: 600;
     font-size: 16px;
     transition: all 0.3s ease;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent number from shrinking */
 }
 
 .step.active .step-number {
@@ -307,6 +297,7 @@ nav {
     color: var(--color-primary-black);
 }
 
+/* Remove horizontal step lines as they are no longer needed for vertical layout */
 .step-line {
     display: none;
 }
@@ -351,20 +342,20 @@ nav {
 
 /* Ensure form-footer is part of the main content flow */
 .registration-container .form-footer {
-    padding-left: 0;
-    padding-right: 0;
-    margin-top: auto;
+    padding-left: 0; /* Reset padding if any */
+    padding-right: 0; /* Reset padding if any */
+    margin-top: auto; /* Pushes to the bottom of the flex container */
 }
 
 /* Responsive adjustments for the new layout */
-@media (max-width: 900px) {
+@media (max-width: 900px) { /* Adjust breakpoint as needed */
     .registration-container {
-        flex-direction: column;
+        flex-direction: column; /* Stack vertically on smaller screens */
         padding: 20px;
     }
 
     .step-indicators {
-        flex-direction: row;
+        flex-direction: row; /* Back to horizontal for small screens */
         justify-content: center;
         margin-right: 0;
         margin-bottom: 30px;
@@ -375,27 +366,27 @@ nav {
 
     .step {
         margin-bottom: 0;
-        flex-direction: column;
+        flex-direction: column; /* Stack number and label */
         gap: 5px;
         opacity: 0.7;
     }
 
     .step.active {
-        transform: none;
+        transform: none; /* Remove translateX for active state */
     }
 
     .step-label {
         font-size: 12px;
     }
 
-    .step-line {
+    .step-line { /* Re-enable horizontal lines for small screens */
         display: block;
         width: 60px;
         margin: 0 10px;
     }
 
     .registration-content {
-        padding-left: 0;
+        padding-left: 0; /* Remove left padding */
         width: 100%;
     }
 
@@ -433,11 +424,7 @@ nav {
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(
-        to bottom,
-        var(--color-lime-green),
-        var(--color-mint)
-    );
+    background: linear-gradient(to bottom, var(--color-lime-green), var(--color-mint));
     border-radius: 16px 0 0 16px;
 }
 
@@ -459,7 +446,7 @@ nav {
 }
 
 .form-section h3::before {
-    font-family: 'Font Awesome 5 Free';
+    font-family: "Font Awesome 5 Free";
     font-weight: 900;
     font-size: 18px;
     color: var(--color-lime-green);
@@ -502,23 +489,10 @@ select {
     color: var(--color-primary-black);
     transition: all 0.3s ease;
     appearance: none;
-    background-image: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
     cursor: pointer;
-    position: relative;
-}
-
-/* Custom dropdown arrow using pseudo-element */
-select::after {
-    content: '\f107'; /* Font Awesome chevron-down icon */
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #333;
-    pointer-events: none;
-    font-size: 14px;
 }
 
 select:focus {
@@ -535,7 +509,7 @@ select:focus {
     gap: 8px;
     margin-top: 8px;
     font-size: 13px;
-    color: #6b7280;
+    color: #6B7280;
 }
 
 .requirement {
@@ -569,7 +543,7 @@ select:focus {
 }
 
 /* Date Input */
-input[type='date'] {
+input[type="date"] {
     width: 100%;
     padding: 12px 20px;
     border: 2px solid transparent;
@@ -581,7 +555,7 @@ input[type='date'] {
     transition: all 0.3s ease;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     padding: 5px;
     filter: invert(0.5);
@@ -635,7 +609,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .form-group input::placeholder {
-    color: #8b8b8b;
+    color: #8B8B8B;
     opacity: 0.8;
     font-size: 14px;
 }
@@ -666,26 +640,26 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .phone-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .phone-input-wrapper .country-code {
-    position: absolute;
-    left: 16px;
-    color: #222;
-    font-size: 1.05rem;
-    font-weight: bold;
-    background: transparent;
-    pointer-events: none;
-    z-index: 2;
-    letter-spacing: 1px;
+  position: absolute;
+  left: 16px;
+  color: #222;
+  font-size: 1.05rem;
+  font-weight: bold;
+  background: transparent;
+  pointer-events: none;
+  z-index: 2;
+  letter-spacing: 1px;
 }
 
-.phone-input-wrapper input[type='tel'] {
-    padding-left: 50px;
-    letter-spacing: 2px;
+.phone-input-wrapper input[type="tel"] {
+  padding-left: 56px; /* slightly more for bold +63 */
+  letter-spacing: 2px;
 }
 
 /* Form Validation Styles */
@@ -734,11 +708,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
 .btn-continue,
 .btn-dashboard {
-    background: linear-gradient(
-        45deg,
-        var(--color-lime-green) 0%,
-        var(--color-mint) 100%
-    );
+    background: linear-gradient(45deg, var(--color-lime-green) 0%, var(--color-mint) 100%);
     color: var(--color-primary-black);
     font-weight: 700;
 }
@@ -865,7 +835,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 .help-text {
     margin-top: 8px;
     font-size: 13px;
-    color: #6b7280;
+    color: #6B7280;
     line-height: 1.4;
 }
 
@@ -900,20 +870,20 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
 .form-footer p {
     margin: 8px 0;
-    color: #4b5563;
+    color: #4B5563;
     font-size: 14px;
     line-height: 1.5;
 }
 
 .form-footer a {
-    color: #2563eb;
+    color: #2563EB;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease;
 }
 
 .form-footer a:hover {
-    color: #1d4ed8;
+    color: #1D4ED8;
     text-decoration: underline;
 }
 
@@ -1289,6 +1259,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
 /* Responsive height adjustments */
 @media screen and (max-height: 800px) {
     .registration-container {
+        /* max-height removed to allow vertical expansion */
     }
 
     .form-header {
@@ -1328,7 +1299,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #ef4444;
+    color: #EF4444;
     margin-top: 8px;
     font-size: 13px;
 }
@@ -1369,12 +1340,8 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 @keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .file-upload-container.has-file .file-upload-label {
@@ -1837,7 +1804,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
         padding: 1.2rem 0.5rem 2.2rem 0.5rem;
         border-radius: 18px;
         min-height: unset;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
     }
     .registration-content {
         padding-left: 0;
@@ -1925,15 +1892,14 @@ input[type='date']::-webkit-calendar-picker-indicator {
     z-index: 2000;
     font-size: 1.15rem;
     font-weight: bold;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     opacity: 1;
     background: #fff;
     border-radius: 10px;
     border: 2px solid #e74c3c;
     padding: 0;
 }
-.notification.custom-visible.error,
-.notification.custom-visible.notification-error {
+.notification.custom-visible.error, .notification.custom-visible.notification-error {
     background: #fff0f0;
     border-color: #e74c3c;
     color: #e74c3c;

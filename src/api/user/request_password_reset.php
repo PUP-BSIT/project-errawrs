@@ -109,14 +109,17 @@ try {
             $host = $_SERVER['HTTP_HOST'];
             $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
             
-            // Check if request is from localhost (development) or production server
-            if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
-                // Development environment - use localhost
-                $reset_link = "{$protocol}://{$host}/project-errawrs/public/user/reset_password.html?token=" . urlencode($token);
+            // Dynamic base URL logic
+            if (strpos($host, '.local') !== false) {
+                $baseUrl = $protocol . '://stackovercash.site.local';
+            } else if ($host === 'dev.stackovercash.site') {
+                $baseUrl = 'https://dev.stackovercash.site';
+            } else if ($host === 'stackovercash.site' || $host === 'www.stackovercash.site') {
+                $baseUrl = 'https://stackovercash.site';
             } else {
-                // Production environment - use actual domain
-                $reset_link = "https://stackovercash.site/user/reset_password.html?token=" . urlencode($token);
+                $baseUrl = $protocol . '://' . $host;
             }
+            $reset_link = $baseUrl . '/user/reset-password?token=' . urlencode($token);
             
             error_log("Reset link generated: " . $reset_link);
             error_log("Request host: " . $host . ", Protocol: " . $protocol);
@@ -141,7 +144,7 @@ try {
 
             // Load the email template and CSS
             $templatePath = __DIR__ . '/email-templates/forgot-password-email.html';
-            $cssPath = __DIR__ . '/email-templates/forgot-password-email.css';
+            $cssPath = __DIR__ . '/email-templates/email-template.css';
             
             if (file_exists($templatePath) && file_exists($cssPath)) {
                 error_log("Email template and CSS found, loading...");

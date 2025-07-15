@@ -119,3 +119,11 @@ window.ROUTES = ROUTES;
 window.API_ENDPOINTS = API_ENDPOINTS;
 window.API_BASE_URL = API_BASE_URL;
 console.log('config.js loaded, ROUTES =', window.ROUTES);
+
+// Add a function to get the static asset base URL
+function getStaticAssetBaseUrl() {
+    // For most environments, assets are served from root
+    return '';
+}
+const STATIC_ASSET_BASE_URL = getStaticAssetBaseUrl();
+window.STATIC_ASSET_BASE_URL = STATIC_ASSET_BASE_URL;

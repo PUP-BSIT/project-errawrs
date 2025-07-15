@@ -29,11 +29,15 @@
     --box-shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.1);
     --transition-default: 0.3s ease;
 }
+
+/* Existing base styles from user_dashboard.css might be included via the link tag */
+
+/* Specific styles for Transfer page */
 .transfer-content {
     padding: 56px 64px;
     background-color: var(--color-white);
     border-radius: 24px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.10);
     max-width: 1200px;
     min-width: 700px;
     margin: 64px auto;
@@ -158,13 +162,13 @@
     width: 100%;
     max-width: 600px;
     transition: box-shadow 0.2s;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 .radio-option:hover {
-    box-shadow: 0 4px 24px rgba(182, 255, 74, 0.1);
+    box-shadow: 0 4px 24px rgba(182,255,74,0.10);
 }
 
-.radio-option input[type='radio'] {
+.radio-option input[type="radio"] {
     margin-right: 15px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -179,7 +183,7 @@
     flex-shrink: 0;
 }
 
-.radio-option input[type='radio']:checked::before {
+.radio-option input[type="radio"]:checked::before {
     content: '';
     display: block;
     width: 10px;
@@ -208,6 +212,7 @@
     margin-top: 30px;
 }
 
+/* Account Details Panel Styles */
 .form-group {
     margin-bottom: 32px;
     width: 100%;
@@ -224,8 +229,7 @@
     margin-bottom: 12px;
 }
 
-.form-group input[type='text'],
-.form-group select {
+.form-group input[type="text"], .form-group select {
     width: 100%;
     padding: 18px 20px;
     border: 1.5px solid var(--color-border);
@@ -237,12 +241,11 @@
     transition: border 0.2s;
 }
 
-.form-group input[type='text']::placeholder {
+.form-group input[type="text"]::placeholder {
     color: var(--color-gray);
 }
 
-.form-group input[type='text']:focus,
-.form-group select:focus {
+.form-group input[type="text"]:focus, .form-group select:focus {
     border-color: var(--color-lime-green);
 }
 
@@ -251,12 +254,6 @@
     display: block;
 }
 
-.custom-select select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding-right: 40px;
-    cursor: pointer;
 .custom-select select,
 select {
   width: 100%;
@@ -294,7 +291,7 @@ select option,
     max-width: 600px;
 }
 
-.checkbox-group input[type='checkbox'] {
+.checkbox-group input[type="checkbox"] {
     margin-right: 14px;
     width: 26px;
     height: 26px;
@@ -310,13 +307,13 @@ select option,
     background-color: white;
 }
 
-.checkbox-group input[type='checkbox']:checked {
+.checkbox-group input[type="checkbox"]:checked {
     background-color: var(--color-lime-green);
 }
 
-.checkbox-group input[type='checkbox']:checked::before {
+.checkbox-group input[type="checkbox"]:checked::before {
     content: '\f00c';
-    font-family: 'Font Awesome 6 Free';
+    font-family: "Font Awesome 6 Free";
     font-weight: 900;
     display: block;
     width: 100%;
@@ -334,8 +331,7 @@ select option,
     cursor: pointer;
 }
 
-.next-btn,
-.send-btn {
+.next-btn, .send-btn {
     display: block;
     width: 100%;
     max-width: 600px;
@@ -349,25 +345,20 @@ select option,
     font-weight: 800;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 48px;
-    box-shadow: 0 2px 12px rgba(182, 255, 74, 0.1);
     margin: 48px auto 0 auto;
     box-shadow: 0 2px 12px rgba(182,255,74,0.10);
 }
 
-.next-btn:hover:not(:disabled),
-.send-btn:hover:not(:disabled) {
+.next-btn:hover:not(:disabled), .send-btn:hover:not(:disabled) {
     background-color: #a7f535;
     transform: translateY(-1px);
 }
 
-.next-btn:active:not(:disabled),
-.send-btn:active:not(:disabled) {
+.next-btn:active:not(:disabled), .send-btn:active:not(:disabled) {
     transform: translateY(0);
 }
 
-.next-btn:disabled,
-.send-btn:disabled {
+.next-btn:disabled, .send-btn:disabled {
     background-color: #e2e2e2;
     color: #999;
     cursor: not-allowed;
@@ -398,8 +389,13 @@ select option,
     font-size: 16px;
     font-weight: 500;
 }
+
+/* Ensure 80 column width */
+/* This is handled by the editor's formatting, not CSS */
+
+/* OTP Verification Modal Styles */
 .modal {
-    display: none;
+    display: none; /* Hidden by default, only shown when JS sets it to block */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -412,21 +408,21 @@ select option,
 
 .modal-content {
     background-color: var(--color-white);
-    margin: 10vh auto;
+    margin: 10vh auto; /* 10% from the top */
     padding: 0;
     width: 100%;
     max-width: 500px;
     border-radius: 16px;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
     animation: modalFadeIn 0.3s;
     transform: translateY(0);
-    position: relative;
+    position: relative; /* Ensure it's positioned relative for animation */
 }
 
 @keyframes modalFadeIn {
     from {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-30px); /* Start from higher up */
     }
     to {
         opacity: 1;
@@ -627,14 +623,14 @@ select option,
 .form-group input.invalid {
     border-color: var(--color-error);
     background-color: rgba(220, 53, 69, 0.05);
-}
+} 
 
 .result-container {
     max-width: 500px;
     margin: 80px auto;
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     padding: 40px 32px 32px 32px;
     text-align: center;
 }
@@ -669,7 +665,7 @@ select option,
 }
 .back-btn:hover {
     background: #b52a37;
-}
+} 
 
 .hidden { display: none !important; }
 .block { display: block !important; }
@@ -688,167 +684,6 @@ select option,
 .border-error { border-color: var(--color-error) !important; }
 .border-normal { border-color: initial !important; } 
 
-@media (max-width: 768px) {
-    html,
-    body {
-        width: 100vw;
-        max-width: 100vw;
-        overflow-x: hidden;
-    }
-    .transfer-content {
-        width: 100vw;
-        max-width: 100vw;
-        min-width: 0;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-        overflow-x: hidden;
-        font-size: 1rem;
-        background: #fff;
-    }
-    .transfer-content h2 {
-        font-size: 1.5rem;
-        margin-bottom: 18px;
-        word-break: break-word;
-        text-align: center;
-        line-height: 1.2;
-    }
-    .transfer-panel {
-        width: 100vw;
-        max-width: 100vw;
-        padding: 0;
-        margin: 0 auto;
-        background: #fff;
-        border-radius: 0;
-        box-shadow: none;
-    }
-    .panel-header {
-        font-size: 1rem;
-        margin-bottom: 12px;
-        flex-wrap: wrap;
-        word-break: break-word;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    .panel-header-steps {
-        gap: 8px;
-        padding: 0 1px;
-        font-size: 1rem;
-        flex-wrap: wrap;
-        word-break: break-word;
-        overflow-x: auto;
-    }
-    .panel-header-step {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 40vw;
-        font-size: 1rem;
-    }
-    .panel-body {
-        width: 100vw;
-        max-width: 100vw;
-        padding: 18px 5vw 24px 5vw;
-        margin-top: 0;
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        box-sizing: border-box;
-    }
-    .form-group {
-        width: 100%;
-        max-width: 100vw;
-        min-width: 0;
-        margin-bottom: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        box-sizing: border-box;
-    }
-    .form-group label {
-        font-size: 1rem;
-        margin-bottom: 2px;
-        text-align: left;
-    }
-    .form-group input[type='text'],
-    .form-group select {
-        width: 100%;
-        max-width: 100vw;
-        min-width: 0;
-        box-sizing: border-box;
-        font-size: 1.1rem;
-        padding: 12px 10px;
-        border-radius: 6px;
-        margin-bottom: 0;
-        background-clip: padding-box;
-    }
-    .form-group input[type='text']::placeholder {
-        font-size: 1rem;
-        color: #b0b0b0;
-        opacity: 1;
-        white-space: nowrap;
-        overflow: visible;
-    }
-    .custom-select select {
-        padding-right: 6px;
-    }
-    .select-arrow {
-        right: 1px;
-        font-size: 0.8rem;
-    }
-    .checkbox-group {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1rem;
-        margin: 10px 0 10px 0;
-        padding-left: 2px;
-    }
-    .checkbox-group input[type='checkbox'] {
-        width: 18px;
-        height: 18px;
-        border-radius: 3px;
-        margin-right: 4px;
-    }
-    .radio-option {
-        font-size: 1rem;
-        padding: 10px 10px;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        max-width: 100%;
-        min-height: 32px;
-        box-sizing: border-box;
-    }
-    .radio-option input[type='radio'] {
-        width: 18px;
-        height: 18px;
-        margin-right: 8px;
-    }
-    .radio-option input[type='radio']:checked::before {
-        width: 10px;
-        height: 10px;
-    }
-    .radio-option label {
-        font-size: 1rem;
-    }
-    .next-btn,
-    .send-btn {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
-        font-size: 1.1rem;
-        padding: 16px;
-        border-radius: 6px;
-        margin-top: 16px;
-        margin-bottom: 2px;
-    }
-}
 .custom-dropdown {
   position: relative;
   width: 100%;
@@ -1096,79 +931,6 @@ select option,
 } 
 
 @media (min-width: 769px) {
-    .transfer-content {
-        max-width: 600px;
-        width: 100%;
-        margin: 48px auto;
-        padding: 40px 24px;
-        border-radius: 16px;
-    }
-    .transfer-panel {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0;
-    }
-    .radio-option {
-        max-width: 100%;
-        width: 100%;
-        margin-bottom: 18px;
-        font-size: 1.1rem;
-        padding: 18px 18px;
-        border-radius: 10px;
-    }
-    .next-btn,
-    .send-btn {
-        max-width: 100%;
-        width: 100%;
-        font-size: 1.1rem;
-        padding: 18px;
-        border-radius: 10px;
-        margin-top: 24px;
-    }
-    .panel-body {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 0 0 12px 0;
-        gap: 12px;
-    }
-    .form-group {
-        gap: 4px;
-        margin-bottom: 0;
-    }
-    .form-group label {
-        font-size: 1rem;
-        margin-bottom: 1px;
-    }
-    .form-group input[type='text'],
-    .form-group select {
-        font-size: 1rem;
-        padding: 10px 10px;
-        border-radius: 6px;
-    }
-    .form-group input[type='text']::placeholder {
-        font-size: 0.95rem;
-    }
-    .checkbox-group {
-        font-size: 1rem;
-        gap: 6px;
-        margin: 8px 0 8px 0;
-    }
-    .checkbox-group input[type='checkbox'] {
-        width: 16px;
-        height: 16px;
-        border-radius: 3px;
-        margin-right: 3px;
-    }
-    .next-btn,
-    .send-btn {
-        font-size: 1rem;
-        padding: 12px;
-        border-radius: 6px;
-        margin-top: 10px;
-        margin-bottom: 2px;
-    }
-}
-
   .transfer-content {
     max-width: 600px;
     width: 100%;

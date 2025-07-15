@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('reset_password_form');
-    const notificationContainer = document.querySelector(
-        '.notification-container'
-    );
+    const form = document.getElementById('reset-password-form');
+    const notificationContainer = document.getElementById('reset-message');
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -34,19 +32,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     result.error || 'Invalid or expired token.',
                     'error'
                 );
+                form.style.display = 'none';
             }
         } catch (error) {
             showNotification(
                 'An error occurred while verifying your request. Please try again.',
                 'error'
             );
+            form.style.display = 'none';
         }
     }
 
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        const password = document.getElementById('reset_username').value;
-        const confirmPassword = document.getElementById('reset_password').value;
+        const password = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
         const submitButton = form.querySelector('button[type="submit"]');
 
         if (password.length < 8) {
@@ -75,16 +75,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.success) {
-                // Hide form after successful reset
+                // Replace form with success message and Go to Login button
                 form.style.display = 'none';
-                showNotification(
-                    result.message +
-                        ' You will be redirected to the login page shortly.',
-                    'success'
-                );
-                setTimeout(() => {
-                    window.location.href = './login_account_holder.html';
-                }, 5000);
+                notificationContainer.innerHTML = `
+                    <div style="text-align:center; margin-top:32px;">
+                        <div style="font-size:2.5rem; color:#39d353; margin-bottom:12px;"><i class='fa fa-check-circle'></i></div>
+                        <div style="font-size:1.1rem; font-weight:600; margin-bottom:18px; color:#222;">Your password has been reset successfully!</div>
+                        <a href="/login" style="display:inline-block; background:#a7f535; color:#222; font-weight:700; padding:12px 32px; border-radius:6px; text-decoration:none; font-size:1.1rem; margin-top:10px;">
+                            <i class="fa fa-sign-in-alt" style="margin-right:8px;"></i>Go to Login
+                        </a>
+                    </div>
+                `;
             } else {
                 showNotification(
                     result.error || 'An unexpected error occurred.',
@@ -103,30 +104,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
-        notificationContainer.appendChild(notification);
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
+        notificationContainer.innerHTML = `<div class="notification notification-${type}" style="margin-top:12px; text-align:center;">${message}</div>`;
     }
 
     // Password visibility toggles
-    document.querySelectorAll('.password-toggle').forEach((button) => {
-        button.addEventListener('click', function () {
-            const targetId = this.dataset.target;
-            const passwordInput = document.getElementById(targetId);
-            const icon = this.querySelector('i');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const target = document.getElementById(this.dataset.target);
+            if (target.type === 'password') {
+                target.type = 'text';
+                this.querySelector('i').classList.remove('fa-eye');
+                this.querySelector('i').classList.add('fa-eye-slash');
             } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+                target.type = 'password';
+                this.querySelector('i').classList.remove('fa-eye-slash');
+                this.querySelector('i').classList.add('fa-eye');
             }
         });
     });

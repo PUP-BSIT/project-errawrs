@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dashboardButtons.forEach((button) => {
         button.addEventListener('click', function (e) {
             e.preventDefault();
-            window.location.href = '/user/dashboard?transaction_success=true';
+            window.location.href = '/user/dashboard'; // No extra parameters
         });
     });
 
