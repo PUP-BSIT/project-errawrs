@@ -33806,3 +33806,12 @@ Stack trace:
 [15-Jul-2025 03:30:06 Asia/Manila] Query executed successfully
 [15-Jul-2025 03:30:06 Asia/Manila] Processed 5 transactions
 [15-Jul-2025 03:30:06 Asia/Manila] Connection closed
+[15-Jul-2025 09:39:00 Asia/Manila] Starting registration review process
+[15-Jul-2025 09:39:00 Asia/Manila] Processing registration ID: 42, Action: deny
+[15-Jul-2025 09:39:01 Asia/Manila] Database connection established
+[15-Jul-2025 09:39:01 Asia/Manila] Transaction started
+[15-Jul-2025 09:39:01 Asia/Manila] Found registration for: Simone Reyes
+[15-Jul-2025 09:39:01 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 09:39:05 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 09:39:05 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 09:39:05 Asia/Manila] Review process completed
