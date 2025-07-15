@@ -425,7 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
 
     if (hamburgerBtn && topnavDropdown) {
         hamburgerBtn.addEventListener('click', (e) => {

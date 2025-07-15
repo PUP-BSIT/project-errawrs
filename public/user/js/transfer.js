@@ -704,7 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
 
     // Mobile/tablet nav logic
     if (hamburgerBtn && topnavDropdown) {
@@ -731,13 +730,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ) {
                 topnavDropdown.classList.remove('open');
             }
-        });
-    }
-    // Mobile logout button uses same handler
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            handleLogout();
         });
     }
 
