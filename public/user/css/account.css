@@ -53,17 +53,13 @@
 
 .account-content {
     padding: 32px;
-    background: linear-gradient(
-        to bottom right,
-        rgba(255, 255, 255, 0.9),
-        rgba(255, 255, 255, 0.95)
-    );
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
     backdrop-filter: blur(20px);
     border-radius: 32px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     max-width: 1400px;
     margin: 16px auto;
-    min-height: auto;
+    min-height: auto; 
     border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
@@ -85,11 +81,7 @@
     left: 0;
     width: 80px;
     height: 4px;
-    background: linear-gradient(
-        90deg,
-        var(--color-mint),
-        var(--color-lime-green)
-    );
+    background: linear-gradient(90deg, var(--color-mint), var(--color-lime-green));
     border-radius: 2px;
 }
 
@@ -340,12 +332,12 @@
 }
 
 .menu-item.transfer-button::before {
-    content: '\f362';
+    content: '\f362'; /* Exchange alt icon */
     color: #2196f3;
 }
 
 .menu-item.close-button::before {
-    content: '\f057';
+    content: '\f057'; /* Times circle icon */
     color: #f44336;
 }
 
@@ -369,11 +361,9 @@
 
 /* Add Account Placeholder */
 .add-account-placeholder {
-    background: linear-gradient(
-        135deg,
-        rgba(248, 250, 252, 0.8) 0%,
-        rgba(241, 245, 249, 0.8) 100%
-    );
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.8) 0%, 
+        rgba(241, 245, 249, 0.8) 100%);
     backdrop-filter: blur(12px);
     border: 2px dashed #cbd5e1;
     border-radius: 24px;
@@ -397,11 +387,9 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        135deg,
+    background: linear-gradient(135deg,
         rgba(182, 255, 74, 0.1) 0%,
-        rgba(126, 217, 87, 0.1) 100%
-    );
+        rgba(126, 217, 87, 0.1) 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
 }
@@ -409,7 +397,9 @@
 .add-account-placeholder:hover {
     border-color: var(--color-mint);
     transform: translateY(-6px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .add-account-placeholder:hover::before {
@@ -426,7 +416,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.02);
+    box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.06),
+        0 1px 2px rgba(0, 0, 0, 0.02);
     transition: all 0.4s ease;
     position: relative;
     z-index: 1;
@@ -459,7 +451,7 @@
         margin: 16px;
         padding: 24px;
     }
-
+    
     .account-list-container {
         grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
         gap: 20px;
@@ -472,41 +464,41 @@
         padding: 20px;
         border-radius: 24px;
     }
-
+    
     .account-content h2 {
         font-size: 24px;
         margin-bottom: 24px;
     }
-
+    
     .account-list-container {
         grid-template-columns: 1fr;
         gap: 16px;
     }
-
+    
     .account-item {
         min-height: 180px;
         padding: 20px;
     }
-
+    
     .account-info {
         gap: 16px;
     }
-
+    
     .info-value {
         font-size: 24px;
     }
-
+    
     .info-group:first-child .info-value {
         font-size: 20px;
     }
-
+    
     .account-type-badge,
     .account-status {
         height: 28px;
         padding: 6px 12px;
         font-size: 13px;
     }
-
+    
     .add-account-placeholder {
         padding: 32px;
         min-height: 240px;
@@ -530,15 +522,9 @@
 }
 
 /* Stagger animation for multiple items */
-.account-item:nth-child(1) {
-    animation-delay: 0.1s;
-}
-.account-item:nth-child(2) {
-    animation-delay: 0.2s;
-}
-.account-item:nth-child(3) {
-    animation-delay: 0.3s;
-}
+.account-item:nth-child(1) { animation-delay: 0.1s; }
+.account-item:nth-child(2) { animation-delay: 0.2s; }
+.account-item:nth-child(3) { animation-delay: 0.3s; }
 
 /* Notification Container */
 .notification-container {
@@ -583,10 +569,14 @@
     font-size: 20px;
 }
 
+/* Ensure 80 column width */
+/* This is handled by the editor's formatting, not CSS */
+
+/* New styles for Add Account button and Modals */
 .add-account-btn {
     display: block;
     width: fit-content;
-    margin: 0 auto 24px auto;
+    margin: 0 auto 24px auto; /* Center below heading, add space */
     padding: 10px 20px;
     background-color: var(--color-lime-green);
     color: var(--color-primary-black);
@@ -609,11 +599,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 100; /* Below notifications but above content */
 }
 
 .modal.hidden {
@@ -647,7 +637,7 @@
 .checkbox-container {
     display: block;
     position: relative;
-    padding-left: 25px;
+    padding-left: 25px; /* Space for the custom checkbox */
     margin-bottom: 15px;
     cursor: pointer;
     font-size: 16px;
@@ -655,7 +645,7 @@
     text-align: left;
 }
 
-.checkbox-container input[type='checkbox'] {
+.checkbox-container input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -669,20 +659,20 @@
     left: 0;
     height: 20px;
     width: 20px;
-    background-color: var(--color-input-bg);
+    background-color: var(--color-input-bg); /* Light gray background */
     border-radius: 4px;
 }
 
 .checkbox-container:hover input ~ .checkmark {
-    background-color: #ccc;
+    background-color: #ccc; /* Darker gray on hover */
 }
 
 .checkbox-container input:checked ~ .checkmark {
-    background-color: var(--color-lime-green);
+    background-color: var(--color-lime-green); /* Green when checked */
 }
 
 .checkmark:after {
-    content: '';
+    content: "";
     position: absolute;
     display: none;
 }
@@ -709,9 +699,8 @@
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color var(--transition-default),
-        opacity var(--transition-default);
-    margin: 5px;
+    transition: background-color var(--transition-default), opacity var(--transition-default);
+    margin: 5px; /* Space between buttons */
 }
 
 .modal-content .primary-btn {
@@ -720,7 +709,7 @@
 }
 
 .modal-content .primary-btn:hover:not(:disabled) {
-    background-color: var(--color-mint);
+     background-color: var(--color-mint);
 }
 
 .modal-content .secondary-btn {
@@ -729,7 +718,7 @@
 }
 
 .modal-content .secondary-btn:hover {
-    background-color: #888;
+    background-color: #888; /* Darker gray on hover */
 }
 
 .modal-content .primary-btn:disabled {
@@ -760,7 +749,7 @@
     position: relative;
 }
 
-.account-type-option input[type='radio'] {
+.account-type-option input[type="radio"] {
     position: absolute;
     opacity: 0;
     width: 0;
@@ -777,7 +766,7 @@
     transition: all var(--transition-default);
 }
 
-.account-type-option input[type='radio']:checked + label {
+.account-type-option input[type="radio"]:checked + label {
     border-color: var(--color-mint);
     background-color: var(--color-bg-gradient-start);
 }
@@ -903,11 +892,7 @@
     align-items: center;
     justify-content: center;
     padding: 60px 30px;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.8),
-        rgba(255, 255, 255, 0.95)
-    );
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.95));
     border-radius: 24px;
     text-align: center;
     border: 1px dashed rgba(126, 217, 87, 0.4);
@@ -934,13 +919,8 @@
 }
 
 @keyframes floatIcon {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 /* Account Item Header and Footer */
@@ -1053,69 +1033,70 @@
 
 .transfer-button i {
     font-size: 14px;
-}
+} 
 
+/* Mobile S, M, L, Tablet: Make account cards fit screen, no overflow */
 @media (max-width: 425px) {
-    .account-list-container {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    .account-item {
-        width: 100%;
-        max-width: 420px;
-        min-width: 0;
-        margin: 0 auto 12px auto;
-        padding: 12px 6px;
-        box-sizing: border-box;
-        border-radius: 16px;
-        font-size: 1rem;
-    }
-    .info-value {
-        font-size: 1.1rem;
-        word-break: break-all;
-    }
-    .account-type-badge {
-        font-size: 0.95rem;
-        padding: 4px 10px;
-    }
-    .account-status {
-        font-size: 0.95rem;
-    }
+  .account-list-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .account-item {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto 12px auto;
+    padding: 12px 6px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    font-size: 1rem;
+  }
+  .info-value {
+    font-size: 1.1rem;
+    word-break: break-all;
+  }
+  .account-type-badge {
+    font-size: 0.95rem;
+    padding: 4px 10px;
+  }
+  .account-status {
+    font-size: 0.95rem;
+  }
 }
 @media (min-width: 426px) and (max-width: 768px) {
-    .account-list-container {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        padding: 0 2vw;
-        box-sizing: border-box;
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    .account-item {
-        width: 100%;
-        max-width: 420px;
-        min-width: 0;
-        margin: 0 auto 16px auto;
-        padding: 16px 10px;
-        box-sizing: border-box;
-        border-radius: 18px;
-        font-size: 1.08rem;
-    }
-    .info-value {
-        font-size: 1.18rem;
-        word-break: break-all;
-    }
-    .account-type-badge {
-        font-size: 1rem;
-        padding: 6px 12px;
-    }
-    .account-status {
-        font-size: 1rem;
-    }
-}
+  .account-list-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 2vw;
+    box-sizing: border-box;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .account-item {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin: 0 auto 16px auto;
+    padding: 16px 10px;
+    box-sizing: border-box;
+    border-radius: 18px;
+    font-size: 1.08rem;
+  }
+  .info-value {
+    font-size: 1.18rem;
+    word-break: break-all;
+  }
+  .account-type-badge {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+  .account-status {
+    font-size: 1rem;
+  }
+} 

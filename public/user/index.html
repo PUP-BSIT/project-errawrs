@@ -25,88 +25,67 @@
         <header>
             <div class="container-nav">
                 <div class="logo">
-                    <span class="logo-text"
-                        ><span class="white">Stack</span
-                        ><span class="green">Overcash</span></span
-                    >
+                    <span class="logo-text"><span class="white">Stack</span><span class="green">Overcash</span></span>
                 </div>
                 <nav>
                     <ul class="nav-links">
                         <li><a href="" class="active">Home</a></li>
-                        <li><a href="contact-us">Contact</a></li>
-                        <li><a href="about-us">About Us</a></li>
+                                        <li><a href="contact-us">Contact</a></li>
+                <li><a href="about-us">About Us</a></li>
                     </ul>
                 </nav>
                 <a href="login" class="login-btn">Join Now</a>
                 <!-- Hamburger Icon (Font Awesome) -->
                 <button class="hamburger" aria-label="Open menu">
-                    <i class="fa fa-bars"></i>
+                  <i class="fa fa-bars"></i>
                 </button>
             </div>
             <!-- Mobile Menu Overlay -->
             <div class="mobile-menu-overlay">
-                <div class="mobile-menu">
-                    <div class="mobile-menu-header">
-                        <span class="logo">
-                            <span class="white">Stack</span
-                            ><span class="green">Overcash</span>
-                        </span>
-                        <button class="close-menu" aria-label="Close menu">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                    <ul>
-                        <li><a href="">Home</a></li>
-                        <li><a href="contact-us">Contact Us</a></li>
-                        <li><a href="about-us">About Us</a></li>
-                    </ul>
-                    <a href="login" class="join-btn">Join Now</a>
+              <div class="mobile-menu">
+                <div class="mobile-menu-header">
+                  <span class="logo">
+                    <span class="white">Stack</span><span class="green">Overcash</span>
+                  </span>
+                  <button class="close-menu" aria-label="Close menu">
+                    <i class="fa fa-times"></i>
+                  </button>
                 </div>
+                <ul>
+                  <li><a href="">Home</a></li>
+                                          <li><a href="contact-us">Contact Us</a></li>
+                        <li><a href="about-us">About Us</a></li>
+                </ul>
+                <a href="login" class="join-btn">Join Now</a>
+              </div>
             </div>
         </header>
 
         <div class="landing-section">
             <section class="container-hero">
                 <div class="hero-content">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            Banking<br />
-                            that works for you
-                        </h1>
-                        <p>
-                            The smarter banking experience<br />
-                            that puts you in control of every<br />
-                            transaction, anytime, anywhere
-                        </p>
-                    </div>
-                    <button
-                        class="learn-more-btn desktop-only"
-                        id="learn-more-desktop"
-                    >
-                        <a
-                            href="#services"
-                            style="text-decoration: none; color: inherit"
-                            >Learn more</a
-                        >
+                  <div class="hero-text">
+                    <h1 class="hero-title">
+                        Banking<br />
+                        that works for you
+                    </h1>
+                    <p>
+                        The smarter banking experience<br />
+                        that puts you in control of every<br />
+                        transaction, anytime, anywhere
+                    </p>
+                  </div>
+                    <button class="learn-more-btn desktop-only" id="learn-more-desktop">
+                        Learn more
                     </button>
                 </div>
                 <div class="hero-visual">
-                    <img
-                        src="assets/images/landing-vector.png"
-                        alt="Banking vector"
-                        class="landing-vector-img"
-                    />
+                    <img src="assets/images/landing-vector.png" alt="Banking vector" class="landing-vector-img" />
                 </div>
-                <button
-                    class="learn-more-btn mobile-only"
-                    id="learn-more-mobile"
-                >
-                    <a
-                        href="#services"
-                        style="text-decoration: none; color: inherit"
-                        >Learn more</a
-                    >
+                <button class="learn-more-btn mobile-only" id="learn-more-mobile">
+                    Learn more
                 </button>
+
             </section>
         </div>
 
@@ -394,7 +373,7 @@
                         <div class="faq-answer">
                             <p>
                                 Yes! You can open and manage multiple accounts
-                                for savings, bills, or business all under one
+                                for savings, bills, or business—all under one
                                 login.
                             </p>
                         </div>
@@ -472,6 +451,10 @@
             </div>
         </footer>
         <script src="user/js/config.js"></script>
+        <script>
+        var loginLink = document.getElementById('login-link');
+        if (loginLink) loginLink.href = ROUTES.LOGIN;
+        </script>
         <script src="user/js/script.js"></script>
     </body>
 </html>

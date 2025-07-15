@@ -1,11 +1,14 @@
+// API Endpoints and Routes are now imported from config.js
+
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Element IDs and Selectors
     const ELEMENT_ID = {
-        LOGIN_FORM: 'login_form',
+        LOGIN_FORM: 'login_form'
     };
-
+    
     const SELECTOR = {
-        PASSWORD_TOGGLE: '.password-toggle',
+        PASSWORD_TOGGLE: '.password-toggle'
     };
 
     const loginForm = document.getElementById(ELEMENT_ID.LOGIN_FORM);
@@ -20,28 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePasswordVisibility(passwordToggle)
         );
     }
-    
-    // Progressive Image Loading with Blur Effect
-    const allImages = document.querySelectorAll('img');
-    
-    allImages.forEach(function(img) {
-        // Check if image is already loaded
-        if (img.complete) {
-            img.classList.add('loaded');
-        } else {
-            // Add event listeners for when image loads
-            img.addEventListener('load', function() {
-                this.classList.add('loaded');
-            });
-            
-            // Fallback: if image fails to load or takes too long
-            setTimeout(function() {
-                if (!img.classList.contains('loaded')) {
-                    img.classList.add('loaded');
-                }
-            }, 3000);
-        }
-    });
 });
 
 const API_LOGIN = API_ENDPOINTS.AUTH.LOGIN;
@@ -52,31 +33,31 @@ async function handleLogin(e) {
     // Element IDs and Selectors
     const ELEMENT_ID = {
         USERNAME: 'username',
-        PASSWORD: 'password',
+        PASSWORD: 'password'
     };
-
+    
     const SELECTOR = {
-        SUBMIT_BUTTON: 'button[type="submit"]',
+        SUBMIT_BUTTON: 'button[type="submit"]'
     };
-
+    
     // Notification Types
     const NOTIFICATION_TYPE = {
         SUCCESS: 'success',
-        ERROR: 'error',
+        ERROR: 'error'
     };
-
+    
     // Text Content
     const TEXT = {
         ELEMENTS_NOT_FOUND: 'Form elements not found',
         FIELDS_REQUIRED: 'Please fill in all fields',
         LOGIN_SUCCESS: 'Login successful! Redirecting...',
         LOGIN_ERROR: 'Login failed',
-        GENERIC_ERROR: 'An error occurred. Please try again.',
+        GENERIC_ERROR: 'An error occurred. Please try again.'
     };
-
+    
     // Timing (in milliseconds)
     const TIMING = {
-        REDIRECT_DELAY: 1500,
+        REDIRECT_DELAY: 1500
     };
 
     const usernameInput = document.getElementById(ELEMENT_ID.USERNAME);
@@ -101,71 +82,58 @@ async function handleLogin(e) {
     showLoadingState();
 
     try {
-        const response = await fetch(API_LOGIN, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
-                login_type: 'user',
-            }),
-        });
+        const response = await fetch(
+            API_LOGIN,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    login_type: 'user',
+                }),
+            }
+        );
 
         const data = await response.json();
 
         if (data.success) {
             showNotification('Login successful! Redirecting...', 'success');
-
+            
             // Store user data in sessionStorage
             const userInfo = {
                 id: data.user.id,
                 username: data.user.username,
                 name: `${data.user.first_name} ${data.user.last_name}`,
                 phone_number: data.user.phone_number,
-                type: 'user',
+                type: 'user'
             };
-
+            
             if (data.user.account) {
                 userInfo.account = data.user.account;
             }
-
+            
             sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
-
+            
             // Check session validity before redirect
             try {
-                const sessionResponse = await fetch(
-                    API_ENDPOINTS.SESSION_CHECK,
-                    { credentials: 'include' }
-                );
+                const sessionResponse = await fetch(API_ENDPOINTS.SESSION_CHECK, { credentials: 'include' });
                 const sessionData = await sessionResponse.json();
-                if (
-                    sessionData &&
-                    sessionData.success &&
-                    sessionData.authenticated
-                ) {
+                if (sessionData && sessionData.success && sessionData.authenticated) {
+                    // Session is valid, redirect to dashboard
                     window.location.href = ROUTES.USER_DASHBOARD;
                 } else {
                     console.error('Session invalid after login:', sessionData);
-                    alert(
-                        'Login failed: Session is not valid after login. See console for details.'
-                    );
+                    alert('Login failed: Session is not valid after login. See console for details.');
                 }
             } catch (sessionError) {
-                console.error(
-                    'Error checking session after login:',
-                    sessionError
-                );
-                alert(
-                    'Error checking session after login. See console for details.'
-                );
+                console.error('Error checking session after login:', sessionError);
+                alert('Error checking session after login. See console for details.');
             }
         } else {
-            showNotification(
-                data.error || 'An unknown error occurred.',
-                'error'
-            );
+            showNotification(data.error || 'An unknown error occurred.', 'error');
             console.error('Login failed:', data);
         }
     } catch (error) {
@@ -180,22 +148,23 @@ function showLoadingState() {
     // Selectors
     const SELECTOR = {
         SUBMIT_BUTTON: 'button[type="submit"]',
-        INPUTS: 'input',
+        INPUTS: 'input'
     };
-
+    
     // Icons
     const ICON = {
-        SPINNER: 'fas fa-spinner fa-spin',
+        SPINNER: 'fas fa-spinner fa-spin'
     };
-
+    
     // Text
     const TEXT = {
-        LOGGING_IN: 'Logging in...',
+        LOGGING_IN: 'Logging in...'
     };
 
     const submitBtn = document.querySelector(SELECTOR.SUBMIT_BUTTON);
     if (submitBtn) {
-        submitBtn.innerHTML = `<i class="${ICON.SPINNER}"></i> ${TEXT.LOGGING_IN}`;
+        submitBtn.innerHTML =
+            `<i class="${ICON.SPINNER}"></i> ${TEXT.LOGGING_IN}`;
         submitBtn.disabled = true;
     }
 
@@ -209,12 +178,12 @@ function hideLoadingState() {
     // Selectors
     const SELECTOR = {
         SUBMIT_BUTTON: 'button[type="submit"]',
-        INPUTS: 'input',
+        INPUTS: 'input'
     };
-
+    
     // Text
     const TEXT = {
-        LOGIN: 'Login',
+        LOGIN: 'Login'
     };
 
     const submitBtn = document.querySelector(SELECTOR.SUBMIT_BUTTON);
@@ -233,7 +202,7 @@ function togglePasswordVisibility(toggleBtn) {
     // Icons
     const ICON = {
         EYE: 'fas fa-eye',
-        EYE_SLASH: 'fas fa-eye-slash',
+        EYE_SLASH: 'fas fa-eye-slash'
     };
 
     const targetId = toggleBtn.getAttribute('data-target');
@@ -263,15 +232,12 @@ function showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
-
+    
     // Add icon based on type
-    const icon =
-        type === 'success'
-            ? 'fa-check-circle'
-            : type === 'error'
-            ? 'fa-exclamation-circle'
-            : 'fa-info-circle';
-
+    const icon = type === 'success' ? 'fa-check-circle' : 
+                type === 'error' ? 'fa-exclamation-circle' : 
+                'fa-info-circle';
+    
     notification.innerHTML = `
         <div class="notification-content">
             <i class="fas ${icon}"></i>
@@ -299,46 +265,4 @@ function showNotification(message, type = 'info') {
             notification.remove();
         }
     }, 5000);
-}
-
-// Floating popup function for session expired
-function showFloatingPopup(message, title = 'Session Expired') {
-    // Remove any existing popup
-    const existingPopup = document.querySelector('.floating-popup');
-    if (existingPopup) {
-        existingPopup.remove();
-    }
-    
-    // Create popup element
-    const popup = document.createElement('div');
-    popup.className = 'floating-popup';
-    popup.innerHTML = `
-        <h3>${title}</h3>
-        <p>${message}</p>
-    `;
-    
-    // Add to body
-    document.body.appendChild(popup);
-    
-    // Auto-dismiss after 5 seconds
-    setTimeout(() => {
-        dismissFloatingPopup();
-    }, 5000);
-}
-
-function dismissFloatingPopup() {
-    const popup = document.querySelector('.floating-popup');
-    if (popup) {
-        popup.classList.add('fade-out');
-        setTimeout(() => {
-            popup.remove();
-        }, 300);
-    }
-}
-
-// Show session expired floating popup if redirected with ?expired=true
-if (window.location.search.includes('expired=true')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        showFloatingPopup('You were logged out due to inactivity. Please log in again to continue.');
-    });
 }

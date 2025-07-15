@@ -6,11 +6,11 @@ class SessionManager {
     constructor(options = {}) {
         // Default Settings
         const DEFAULT_SETTINGS = {
-            CHECK_INTERVAL: 30000, // Check session every 30 seconds
-            WARNING_THRESHOLD: 60, // Show warning when 1 minute left
-            INACTIVITY_THRESHOLD: 300, // 5 minutes
+            CHECK_INTERVAL: 30000,        // Check session every 30 seconds
+            WARNING_THRESHOLD: 60,        // Show warning when 1 minute left
+            INACTIVITY_THRESHOLD: 300     // 5 minutes
         };
-
+        
         // Default options
         this.options = {
             checkInterval: DEFAULT_SETTINGS.CHECK_INTERVAL,
@@ -20,7 +20,7 @@ class SessionManager {
             onTimeout: null, // Custom callback for timeout
             onWarning: null, // Custom callback for warning
             debug: false,
-            ...options,
+            ...options
         };
 
         // State
@@ -50,39 +50,31 @@ class SessionManager {
     init() {
         // Text Content
         const TEXT = {
-            INIT_MESSAGE: 'Initializing session manager',
+            INIT_MESSAGE: 'Initializing session manager'
         };
-
+        
         this.log(TEXT.INIT_MESSAGE);
-
+        
         // Check for session immediately on page load
-        this.checkSession(true)
-            .then((isAuthenticated) => {
-                if (!isAuthenticated) {
-                    this.redirectToLogin();
-                    return;
-                }
-
-                // Start session check timer only if authenticated
-                this.timer = setInterval(
-                    this.checkSession,
-                    this.options.checkInterval
-                );
-
-                // Track user activity
-                this.setupActivityTracking();
-
-                // Add page visibility and navigation listeners
-                this.setupNavigationTracking();
-            })
-            .catch((error) => {
-                console.error('Session check failed:', error);
-                // Don't redirect on initial error, give it another chance
-                this.timer = setInterval(
-                    this.checkSession,
-                    this.options.checkInterval
-                );
-            });
+        this.checkSession(true).then(isAuthenticated => {
+            if (!isAuthenticated) {
+                this.redirectToLogin();
+                return;
+            }
+            
+            // Start session check timer only if authenticated
+            this.timer = setInterval(this.checkSession, this.options.checkInterval);
+            
+            // Track user activity
+            this.setupActivityTracking();
+            
+            // Add page visibility and navigation listeners
+            this.setupNavigationTracking();
+        }).catch(error => {
+            console.error('Session check failed:', error);
+            // Don't redirect on initial error, give it another chance
+            this.timer = setInterval(this.checkSession, this.options.checkInterval);
+        });
     }
 
     /**
@@ -91,19 +83,19 @@ class SessionManager {
     setupActivityTracking() {
         // User Activity Events
         const ACTIVITY_EVENTS = [
-            'mousemove',
-            'mousedown',
-            'keypress',
-            'scroll',
-            'touchstart',
-            'click',
+            'mousemove', 
+            'mousedown', 
+            'keypress', 
+            'scroll', 
+            'touchstart', 
+            'click'
         ];
-
+        
         // Track mouse movement, clicks, key presses, scrolling
-        ACTIVITY_EVENTS.forEach((event) => {
+        ACTIVITY_EVENTS.forEach(event => {
             document.addEventListener(event, this.trackActivity);
         });
-
+        
         // Also track tab visibility changes
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
@@ -123,23 +115,19 @@ class SessionManager {
                 this.checkSession();
             }
         });
-
+        
         // Handle navigation events (page show/hide)
         window.addEventListener('pagehide', this.handlePageHide);
         window.addEventListener('pageshow', this.handlePageShow);
-
+        
         // Handle history API for back/forward navigation
         window.addEventListener('popstate', () => {
             this.checkSession();
         });
-
+        
         // Add state to history to detect back button
         if (history.pushState) {
-            history.pushState(
-                { authenticated: true },
-                document.title,
-                window.location.href
-            );
+            history.pushState({ authenticated: true }, document.title, window.location.href);
         }
     }
 
@@ -158,12 +146,9 @@ class SessionManager {
     handlePageShow(e) {
         // If navigating back (persisted is true), check session
         if (e.persisted) {
-            const hideTime = parseInt(
-                sessionStorage.getItem('page_hide_time') || '0',
-                10
-            );
+            const hideTime = parseInt(sessionStorage.getItem('page_hide_time') || '0', 10);
             const timeAway = Date.now() - hideTime;
-
+            
             // If away for more than 5 seconds, check session
             if (timeAway > 5000) {
                 this.checkSession();
@@ -177,7 +162,7 @@ class SessionManager {
     trackActivity() {
         this.lastActivity = Date.now();
         this.resetTimer();
-
+        
         // Clear warning if shown
         if (this.warningShown) {
             this.hideWarning();
@@ -207,14 +192,14 @@ class SessionManager {
                 credentials: 'include',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    Pragma: 'no-cache',
-                    Expires: '0',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
                 },
-                credentials: 'same-origin',
+                credentials: 'same-origin'
             });
-
+            
             const data = await response.json();
-
+            
             if (data.success && data.authenticated) {
                 this.sessionData = data;
                 this.lastActivity = Date.now();
@@ -243,82 +228,74 @@ class SessionManager {
         const ELEMENT_ID = {
             SESSION_WARNING: 'session-warning',
             SESSION_COUNTDOWN: 'session-countdown',
-            SESSION_CONTINUE: 'session-continue',
+            SESSION_CONTINUE: 'session-continue'
         };
-
+        
         // CSS Classes
         const CLASS = {
-            SESSION_WARNING_CONTENT: 'session-warning-content',
+            SESSION_WARNING_CONTENT: 'session-warning-content'
         };
-
+        
         // Text Content
         const TEXT = {
             SESSION_EXPIRING: 'Your session is about to expire',
-            LOGOUT_WARNING:
-                'You will be logged out in <span id="session-countdown">{timeLeft}</span> seconds due to inactivity.',
-            CONTINUE_SESSION: 'Continue Session',
+            LOGOUT_WARNING: 'You will be logged out in <span id="session-countdown">{timeLeft}</span> seconds due to inactivity.',
+            CONTINUE_SESSION: 'Continue Session'
         };
-
+        
         // If custom warning handler provided, use it
         if (typeof this.options.onWarning === 'function') {
             this.options.onWarning(timeLeft);
             this.warningShown = true;
             return;
         }
-
+        
         // Remove existing warning if present
         this.hideWarning();
-
+        
         // Create warning element
         const warningElement = document.createElement('div');
         warningElement.id = ELEMENT_ID.SESSION_WARNING;
         warningElement.className = 'session-warning-container';
-
+        
         // Create warning content
         const warningContent = document.createElement('div');
-        warningContent.className =
-            CLASS.SESSION_WARNING_CONTENT + ' session-warning-content';
-
+        warningContent.className = CLASS.SESSION_WARNING_CONTENT + ' session-warning-content';
+        
         // Set HTML content
         warningContent.innerHTML = `
             <h3>${TEXT.SESSION_EXPIRING}</h3>
             <p>${TEXT.LOGOUT_WARNING.replace('{timeLeft}', timeLeft)}</p>
-            <button id="${
-                ELEMENT_ID.SESSION_CONTINUE
-            }" class="session-continue-btn">
+            <button id="${ELEMENT_ID.SESSION_CONTINUE}" class="session-continue-btn">
                 ${TEXT.CONTINUE_SESSION}
             </button>
         `;
-
+        
         // Add to DOM
         warningElement.appendChild(warningContent);
         document.body.appendChild(warningElement);
-
+        
         // Add event listener to continue button
-        document
-            .getElementById(ELEMENT_ID.SESSION_CONTINUE)
-            .addEventListener('click', () => {
-                this.trackActivity();
-            });
-
+        document.getElementById(ELEMENT_ID.SESSION_CONTINUE).addEventListener('click', () => {
+            this.trackActivity();
+        });
+        
         // Set countdown timer
         let remaining = timeLeft;
-        const countdownElement = document.getElementById(
-            ELEMENT_ID.SESSION_COUNTDOWN
-        );
-
+        const countdownElement = document.getElementById(ELEMENT_ID.SESSION_COUNTDOWN);
+        
         const countdownInterval = setInterval(() => {
             remaining--;
             if (countdownElement) {
                 countdownElement.textContent = remaining;
             }
-
+            
             if (remaining <= 0) {
                 clearInterval(countdownInterval);
                 this.handleTimeout();
             }
         }, 1000);
-
+        
         // Set flag
         this.warningShown = true;
     }
@@ -329,16 +306,14 @@ class SessionManager {
     hideWarning() {
         // Element IDs
         const ELEMENT_ID = {
-            SESSION_WARNING: 'session-warning',
+            SESSION_WARNING: 'session-warning'
         };
-
-        const warningElement = document.getElementById(
-            ELEMENT_ID.SESSION_WARNING
-        );
+        
+        const warningElement = document.getElementById(ELEMENT_ID.SESSION_WARNING);
         if (warningElement) {
             warningElement.remove();
         }
-
+        
         this.warningShown = false;
     }
 
@@ -351,15 +326,15 @@ class SessionManager {
             clearInterval(this.timer);
             this.timer = null;
         }
-
+        
         if (this.warningTimer) {
             clearTimeout(this.warningTimer);
             this.warningTimer = null;
         }
-
+        
         // Clear localStorage
         this.clearStoredCredentials();
-
+        
         // If custom timeout handler provided, use it
         if (typeof this.options.onTimeout === 'function') {
             this.options.onTimeout();
@@ -371,25 +346,25 @@ class SessionManager {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        Pragma: 'no-cache',
-                        Expires: '0',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
                     },
-                    credentials: 'same-origin',
+                    credentials: 'same-origin'
                 });
             } catch (error) {
                 this.log('Error during session kill:', error);
-
+                
                 // Fallback to regular logout if session kill fails
                 try {
                     await fetch(API_ENDPOINTS.LOGOUT, {
                         method: 'POST',
-                        credentials: 'same-origin',
+                        credentials: 'same-origin'
                     });
                 } catch (error) {
                     console.error('Error killing session:', error);
                 }
             }
-
+            
             // Redirect to login page
             this.redirectToLogin();
         }
@@ -404,7 +379,7 @@ class SessionManager {
         localStorage.removeItem('account');
         localStorage.removeItem('token');
         localStorage.removeItem('auth');
-
+        
         // Clear session storage as well
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('account');
@@ -419,7 +394,7 @@ class SessionManager {
         // Create a unique URL to prevent browser caching
         const cacheBuster = new Date().getTime();
         const redirectUrl = `${this.options.loginPage}?expired=true&t=${cacheBuster}`;
-
+        
         // Replace current history entry to prevent back navigation
         if (window.location.href !== redirectUrl) {
             window.location.replace(redirectUrl);
@@ -432,33 +407,33 @@ class SessionManager {
     destroy() {
         // User Activity Events
         const ACTIVITY_EVENTS = [
-            'mousemove',
-            'mousedown',
-            'keypress',
-            'scroll',
-            'touchstart',
-            'click',
+            'mousemove', 
+            'mousedown', 
+            'keypress', 
+            'scroll', 
+            'touchstart', 
+            'click'
         ];
-
+        
         // Clear timers
         if (this.timer) {
             clearInterval(this.timer);
         }
-
+        
         if (this.warningTimer) {
             clearTimeout(this.warningTimer);
         }
-
+        
         // Remove event listeners
-        ACTIVITY_EVENTS.forEach((event) => {
+        ACTIVITY_EVENTS.forEach(event => {
             document.removeEventListener(event, this.trackActivity);
         });
-
+        
         document.removeEventListener('visibilitychange', this.trackActivity);
         window.removeEventListener('pagehide', this.handlePageHide);
         window.removeEventListener('pageshow', this.handlePageShow);
         window.removeEventListener('popstate', this.checkSession);
-
+        
         // Hide warning if shown
         this.hideWarning();
     }
@@ -484,30 +459,26 @@ if (typeof module !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
     // Only initialize on authenticated pages
     if (document.body.classList.contains('authenticated-page')) {
-        window.sessionManager = new SessionManager({ debug: true });
+        window.sessionManager = new SessionManager({debug: true});
     }
 });
 
 // Add login page redirect handling
-if (
-    window.location.href.includes('login_account_holder.html') &&
-    window.location.search.includes('expired=true')
-) {
+if (window.location.href.includes('login_account_holder.html') && window.location.search.includes('expired=true')) {
     document.addEventListener('DOMContentLoaded', () => {
         // Display session expired message if applicable
         const messageContainer = document.createElement('div');
         messageContainer.className = 'notification notification-error';
-        messageContainer.innerHTML =
-            '<i class="fas fa-exclamation-circle"></i><span>Your session has expired. Please log in again.</span>';
+        messageContainer.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Your session has expired. Please log in again.</span>';
         document.body.appendChild(messageContainer);
-
+        
         // Auto-hide after 5 seconds
         setTimeout(() => {
             messageContainer.style.opacity = '0';
             setTimeout(() => messageContainer.remove(), 300);
         }, 5000);
     });
-}
+} 
 
 // Inactivity session killer logic
 let inactivityTimeout;
@@ -519,23 +490,13 @@ function resetInactivityTimer() {
 }
 
 function killSession() {
-    let loginUrl =
-        window.ROUTES && window.ROUTES.LOGIN ? window.ROUTES.LOGIN : null;
-    console.log(
-        'killSession: ROUTES.LOGIN =',
-        window.ROUTES && window.ROUTES.LOGIN,
-        'loginUrl =',
-        loginUrl
-    );
+    let loginUrl = (window.ROUTES && window.ROUTES.LOGIN) ? window.ROUTES.LOGIN : null;
+    console.log('killSession: ROUTES.LOGIN =', window.ROUTES && window.ROUTES.LOGIN, 'loginUrl =', loginUrl);
     if (loginUrl) {
-        if (
-            window.API_ENDPOINTS &&
-            window.API_ENDPOINTS.AUTH &&
-            window.API_ENDPOINTS.AUTH.KILL_SESSION
-        ) {
+        if (window.API_ENDPOINTS && window.API_ENDPOINTS.AUTH && window.API_ENDPOINTS.AUTH.KILL_SESSION) {
             fetch(window.API_ENDPOINTS.AUTH.KILL_SESSION, {
                 method: 'POST',
-                credentials: 'include',
+                credentials: 'include'
             }).then(() => {
                 window.location.href = loginUrl + '?expired=true';
             });
@@ -543,15 +504,11 @@ function killSession() {
             window.location.href = loginUrl + '?expired=true';
         }
     } else {
-        alert(
-            'ROUTES.LOGIN is not defined! Please check config.js loading order.'
-        );
+        alert('ROUTES.LOGIN is not defined! Please check config.js loading order.');
     }
 }
 
-['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(
-    (event) => {
-        window.addEventListener(event, resetInactivityTimer, true);
-    }
-);
-window.addEventListener('load', resetInactivityTimer);
+['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(event => {
+    window.addEventListener(event, resetInactivityTimer, true);
+});
+window.addEventListener('load', resetInactivityTimer); 

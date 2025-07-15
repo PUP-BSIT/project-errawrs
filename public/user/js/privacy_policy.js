@@ -1,3 +1,5 @@
+// privacy_policy.js
+// Smooth scroll for anchor links (if any in future)
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

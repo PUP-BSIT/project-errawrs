@@ -71,8 +71,7 @@ function extractProfileData($data) {
         'country' => $data['country'] ?? null,
         'phone_number' => $data['phone_number'] ?? null,
         'password' => $data['password'] ?? null,
-        'current_password' => $data['current_password'] ?? null,
-        'id_type' => $data['id_type'] ?? null
+        'current_password' => $data['current_password'] ?? null
     ];
 }
 
@@ -98,8 +97,7 @@ function buildUpdateFields($profileData) {
         'street' => $profileData['street'],
         'city' => $profileData['city'],
         'zip_code' => $profileData['zip_code'],
-        'country' => $profileData['country'],
-        'id_type' => $profileData['id_type']
+        'country' => $profileData['country']
     ];
     
     $types = '';
@@ -185,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $db = db_connect();
         
         $query = "SELECT user_id, username, first_name, last_name, email, phone_number, 
-                         street, city, zip_code, country, id_type, id_image, created_at 
+                         street, city, zip_code, country, created_at 
                   FROM user WHERE user_id = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param('i', $userId);

@@ -1,71 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <title>StackOvercash - Transaction</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet"
-        />
+            rel="stylesheet"/>
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
-        <link rel="stylesheet" href="/user/css/user_dashboard.css?v=1.1" />
-        <link rel="stylesheet" href="/user/css/transaction.css?v=1.1" />
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link rel="stylesheet" href="/user/css/user_dashboard.css?v=1.1"/>
+        <link rel="stylesheet" href="/user/css/transaction.css?v=1.1"/>
     </head>
     <body class="authenticated-page">
         <!-- Mobile Header -->
         <header class="main-header mobile-header hidden">
             <div class="mobile-logo" id="mobile_logo">
-                <span class="logo-stackovercash"
-                    ><span class="logo-stack">Stack</span
-                    ><span class="logo-overcash">Overcash</span></span
-                >
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
             </div>
-            <button
-                id="hamburger_btn"
-                class="hamburger-btn"
-                aria-label="Open navigation"
-            >
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </header>
         <!-- Topnav Dropdown Nav (mobile/tablet) -->
-        <nav
-            class="topnav-dropdown"
-            id="topnav_dropdown"
-            aria-label="Mobile navigation"
-        >
-            <a href="/user/dashboard" class="nav-link" data-page="dashboard"
-                ><i class="fas fa-tachometer-alt"></i>Dashboard</a
-            >
-            <a href="/user/transfer" class="nav-link" data-page="transfer"
-                ><i class="fas fa-exchange-alt"></i>Transfer</a
-            >
-            <a
-                href="/user/transactions"
-                class="nav-link"
-                data-page="transaction"
-                ><i class="fas fa-receipt"></i>Transactions</a
-            >
-            <a href="/user/account" class="nav-link" data-page="account"
-                ><i class="fas fa-wallet"></i>Account</a
-            >
-            <a href="/user/profile" class="nav-link" data-page="profile"
-                ><i class="fas fa-user-circle"></i>Profile</a
-            >
-            <button
-                class="logout-btn"
-                id="logout_btn_mobile"
-                aria-label="Log out of account"
-            >
-                <i class="fas fa-sign-out-alt"></i>Log out
-            </button>
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="/user/dashboard" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="/user/transfer" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="/user/transactions" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="/user/account" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="/user/profile" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
         </nav>
         <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
@@ -73,18 +41,11 @@
             <div class="sidebar sidebar-black" id="sidebar_nav">
                 <div class="popup-header popup-header-style">
                     <span class="logo logo-large">
-                        <span class="logo-stackovercash"
-                            ><span class="logo-stack">Stack</span
-                            ><span class="logo-overcash">Overcash</span></span
-                        >
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
                 </div>
                 <div class="user-profile flex-center">
-                    <div
-                        class="avatar"
-                        id="user_avatar_container"
-                        aria-label="User avatar"
-                    >
+                    <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
@@ -94,80 +55,39 @@
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a
-                                href="/user/dashboard"
-                                class="nav-link"
-                                data-page="dashboard"
-                                aria-label="Dashboard"
-                            >
-                                <i
-                                    class="fas fa-tachometer-alt"
-                                    aria-hidden="true"
-                                ></i>
+                            <a href="/user/dashboard" class="nav-link" data-page="dashboard" aria-label="Dashboard">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="/user/transfer"
-                                class="nav-link"
-                                data-page="transfer"
-                                aria-label="Transfer funds"
-                            >
-                                <i
-                                    class="fas fa-exchange-alt"
-                                    aria-hidden="true"
-                                ></i>
+                            <a href="/user/transfer" class="nav-link" data-page="transfer" aria-label="Transfer funds">
+                                <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a
-                                href="/user/transactions"
-                                class="nav-link"
-                                data-page="transaction"
-                                aria-label="View transactions"
-                            >
-                                <i
-                                    class="fas fa-receipt"
-                                    aria-hidden="true"
-                                ></i>
+                            <a href="/user/transactions" class="nav-link" data-page="transaction" aria-label="View transactions">
+                                <i class="fas fa-receipt" aria-hidden="true"></i>
                                 Transactions
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="/user/account"
-                                class="nav-link"
-                                data-page="account"
-                                aria-label="Manage accounts"
-                            >
+                            <a href="/user/account" class="nav-link" data-page="account" aria-label="Manage accounts">
                                 <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                href="/user/profile"
-                                class="nav-link"
-                                data-page="profile"
-                                aria-label="User profile"
-                            >
-                                <i
-                                    class="fas fa-user-circle"
-                                    aria-hidden="true"
-                                ></i>
+                            <a href="/user/profile" class="nav-link" data-page="profile" aria-label="User profile">
+                                <i class="fas fa-user-circle" aria-hidden="true"></i>
                                 Profile
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button
-                        class="logout-btn"
-                        id="logout_btn"
-                        aria-label="Log out of account"
-                    >
+                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
                         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
                     </button>
@@ -177,7 +97,8 @@
             <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
-                <header class="main-header"></header>
+                <header class="main-header">
+                </header>
 
                 <!-- Transaction History Content -->
                 <div class="transaction-history-content">
@@ -194,14 +115,16 @@
                                     <th>Reference Number</th>
                                 </tr>
                             </thead>
-                            <tbody id="transaction-table-body"></tbody>
+                            <tbody id="transaction-table-body">
+                            </tbody>
                         </table>
                     </div>
 
                     <div class="pagination-container">
                         <div class="pagination-buttons">
                             <button id="previous-page-button">Previous</button>
-                            <div class="page-numbers" id="page-numbers"></div>
+                            <div class="page-numbers" id="page-numbers">
+                            </div>
                             <button id="next-page-button">Next</button>
                         </div>
 
@@ -212,7 +135,7 @@
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                             </select>
-                            <i class="fas fa-angle-down select-arrow"></i>
+                             <i class="fas fa-angle-down select-arrow"></i>
 
                             <span id="showing-info">Showing 1 to 05 of 15</span>
                             <button id="go-button">Go</button>
@@ -228,4 +151,4 @@
         <script src="/user/js/session-manager.js"></script>
         <script src="/user/js/transaction.js"></script>
     </body>
-</html>
+</html> 

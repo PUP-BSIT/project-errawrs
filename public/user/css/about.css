@@ -91,7 +91,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     margin-top: 2.5rem;
-    margin-bottom: 0;
+    margin-bottom: 0; /* remove bottom margin */
 }
 
 .large-hero-image {
@@ -275,37 +275,6 @@ footer {
     font-weight: 500 !important;
 }
 
-
-/* Progressive Image Loading with Blur Effect */
-.hero-image img,
-.large-hero-image img {
-    filter: blur(10px);
-    transition: filter 0.5s ease-out, opacity 0.5s ease-out;
-    opacity: 0.8;
-}
-
-.hero-image img.loaded,
-.large-hero-image img.loaded {
-    filter: blur(0);
-    opacity: 1;
-}
-
-/* Responsive blur effects for different screen sizes */
-@media (max-width: 768px) {
-    .hero-image img,
-    .large-hero-image img {
-        filter: blur(8px);
-        transition: filter 0.4s ease-out, opacity 0.4s ease-out;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-image img,
-    .large-hero-image img {
-        filter: blur(6px);
-        transition: filter 0.3s ease-out, opacity 0.3s ease-out;
-    }
-}
 
 /* Responsive Design */
 @media (max-width: 1400px) {

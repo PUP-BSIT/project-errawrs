@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Transfer Successful - StackOvercash</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet"
-        />
+            rel="stylesheet"/>
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
@@ -44,12 +44,9 @@
                             <a href="/user/dashboard"
                                 class="nav-link"
                                 data-page="dashboard"
-                                aria-label="Dashboard"
-                            >
-                                <i
-                                    class="fas fa-tachometer-alt"
-                                    aria-hidden="true"
-                                ></i>
+                                aria-label="Dashboard">
+                                <i class="fas fa-tachometer-alt"
+                                    aria-hidden="true"></i>
                                 Dashboard
                             </a>
                         </li>
@@ -95,11 +92,7 @@
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button
-                        class="logout-btn"
-                        id="logout_btn"
-                        aria-label="Log out of account"
-                    >
+                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
                         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
                     </button>
@@ -109,7 +102,8 @@
             <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
-                <header class="main-header"></header>
+                <header class="main-header">
+                </header>
 
                 <!-- Success Content -->
                 <div class="success-container">
@@ -123,41 +117,27 @@
                     <div class="receipt-container">
                         <div class="receipt-row">
                             <span class="receipt-label">Transaction ID</span>
-                            <span class="receipt-value" id="transaction_id"
-                                >97</span
-                            >
+                            <span class="receipt-value" id="transaction_id">97</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-label">Date</span>
-                            <span class="receipt-value" id="transaction_date"
-                                >6/6/2025, 2:57:01 AM</span
-                            >
+                            <span class="receipt-value" id="transaction_date">6/6/2025, 2:57:01 AM</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-label">Amount</span>
-                            <span
-                                class="receipt-value amount-value"
-                                id="transaction_amount"
-                                >Loading...</span
-                            >
+                            <span class="receipt-value amount-value" id="transaction_amount">Loading...</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-label">Remaining Balance</span>
-                            <span class="receipt-value" id="remaining_balance"
-                                >Loading...</span
-                            >
+                            <span class="receipt-value" id="remaining_balance">Loading...</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-label">From Account</span>
-                            <span class="receipt-value" id="from_account"
-                                >Loading...</span
-                            >
+                            <span class="receipt-value" id="from_account">Loading...</span>
                         </div>
                         <div class="receipt-row">
                             <span class="receipt-label">To Account</span>
-                            <span class="receipt-value" id="to_account"
-                                >Loading...</span
-                            >
+                            <span class="receipt-value" id="to_account">Loading...</span>
                         </div>
                     </div>
 
@@ -172,7 +152,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="notification-container"></div>
         
         <script src="/user/js/config.js"></script>
@@ -180,4 +160,4 @@
         <script src="/user/js/session-manager.js"></script>
         <script src="/user/js/transfer_success.js"></script>
     </body>
-</html>
+</html> 

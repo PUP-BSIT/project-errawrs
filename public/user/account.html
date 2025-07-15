@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+    
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
@@ -22,50 +23,20 @@
         <!-- Mobile Header -->
         <header class="main-header mobile-header hidden">
             <div class="mobile-logo" id="mobile_logo">
-                <span class="logo-stackovercash"
-                    ><span class="logo-stack">Stack</span
-                    ><span class="logo-overcash">Overcash</span></span
-                >
+                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
             </div>
-            <button
-                id="hamburger_btn"
-                class="hamburger-btn"
-                aria-label="Open navigation"
-            >
+            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </header>
         <!-- Topnav Dropdown Nav (mobile/tablet) -->
-        <nav
-            class="topnav-dropdown"
-            id="topnav_dropdown"
-            aria-label="Mobile navigation"
-        >
-            <a href="/user/dashboard" class="nav-link" data-page="dashboard"
-                ><i class="fas fa-tachometer-alt"></i>Dashboard</a
-            >
-            <a href="/user/transfer" class="nav-link" data-page="transfer"
-                ><i class="fas fa-exchange-alt"></i>Transfer</a
-            >
-            <a
-                href="/user/transactions"
-                class="nav-link"
-                data-page="transaction"
-                ><i class="fas fa-receipt"></i>Transactions</a
-            >
-            <a href="/user/account" class="nav-link" data-page="account"
-                ><i class="fas fa-wallet"></i>Account</a
-            >
-            <a href="/user/profile" class="nav-link" data-page="profile"
-                ><i class="fas fa-user-circle"></i>Profile</a
-            >
-            <button
-                class="logout-btn"
-                id="logout_btn_mobile"
-                aria-label="Log out of account"
-            >
-                <i class="fas fa-sign-out-alt"></i>Log out
-            </button>
+        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
+            <a href="/user/dashboard" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="/user/transfer" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
+            <a href="/user/transactions" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
+            <a href="/user/account" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
+            <a href="/user/profile" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
+            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
         </nav>
         <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
@@ -73,18 +44,11 @@
             <div class="sidebar sidebar-black" id="sidebar_nav">
                 <div class="popup-header popup-header-style">
                     <span class="logo logo-large">
-                        <span class="logo-stackovercash"
-                            ><span class="logo-stack">Stack</span
-                            ><span class="logo-overcash">Overcash</span></span
-                        >
+                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
                     </span>
                 </div>
                 <div class="user-profile flex-center">
-                    <div
-                        class="avatar"
-                        id="user_avatar_container"
-                        aria-label="User avatar"
-                    >
+                    <div class="avatar" id="user_avatar_container" aria-label="User avatar">
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
@@ -216,8 +180,7 @@
                             type="radio"
                             id="credit_account"
                             name="account_type"
-                            value="credit"
-                        />
+                            value="credit"/>
                         <label for="credit_account">
                             <i class="fas fa-credit-card"></i>
                             <span>Credit Account</span>
@@ -229,14 +192,12 @@
                     <button
                         id="proceed_account_type_button"
                         class="btn primary-btn"
-                        disabled
-                    >
+                        disabled>
                         Continue
                     </button>
                     <button
                         id="cancel_account_type_button"
-                        class="btn secondary-btn"
-                    >
+                        class="btn secondary-btn">
                         Cancel
                     </button>
                 </div>
@@ -261,14 +222,12 @@
                     <button
                         id="proceed_add_account_button"
                         class="btn primary-btn"
-                        disabled
-                    >
+                        disabled>
                         Proceed
                     </button>
                     <button
                         id="cancel_add_account_button"
-                        class="btn secondary-btn"
-                    >
+                        class="btn secondary-btn">
                         Cancel
                     </button>
                 </div>
@@ -287,8 +246,7 @@
                     type="text"
                     id="otp_input"
                     placeholder="Enter OTP"
-                    class="form-input"
-                />
+                    class="form-input"/>
                 <div class="modal-actions">
                     <button id="verify_otp_button" class="btn primary-btn">
                         Verify
