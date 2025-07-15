@@ -277,7 +277,7 @@ function getToastIcon(type) {
 function showError(message, debugInfo = null) {
     let fullMessage = `${message}`;
     if (debugInfo) {
-        fullMessage += `<br><span style='font-size:0.95em;color:#a94442;'>${debugInfo}</span>`;
+        fullMessage += `<br><span class='error-debug-info'>${debugInfo}</span>`;
     }
     showToast(fullMessage, 'error');
 }
