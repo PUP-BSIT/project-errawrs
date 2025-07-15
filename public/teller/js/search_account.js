@@ -1,11 +1,4 @@
-// Bank Teller Search Account - Main JavaScript File
-// This file handles account search functionality for bank tellers
-
 import { API_ENDPOINTS, ROUTES } from '/api_config.js';
-
-// ============================================================================
-// INITIALIZATION AND CONFIGURATION
-// ============================================================================
 
 // Check if teller is logged in
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
@@ -14,18 +7,10 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "/login";
 }
 
-// ============================================================================
-// DOM ELEMENTS
-// ============================================================================
-
 const searchInput = document.getElementById("search_input");
 const clearBtn = document.getElementById('clear_search_btn');
 const accountContainer = document.querySelector(".account-container");
 const contentArea = document.querySelector(".content-area");
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
 
 // Format currency to Philippine Peso
 function formatCurrency(amount) {
@@ -109,41 +94,31 @@ function showConfirmationModal(message, onConfirm) {
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'confirmation_modal';
+        modal.className = 'confirmation-modal-overlay';
         modal.innerHTML = `
-            <div class="overlay-content" style="min-width:320px;text-align:center;">
-                <div class="overlay-message" id="confirmation_message"></div>
-                <div id="confirmation_actions" style="margin-top:24px;display:flex;gap:16px;justify-content:center;"></div>
+            <div class="confirmation-modal-content">
+                <div class="confirmation-label" id="confirmation_message"></div>
+                <div id="confirmation_actions" class="confirmation-actions"></div>
             </div>
         `;
-        modal.style.position = 'fixed';
-        modal.style.top = '0';
-        modal.style.left = '0';
-        modal.style.width = '100vw';
-        modal.style.height = '100vh';
-        modal.style.background = 'rgba(0,0,0,0.6)';
-        modal.style.zIndex = '10001';
-        modal.style.display = 'flex';
-        modal.style.justifyContent = 'center';
-        modal.style.alignItems = 'center';
         document.body.appendChild(modal);
     }
     const questionDiv = document.getElementById('confirmation_message');
     questionDiv.textContent = message;
-    questionDiv.style.fontSize = '1.25rem';
-    questionDiv.style.fontWeight = '700';
+    questionDiv.style.display = '';
     modal.style.display = 'flex';
     const actionsDiv = document.getElementById('confirmation_actions');
     actionsDiv.innerHTML = `
-        <button id="confirm_btn" style="padding:14px 32px;border-radius:8px;background:var(--color-mint);color:#fff;border:none;font-weight:600;cursor:pointer;font-size:1.1rem;">Confirm</button>
-        <button id="cancel_btn" style="padding:14px 32px;border-radius:8px;background:var(--color-red);color:#fff;border:none;font-weight:600;cursor:pointer;font-size:1.1rem;">Cancel</button>
+        <button id="confirm_btn" class="confirm-btn">Confirm</button>
+        <button id="cancel_btn" class="cancel-btn">Cancel</button>
     `;
     document.getElementById('confirm_btn').onclick = function() {
         // Hide the question, show only spinner and processing
         questionDiv.style.display = 'none';
         actionsDiv.innerHTML = `
-            <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;width:160px;padding:24px 0;'>
-                <div class='spinner mint-spinner' style='width:40px;height:40px;'></div>
-                <div style='margin-top:18px;font-weight:700;font-size:1.5rem;'>Processing...</div>
+            <div class='processing-container'>
+                <div class='spinner mint-spinner'></div>
+                <div class='processing-text'>Processing...</div>
             </div>
         `;
         onConfirm(() => { modal.style.display = 'none'; questionDiv.style.display = ''; });
@@ -183,10 +158,6 @@ function showSuccessOverlay(message) {
     overlay.style.display = 'flex';
     setTimeout(() => { overlay.style.display = 'none'; }, 1800);
 }
-
-// ============================================================================
-// ACCOUNT DISPLAY FUNCTIONS
-// ============================================================================
 
 // Update account details in the UI
 function updateAccountDetails(accounts) {
@@ -289,10 +260,6 @@ function handleActionButtonClick(button, account, balance) {
     }
 }
 
-// ============================================================================
-// SEARCH FUNCTIONALITY
-// ============================================================================
-
 // Search for accounts
 async function searchAccount() {
     const searchTerm = searchInput.value.trim();
@@ -347,10 +314,6 @@ async function searchAccount() {
         contentArea.classList.remove("has-search-results");
     }
 }
-
-// ============================================================================
-// ACCOUNT OPERATIONS
-// ============================================================================
 
 // Close account
 async function closeAccount(done) {
@@ -434,10 +397,6 @@ async function reopenAccount(done) {
     }
 }
 
-// ============================================================================
-// EVENT LISTENERS
-// ============================================================================
-
 // Initialize the page
 document.addEventListener("DOMContentLoaded", () => {
     // Update user profile display
@@ -490,13 +449,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Remove Enter key search (now handled by input event)
-    // searchInput.addEventListener("keyup", (e) => {
-    //     if (e.key === "Enter") {
-    //         searchAccount();
-    //     }
-    // });
-
     // Check for account parameter in URL
     const accountParam = getQueryParam('account');
     if (accountParam) {
@@ -508,14 +460,4 @@ document.addEventListener("DOMContentLoaded", () => {
         searchAccount();
     }
 });
-
-// Add mint-spinner CSS if not present
-(function(){
-    if (!document.getElementById('mint-spinner-style')) {
-        const style = document.createElement('style');
-        style.id = 'mint-spinner-style';
-        style.innerHTML = `.mint-spinner { border-top: 4px solid var(--color-mint) !important; border-width: 4px !important; }`;
-        document.head.appendChild(style);
-    }
-})();
 
