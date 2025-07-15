@@ -204,15 +204,16 @@ nav {
     align-items: flex-start;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    min-height: 600px; /* Added minimum height */
+    min-height: 500px; /* Added minimum height */
 }
 
 .registration-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    padding-left: 15px;
-    min-height: 500px; /* Added minimum height */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 70vh;
 }
 
 /* Form Steps */
@@ -236,7 +237,7 @@ nav {
     flex-direction: column; /* Vertical alignment */
     align-items: flex-start; /* Align steps to the left */
     justify-content: flex-start;
-    margin-right: 20px; /* Reduced space between steps and form */
+    margin-right: 10px; /* Reduced space between steps and form */
     margin-top: 90px; /* Adjusted margin-top to align with form content */
     padding: 0; /* Reset padding as margin-top is used for vertical offset */
     background: transparent;
@@ -1937,4 +1938,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .notification.custom-visible .notification-content {
         padding: 12px 10px 12px 10px;
     }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.notification.success, .notification-success {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border-left: 4px solid #28a745 !important;
+}
+.notification.success .notification-content i:first-child, .notification-success .notification-content i:first-child {
+    color: #28a745 !important;
+}
+#step_one_identification .form-section h3 {
+  font-size: 24px;
 }
