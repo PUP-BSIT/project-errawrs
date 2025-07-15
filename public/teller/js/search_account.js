@@ -409,14 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Handle search on Enter key
-    searchInput.addEventListener("keyup", (e) => {
-        if (e.key === "Enter") {
-            searchAccount();
-        }
-    });
-
-    // Auto-search on input
+    // Instant search on input (no delay)
     searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.trim();
         if (!searchTerm) {
@@ -427,6 +420,13 @@ document.addEventListener("DOMContentLoaded", () => {
             searchAccount();
         }
     });
+
+    // Remove Enter key search (now handled by input event)
+    // searchInput.addEventListener("keyup", (e) => {
+    //     if (e.key === "Enter") {
+    //         searchAccount();
+    //     }
+    // });
 
     // Check for account parameter in URL
     const accountParam = getQueryParam('account');
