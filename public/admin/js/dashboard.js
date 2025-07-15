@@ -254,7 +254,8 @@ async function handleTellerSearch(searchTerm, resultsContainer = unifiedResults)
             <div class="loading-state">
                 <p>Searching tellers...</p>
             </div>`;
-        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=
+            ${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Failed to fetch tellers');
         const data = await response.json();
         if (!data.success) {
@@ -310,7 +311,8 @@ async function handleUserSearch(searchTerm, resultsContainer = unifiedResults) {
             <div class="loading-state">
                 <p>Searching accounts...</p>
             </div>`;
-        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=
+            ${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
         if (!response.ok) throw new Error('Failed to fetch users');
         const data = await response.json();
         if (!data.success) {
