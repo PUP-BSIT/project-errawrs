@@ -36,6 +36,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function setStepIndicator(step) {
+        document.querySelectorAll('.step-indicators .step').forEach((el, idx) => {
+            if (idx === step - 1) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        });
+    }
+
     // Pagination dots
     const dots = Array.from(document.querySelectorAll('.pagination-dot'));
     const formPages = Array.from(document.querySelectorAll('.form-page'));
@@ -70,6 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
             formDataUtils.saveFormData,
             collectFormData
         );
+        setStepIndicator(2); // Always highlight step 2 when in any sub-page of Step 2
+    }
+
+    // Also update the step indicator when entering Step 2 from Step 1
+    const toStep2Btn = document.querySelector('#step_one_identification .btn-continue');
+    if (toStep2Btn) {
+        toStep2Btn.addEventListener('click', () => {
+            setStepIndicator(2);
+        });
+    }
+
+    // On page load, if #step_two_contact is active, highlight step 2
+    if (document.getElementById('step_two_contact')?.classList.contains('active')) {
+        setStepIndicator(2);
     }
 
     // Back/next buttons for contact pages
@@ -405,14 +429,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('id_image', file);
             }
 
-            // Save formData for later submission after OTP
-            pendingFormData = formData;
-            otpModal.showOtpModal(
-                data.phone_number,
-                onOtpVerifiedSubmitRegistration
-            );
-        });
-    }
+			// Append the ID image file from Step 1
+			const idImageInput = document.getElementById("id_image");
+			if (
+				idImageInput &&
+				idImageInput.files &&
+				idImageInput.files.length > 0
+			) {
+				const file = idImageInput.files[0];
+				const maxSize = 500 * 1024; // 500 KB
+				if (file.size >= maxSize) {
+					notifications.showNotification('ID image file size must be less than 500 KB.', 'error');
+					return; // Block submission
+				}
+				formData.append("id_image", file);
+			}
+
+			// Save formData for later submission after OTP
+			pendingFormData = formData;
+			otpModal.showOtpModal(
+				data.phone_number,
+				onOtpVerifiedSubmitRegistration
+			);
+		});
+	}
 
     // Callback to submit registration after OTP is verified
     async function onOtpVerifiedSubmitRegistration() {
@@ -434,6 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show the success step/panel and display registration ID
     function showSuccessStep(registrationId) {
+        setStepIndicator(3);
         // Hide all steps
         steps.forEach((step) => step.classList.remove('active'));
         // Show the success step (step_three_processing)
@@ -732,6 +773,82 @@ document.addEventListener('DOMContentLoaded', () => {
         countrySelect.addEventListener('change', function () {
             if (countrySelect.value) {
                 searchInput.value = countrySelect.value;
+            }
+        });
+    }
+
+    let previousFile = null;
+    let previousFileName = '';
+    let previousFileURL = '';
+
+    const viewBtn = document.querySelector('.btn-view-image');
+
+    function updateViewButtonState() {
+        if (viewBtn) {
+            viewBtn.disabled = !previousFileURL;
+        }
+    }
+
+    const fileInput = document.getElementById('id_image');
+    const previewInfo = document.querySelector('.preview-info-compact');
+    const removeBtn = document.querySelector('.btn-remove-image');
+
+    if (fileInput && previewInfo) {
+        fileInput.addEventListener('change', function(e) {
+            const file = fileInput.files[0];
+            const maxSize = 500 * 1024; // 500 KB
+            const fileNameDisplay = document.querySelector('.file-name-display');
+            if (file) {
+                if (file.size >= maxSize) {
+                    notifications.showNotification('ID image file size must be less than 500 KB.', 'error');
+                    // Do NOT update preview or file name, just clear the file input
+                    fileInput.value = '';
+                    previewInfo.classList.remove('hidden');
+                    if (fileNameDisplay) fileNameDisplay.textContent = previousFileName;
+                    updateViewButtonState();
+                    return;
+                }
+                // If valid, update previousFile, preview, and preview URL
+                previousFile = file;
+                previousFileName = file.name;
+                previousFileURL = URL.createObjectURL(file);
+                previewInfo.classList.remove('hidden');
+                if (fileNameDisplay) fileNameDisplay.textContent = file.name;
+                updateViewButtonState();
+            } else {
+                previewInfo.classList.add('hidden');
+                previousFile = null;
+                previousFileName = '';
+                previousFileURL = '';
+                if (fileNameDisplay) fileNameDisplay.textContent = '';
+                updateViewButtonState();
+            }
+        });
+    }
+
+    if (removeBtn && previewInfo && fileInput) {
+        removeBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            previewInfo.classList.add('hidden');
+            previousFile = null;
+            previousFileName = '';
+            previousFileURL = '';
+            const fileNameDisplay = document.querySelector('.file-name-display');
+            if (fileNameDisplay) fileNameDisplay.textContent = '';
+            updateViewButtonState();
+        });
+    }
+
+    // View button logic: show preview modal if previousFileURL exists
+    if (viewBtn) {
+        viewBtn.addEventListener('click', function() {
+            if (!previousFileURL) return;
+            // Show your preview modal and set the image src to previousFileURL
+            const modal = document.getElementById('image_preview_modal');
+            const modalImg = modal ? modal.querySelector('img') : null;
+            if (modal && modalImg) {
+                modalImg.src = previousFileURL;
+                modal.classList.add('active');
             }
         });
     }

@@ -1,4 +1,6 @@
-const ITEMS_PER_PAGE = 6;
+import { API_ENDPOINTS } from '/api_config.js';
+
+const ITEMS_PER_PAGE = 3;
 let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];
@@ -23,13 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                await fetch('/project-errawrs/src/api/auth/logout.php', {
+                await fetch(API_ENDPOINTS.USER_LOGOUT, {
                     method: 'POST',
                     credentials: 'include'
                 });
             } catch (err) {}
             sessionStorage.clear();
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         });
     }
 
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userCardsContainer.classList.add('loading');
         
         try {
-            		const response = await fetch(APP_CONFIG.getApiUrl('admin/list_users.php'), {
+            		const response = await fetch(API_ENDPOINTS.ADMIN_LIST_USERS, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -122,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="detail-label">Joined:</span>
                         <span class="detail-value">${new Date(user.user_created_at).toLocaleDateString()}</span>
                     </div>
+                </div>
+                <div class="view-detail-btn-wrapper">
+                    <button class="view-detail-btn"><i class='fas fa-eye'></i> View Details</button>
                 </div>
             `;
             card.setAttribute('data-user-id', user.user_id); // Add data-user-id
@@ -249,21 +254,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Delegate click event to user cards
     document.getElementById('user_cards').addEventListener('click', async (e) => {
-        const card = e.target.closest('.user-card');
-        if (!card) return;
-        const userId = card.getAttribute('data-user-id');
-        if (!userId) return;
-        // Fetch user details
-        try {
-            const response = await fetch(APP_CONFIG.getApiUrl(`admin/get_user.php?user_id=${userId}`), { credentials: 'include' });
-            const data = await response.json();
-            if (data.success && data.user) {
-                showUserDetailsCard(data.user);
-            } else {
-                alert('Failed to load user details.');
+        if (e.target.classList.contains('view-detail-btn')) {
+            const card = e.target.closest('.user-card');
+            if (!card) return;
+            const userId = card.getAttribute('data-user-id');
+            if (!userId) return;
+            // Fetch user details
+            try {
+                const response = await fetch(`${API_ENDPOINTS.ADMIN_GET_USER}/${userId}`, { credentials: 'include' });
+                if (!response.ok) {
+                    let msg = 'Failed to load user details.';
+                    if (response.status === 404) msg = 'User not found.';
+                    showToast(msg, 'error');
+                    return;
+                }
+                const data = await response.json();
+                if (data.success && data.user) {
+                    showUserDetailsCard(data.user);
+                } else {
+                    showToast(data.error || 'Failed to load user details.', 'error');
+                }
+            } catch (err) {
+                showToast('Network error: Could not load user details.', 'error');
             }
-        } catch (err) {
-            alert('Error loading user details.');
         }
     });
 
@@ -271,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const idImageModal = document.getElementById('idImageModal');
     const idImageModalClose = document.getElementById('idImageModalClose');
     if (idImageModal && idImageModalClose) {
+        // Move the close button inside the modal div in HTML (handled in HTML file)
         idImageModalClose.onclick = function() {
             idImageModal.style.display = 'none';
             document.getElementById('idImageModalImg').src = '';
@@ -325,13 +339,13 @@ function showUserDetailsCard(user) {
 // Session check on page load
 (async function() {
     try {
-        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        const res = await fetch(API_ENDPOINTS.ADMIN_SESSION_CHECK, { credentials: 'include' });
         const data = await res.json();
         if (!data.success) {
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
     } catch (e) {
-        window.location.href = 'login.html';
+        window.location.href = '/login';
     }
 })();
 

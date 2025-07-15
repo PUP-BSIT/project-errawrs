@@ -161,23 +161,27 @@ body {
 
 /* Main Content */
 .main-content {
-    flex: 1;
     margin-left: 250px;
     padding: 24px 32px;
     min-height: 100vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    width: calc(100vw - 250px); 
+    width: 1270px; 
     box-sizing: border-box;
 }
 
 /* Top Bar */
 .top-bar {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 32px;
+    justify-content: center;
+}
+
+.page-title {
+    text-align: center;
+    width: 100%;
 }
 
 .page-title h1 {
@@ -302,6 +306,8 @@ body {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto 32px auto;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 /* Make each card fill its grid cell and remove margin-bottom */
@@ -360,6 +366,12 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+}
+
+/* Applications grid: 2 cards per page - removed duplicate */
+/* Remove showing-text styles */
+.showing-text {
+    display: none;
 }
 
 /* Registration Card */
@@ -471,6 +483,13 @@ body {
 .detail-item span {
     color: var(--color-primary-black);
     font-weight: 500;
+}
+
+.detail-item.email span {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    display: inline-block;
+    max-width: 100%;
 }
 
 /* Status badge absolute at top right */
@@ -586,7 +605,7 @@ body {
 /* Pagination */
 .pagination-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     background: var(--color-white);
     padding: 16px 24px;
@@ -600,6 +619,8 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    justify-content: center;
+    width: 100%;
 }
 
 .pagination-btn {
@@ -682,6 +703,16 @@ body {
         height: 32px;
         font-size: 0.9rem;
     }
+}
+
+.pagination-ellipsis {
+    display: inline-block;
+    width: 32px;
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    pointer-events: none;
+    user-select: none;
 }
 
 .showing-text {
@@ -946,26 +977,17 @@ body {
     gap: 16px;
 }
 
-.id-preview-section {
-    margin-top: 32px;
-}
-
 .id-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
-    cursor: zoom-in;
-    background-color: var(--color-bg-gradient-start);
-    padding: 24px;
-}
-
-.id-preview-container:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-md);
+    padding: 24px 0;
+    /* Remove hover effect */
+    box-shadow: none;
+    background: none;
+    transition: none;
+    cursor: default;
 }
 
 .id-preview-image {
@@ -976,13 +998,10 @@ body {
 }
 
 .id-preview-note {
-    margin-top: 12px;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    text-align: center;
+    width: 100%;
     justify-content: center;
+    display: flex;
 }
 
 .details-actions {
@@ -1087,6 +1106,7 @@ body {
     flex: 1;
 }
 
+/* Prevent registration cards from overlapping/touching parent container */
 .registration-container {
     width: 100%;
     max-width: 1200px;
@@ -1094,6 +1114,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Changed from center to flex-start */
+    padding: 0 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
 }
 
 .no-applications {
@@ -1266,4 +1290,102 @@ body {
 /* Utility class for hiding elements via JS */
 .hidden {
     display: none;
+}
+
+/* Center the no applications message */
+.applications-grid.empty-state {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+}
+
+/* Center a single registration card */
+.applications-grid.single-card {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+.applications-grid.single-card .registration-card {
+    max-width: 500px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .registration-container {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .registration-card {
+        margin: 0 2px;
+    }
+}
+
+.image-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.image-overlay.hidden {
+    display: none;
+}
+.image-overlay-content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.image-overlay-content img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+}
+.close-image-overlay {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 2100;
+    background: rgba(0,0,0,0.3);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.close-image-overlay:hover {
+    background: rgba(0,0,0,0.6);
+}
+.btn-view-image {
+    margin-top: 12px;
+    background: var(--color-mint);
+    color: var(--color-primary-black);
+    border: none;
+    border-radius: 8px;
+    padding: 16px 32px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: none;
+}
+.btn-view-image:hover {
+    background: var(--color-lime-green);
+    color: var(--color-primary-black);
 }

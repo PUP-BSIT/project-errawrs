@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/manage_tellers.css">
+    <link rel="stylesheet" href="/admin/css/manage_tellers.css">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -30,30 +30,30 @@
         
         <nav class="sidebar-nav">
             <ul class="nav-list">
-                <li class="nav-item">
-                    <a href="admin/dashboard" class="nav-link">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item active">
-                    <a href="admin/tellers" class="nav-link">
-                        <i class="fas fa-users"></i>
-                        <span>Tellers</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="admin/users" class="nav-link">
-                        <i class="fas fa-user-circle"></i>
-                        <span>User Accounts</span>
-                    </a>
-                </li>
-                                        <li class="nav-item">
-                            <a href="admin/transactions" class="nav-link">
-                                <i class="fas fa-exchange-alt"></i>
-                                <span>Transactions</span>
-                            </a>
-                        </li>
+                                    <li class="nav-item">
+                        <a href="/dashboard" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="/tellers" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Tellers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/users" class="nav-link">
+                            <i class="fas fa-user-circle"></i>
+                            <span>User Accounts</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/transactions" class="nav-link">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li>
                         <li class="nav-item logout-item">
                             <a href="#" id="logout_btn" class="nav-link">
                                 <i class="fas fa-sign-out-alt"></i>
@@ -209,6 +209,15 @@
                 <button class="btn-secondary" id="cancel_reset_btn">Cancel</button>
                 <button class="btn-mint" id="confirm_reset_btn">Reset Password</button>
             </div>
+            <!-- Loading Overlay -->
+            <div class="modal-loading-overlay" id="reset_loading_overlay">
+                <div class="loading-container">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p id="reset_loading_text">Processing...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -232,6 +241,15 @@
                 <button class="btn-secondary" id="cancel_status_btn">Cancel</button>
                 <button class="btn-danger" id="confirm_status_btn">Deactivate Account</button>
             </div>
+            <!-- Loading Overlay -->
+            <div class="modal-loading-overlay" id="status_loading_overlay">
+                <div class="loading-container">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p id="status_loading_text">Processing...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -239,7 +257,6 @@
       <div class="toast-container"></div>
 
               <!-- Scripts -->
-        <script src="js/config.js"></script>
-        <script src="js/manage_tellers.js"></script>
+        <script type="module" src="/admin/js/manage_tellers.js"></script>
   </body>
   </html>

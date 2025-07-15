@@ -21,6 +21,8 @@ $router->post('/auth/logout', 'src/api/auth/logout.php');
 // Session management
 $router->get('/auth/session-check', 'src/api/auth/session_check.php');
 $router->post('/auth/kill-session', 'src/api/auth/kill_session.php');
+$router->get('/auth/admin-session-check', 'src/api/auth/admin_session_check.php');
+$router->get('/auth/teller-session-check', 'src/api/auth/teller_session_check.php');
 
 // OTP verification
 $router->post('/auth/send-otp', 'src/api/auth/send_otp.php');
@@ -63,7 +65,8 @@ $router->get('/user/financial-tips', 'src/api/user/financial-tips.php');
 
 // Teller authentication
 $router->post('/teller/set-password', 'src/api/teller/set_password.php');
-$router->post('/teller/reset-password', 'src/api/teller/reset_password.php');
+$router->post('/teller/request-password-reset', 'src/api/teller/request_password_reset.php');
+$router->post('/teller/process-password-reset', 'src/api/teller/process_password_reset.php');
 
 // Account operations
 $router->get('/teller/search-account', 'src/api/teller/search_account.php');

@@ -34,9 +34,9 @@
                 </div>
                 <nav>
                     <ul class="nav-links">
-                        <li><a href="">Home</a></li>
-                        <li><a href="contact">Contact Us</a></li>
-                        <li><a href="about">About Us</a></li>
+                        <li><a href="/home">Home</a></li>
+                        <li><a href="/contact-us">Contact Us</a></li>
+                        <li><a href="/about-us">About Us</a></li>
                     </ul>
                 </nav>
                 <a href="login" class="login-btn">Join Now</a>
@@ -64,6 +64,13 @@
                     </ul>
                     <a href="login" class="join-btn">Join Now</a>
                 </div>
+                <ul>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/contact-us">Contact Us</a></li>
+                  <li><a href="/about-us">About Us</a></li>
+                </ul>
+                <a href="login" class="join-btn">Join Now</a>
+              </div>
             </div>
         </header>
 
@@ -79,37 +86,25 @@
                     <div class="step-indicators">
                         <div class="step active" data-step="1">
                             <span class="step-number">1</span>
-                            <span class="step-label">Identification</span>
+                            <span class="step-label">Identification Documents</span>
                         </div>
                         <div class="step" data-step="2">
                             <span class="step-number">2</span>
-                            <span class="step-label">Contact Info</span>
+                            <span class="step-label">General Information</span>
                         </div>
                         <div class="step" data-step="3">
                             <span class="step-number">3</span>
-                            <span class="step-label">Processing</span>
+                            <span class="step-label">Verification</span>
                         </div>
                     </div>
 
                     <div class="registration-content">
                         <!-- Step 1: Identification Documents -->
-                        <div
-                            class="form-step active"
-                            id="step_one_identification"
-                        >
-                            <div class="form-header">
-                                <h2>Identification Documents</h2>
-                                <p>
-                                    Please provide your identification details.
-                                </p>
-                            </div>
-
-                            <form
-                                class="registration-form"
-                                id="identification_form"
-                            >
+                        <div class="form-step active" id="step_one_identification">
+                            
+                            <form class="registration-form" id="identification_form">
                                 <div class="form-section">
-                                    <h3>ID Information</h3>
+                                    <h3>Identification Documents</h3>
                                     <div class="form-group">
                                         <label for="id_type">ID Type</label>
                                         <select
@@ -213,15 +208,7 @@
 
                         <!-- Step 2: Contact Information -->
                         <div class="form-step" id="step_two_contact">
-                            <div class="form-header">
-                                <h2>Contact Information</h2>
-                                <p>Please provide your contact details.</p>
-                            </div>
-
-                            <form
-                                class="registration-form"
-                                id="contact_info_form"
-                            >
+                            <form class="registration-form" id="contact_info_form">
                                 <!-- Page 1: Personal Information -->
                                 <div
                                     class="form-page active"
@@ -311,8 +298,8 @@
                                 <!-- Page 2: Contact Details -->
                                 <div class="form-page" id="contact_page_2">
                                     <div class="form-section">
-                                        <h3>Contact Details</h3>
-
+                                        <h3>Contact Information</h3>
+                                        
                                         <div class="form-group">
                                             <label for="email"
                                                 >Email Address</label
@@ -499,7 +486,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <!-- Pagination Indicator -->
                                 <div class="form-pagination">
                                     <div
@@ -535,9 +521,8 @@
                                     account is approved.
                                 </p>
                                 <div class="form-actions">
-                                    <a href="" class="btn btn-secondary">
-                                        <i class="fas fa-home"></i> Go to Home
-                                        Page
+                                    <a href="/home" class="btn btn-secondary">
+                                        <i class="fas fa-home"></i> Go to Home Page
                                     </a>
                                 </div>
                             </div>

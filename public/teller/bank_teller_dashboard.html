@@ -26,7 +26,7 @@
             <div class="user-profile">
                 <a href="/profile">
                     <div class="user-avatar dynamic-avatar"></div></a>
-                <div class="user-name"></div>
+                <!-- Removed the username display here -->
             </div>
             
             <div class="nav-menu">
@@ -34,7 +34,7 @@
                 <a href="/search" class="nav-item">Search Account</a>
                 <a href="/deposit" class="nav-item">Deposit</a>
                 <a href="/withdraw" class="nav-item">Withdraw</a>
-                <a href="/registrations" class="nav-item">Review Registration</a>
+                <a href="/registrations" class="nav-item">Registration</a>
                 <a href="/history" class="nav-item">Transaction</a>
             </div>
             
@@ -131,6 +131,23 @@
         </div>
     </div>
     <div id="notification_container" class="notification-container"></div>
+    <!-- Confirmation Modal Overlay -->
+    <div id="confirmation_modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-message" id="modal_message"></div>
+            <div class="modal-actions">
+                <button id="modal_confirm_btn" class="modal-btn confirm">Confirm</button>
+                <button id="modal_cancel_btn" class="modal-btn cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- Loading Spinner/Message -->
+    <div id="modal_loading" class="modal-loading hidden">
+        <div class="modal-loading-content">
+            <div class="spinner"></div>
+            <div id="modal_loading_message"></div>
+        </div>
+    </div>
     <script type="module" src="/teller/js/teller_dashboard.js"></script>
     <script type="module" src="/teller/js/logout.js"></script>
 </body>

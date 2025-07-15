@@ -373,7 +373,6 @@ async function reopenAccount() {
 document.addEventListener("DOMContentLoaded", () => {
     // Update user profile display
     if (tellerInfo) {
-        const userNameElements = document.querySelectorAll(".user-name");
         const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
         let fullName = '';
         
@@ -382,8 +381,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (tellerInfo.name) {
             fullName = tellerInfo.name;
         }
-        
-        userNameElements.forEach(el => el.textContent = fullName);
         
         // Set avatar initial
         if (avatarElement && fullName) {

@@ -14,31 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = json_decode(file_get_contents('php://input'), true);
 $teller_email = $input['teller_email'] ?? '';
 $password = $input['password'] ?? '';
-$token = $input['token'] ?? '';
-
-if ($token) {
-    // Password reset via token
-    require_once __DIR__ . '/../../config/database.php';
-    $db = db_connect();
-    $stmt = $db->prepare('SELECT teller_email FROM password_resets WHERE token = ? AND expires_at > NOW()');
-    $stmt->bind_param('s', $token);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    if (!$row) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Invalid or expired token']);
-        exit();
-    }
-    $teller_email = $row['teller_email'];
-    // Continue to password update below
-}
 
 if (!$teller_email || !$password) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Missing email or password']);
     exit();
 }
+
 if (strlen($password) < 8) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters']);
@@ -48,24 +30,35 @@ if (strlen($password) < 8) {
 try {
     $db = db_connect();
     $db->begin_transaction();
-    $stmt = $db->prepare('SELECT teller_id FROM teller WHERE email = ?');
+    
+    // Check if teller exists and is in pending status (new account setup)
+    $stmt = $db->prepare('SELECT teller_id, status FROM teller WHERE email = ?');
     $stmt->bind_param('s', $teller_email);
     $stmt->execute();
     $result = $stmt->get_result();
     $teller = $result->fetch_assoc();
+    
     if (!$teller) {
-        throw new Exception('Invalid email');
+        throw new Exception('Invalid email address');
     }
+    
+    // Only allow setup for pending accounts (new tellers)
+    if ($teller['status'] !== 'pending') {
+        throw new Exception('Account is already active. Use password reset if you forgot your password.');
+    }
+    
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $db->prepare('UPDATE teller SET password_hash = ?, status = "active" WHERE teller_id = ?');
     $stmt->bind_param('si', $password_hash, $teller['teller_id']);
     $stmt->execute();
+    
     if ($stmt->affected_rows === 0) {
         throw new Exception('Failed to update teller account');
     }
+    
     $db->commit();
     echo json_encode(['success' => true, 'message' => 'Account setup complete! You can now log in.']);
-    exit();
+    
 } catch (Exception $e) {
     if (isset($db)) $db->rollback();
     error_log('Teller Password Setup Error: ' . $e->getMessage());

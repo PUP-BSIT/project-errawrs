@@ -1,3 +1,5 @@
+import { API_ENDPOINTS } from '/api_config.js';
+
 class TellerManager {
     constructor() {
         this.currentPage = 1;
@@ -5,6 +7,7 @@ class TellerManager {
         this.totalTellers = 0;
         this.searchTerm = '';
         this.searchTimeout = null;
+        this.currentOperation = 'create'; // Track current operation: 'create' or 'edit'
         this.init();
     }
 
@@ -92,6 +95,9 @@ class TellerManager {
 
     async loadTellers() {
         try {
+            console.log('=== LOADING TELLERS ===');
+            console.log('API endpoint:', API_ENDPOINTS.ADMIN_LIST_TELLERS);
+            
             const container = document.getElementById('teller_cards');
             if (!container) return;
 
@@ -103,9 +109,7 @@ class TellerManager {
                 search: this.searchTerm
             });
 
-            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/list_tellers.php')}?${params}`, {
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?${params}`, { credentials: 'include' });
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch tellers: ${response.status}`);
@@ -273,6 +277,9 @@ class TellerManager {
         const modal = document.getElementById('teller_modal');
         if (!modal) return;
 
+        // Set operation type
+        this.currentOperation = 'create';
+
         // Reset form
         const form = document.getElementById('teller_form');
         if (form) {
@@ -301,17 +308,19 @@ class TellerManager {
 
     async editTeller(tellerId) {
         try {
-            		const response = await fetch(`${APP_CONFIG.getApiUrl('admin/get_teller.php')}?id=${tellerId}`, {
-                credentials: 'include'
-            });
+            // Set operation type
+            this.currentOperation = 'edit';
+
+            const response = await fetch(`${API_ENDPOINTS.ADMIN_GET_TELLER}/${tellerId}`, { credentials: 'include' });
 
             if (!response.ok) {
                 throw new Error('Failed to fetch teller details');
             }
 
             const data = await response.json();
+            console.log('editTeller API response:', data);
             
-            if (data.success) {
+            if (data.success && data.teller) {
                 const modal = document.getElementById('teller_modal');
                 const form = document.getElementById('teller_form');
                 
@@ -322,8 +331,9 @@ class TellerManager {
                     document.getElementById('last_name').value = data.teller.last_name;
                     document.getElementById('email').value = data.teller.email;
 
-                    // Update modal title
+                    // Update modal title and button
                     document.getElementById('modal_title').textContent = 'Edit Teller';
+                    document.getElementById('save_btn').textContent = 'Update Teller';
 
                     // Show modal
                     modal.classList.add('show');
@@ -343,7 +353,7 @@ class TellerManager {
             if (!form) return;
 
             const tellerId = document.getElementById('teller_id').value;
-            const isEdit = !!tellerId;
+            const isEdit = this.currentOperation === 'edit';
 
             const formData = {
                 first_name: document.getElementById('first_name').value.trim(),
@@ -368,14 +378,18 @@ class TellerManager {
                 formData.teller_id = tellerId;
             }
 
+            // Show loading state on save button
+            this.setSaveButtonLoading(true);
+
             // Log the request data for debugging
             console.log('Request data:', {
-                			url: isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'),
+                url: isEdit ? `${API_ENDPOINTS.ADMIN_UPDATE_TELLER}/${tellerId}` : API_ENDPOINTS.ADMIN_CREATE_TELLER,
                 method: isEdit ? 'PUT' : 'POST',
                 body: formData
             });
 
-            		const response = await fetch(isEdit ? APP_CONFIG.getApiUrl('admin/update.php') : APP_CONFIG.getApiUrl('admin/create_teller.php'), {
+            const url = isEdit ? `${API_ENDPOINTS.ADMIN_UPDATE_TELLER}/${tellerId}` : API_ENDPOINTS.ADMIN_CREATE_TELLER;
+            const response = await fetch(url, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -416,6 +430,83 @@ class TellerManager {
         } catch (error) {
             console.error('Error saving teller:', error);
             this.showToast(error.message, 'error');
+        } finally {
+            // Hide loading state on save button
+            this.setSaveButtonLoading(false);
+        }
+    }
+
+    setSaveButtonLoading(isLoading) {
+        const saveBtn = document.getElementById('save_btn');
+        if (!saveBtn) return;
+
+        const isEdit = this.currentOperation === 'edit';
+        if (isLoading) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = isEdit ? '<i class="fas fa-spinner fa-spin"></i> Saving...' : '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        } else {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = isEdit ? 'Update Teller' : 'Create Teller';
+        }
+    }
+
+    setResetButtonLoading(isLoading) {
+        const resetBtn = document.getElementById('confirm_reset_btn');
+        if (!resetBtn) return;
+
+        if (isLoading) {
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        } else {
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = 'Reset Password';
+        }
+    }
+
+    setResetModalLoading(isLoading, completeMessage) {
+        const overlay = document.getElementById('reset_loading_overlay');
+        const loadingText = document.getElementById('reset_loading_text');
+        const modal = document.getElementById('reset_password_modal');
+        if (!overlay || !loadingText || !modal) return;
+
+        if (isLoading) {
+            loadingText.textContent = 'Processing...';
+            overlay.classList.add('show');
+        } else {
+            loadingText.textContent = completeMessage || 'Complete';
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                this.closeModal(modal);
+            }, 1000);
+        }
+    }
+
+    setStatusModalLoading(isLoading, completeMessage) {
+        const overlay = document.getElementById('status_loading_overlay');
+        const loadingText = document.getElementById('status_loading_text');
+        const modal = document.getElementById('status_change_modal');
+        if (!overlay || !loadingText || !modal) return;
+
+        // Get modal content sections
+        const header = modal.querySelector('.modal-header');
+        const body = modal.querySelector('.modal-body');
+        const footer = modal.querySelector('.modal-footer');
+
+        if (isLoading) {
+            loadingText.textContent = 'Processing...';
+            overlay.classList.add('show');
+            if (header) header.classList.add('modal-content-hidden');
+            if (body) body.classList.add('modal-content-hidden');
+            if (footer) footer.classList.add('modal-content-hidden');
+        } else {
+            loadingText.textContent = completeMessage || 'Complete';
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                this.closeModal(modal);
+                if (header) header.classList.remove('modal-content-hidden');
+                if (body) body.classList.remove('modal-content-hidden');
+                if (footer) footer.classList.remove('modal-content-hidden');
+            }, 1000);
         }
     }
 
@@ -435,16 +526,16 @@ class TellerManager {
 
             const handleConfirm = async () => {
                 try {
-                    // Close the modal first
-                    this.closeModal(modal);
+                    // Show loading state on reset button
+                    this.setResetButtonLoading(true);
+                    this.setResetModalLoading(true); // Show loading overlay with "Processing..."
 
-                    		const response = await fetch(APP_CONFIG.getApiUrl('admin/send_teller_reset_email.php'), {
+                    const response = await fetch(`${API_ENDPOINTS.ADMIN_SEND_TELLER_RESET_EMAIL}/${tellerId}/reset-password`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        credentials: 'include',
-                        body: JSON.stringify({ teller_id: tellerId })
+                        credentials: 'include'
                     });
 
                     if (!response.ok) {
@@ -454,6 +545,8 @@ class TellerManager {
                     const data = await response.json();
                     
                     if (data.success) {
+                        // Show complete message and close modal
+                        this.setResetModalLoading(false, 'Reset Password Complete');
                         this.showToast('A password reset link has been sent to the teller\'s email address', 'success');
                     } else {
                         throw new Error(data.message || 'Failed to send reset email');
@@ -461,6 +554,11 @@ class TellerManager {
                 } catch (error) {
                     console.error('Error resetting password:', error);
                     this.showToast(error.message, 'error');
+                    // Show generic complete message on error
+                    this.setResetModalLoading(false, 'Complete');
+                } finally {
+                    // Hide loading state on reset button
+                    this.setResetButtonLoading(false);
                 }
             };
 
@@ -469,6 +567,7 @@ class TellerManager {
     }
 
     async toggleTellerStatus(tellerId, currentStatus) {
+        console.log('toggleTellerStatus called with:', tellerId, currentStatus);
         const modal = document.getElementById('status_change_modal');
         const modalTitle = document.getElementById('status_modal_title');
         const modalMessage = document.getElementById('status_modal_message');
@@ -498,16 +597,15 @@ class TellerManager {
         // Set up the confirm button click handler
         const handleConfirm = async () => {
             try {
-                // Close the modal first
-                this.closeModal(modal);
+                // Show loading overlay
+                this.setStatusModalLoading(true);
 
-                		const response = await fetch(APP_CONFIG.getApiUrl('admin/toggle_teller_status.php'), {
+                const response = await fetch(`${API_ENDPOINTS.ADMIN_TOGGLE_TELLER_STATUS}/${tellerId}/toggle-status`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    credentials: 'include',
-                    body: JSON.stringify({ teller_id: tellerId })
+                    credentials: 'include'
                 });
 
                 if (!response.ok) {
@@ -522,16 +620,20 @@ class TellerManager {
                         'success'
                     );
                     await this.loadTellers();
+                    // Show appropriate complete message
+                    this.setStatusModalLoading(false, data.status === 'active' ? 'Activation Complete' : 'Deactivation Complete');
                 } else {
                     throw new Error(data.message || 'Failed to update teller status');
                 }
             } catch (error) {
                 console.error('Error toggling teller status:', error);
                 this.showToast(error.message, 'error');
+                // Show generic complete message on error
+                this.setStatusModalLoading(false, 'Complete');
+            } finally {
+                // Remove the event listener after handling
+                confirmBtn.removeEventListener('click', handleConfirm);
             }
-
-            // Remove the event listener after handling
-            confirmBtn.removeEventListener('click', handleConfirm);
         };
 
         // Add the event listener
@@ -639,13 +741,10 @@ class TellerManager {
     async handleLogout(e) {
         e.preventDefault();
         try {
-            await fetch('/project-errawrs/src/api/auth/logout.php', {
-                method: 'POST',
-                credentials: 'include'
-            });
+            await fetch(API_ENDPOINTS.USER_LOGOUT, { method: 'POST', credentials: 'include' });
         } catch (err) {}
         sessionStorage.clear();
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        window.location.href = '/login';
     }
 
     // Initialize the manager
@@ -660,13 +759,39 @@ document.addEventListener('DOMContentLoaded', TellerManager.init);
 // Session check on page load
 (async function() {
     try {
-        const res = await fetch('/project-errawrs/src/api/auth/session_check.php', { credentials: 'include' });
+        console.log('=== TELLER PAGE SESSION CHECK ===');
+        console.log('Current URL:', window.location.href);
+        console.log('API_ENDPOINTS available:', !!API_ENDPOINTS);
+        console.log('Session check endpoint:', API_ENDPOINTS?.ADMIN_SESSION_CHECK);
+        
+        if (!API_ENDPOINTS?.ADMIN_SESSION_CHECK) {
+            console.error('❌ ADMIN_SESSION_CHECK endpoint not found in API_ENDPOINTS');
+            console.log('Available endpoints:', Object.keys(API_ENDPOINTS || {}));
+            return;
+        }
+        
+        const res = await fetch(API_ENDPOINTS.ADMIN_SESSION_CHECK, { credentials: 'include' });
+        console.log('Session check response status:', res.status);
+        console.log('Response headers:', Object.fromEntries(res.headers.entries()));
+        
         const data = await res.json();
+        console.log('Session check response data:', data);
+        
         if (!data.success) {
-            window.location.href = '/project-errawrs/public/admin/login.html';
+            console.log('❌ Session check failed, redirecting to login');
+            console.log('Reason:', data.message || 'Unknown error');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 3000);
+        } else {
+            console.log('✅ Session check successful');
         }
     } catch (e) {
-        window.location.href = '/project-errawrs/public/admin/login.html';
+        console.error('❌ Session check error:', e);
+        console.log('Will redirect in 3 seconds...');
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 3000);
     }
 })();
 

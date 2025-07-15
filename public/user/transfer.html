@@ -185,7 +185,7 @@
                 <div class="transfer-content">
                     <h2>Account-Holder Transfer</h2>
 
-                    <div class="transfer-panel" id="select-bank-panel">
+                    <div class="transfer-panel block" id="select-bank-panel">
                         <div class="panel-header">
                             <div class="panel-header-steps">
                                 <span class="panel-header-step active"
@@ -194,7 +194,7 @@
                                 <span class="panel-header-step">Account</span>
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body block">
                             <!-- Bank selection radio buttons here -->
                             <div class="radio-option">
                                 <input
@@ -257,16 +257,12 @@
                         </div>
                         <div class="panel-body">
                             <!-- Account details form here -->
+                            <!-- Replace the native select for 'Your Account' with a custom dropdown -->
                             <div class="form-group">
                                 <label for="your-account">Your Account</label>
-                                <div class="custom-select">
-                                    <select id="your-account">
-                                        <!-- Account options will be dynamically populated -->
-                                        <option value="">Select Account</option>
-                                    </select>
-                                    <i
-                                        class="fas fa-angle-down select-arrow"
-                                    ></i>
+                                <div class="custom-dropdown" id="account-dropdown">
+                                    <button class="dropdown-selected" id="dropdown-selected" type="button">Select Account</button>
+                                    <ul class="dropdown-options" id="dropdown-options" style="display: none;"></ul>
                                 </div>
                             </div>
 

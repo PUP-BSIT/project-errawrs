@@ -285,7 +285,52 @@ function updateDashboardSummary(summary) {
 }
 
 // ========================================
-// REGISTRATION MANAGEMENT
+// MODAL & LOADING OVERLAY LOGIC
+// ========================================
+
+let modalState = {
+    registrationId: null,
+    action: null
+};
+
+function showConfirmationModal(message, onConfirm) {
+    const modal = document.getElementById('confirmation_modal');
+    const modalMsg = document.getElementById('modal_message');
+    const confirmBtn = document.getElementById('modal_confirm_btn');
+    const cancelBtn = document.getElementById('modal_cancel_btn');
+
+    modalMsg.textContent = message;
+    modal.classList.remove('hidden');
+
+    // Remove previous listeners
+    confirmBtn.onclick = null;
+    cancelBtn.onclick = null;
+
+    confirmBtn.onclick = () => {
+        modal.classList.add('hidden');
+        onConfirm();
+    };
+    cancelBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modalState.registrationId = null;
+        modalState.action = null;
+    };
+}
+
+function showLoadingOverlay(message) {
+    const loading = document.getElementById('modal_loading');
+    const loadingMsg = document.getElementById('modal_loading_message');
+    loadingMsg.textContent = message;
+    loading.classList.remove('hidden');
+}
+
+function hideLoadingOverlay() {
+    const loading = document.getElementById('modal_loading');
+    loading.classList.add('hidden');
+}
+
+// ========================================
+// REGISTRATION MANAGEMENT (MODAL VERSION)
 // ========================================
 
 /**
@@ -326,10 +371,10 @@ async function loadRecentRegistrations() {
                     </div>
                 </div>
                 <div class="registration-actions">
-                    <button class="action-btn approve" onclick="handleRegistration(${reg.registration_id}, 'approve')" data-registration-id="${reg.registration_id}">
+                    <button class="action-btn approve" data-registration-id="${reg.registration_id}">
                         <i class="fas fa-check"></i> Approve
                     </button>
-                    <button class="action-btn deny" onclick="handleRegistration(${reg.registration_id}, 'deny')" data-registration-id="${reg.registration_id}">
+                    <button class="action-btn deny" data-registration-id="${reg.registration_id}">
                         <i class="fas fa-times"></i> Deny
                     </button>
                 </div>
@@ -425,6 +470,44 @@ async function handleRegistration(registrationId, action) {
     }
 }
 
+/**
+ * Handle registration approval/denial using modal
+ * @param {number} registrationId - The registration ID
+ * @param {string} action - The action to perform ('approve' or 'deny')
+ */
+async function handleRegistrationModal(registrationId, action) {
+    showLoadingOverlay(`${action === 'approve' ? 'Approving' : 'Denying'} registration...`);
+    disableRegistrationButtons(registrationId);
+    try {
+        const data = await makeApiRequest(`${API_ENDPOINTS.TELLER_REVIEW_REGISTRATION}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                registration_id: registrationId,
+                action: action
+            })
+        });
+        hideLoadingOverlay();
+        if (!data.success) {
+            showNotification(data.message || data.error || 'Operation failed', 'error');
+            enableRegistrationButtons(registrationId);
+            return;
+        }
+        showLoadingOverlay(`Registration ${action === 'approve' ? 'approved' : 'denied'} successfully!`);
+        setTimeout(() => {
+            hideLoadingOverlay();
+            showNotification(`Registration ${action === 'approve' ? 'approved' : 'denied'} successfully`, 'success');
+            loadRecentRegistrations();
+        }, 1200);
+    } catch (error) {
+        hideLoadingOverlay();
+        showNotification(`Error ${action === 'approve' ? 'approving' : 'denying'} registration: ${error.message}`, 'error');
+        enableRegistrationButtons(registrationId);
+    }
+}
+
 // ========================================
 // USER INTERFACE INITIALIZATION
 // ========================================
@@ -434,27 +517,25 @@ async function handleRegistration(registrationId, action) {
  */
 function initializeUI() {
     // Update name in sidebar and greeting section
-    const userNameElements = document.querySelectorAll(".user-name");
     const nameTextElement = document.querySelector(".name-text");
     const avatarElement = document.querySelector(".user-avatar.dynamic-avatar");
     
-    let fullName = '';
-    
-    if (tellerInfo.first_name && tellerInfo.last_name) {
-        fullName = `${tellerInfo.first_name} ${tellerInfo.last_name}`;
+    let firstName = '';
+    if (tellerInfo.first_name) {
+        firstName = tellerInfo.first_name;
     } else if (tellerInfo.name) {
-        fullName = tellerInfo.name;
+        // If only a full name is available, use the first word as first name
+        firstName = tellerInfo.name.split(' ')[0];
     }
     
-    // Update all name elements
-    userNameElements.forEach(el => el.textContent = fullName);
+    // Only update greeting and avatar, not sidebar username
     if (nameTextElement) {
-        nameTextElement.textContent = fullName + "!";
+        nameTextElement.textContent = firstName + "!";
     }
     
     // Set avatar initial
-    if (avatarElement && fullName) {
-        const initial = fullName.trim().charAt(0).toUpperCase();
+    if (avatarElement && firstName) {
+        const initial = firstName.trim().charAt(0).toUpperCase();
         avatarElement.textContent = initial;
     }
 }
@@ -477,6 +558,31 @@ function setupAutoRefresh() {
     setInterval(loadRecentRegistrations, 30000);
 }
 
+/**
+ * Set up registration approve/deny modal logic
+ */
+function setupRegistrationActions() {
+    const registrationList = document.getElementById('recent_registrations');
+    if (!registrationList) return;
+
+    registrationList.addEventListener('click', function(e) {
+        const approveBtn = e.target.closest('.action-btn.approve');
+        const denyBtn = e.target.closest('.action-btn.deny');
+        if (approveBtn || denyBtn) {
+            const item = e.target.closest('.registration-item');
+            if (!item) return;
+            const registrationId = item.getAttribute('data-id');
+            const action = approveBtn ? 'approve' : 'deny';
+            modalState.registrationId = registrationId;
+            modalState.action = action;
+            showConfirmationModal(
+                `Are you sure you want to ${action} this registration?`,
+                () => handleRegistrationModal(registrationId, action)
+            );
+        }
+    });
+}
+
 // ========================================
 // MAIN INITIALIZATION
 // ========================================
@@ -493,6 +599,9 @@ function initializeDashboard() {
     
     // Set up event listeners
     setupEventListeners();
+    
+    // Set up registration approve/deny modal logic
+    setupRegistrationActions();
     
     // Fetch initial data
     fetchDashboardSummary();
