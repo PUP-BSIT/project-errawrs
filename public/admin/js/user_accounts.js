@@ -1,6 +1,7 @@
 import { API_ENDPOINTS } from '/api_config.js';
 
 const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 3;
 let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];

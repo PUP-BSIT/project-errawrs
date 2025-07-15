@@ -199,7 +199,9 @@ accountInput.addEventListener("input", function (e) {
 					});
 					suggestionsDiv.classList.add("active");
 				} else {
-					suggestionsDiv.classList.remove("active");
+					// Show 'No account found' message
+					suggestionsDiv.innerHTML = '<div class="suggestion-item no-result">No account found</div>';
+					suggestionsDiv.classList.add("active");
 				}
 			} catch (error) {
 				console.error("Search error:", error);

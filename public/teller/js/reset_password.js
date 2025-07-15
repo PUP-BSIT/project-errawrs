@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             messageDiv.innerHTML = "Processing...";
             try {
                 const res = await fetch(
-                    "/project-errawrs/src/api/teller/set_password.php",
+                    "/api/teller/set-password",
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const data = await res.json();
                 if (data.success) {
                     messageDiv.innerHTML =
-                        '<div class="success">Your password has been reset! You can now <a href="/project-errawrs/public/teller/bank_teller_login.html">log in</a>.</div>';
+                        '<div class="success">Your password has been reset! You can now <a href="/teller/bank_teller_login.html">log in</a>.</div>';
                     form.classList.remove("block");
                     form.classList.add("hidden");
                 } else {

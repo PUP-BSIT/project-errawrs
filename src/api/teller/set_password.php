@@ -42,14 +42,19 @@ try {
         throw new Exception('Invalid email address');
     }
     
-    // Only allow setup for pending accounts (new tellers)
-    if ($teller['status'] !== 'pending') {
-        throw new Exception('Account is already active. Use password reset if you forgot your password.');
+    // Allow password change for both pending and active tellers
+    if ($teller['status'] !== 'pending' && $teller['status'] !== 'active') {
+        throw new Exception('Account is not eligible for password change.');
     }
     
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $db->prepare('UPDATE teller SET password_hash = ?, status = "active" WHERE teller_id = ?');
-    $stmt->bind_param('si', $password_hash, $teller['teller_id']);
+    if ($teller['status'] === 'pending') {
+        $stmt = $db->prepare('UPDATE teller SET password_hash = ?, status = "active" WHERE teller_id = ?');
+        $stmt->bind_param('si', $password_hash, $teller['teller_id']);
+    } else {
+        $stmt = $db->prepare('UPDATE teller SET password_hash = ? WHERE teller_id = ?');
+        $stmt->bind_param('si', $password_hash, $teller['teller_id']);
+    }
     $stmt->execute();
     
     if ($stmt->affected_rows === 0) {

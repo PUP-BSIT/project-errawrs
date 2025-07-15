@@ -1,12 +1,3 @@
-/* ============================================================================
-   BANK TELLER SEARCH ACCOUNT - MAIN STYLESHEET
-   This file contains all styles for the bank teller search account page
-   ============================================================================ */
-
-/* ============================================================================
-   CSS VARIABLES (COLORS, FONTS, SPACING)
-   ============================================================================ */
-
 :root {
     /* Primary Colors */
     --color-primary-black: #111111;
@@ -83,10 +74,6 @@
     --z-index-overlay: 9999;
 }
 
-/* ============================================================================
-   RESET AND BASE STYLES
-   ============================================================================ */
-
 * {
     margin: 0;
     padding: 0;
@@ -97,12 +84,7 @@
 body {
     background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
     min-height: 100vh;
-    /* Remove any display: flex or vertical alignment here */
 }
-
-/* ============================================================================
-   LAYOUT CONTAINERS
-   ============================================================================ */
 
 .container {
     display: flex;
@@ -282,9 +264,6 @@ body {
     font-size: 1.2rem;
 }
 
-/* ============================================================================
-   SEARCH CONTAINER
-   ============================================================================ */
 
 .search-container {
     width: 100%;
@@ -354,10 +333,6 @@ body {
 .clear-search-btn:hover {
     color: var(--color-red);
 }
-
-/* ============================================================================
-   ACCOUNT CONTAINER AND CARDS
-   ============================================================================ */
 
 .account-container {
     width: 100%;
@@ -546,10 +521,6 @@ body {
     font-size: var(--font-size-large);
 }
 
-/* ============================================================================
-   LOADING INDICATORS
-   ============================================================================ */
-
 #loading_indicator {
     position: absolute;
     top: 100%;
@@ -620,10 +591,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* ============================================================================
-   NOTIFICATIONS
-   ============================================================================ */
-
 .notification-container {
     position: fixed;
     top: var(--spacing-lg);
@@ -659,10 +626,6 @@ body {
     }
 }
 
-/* ============================================================================
-   UTILITY CLASSES
-   ============================================================================ */
-
 .clear-search-btn-hidden {
     display: none;
 }
@@ -685,85 +648,4 @@ body {
 
 .transaction-modal-hidden {
     display: none;
-}
-
-/* ============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================ */
-
-/* Mobile S (max-width: 320px) */
-@media (max-width: 320px) {
-    .sidebar {
-        width: 200px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .main-content {
-        margin-left: 200px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .account-container {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .account-info {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .card-actions {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
-}
-
-/* Mobile M (min-width: 321px and max-width: 375px) */
-@media (min-width: 321px) and (max-width: 375px) {
-    .account-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .card-actions {
-        flex-direction: column;
-    }
-}
-
-/* Mobile L (min-width: 376px and max-width: 425px) */
-@media (min-width: 376px) and (max-width: 425px) {
-    .account-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Tablet (min-width: 426px and max-width: 768px) */
-@media (min-width: 426px) and (max-width: 768px) {
-    .sidebar {
-        width: 220px;
-    }
-    
-    .main-content {
-        margin-left: 220px;
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
-    
-    .account-container {
-        grid-template-columns: 1fr;
-        max-width: 600px;
-    }
-}
-
-/* Laptop (min-width: 769px and max-width: 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .account-container {
-        max-width: 900px;
-    }
-}
-
-/* Above (min-width: 1025px) */
-@media (min-width: 1025px) {
-    .account-container {
-        max-width: 1200px;
-    }
 }
