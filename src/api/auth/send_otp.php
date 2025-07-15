@@ -80,12 +80,13 @@ try {
     $apiUrl = $_ENV['SEMAPHORE_API_URL'];
 
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    $isLocalOrDev = (strpos($host, '.local') !== false) || (strpos($host, 'dev') !== false);
+    $isDev = (strpos($host, 'dev') !== false);
     $isProduction = ($host === 'stackovercash.site' || $host === 'www.stackovercash.site');
+    $isLocal = (strpos($host, '.local') !== false);
 
-    if ($isLocalOrDev) {
-        // Use fixed OTP and do NOT call Semaphore API
-    $otp = '123456';
+    if ($isDev) {
+        // Use fixed OTP and do NOT call Semaphore API for dev subdomains only
+        $otp = '123456';
         // Store OTP using SessionManager
         $stored = $sessionManager->storeOTP((string)$otp, $phone, $purpose);
         if (!$stored) {
@@ -93,50 +94,50 @@ try {
         }
         $responseArr = [
             'success' => true,
-            'message' => 'OTP sent successfully (simulated for local/dev).',
+            'message' => 'OTP sent successfully (simulated for dev).',
             'dev_otp' => $otp
         ];
         echo json_encode($responseArr);
         exit();
-    } else if ($isProduction) {
-        // Generate random OTP and send via Semaphore API
+    } else if ($isProduction || $isLocal) {
+        // Generate random OTP and send via Semaphore API for production and local
         $otp = str_pad(strval(random_int(0, 999999)), 6, '0', STR_PAD_LEFT);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $apiUrl);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-        'apikey' => $apiKey,
-        'number' => $formattedPhone,
-        'message' => 'Your OTP is ' . $otp . '. DO NOT SHARE THIS TO ANYONE.',
-        'sendername' => $senderId
-    ]));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'apikey' => $apiKey,
+            'number' => $formattedPhone,
+            'message' => 'Your OTP is ' . $otp . '. DO NOT SHARE THIS TO ANYONE.',
+            'sendername' => $senderId
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
 
-    if ($httpCode !== 200 || !$response) {
-        error_log("Semaphore API Error: " . $response);
-        throw new Exception('Failed to send OTP via SMS. Please try again.');
-    }
+        if ($httpCode !== 200 || !$response) {
+            error_log("Semaphore API Error: " . $response);
+            throw new Exception('Failed to send OTP via SMS. Please try again.');
+        }
 
-    $apiResponse = json_decode($response, true);
-    if (!$apiResponse || isset($apiResponse['error'])) {
-        error_log("Semaphore API Error Response: " . $response);
-        throw new Exception('Failed to send OTP via SMS: ' . ($apiResponse['error'] ?? 'Unknown error'));
-    }
+        $apiResponse = json_decode($response, true);
+        if (!$apiResponse || isset($apiResponse['error'])) {
+            error_log("Semaphore API Error Response: " . $response);
+            throw new Exception('Failed to send OTP via SMS: ' . ($apiResponse['error'] ?? 'Unknown error'));
+        }
 
-    // Store OTP using SessionManager
-    $stored = $sessionManager->storeOTP((string)$otp, $phone, $purpose);
-    if (!$stored) {
-        throw new Exception('Failed to store OTP in session. Please try again.');
-    }
-    $responseArr = [
-        'success' => true,
-        'message' => 'OTP sent successfully to your phone number.'
-    ];
-    echo json_encode($responseArr);
+        // Store OTP using SessionManager
+        $stored = $sessionManager->storeOTP((string)$otp, $phone, $purpose);
+        if (!$stored) {
+            throw new Exception('Failed to store OTP in session. Please try again.');
+        }
+        $responseArr = [
+            'success' => true,
+            'message' => 'OTP sent successfully to your phone number.'
+        ];
+        echo json_encode($responseArr);
         exit();
     } else {
         throw new Exception('Unrecognized environment for OTP sending.');

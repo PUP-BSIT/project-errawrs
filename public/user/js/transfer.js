@@ -52,6 +52,7 @@ const info_correct_checkbox = document.getElementById('info-correct');
 const default_bank_label = document.getElementById('default-bank-label');
 const stackovercash_bank_radio = document.getElementById('stackovercash_bank');
 const dropdown_selected = document.getElementById('dropdown-selected');
+const dropdown_options = document.getElementById('dropdown-options');
 const receiver_account_input = document.getElementById('receiver-account');
 const amount_input = document.getElementById('amount');
 
@@ -363,13 +364,32 @@ function validateTransferAmount() {
     }
 }
 
+// Add after DOM Elements and before any event listeners
+function updateSendMoneyButtonState() {
+    const send_money_button = document.getElementById('send-money-button');
+    if (!send_money_button) return;
+
+    const selectedOption = user_accounts.find(account => account.account_number === dropdown_selected.dataset.value);
+    const accountBalance = selectedOption ? parseFloat(selectedOption.balance || 0) : 0;
+    const transferAmount = parseFloat(amount_input.value || 0);
+    const isChecked = info_correct_checkbox && info_correct_checkbox.checked;
+    const receiverFilled = receiver_account_input && receiver_account_input.value.length > 0;
+
+    send_money_button.disabled = !(
+        selectedOption &&
+        accountBalance > 0 &&
+        transferAmount > 0 &&
+        transferAmount <= accountBalance &&
+        isChecked &&
+        receiverFilled
+    );
+}
+
 // Event listeners for real-time validation
-if (amount_input) {
-  amount_input.addEventListener('input', validateTransferAmount);
-}
-if (dropdown_selected) {
-  dropdown_selected.addEventListener('change', validateTransferAmount);
-}
+if (amount_input) amount_input.addEventListener('input', updateSendMoneyButtonState);
+if (receiver_account_input) receiver_account_input.addEventListener('input', updateSendMoneyButtonState);
+if (info_correct_checkbox) info_correct_checkbox.addEventListener('change', updateSendMoneyButtonState);
+if (dropdown_selected) dropdown_selected.addEventListener('change', updateSendMoneyButtonState);
 
 // Modify the info_correct_checkbox event listener
 if (info_correct_checkbox) {
@@ -399,9 +419,7 @@ if (info_correct_checkbox) {
 }
 
 function populateCustomAccountDropdown() {
-  if (!window.dropdown_selected || !window.dropdown_options) return;
-  const dropdown_selected = window.dropdown_selected;
-  const dropdown_options = window.dropdown_options;
+  if (!dropdown_selected || !dropdown_options) return;
   dropdown_options.innerHTML = '';
   if (user_accounts && user_accounts.length > 0) {
     user_accounts.forEach((account) => {
@@ -429,6 +447,7 @@ function populateCustomAccountDropdown() {
     dropdown_options.appendChild(li);
   }
   // Do NOT reset dropdown_selected here; only reset in resetTransferForm or back button logic
+  updateSendMoneyButtonState(); // <-- Add this line at the end
 }
 
 // Event listeners
@@ -526,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transaction_amount: transferAmount,
                 source_account_no: sourceAccount,
                 recipient_account_no: recipientAccount,
-                redirect_url: window.location.origin + ROUTES.TRANSFER_SUCCESS
+                redirect_url: window.location.origin + '/user/transfer/success'
             };
 
             if (!isInternal) {
@@ -678,13 +697,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const dropdown_selected = document.getElementById('dropdown-selected');
-    const dropdown_options = document.getElementById('dropdown-options');
-
-    // Pass these to populateCustomAccountDropdown
-    window.dropdown_selected = dropdown_selected;
-    window.dropdown_options = dropdown_options;
-
     if (dropdown_selected && dropdown_options) {
         dropdown_selected.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -703,6 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    updateSendMoneyButtonState(); // <-- Add this line at the end
 });
 
 // Validate transfer form
