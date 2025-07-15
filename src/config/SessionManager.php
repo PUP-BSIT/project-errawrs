@@ -8,14 +8,7 @@ class SessionManager {
     private $isInitialized = false;
 
     private function __construct() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
-            $this->sessionTimeout = 0; // Never expire for admin
-        } elseif (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
-            $this->sessionTimeout = 0; // Never expire for teller
-        } else {
-            $this->sessionTimeout = 300; // 5 minutes for users
-        }
+        $this->sessionTimeout = 3600;      // 1 hour
         $this->sessionRefreshTime = 1800;  // 30 minutes
         $this->sessionWarnTime = 300;      // 5 minute warning
     }
@@ -40,44 +33,16 @@ class SessionManager {
             $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
             ini_set('session.cookie_secure', $secure ? 1 : 0);
             ini_set('session.cookie_samesite', 'Lax');
-            // Set session lifetime based on timeout (1 year if never expire)
-            ini_set('session.gc_maxlifetime', $this->sessionTimeout > 0 ? $this->sessionTimeout : 31536000);
+            ini_set('session.gc_maxlifetime', 3600); // 1 hour
             ini_set('session.cookie_lifetime', 0); // Until browser closes
 
-            // Session name (dynamic by subdomain)
-            session_name($this->getSessionName());
-
-            // Set cookie params for all subdomains
-            session_set_cookie_params([
-                'domain' => $this->getCookieDomain(),
-                'path' => '/',
-                'secure' => $secure,
-                'httponly' => true,
-                'samesite' => 'Lax'
-            ]);
+            // Session name
+            session_name('STACKOVERCASH_SESSID');
             
             session_start();
         }
 
         $this->isInitialized = true;
-    }
-
-    private function getCookieDomain() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, '.local') !== false) {
-            return '.stackovercash.site.local';
-        }
-        return '.stackovercash.site';
-    }
-
-    private function getSessionName() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
-            return 'STACKOVERCASH_SESSID_ADMIN';
-        } elseif (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
-            return 'STACKOVERCASH_SESSID_TELLER';
-        }
-        return 'STACKOVERCASH_SESSID';
     }
 
     public function storeOTP(string $otp, string $phone, string $purpose = 'general'): bool {
@@ -176,24 +141,25 @@ class SessionManager {
         if (!$this->isAuthenticated()) {
             return true;
         }
-        // Never expire for admin/teller
-        if ($this->sessionTimeout === 0) {
-            return false;
-        }
+
         $currentTime = time();
         $lastActivity = $_SESSION['auth']['last_activity'] ?? 0;
         $timeDiff = $currentTime - $lastActivity;
+        
         // Don't expire new sessions
         $isNewSession = isset($_SESSION['auth']['logged_in_at']) && 
                        ($currentTime - $_SESSION['auth']['logged_in_at'] <= 5);
+        
         if ($isNewSession) {
             return false;
         }
+        
         // Auto-refresh session if within refresh window
         if ($timeDiff <= $this->sessionRefreshTime) {
             $this->updateActivity();
             return false;
         }
+        
         return $timeDiff > $this->sessionTimeout;
     }
 
