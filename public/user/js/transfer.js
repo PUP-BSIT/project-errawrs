@@ -421,21 +421,35 @@ if (info_correct_checkbox) {
 function populateCustomAccountDropdown() {
   if (!dropdown_selected || !dropdown_options) return;
   dropdown_options.innerHTML = '';
+
+  // If no account is selected, select the first one
+  if (!dropdown_selected.dataset.value && user_accounts.length > 0) {
+    const first = user_accounts[0];
+    let label = `${first.account_type ? first.account_type.charAt(0).toUpperCase() + first.account_type.slice(1) : 'Account'} No. ${first.account_number}<br>(₱ ${parseFloat(first.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+    dropdown_selected.innerHTML = label;
+    dropdown_selected.dataset.value = first.account_number;
+    dropdown_selected.classList.add('has-value');
+  }
+
+  const selectedAccountNumber = dropdown_selected.dataset.value;
+
   if (user_accounts && user_accounts.length > 0) {
     user_accounts.forEach((account) => {
-      const li = document.createElement('li');
+      if (account.account_number === selectedAccountNumber) return; // Skip selected
       let label = `${account.account_type ? account.account_type.charAt(0).toUpperCase() + account.account_type.slice(1) : 'Account'} No. ${account.account_number}<br>(₱ ${parseFloat(account.balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      const li = document.createElement('li');
       li.innerHTML = label;
       li.dataset.value = account.account_number;
       li.dataset.balance = account.balance;
       li.addEventListener('click', () => {
-        console.log('Dropdown option clicked:', label); // Debug log
         dropdown_selected.innerHTML = label;
         dropdown_selected.dataset.value = account.account_number;
         dropdown_selected.classList.add('has-value');
         dropdown_options.style.display = 'none';
         setTimeout(() => {
           validateTransferAmount();
+          updateSendMoneyButtonState();
+          populateCustomAccountDropdown(); // Repopulate to hide the newly selected account
         }, 100);
       });
       dropdown_options.appendChild(li);
@@ -446,8 +460,7 @@ function populateCustomAccountDropdown() {
     li.style.color = '#aaa';
     dropdown_options.appendChild(li);
   }
-  // Do NOT reset dropdown_selected here; only reset in resetTransferForm or back button logic
-  updateSendMoneyButtonState(); // <-- Add this line at the end
+  updateSendMoneyButtonState();
 }
 
 // Event listeners
