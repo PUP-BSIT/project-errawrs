@@ -40586,3 +40586,95 @@ Stack trace:
 [15-Jul-2025 09:39:05 Asia/Manila] Denial email sent successfully
 [15-Jul-2025 09:39:05 Asia/Manila] Transaction committed successfully
 [15-Jul-2025 09:39:05 Asia/Manila] Review process completed
+[15-Jul-2025 06:30:04 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:30:04 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:30:04 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:30:04 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:30:04 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:30:04 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => cam3gqp6dqv87smcc0flbh1a4f
+    [STACKOVERCASH_SESSID_TELLER] => a7mvl3ubd3umk107de6vbnim3e
+    [STACKOVERCASH_SESSID_ADMIN] => s0pgsc8a98jkt8hjll5qo25ijs
+)
+
+[15-Jul-2025 06:30:06 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:30:06 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752542927
+    [last_activity] => 1752553804
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:30:06 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:30:06 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 12:30:15 Asia/Manila] Profile Error: Teller not found or inactive
+[15-Jul-2025 06:30:17 Europe/Berlin] Logout request received. User: T000002
+[15-Jul-2025 12:30:36 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 68
+            [identifier] => T000009
+            [type] => teller
+            [logged_in_at] => 1752553836
+            [last_activity] => 1752553836
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [phone_number] => 
+            [email] => geraldkasan163@gmail.com
+        )
+
+)
+
+[15-Jul-2025 12:30:36 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 68
+            [teller_number] => T000009
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [email] => geraldkasan163@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-15 12:30:36
+)
+
+[15-Jul-2025 12:30:36 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 68
+            [identifier] => T000009
+            [type] => teller
+            [logged_in_at] => 1752553836
+            [last_activity] => 1752553836
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [phone_number] => 
+            [email] => geraldkasan163@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 68
+            [teller_number] => T000009
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [email] => geraldkasan163@gmail.com
+            [status] => active
+        )
+
+)
+
