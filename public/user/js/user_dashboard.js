@@ -995,3 +995,23 @@ function fallbackCopyToClipboard(text, resolve, reject) {
         reject(err);
     }
 }
+
+function displayFinancialTip() {
+    const tips = [
+        "Pay yourself first: Save before you spend.",
+        "Track your expenses to find hidden leaks.",
+        "Set financial goals and review them regularly.",
+        "Avoid impulse purchases—wait 24 hours before buying.",
+        "Build an emergency fund for unexpected expenses.",
+        "Review your subscriptions and cancel unused ones.",
+        "Automate your savings for consistency.",
+        "Use a budget to control your spending.",
+        "Compare prices before making big purchases.",
+        "Invest early to take advantage of compounding."
+    ];
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    const tipContainer = document.getElementById('financial_tip_container');
+    if (tipContainer) {
+        tipContainer.textContent = tip;
+    }
+}
