@@ -55,19 +55,41 @@ document.addEventListener('DOMContentLoaded', function () {
         notification.className = `notification notification-${type}`;
         notification.textContent = message;
         notificationContainer.appendChild(notification);
-
-        // Add 'show' class after a short delay to trigger the transition
         setTimeout(() => {
             notification.classList.add('show');
         }, 10);
-
-        // Remove the notification after 5 seconds
         setTimeout(() => {
             notification.classList.remove('show');
-            // Wait for the transition to finish before removing the element
             notification.addEventListener('transitionend', () =>
                 notification.remove()
             );
         }, 5000);
     }
+});
+
+// Set up back to login link
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('back-to-login-link').href = ROUTES.LOGIN;
+    
+    // Progressive Image Loading with Blur Effect
+    const allImages = document.querySelectorAll('img');
+    
+    allImages.forEach(function(img) {
+        // Check if image is already loaded
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            // Add event listeners for when image loads
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+            
+            // Fallback: if image fails to load or takes too long
+            setTimeout(function() {
+                if (!img.classList.contains('loaded')) {
+                    img.classList.add('loaded');
+                }
+            }, 3000);
+        }
+    });
 });
