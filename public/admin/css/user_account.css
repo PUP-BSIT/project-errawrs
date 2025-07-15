@@ -20,7 +20,7 @@ body {
     background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
     display: flex;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
+    overflow-x: hidden; 
 }
 
 /* Sidebar Styles */
@@ -30,7 +30,7 @@ body {
     color: var(--color-white);
     padding: 32px 24px;
     transition: all 0.3s ease;
-    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

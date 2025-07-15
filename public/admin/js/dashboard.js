@@ -34,7 +34,7 @@ function setupEventListeners() {
             profileBtn.addEventListener('click', () => {
                 const dropdown = document.querySelector('.dropdown-content');
                 if (dropdown) {
-                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                    dropdown.classList.toggle('show');
                 }
             });
         }
@@ -44,7 +44,8 @@ function setupEventListeners() {
         if (dashboardLink) {
             dashboardLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(item => 
+                      item.classList.remove('active'));
                 e.target.closest('.nav-item').classList.add('active');
                 hideAllSections();
                 const dashboardSection = document.querySelector('.dashboard-section');
@@ -187,6 +188,18 @@ function updateDashboardStats(stats) {
 function formatNumber(number) {
         return new Intl.NumberFormat().format(number);
     }
+
+function formatDate(dateString) {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
 
 async function handleLogout(e) {
         e.preventDefault();

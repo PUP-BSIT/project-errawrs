@@ -10,27 +10,19 @@ let searchInput;
 let searchBtn;
 let paginationContainer;
 
+let allTransactions = [];
+let filteredTransactions = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     transactionContent = document.querySelector('.transactions-content');
     searchInput = document.querySelector('.search-input');
     searchBtn = document.querySelector('.search-btn');
     paginationContainer = document.querySelector('.transaction-pagination');
 
-    loadTransactions();
+    fetchAllTransactions();
 
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            currentPage = 1;
-            loadTransactions();
-        });
-    }
     if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                currentPage = 1;
-                loadTransactions();
-            }
-        });
+        searchInput.addEventListener('input', handleSearchInput);
     }
 
     // Logout logic
@@ -66,31 +58,39 @@ window.addEventListener('pageshow', function(event) {
     }
 });
 
-async function loadTransactions() {
+async function fetchAllTransactions() {
     try {
-        const searchQuery = searchInput && searchInput.value ? searchInput.value.trim() : '';
-        const statusFilter = '';
-        const url = `${API_ENDPOINTS.ADMIN_GET_TRANSACTIONS}?page=${currentPage}&limit=${itemsPerPage}&search_query=${encodeURIComponent(searchQuery)}&status=${statusFilter}`;
-        console.log('Fetching transactions from:', url);
-        const response = await fetch(url, {
-            credentials: 'include'
-        });
-
+        if (searchInput) searchInput.classList.add('loading');
+        const url = `${API_ENDPOINTS.ADMIN_GET_TRANSACTIONS}?page=1&limit=1000`;
+        const response = await fetch(url, { credentials: 'include' });
         const data = await response.json();
-        if (!data.success) {
-            throw new Error(data.message || 'Failed to load transactions');
-        }
-
-        totalPages = data.total_pages;
-        displayTransactions(data.transactions);
+        if (!data.success) throw new Error(data.message || 'Failed to load transactions');
+        allTransactions = data.transactions;
+        filteredTransactions = [...allTransactions];
+        currentPage = 1;
+        displayTransactionsPaginated();
         updatePagination();
     } catch (error) {
-        console.error('Error loading transactions:', error);
         showError('Failed to load transactions. Please try again later.');
+    } finally {
+        if (searchInput) searchInput.classList.remove('loading');
     }
 }
 
-function displayTransactions(transactions) {
+function handleSearchInput(e) {
+    const searchTerm = e.target.value.trim().toLowerCase();
+    filteredTransactions = allTransactions.filter(trx =>
+        (trx.transaction_id && trx.transaction_id.toString().includes(searchTerm)) ||
+        (trx.sender_account_number && trx.sender_account_number.toLowerCase().includes(searchTerm)) ||
+        (trx.receiver_account_number && trx.receiver_account_number.toLowerCase().includes(searchTerm)) ||
+        (trx.teller_full_name && trx.teller_full_name.toLowerCase().includes(searchTerm))
+    );
+    currentPage = 1;
+    displayTransactionsPaginated();
+    updatePagination();
+}
+
+function displayTransactionsPaginated() {
     let transactionList = document.querySelector('.transaction-list');
     if (!transactionList) {
         transactionList = document.createElement('div');
@@ -98,7 +98,10 @@ function displayTransactions(transactions) {
         transactionContent.insertBefore(transactionList, document.querySelector('.transaction-pagination'));
     }
     transactionList.innerHTML = '';
-    if (transactions.length === 0) {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageTransactions = filteredTransactions.slice(startIndex, endIndex);
+    if (pageTransactions.length === 0) {
         transactionList.innerHTML = `
             <div class="no-transactions">
                 <p>No transactions found</p>
@@ -106,7 +109,7 @@ function displayTransactions(transactions) {
         `;
         return;
     }
-    transactions.forEach(transaction => {
+    pageTransactions.forEach(transaction => {
         const transactionEl = document.createElement('div');
         transactionEl.className = 'transaction-item';
         const transactionType = formatTransactionType(transaction.transaction_type);
@@ -114,7 +117,11 @@ function displayTransactions(transactions) {
         const date = formatDate(transaction.transaction_date);
         let senderDisplay = transaction.sender_account_number || 'N/A';
         let receiverDisplay = transaction.receiver_account_number || 'N/A';
-        if (transaction.teller_full_name) {
+        if (transaction.transaction_type === 'deposit' && transaction.teller_full_name) {
+            senderDisplay = transaction.teller_full_name;
+        } else if (transaction.transaction_type === 'withdrawal' && transaction.teller_full_name) {
+            senderDisplay = transaction.teller_full_name;
+        } else if (transaction.teller_full_name && !transaction.sender_account_number) {
             senderDisplay = transaction.teller_full_name;
         }
         if (transaction.external_bank_code && transaction.external_account_number) {
@@ -153,6 +160,7 @@ function displayTransactions(transactions) {
 }
 
 function updatePagination() {
+    totalPages = Math.ceil(filteredTransactions.length / itemsPerPage) || 1;
     paginationContainer.innerHTML = '';
     // Previous button
     const prevBtn = createPaginationButton('prev', '<i class="fas fa-chevron-left"></i>', currentPage > 1);
@@ -196,7 +204,7 @@ function createPaginationButton(type, content, enabled, isActive = false) {
             } else if (type === 'page') {
                 currentPage = parseInt(content);
             }
-            loadTransactions();
+            displayTransactionsPaginated();
         });
     }
     return button;
@@ -277,7 +285,7 @@ function getToastIcon(type) {
 function showError(message, debugInfo = null) {
     let fullMessage = `${message}`;
     if (debugInfo) {
-        fullMessage += `<br><span style='font-size:0.95em;color:#a94442;'>${debugInfo}</span>`;
+        fullMessage += `<br><span class='error-debug-info'>${debugInfo}</span>`;
     }
     showToast(fullMessage, 'error');
 }
