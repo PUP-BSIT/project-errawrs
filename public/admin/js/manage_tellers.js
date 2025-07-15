@@ -7,6 +7,7 @@ class TellerManager {
         this.totalTellers = 0;
         this.searchTerm = '';
         this.searchTimeout = null;
+        this.currentOperation = 'create'; // Track current operation: 'create' or 'edit'
         this.init();
     }
 
@@ -276,6 +277,9 @@ class TellerManager {
         const modal = document.getElementById('teller_modal');
         if (!modal) return;
 
+        // Set operation type
+        this.currentOperation = 'create';
+
         // Reset form
         const form = document.getElementById('teller_form');
         if (form) {
@@ -304,6 +308,9 @@ class TellerManager {
 
     async editTeller(tellerId) {
         try {
+            // Set operation type
+            this.currentOperation = 'edit';
+
             const response = await fetch(`${API_ENDPOINTS.ADMIN_GET_TELLER}/${tellerId}`, { credentials: 'include' });
 
             if (!response.ok) {
@@ -346,7 +353,7 @@ class TellerManager {
             if (!form) return;
 
             const tellerId = document.getElementById('teller_id').value;
-            const isEdit = !!tellerId;
+            const isEdit = this.currentOperation === 'edit';
 
             const formData = {
                 first_name: document.getElementById('first_name').value.trim(),
@@ -370,6 +377,9 @@ class TellerManager {
             if (isEdit) {
                 formData.teller_id = tellerId;
             }
+
+            // Show loading state on save button
+            this.setSaveButtonLoading(true);
 
             // Log the request data for debugging
             console.log('Request data:', {
@@ -420,6 +430,83 @@ class TellerManager {
         } catch (error) {
             console.error('Error saving teller:', error);
             this.showToast(error.message, 'error');
+        } finally {
+            // Hide loading state on save button
+            this.setSaveButtonLoading(false);
+        }
+    }
+
+    setSaveButtonLoading(isLoading) {
+        const saveBtn = document.getElementById('save_btn');
+        if (!saveBtn) return;
+
+        const isEdit = this.currentOperation === 'edit';
+        if (isLoading) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = isEdit ? '<i class="fas fa-spinner fa-spin"></i> Saving...' : '<i class="fas fa-spinner fa-spin"></i> Creating...';
+        } else {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = isEdit ? 'Update Teller' : 'Create Teller';
+        }
+    }
+
+    setResetButtonLoading(isLoading) {
+        const resetBtn = document.getElementById('confirm_reset_btn');
+        if (!resetBtn) return;
+
+        if (isLoading) {
+            resetBtn.disabled = true;
+            resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        } else {
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = 'Reset Password';
+        }
+    }
+
+    setResetModalLoading(isLoading, completeMessage) {
+        const overlay = document.getElementById('reset_loading_overlay');
+        const loadingText = document.getElementById('reset_loading_text');
+        const modal = document.getElementById('reset_password_modal');
+        if (!overlay || !loadingText || !modal) return;
+
+        if (isLoading) {
+            loadingText.textContent = 'Processing...';
+            overlay.classList.add('show');
+        } else {
+            loadingText.textContent = completeMessage || 'Complete';
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                this.closeModal(modal);
+            }, 1000);
+        }
+    }
+
+    setStatusModalLoading(isLoading, completeMessage) {
+        const overlay = document.getElementById('status_loading_overlay');
+        const loadingText = document.getElementById('status_loading_text');
+        const modal = document.getElementById('status_change_modal');
+        if (!overlay || !loadingText || !modal) return;
+
+        // Get modal content sections
+        const header = modal.querySelector('.modal-header');
+        const body = modal.querySelector('.modal-body');
+        const footer = modal.querySelector('.modal-footer');
+
+        if (isLoading) {
+            loadingText.textContent = 'Processing...';
+            overlay.classList.add('show');
+            if (header) header.classList.add('modal-content-hidden');
+            if (body) body.classList.add('modal-content-hidden');
+            if (footer) footer.classList.add('modal-content-hidden');
+        } else {
+            loadingText.textContent = completeMessage || 'Complete';
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                this.closeModal(modal);
+                if (header) header.classList.remove('modal-content-hidden');
+                if (body) body.classList.remove('modal-content-hidden');
+                if (footer) footer.classList.remove('modal-content-hidden');
+            }, 1000);
         }
     }
 
@@ -439,8 +526,9 @@ class TellerManager {
 
             const handleConfirm = async () => {
                 try {
-                    // Close the modal first
-                    this.closeModal(modal);
+                    // Show loading state on reset button
+                    this.setResetButtonLoading(true);
+                    this.setResetModalLoading(true); // Show loading overlay with "Processing..."
 
                     const response = await fetch(`${API_ENDPOINTS.ADMIN_SEND_TELLER_RESET_EMAIL}/${tellerId}/reset-password`, {
                         method: 'POST',
@@ -457,6 +545,8 @@ class TellerManager {
                     const data = await response.json();
                     
                     if (data.success) {
+                        // Show complete message and close modal
+                        this.setResetModalLoading(false, 'Reset Password Complete');
                         this.showToast('A password reset link has been sent to the teller\'s email address', 'success');
                     } else {
                         throw new Error(data.message || 'Failed to send reset email');
@@ -464,6 +554,11 @@ class TellerManager {
                 } catch (error) {
                     console.error('Error resetting password:', error);
                     this.showToast(error.message, 'error');
+                    // Show generic complete message on error
+                    this.setResetModalLoading(false, 'Complete');
+                } finally {
+                    // Hide loading state on reset button
+                    this.setResetButtonLoading(false);
                 }
             };
 
@@ -502,8 +597,8 @@ class TellerManager {
         // Set up the confirm button click handler
         const handleConfirm = async () => {
             try {
-                // Close the modal first
-                this.closeModal(modal);
+                // Show loading overlay
+                this.setStatusModalLoading(true);
 
                 const response = await fetch(`${API_ENDPOINTS.ADMIN_TOGGLE_TELLER_STATUS}/${tellerId}/toggle-status`, {
                     method: 'POST',
@@ -525,16 +620,20 @@ class TellerManager {
                         'success'
                     );
                     await this.loadTellers();
+                    // Show appropriate complete message
+                    this.setStatusModalLoading(false, data.status === 'active' ? 'Activation Complete' : 'Deactivation Complete');
                 } else {
                     throw new Error(data.message || 'Failed to update teller status');
                 }
             } catch (error) {
                 console.error('Error toggling teller status:', error);
                 this.showToast(error.message, 'error');
+                // Show generic complete message on error
+                this.setStatusModalLoading(false, 'Complete');
+            } finally {
+                // Remove the event listener after handling
+                confirmBtn.removeEventListener('click', handleConfirm);
             }
-
-            // Remove the event listener after handling
-            confirmBtn.removeEventListener('click', handleConfirm);
         };
 
         // Add the event listener
