@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDashboardStats();
     setupSidebarToggle();
     setupUnifiedSearch();
+    setupUnifiedSearch();
 });
 
 function setupEventListeners() {
