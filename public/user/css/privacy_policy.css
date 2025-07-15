@@ -42,7 +42,6 @@ header {
 .nav-links a.active,
 .nav-links a:hover {
     color: #b6ff4a !important;
-    /* Use the same lime green as contact page */
     opacity: 1;
 }
 

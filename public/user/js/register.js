@@ -6,16 +6,19 @@ import * as fileUpload from './register-file-upload.js';
 import * as formDataUtils from './register-form-data.js';
 import * as notifications from './register-notifications.js';
 import { submitRegistrationData } from './register-submit.js';
-import { initFileUpload, setOnFileChangeCallback } from './register-file-upload.js';
+import {
+    initFileUpload,
+    setOnFileChangeCallback,
+} from './register-file-upload.js';
 import { hideLoading, hideOtpModal } from './register-otp-modal.js';
 // import { API_ENDPOINTS } from './config.js';
 const API_ENDPOINTS = window.API_ENDPOINTS;
 
 const FORM_VALIDATION = {
-	FIRST_NAME_MIN_LENGTH: 2,
-	LAST_NAME_MIN_LENGTH: 2,
-	MIN_AGE: 18,
-	MAX_AGE: 100,
+    FIRST_NAME_MIN_LENGTH: 2,
+    LAST_NAME_MIN_LENGTH: 2,
+    MIN_AGE: 18,
+    MAX_AGE: 100,
 };
 
 const API_ENDPOINT = API_ENDPOINTS.SUBMIT_REGISTRATION;
@@ -24,7 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Step navigation
     const steps = Array.from(document.querySelectorAll('.form-step'));
     let currentStep = 1;
-    function setCurrentStep(step) { currentStep = step; }
+    function setCurrentStep(step) {
+        currentStep = step;
+    }
     function updateStepIndicators() {
         steps.forEach((step, idx) => {
             step.classList.toggle('active', idx + 1 === currentStep);
@@ -35,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dots = Array.from(document.querySelectorAll('.pagination-dot'));
     const formPages = Array.from(document.querySelectorAll('.form-page'));
     let currentContactPage = 1;
-    function setCurrentContactPage(page) { currentContactPage = page; }
+    function setCurrentContactPage(page) {
+        currentContactPage = page;
+    }
     function updatePagination() {
         navigation.updatePaginationDots(dots, currentContactPage);
     }
@@ -67,23 +74,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Back/next buttons for contact pages
     const toPage2Btn = document.getElementById('to_contact_page_2');
-    if (toPage2Btn) toPage2Btn.addEventListener('click', () => {
-        if (validateContactPage1()) goToContactPage(2);
-    });
+    if (toPage2Btn)
+        toPage2Btn.addEventListener('click', () => {
+            if (validateContactPage1()) goToContactPage(2);
+        });
     const toPage3Btn = document.getElementById('to_contact_page_3');
-    if (toPage3Btn) toPage3Btn.addEventListener('click', () => {
-        if (validateContactPage2()) goToContactPage(3);
-    });
+    if (toPage3Btn)
+        toPage3Btn.addEventListener('click', () => {
+            if (validateContactPage2()) goToContactPage(3);
+        });
     const backToPage1Btn = document.getElementById('back_to_contact_page_1');
-    if (backToPage1Btn) backToPage1Btn.addEventListener('click', () => goToContactPage(1));
+    if (backToPage1Btn)
+        backToPage1Btn.addEventListener('click', () => goToContactPage(1));
     const backToPage2Btn = document.getElementById('back_to_contact_page_2');
-    if (backToPage2Btn) backToPage2Btn.addEventListener('click', () => goToContactPage(2));
+    if (backToPage2Btn)
+        backToPage2Btn.addEventListener('click', () => goToContactPage(2));
 
     // Back button from Step 2 to Step 1
-    const backToIdentificationBtn = document.getElementById('back_to_identification');
+    const backToIdentificationBtn = document.getElementById(
+        'back_to_identification'
+    );
     if (backToIdentificationBtn) {
         backToIdentificationBtn.addEventListener('click', () => {
-            navigation.goToMainStep(1, steps, setCurrentStep, updateStepIndicators);
+            navigation.goToMainStep(
+                1,
+                steps,
+                setCurrentStep,
+                updateStepIndicators
+            );
         });
     }
 
@@ -92,25 +110,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const firstName = document.getElementById('first_name');
         const lastName = document.getElementById('last_name');
         const dob = document.getElementById('date_of_birth');
-        
+
         if (!firstName || !lastName || !dob) return false;
-        
-        const firstNameValid = validation.validateName(firstName, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH);
-        const lastNameValid = validation.validateName(lastName, FORM_VALIDATION.LAST_NAME_MIN_LENGTH);
-        const dobValid = validation.validateAge(dob, FORM_VALIDATION.MIN_AGE, FORM_VALIDATION.MAX_AGE);
-        
+
+        const firstNameValid = validation.validateName(
+            firstName,
+            FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
+        );
+        const lastNameValid = validation.validateName(
+            lastName,
+            FORM_VALIDATION.LAST_NAME_MIN_LENGTH
+        );
+        const dobValid = validation.validateAge(
+            dob,
+            FORM_VALIDATION.MIN_AGE,
+            FORM_VALIDATION.MAX_AGE
+        );
+
         if (!firstNameValid) {
-            notifications.showNotification('Please enter a valid first name', 'error');
+            notifications.showNotification(
+                'Please enter a valid first name',
+                'error'
+            );
             return false;
         }
         if (!lastNameValid) {
-            notifications.showNotification('Please enter a valid last name', 'error');
+            notifications.showNotification(
+                'Please enter a valid last name',
+                'error'
+            );
             return false;
         }
         if (!dobValid) {
-            notifications.showNotification('You must be between 18 and 100 years old to register', 'error');
-			return false;
-		}
+            notifications.showNotification(
+                'You must be between 18 and 100 years old to register',
+                'error'
+            );
+            return false;
+        }
 
         return true;
     }
@@ -119,26 +156,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email');
         const phone = document.getElementById('phone_number');
         const nationality = document.getElementById('nationality');
-        
+
         if (!email || !phone || !nationality) return false;
-        
+
         const emailValid = validation.validateEmail(email);
         const phoneValid = validation.validatePhoneNumber(phone);
         const nationalityValid = nationality.value !== '';
-        
+
         if (!emailValid) {
-            notifications.showNotification('Please enter a valid email address', 'error');
+            notifications.showNotification(
+                'Please enter a valid email address',
+                'error'
+            );
             return false;
         }
         if (!phoneValid) {
-            notifications.showNotification('Please enter a valid phone number', 'error');
+            notifications.showNotification(
+                'Please enter a valid phone number',
+                'error'
+            );
             return false;
         }
         if (!nationalityValid) {
-            notifications.showNotification('Please select your nationality', 'error');
+            notifications.showNotification(
+                'Please select your nationality',
+                'error'
+            );
             return false;
         }
-        
+
         return true;
     }
 
@@ -150,7 +196,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const firstNameInput = document.getElementById('first_name');
     if (firstNameInput) {
         firstNameInput.addEventListener('blur', () => {
-            if (!validation.validateName(firstNameInput, FORM_VALIDATION.FIRST_NAME_MIN_LENGTH)) {
+            if (
+                !validation.validateName(
+                    firstNameInput,
+                    FORM_VALIDATION.FIRST_NAME_MIN_LENGTH
+                )
+            ) {
                 notifications.showNotification('Invalid first name', 'error');
             }
         });
@@ -158,7 +209,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const lastNameInput = document.getElementById('last_name');
     if (lastNameInput) {
         lastNameInput.addEventListener('blur', () => {
-            if (!validation.validateName(lastNameInput, FORM_VALIDATION.LAST_NAME_MIN_LENGTH)) {
+            if (
+                !validation.validateName(
+                    lastNameInput,
+                    FORM_VALIDATION.LAST_NAME_MIN_LENGTH
+                )
+            ) {
                 notifications.showNotification('Invalid last name', 'error');
             }
         });
@@ -167,10 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emailInput) {
         emailInput.addEventListener('blur', () => {
             if (!validation.validateEmail(emailInput)) {
-                notifications.showNotification('Invalid email address', 'error');
-				}
-			});
-		}
+                notifications.showNotification(
+                    'Invalid email address',
+                    'error'
+                );
+            }
+        });
+    }
     const phoneInput = document.getElementById('phone_number');
     if (phoneInput) {
         phoneInput.addEventListener('blur', () => {
@@ -182,8 +241,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const dobInput = document.getElementById('date_of_birth');
     if (dobInput) {
         dobInput.addEventListener('blur', () => {
-            if (!validation.validateAge(dobInput, FORM_VALIDATION.MIN_AGE, FORM_VALIDATION.MAX_AGE)) {
-                notifications.showNotification('You must be between 18 and 100 years old to register', 'error');
+            if (
+                !validation.validateAge(
+                    dobInput,
+                    FORM_VALIDATION.MIN_AGE,
+                    FORM_VALIDATION.MAX_AGE
+                )
+            ) {
+                notifications.showNotification(
+                    'You must be between 18 and 100 years old to register',
+                    'error'
+                );
             }
         });
     }
@@ -192,9 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
         zipInput.addEventListener('blur', () => {
             if (!validation.validateZipCode(zipInput)) {
                 notifications.showNotification('Invalid zip code', 'error');
-				}
-			});
-	}
+            }
+        });
+    }
 
     // OTP modal logic
     const otpBtn = document.getElementById('resend_otp');
@@ -217,31 +285,48 @@ document.addEventListener('DOMContentLoaded', () => {
         // Only format, do not show notification here
         if (/^9\d{9}$/.test(phone)) {
             phone = '+63' + phone;
-			} else {
+        } else {
             phone = '';
         }
-        
+
         const formData = {
-            first_name: firstNameInput?.value || document.getElementById('first_name')?.value || '',
-            last_name: lastNameInput?.value || document.getElementById('last_name')?.value || '',
-            email: emailInput?.value || document.getElementById('email')?.value || '',
+            first_name:
+                firstNameInput?.value ||
+                document.getElementById('first_name')?.value ||
+                '',
+            last_name:
+                lastNameInput?.value ||
+                document.getElementById('last_name')?.value ||
+                '',
+            email:
+                emailInput?.value ||
+                document.getElementById('email')?.value ||
+                '',
             phone_number: phone,
-            date_of_birth: dobInput?.value || document.getElementById('date_of_birth')?.value || '',
-            zip_code: zipInput?.value || document.getElementById('zip_code')?.value || '',
+            date_of_birth:
+                dobInput?.value ||
+                document.getElementById('date_of_birth')?.value ||
+                '',
+            zip_code:
+                zipInput?.value ||
+                document.getElementById('zip_code')?.value ||
+                '',
             nationality: document.getElementById('nationality')?.value || '',
             street: document.getElementById('street')?.value || '',
             city: document.getElementById('city')?.value || '',
             country: document.getElementById('country')?.value || '',
-            id_type: document.getElementById('id_type')?.value || ''
+            id_type: document.getElementById('id_type')?.value || '',
         };
-        
+
         return formData;
     }
 
     // Step 1: Identification - Next button enable/disable logic
     const idTypeInput = document.getElementById('id_type');
     const idImageInput = document.getElementById('id_image');
-    const nextBtnStep1 = document.querySelector('#step_one_identification .btn-continue');
+    const nextBtnStep1 = document.querySelector(
+        '#step_one_identification .btn-continue'
+    );
     function updateStep1NextBtn() {
         const idTypeValid = idTypeInput && idTypeInput.value !== '';
         const idImageValid =
@@ -268,71 +353,79 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtnStep1.addEventListener('click', (e) => {
             if (!nextBtnStep1.disabled) {
                 formDataUtils.saveFormData(collectFormData());
-                navigation.goToMainStep(2, steps, setCurrentStep, updateStepIndicators);
-				}
-			});
-		}
+                navigation.goToMainStep(
+                    2,
+                    steps,
+                    setCurrentStep,
+                    updateStepIndicators
+                );
+            }
+        });
+    }
 
     // Registration submission
     const contactForm = document.getElementById('contact_info_form');
     let pendingFormData = null;
     if (contactForm) {
-		contactForm.addEventListener("submit", async (e) => {
-			e.preventDefault();
-			const data = collectFormData();
-			if (!data.phone_number) return; // Don't submit if phone is invalid
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = collectFormData();
+            if (!data.phone_number) return;
+            const formData = new FormData();
 
-			// Build FormData from scratch to ensure all fields are included
-			const formData = new FormData();
+            // Append all required fields using the collected data
+            formData.append('first_name', data.first_name);
+            formData.append('last_name', data.last_name);
+            formData.append('phone_number', data.phone_number);
+            formData.append('date_of_birth', data.date_of_birth);
+            formData.append('email', data.email);
+            formData.append('zip_code', data.zip_code);
+            formData.append('nationality', data.nationality);
+            formData.append('street', data.street);
+            formData.append('city', data.city);
+            formData.append('country', data.country);
+            formData.append('id_type', data.id_type);
 
-			// Append all required fields using the collected data
-			formData.append("first_name", data.first_name);
-			formData.append("last_name", data.last_name);
-			formData.append("phone_number", data.phone_number);
-			formData.append("date_of_birth", data.date_of_birth);
-			formData.append("email", data.email);
-			formData.append("zip_code", data.zip_code);
-			formData.append("nationality", data.nationality);
-			formData.append("street", data.street);
-			formData.append("city", data.city);
-			formData.append("country", data.country);
-			formData.append("id_type", data.id_type);
+            // Append the ID image file from Step 1
+            const idImageInput = document.getElementById('id_image');
+            if (
+                idImageInput &&
+                idImageInput.files &&
+                idImageInput.files.length > 0
+            ) {
+                const file = idImageInput.files[0];
+                const maxSize = 500 * 1024; // 500 KB
+                if (file.size > maxSize) {
+                    notifications.showNotification(
+                        'ID image file size must not exceed 500 KB.',
+                        'error'
+                    );
+                    return; // Block submission
+                }
+                formData.append('id_image', file);
+            }
 
-			// Append the ID image file from Step 1
-			const idImageInput = document.getElementById("id_image");
-			if (
-				idImageInput &&
-				idImageInput.files &&
-				idImageInput.files.length > 0
-			) {
-				const file = idImageInput.files[0];
-				const maxSize = 500 * 1024; // 500 KB
-				if (file.size > maxSize) {
-					notifications.showNotification('ID image file size must not exceed 500 KB.', 'error');
-					return; // Block submission
-				}
-				formData.append("id_image", file);
-			}
-
-			// Save formData for later submission after OTP
-			pendingFormData = formData;
-			otpModal.showOtpModal(
-				data.phone_number,
-				onOtpVerifiedSubmitRegistration
-			);
-		});
-	}
+            // Save formData for later submission after OTP
+            pendingFormData = formData;
+            otpModal.showOtpModal(
+                data.phone_number,
+                onOtpVerifiedSubmitRegistration
+            );
+        });
+    }
 
     // Callback to submit registration after OTP is verified
     async function onOtpVerifiedSubmitRegistration() {
         if (pendingFormData) {
-            const success = await submitRegistrationData(pendingFormData, API_ENDPOINT, showSuccessStep);
+            const success = await submitRegistrationData(
+                pendingFormData,
+                API_ENDPOINT,
+                showSuccessStep
+            );
             if (success) {
-                // Hide loading animation and close OTP modal after successful registration
                 hideLoading();
                 hideOtpModal();
             } else {
-                // If registration failed, hide loading but keep modal open for retry
                 hideLoading();
             }
             pendingFormData = null;
@@ -342,13 +435,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show the success step/panel and display registration ID
     function showSuccessStep(registrationId) {
         // Hide all steps
-        steps.forEach(step => step.classList.remove('active'));
+        steps.forEach((step) => step.classList.remove('active'));
         // Show the success step (step_three_processing)
         const successStep = document.getElementById('step_three_processing');
         if (successStep) {
             successStep.classList.add('active');
             // Optionally update the registration ID in the panel
-            const regIdElem = successStep.querySelector('.registration-id-value');
+            const regIdElem = successStep.querySelector(
+                '.registration-id-value'
+            );
             if (regIdElem) {
                 regIdElem.textContent = '#' + registrationId;
             }
@@ -360,30 +455,201 @@ document.addEventListener('DOMContentLoaded', () => {
     if (countrySelect) {
         // Static country list (ISO 3166 common names)
         const staticCountries = [
-            'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
-            'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
-            'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czechia',
-            'Democratic Republic of the Congo','Denmark','Djibouti','Dominica','Dominican Republic',
-            'Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
-            'Fiji','Finland','France',
-            'Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
-            'Haiti','Honduras','Hungary',
-            'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy',
-            'Jamaica','Japan','Jordan',
-            'Kazakhstan','Kenya','Kiribati','Kuwait','Kyrgyzstan',
-            'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
-            'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
-            'Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway',
+            'Afghanistan',
+            'Albania',
+            'Algeria',
+            'Andorra',
+            'Angola',
+            'Antigua and Barbuda',
+            'Argentina',
+            'Armenia',
+            'Australia',
+            'Austria',
+            'Azerbaijan',
+            'Bahamas',
+            'Bahrain',
+            'Bangladesh',
+            'Barbados',
+            'Belarus',
+            'Belgium',
+            'Belize',
+            'Benin',
+            'Bhutan',
+            'Bolivia',
+            'Bosnia and Herzegovina',
+            'Botswana',
+            'Brazil',
+            'Brunei',
+            'Bulgaria',
+            'Burkina Faso',
+            'Burundi',
+            'Cabo Verde',
+            'Cambodia',
+            'Cameroon',
+            'Canada',
+            'Central African Republic',
+            'Chad',
+            'Chile',
+            'China',
+            'Colombia',
+            'Comoros',
+            'Congo',
+            'Costa Rica',
+            'Croatia',
+            'Cuba',
+            'Cyprus',
+            'Czechia',
+            'Democratic Republic of the Congo',
+            'Denmark',
+            'Djibouti',
+            'Dominica',
+            'Dominican Republic',
+            'Ecuador',
+            'Egypt',
+            'El Salvador',
+            'Equatorial Guinea',
+            'Eritrea',
+            'Estonia',
+            'Eswatini',
+            'Ethiopia',
+            'Fiji',
+            'Finland',
+            'France',
+            'Gabon',
+            'Gambia',
+            'Georgia',
+            'Germany',
+            'Ghana',
+            'Greece',
+            'Grenada',
+            'Guatemala',
+            'Guinea',
+            'Guinea-Bissau',
+            'Guyana',
+            'Haiti',
+            'Honduras',
+            'Hungary',
+            'Iceland',
+            'India',
+            'Indonesia',
+            'Iran',
+            'Iraq',
+            'Ireland',
+            'Israel',
+            'Italy',
+            'Jamaica',
+            'Japan',
+            'Jordan',
+            'Kazakhstan',
+            'Kenya',
+            'Kiribati',
+            'Kuwait',
+            'Kyrgyzstan',
+            'Laos',
+            'Latvia',
+            'Lebanon',
+            'Lesotho',
+            'Liberia',
+            'Libya',
+            'Liechtenstein',
+            'Lithuania',
+            'Luxembourg',
+            'Madagascar',
+            'Malawi',
+            'Malaysia',
+            'Maldives',
+            'Mali',
+            'Malta',
+            'Marshall Islands',
+            'Mauritania',
+            'Mauritius',
+            'Mexico',
+            'Micronesia',
+            'Moldova',
+            'Monaco',
+            'Mongolia',
+            'Montenegro',
+            'Morocco',
+            'Mozambique',
+            'Myanmar',
+            'Namibia',
+            'Nauru',
+            'Nepal',
+            'Netherlands',
+            'New Zealand',
+            'Nicaragua',
+            'Niger',
+            'Nigeria',
+            'North Korea',
+            'North Macedonia',
+            'Norway',
             'Oman',
-            'Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal',
+            'Pakistan',
+            'Palau',
+            'Palestine',
+            'Panama',
+            'Papua New Guinea',
+            'Paraguay',
+            'Peru',
+            'Philippines',
+            'Poland',
+            'Portugal',
             'Qatar',
-            'Romania','Russia','Rwanda',
-            'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
-            'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
-            'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
-            'Vanuatu','Vatican City','Venezuela','Vietnam',
+            'Romania',
+            'Russia',
+            'Rwanda',
+            'Saint Kitts and Nevis',
+            'Saint Lucia',
+            'Saint Vincent and the Grenadines',
+            'Samoa',
+            'San Marino',
+            'Sao Tome and Principe',
+            'Saudi Arabia',
+            'Senegal',
+            'Serbia',
+            'Seychelles',
+            'Sierra Leone',
+            'Singapore',
+            'Slovakia',
+            'Slovenia',
+            'Solomon Islands',
+            'Somalia',
+            'South Africa',
+            'South Korea',
+            'South Sudan',
+            'Spain',
+            'Sri Lanka',
+            'Sudan',
+            'Suriname',
+            'Sweden',
+            'Switzerland',
+            'Syria',
+            'Taiwan',
+            'Tajikistan',
+            'Tanzania',
+            'Thailand',
+            'Timor-Leste',
+            'Togo',
+            'Tonga',
+            'Trinidad and Tobago',
+            'Tunisia',
+            'Turkey',
+            'Turkmenistan',
+            'Tuvalu',
+            'Uganda',
+            'Ukraine',
+            'United Arab Emirates',
+            'United Kingdom',
+            'United States',
+            'Uruguay',
+            'Uzbekistan',
+            'Vanuatu',
+            'Vatican City',
+            'Venezuela',
+            'Vietnam',
             'Yemen',
-            'Zambia','Zimbabwe'
+            'Zambia',
+            'Zimbabwe',
         ];
         // Create a wrapper and search input
         const wrapper = document.createElement('div');
@@ -418,28 +684,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Populate select with static list
         wrapper._allCountries = staticCountries;
-        countrySelect.innerHTML = '<option value="">Select Country</option>' +
-            staticCountries.map(c => `<option value="${c}">${c}</option>`).join('');
+        countrySelect.innerHTML =
+            '<option value="">Select Country</option>' +
+            staticCountries
+                .map((c) => `<option value="${c}">${c}</option>`)
+                .join('');
 
         // Show dropdown with filtered results
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const filter = this.value.trim().toLowerCase();
             const allCountries = wrapper._allCountries || [];
             let filtered = allCountries;
             if (filter) {
-                filtered = allCountries.filter(c =>
+                filtered = allCountries.filter((c) =>
                     c.toLowerCase().includes(filter)
                 );
             }
             dropdown.innerHTML = '';
             if (filtered.length > 0 && filter) {
-                filtered.forEach(c => {
+                filtered.forEach((c) => {
                     const item = document.createElement('div');
                     item.textContent = c;
                     item.style.padding = '8px 12px';
                     item.style.cursor = 'pointer';
-                    item.onmouseover = () => item.style.background = '#f0f0f0';
-                    item.onmouseout = () => item.style.background = '#fff';
+                    item.onmouseover = () =>
+                        (item.style.background = '#f0f0f0');
+                    item.onmouseout = () => (item.style.background = '#fff');
                     item.onclick = () => {
                         searchInput.value = c;
                         countrySelect.value = c;
@@ -454,12 +724,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Hide dropdown on blur
-        searchInput.addEventListener('blur', function() {
-            setTimeout(() => dropdown.style.display = 'none', 200);
+        searchInput.addEventListener('blur', function () {
+            setTimeout(() => (dropdown.style.display = 'none'), 200);
         });
 
         // When user selects from dropdown, update search input
-        countrySelect.addEventListener('change', function() {
+        countrySelect.addEventListener('change', function () {
             if (countrySelect.value) {
                 searchInput.value = countrySelect.value;
             }

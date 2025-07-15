@@ -148,8 +148,13 @@ const FormValidator = {
         return true;
     },
     validateProfileData: (data) => {
-        const required = ['first_name', 'last_name', 'phone_number'];
-        const missing = required.filter(field => !data[field]?.trim());
+        const required = ['phone_number'];
+        const userData = StateManager?.state?.userData || {};
+        const missing = required.filter(field => {
+            const formValue = data[field]?.trim();
+            const profileValue = userData[field]?.trim();
+            return !formValue && !profileValue;
+        });
         
         // Reset all form fields to default state
         document.querySelectorAll('.form-input').forEach(input => {
@@ -376,8 +381,9 @@ const ProfileManager = {
             editStreetInput,
             editCityInput,
             editZipCodeInput,
-            editCountryInput
-            // Removed: editIdTypeInput, editIdImageInput
+            editCountryInput,
+            editIdTypeInput,
+            editIdImageInput
         } = DOM;
 
         if (!editFirstNameInput || !editLastNameInput || !editUsernameInput || 
@@ -391,17 +397,32 @@ const ProfileManager = {
         editLastNameInput.value = userData.last_name || '';
         editDateOfBirthInput.value = userData.date_of_birth || '';
         editNationalityInput.value = userData.nationality || '';
-        // Removed: editIdTypeInput.value = userData.id_type || '';
-        // Removed: editIdImageInput.value = userData.id_image || '';
+        if (editIdTypeInput) editIdTypeInput.value = userData.id_type || 'passport';
+        if (userData.id_image && document.getElementById('current_id_image')) {
+            const img = document.getElementById('current_id_image');
+            img.src = `/src/api/user/uploads/registration/${userData.id_image}`;
+            img.style.display = 'block';
+        } else if (document.getElementById('current_id_image')) {
+            document.getElementById('current_id_image').style.display = 'none';
+        }
         editEmailInput.value = userData.email || '';
         editPhoneNumberInput.value = userData.phone_number || '';
         editStreetInput.value = userData.street || '';
         editCityInput.value = userData.city || '';
         editZipCodeInput.value = userData.zip_code || '';
         editCountryInput.value = userData.country || '';
-        
         if (editPasswordInput) editPasswordInput.value = '';
         if (editConfirmPasswordInput) editConfirmPasswordInput.value = '';
+        if (editIdImageInput) editIdImageInput.value = '';
+        if (DOM.editIdTypeInput && userData.id_type) {
+            // Set dropdown value
+            DOM.editIdTypeInput.value = userData.id_type;
+        }
+        // Set read-only text
+        const idTypeText = document.getElementById('current_id_type_text');
+        if (idTypeText) {
+            idTypeText.textContent = userData.id_type ? userData.id_type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Not set';
+        }
     },
 
     disableForm() {
@@ -453,8 +474,13 @@ const ProfileManager = {
             zip_code: DOM.editZipCodeInput?.value.trim() || '',
             country: DOM.editCountryInput?.value.trim() || '',
             password: DOM.editPasswordInput?.value.trim() || null,
-            confirm_password: DOM.editConfirmPasswordInput?.value.trim() || null
+            confirm_password: DOM.editConfirmPasswordInput?.value.trim() || null,
+            id_type: DOM.editIdTypeInput?.value || null
         };
+
+        if (DOM.editIdImageInput && DOM.editIdImageInput.files && DOM.editIdImageInput.files[0]) {
+            StateManager.state.idImageFile = DOM.editIdImageInput.files[0];
+        }
 
         if (!FormValidator.validateProfileData(updatedProfileData)) {
             return;
@@ -629,6 +655,22 @@ const ProfileManager = {
                 }
             };
         }
+        if (DOM.editIdImageInput) {
+            DOM.editIdImageInput.addEventListener('change', function() {
+                const file = this.files && this.files[0];
+                if (file) {
+                    if (file.size > 500 * 1024) { // 500KB
+                        NotificationManager.show('Image size must be 500KB or less.', CONFIG.NOTIFICATION.TYPES.ERROR);
+                        this.value = '';
+                        // Optionally, hide preview if shown
+                        if (document.getElementById('current_id_image')) {
+                            document.getElementById('current_id_image').style.display = 'none';
+                        }
+                        return;
+                    }
+                }
+            });
+        }
     }
 };
 
@@ -801,7 +843,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         prevBtn.style.display = step > 0 ? 'inline-flex' : 'none';
         nextBtn.style.display = step < steps.length - 1 ? 'inline-flex' : 'none';
-        saveBtn.style.display = step === steps.length - 1 ? 'inline-flex' : 'none';
+        // Show only the correct Save button for the current step
+        const saveBtnStep1 = document.getElementById('save_profile_button_step1');
+        const saveBtnStep2 = document.getElementById('save_profile_button_step2');
+        saveBtnStep1.style.display = step === 0 ? 'inline-flex' : 'none';
+        saveBtnStep2.style.display = step === 1 ? 'inline-flex' : 'none';
+        saveBtn.style.display = step === 2 ? 'inline-flex' : 'none';
     }
 
     nextBtn.addEventListener('click', () => {
@@ -829,6 +876,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Initial state
     showStep(currentStep);
+
+    // Attach save handler to all Save buttons
+    const saveBtnStep1 = document.getElementById('save_profile_button_step1');
+    const saveBtnStep2 = document.getElementById('save_profile_button_step2');
+    saveBtnStep1.addEventListener('click', function(e) { e.preventDefault(); ProfileManager.handleSave(); });
+    saveBtnStep2.addEventListener('click', function(e) { e.preventDefault(); ProfileManager.handleSave(); });
+    saveBtn.addEventListener('click', function(e) { e.preventDefault(); ProfileManager.handleSave(); });
 
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
@@ -861,12 +915,49 @@ document.addEventListener('DOMContentLoaded', () => {
             handleLogout();
         });
     }
+
+    // ID Info Edit/Cancel logic
+    const editIdBtn = document.getElementById('edit_id_btn');
+    const cancelEditIdBtn = document.getElementById('cancel_edit_id_btn');
+    const idTypeDisplayGroup = document.getElementById('id_type_display_group');
+    const idTypeEditGroup = document.getElementById('id_type_edit_group');
+    const idImageEditGroup = document.getElementById('id_image_edit_group');
+    if (editIdBtn && cancelEditIdBtn && idTypeDisplayGroup && idTypeEditGroup && idImageEditGroup) {
+        editIdBtn.addEventListener('click', () => {
+            idTypeDisplayGroup.style.display = 'none';
+            idTypeEditGroup.style.display = '';
+            idImageEditGroup.style.display = '';
+            editIdBtn.style.display = 'none';
+            cancelEditIdBtn.style.display = '';
+        });
+        cancelEditIdBtn.addEventListener('click', () => {
+            idTypeDisplayGroup.style.display = '';
+            idTypeEditGroup.style.display = 'none';
+            idImageEditGroup.style.display = 'none';
+            editIdBtn.style.display = '';
+            cancelEditIdBtn.style.display = 'none';
+            // Optionally reset dropdown and file input
+            if (DOM.editIdTypeInput && StateManager.state.userData.id_type) {
+                DOM.editIdTypeInput.value = StateManager.state.userData.id_type;
+            }
+            if (DOM.editIdImageInput) {
+                DOM.editIdImageInput.value = '';
+            }
+        });
+        // On form load, ensure edit mode is off
+        idTypeDisplayGroup.style.display = '';
+        idTypeEditGroup.style.display = 'none';
+        idImageEditGroup.style.display = 'none';
+        editIdBtn.style.display = '';
+        cancelEditIdBtn.style.display = 'none';
+    }
 }); 
 
-// --- Country Searchable Input Enhancement (No Dropdown, Just Search Input) ---
-(function setupCountrySearchInput() {
+// --- Country Searchable Input Enhancement (Custom Dropdown) ---
+(function setupCustomCountryDropdown() {
     const countryInput = document.getElementById('edit_country');
-    if (!countryInput) return;
+    const dropdown = document.getElementById('country-dropdown');
+    if (!countryInput || !dropdown) return;
     // Static country list (ISO 3166 common names)
     const staticCountries = [
         'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
@@ -894,24 +985,74 @@ document.addEventListener('DOMContentLoaded', () => {
         'Yemen',
         'Zambia','Zimbabwe'
     ];
-    // Remove any previous wrapper or search input
-    if (countryInput.parentNode.classList && countryInput.parentNode.classList.contains('country-search-wrapper')) {
-        countryInput.parentNode.replaceWith(countryInput);
+    let filtered = staticCountries;
+    let activeIndex = -1;
+    function renderDropdown(list) {
+        dropdown.innerHTML = '';
+        if (!list.length) {
+            dropdown.style.display = 'none';
+            dropdown.classList.remove('open');
+            return;
+        }
+        list.forEach((country, idx) => {
+            const option = document.createElement('div');
+            option.className = 'country-option' + (idx === activeIndex ? ' active' : '');
+            option.textContent = country;
+            option.tabIndex = -1;
+            option.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                countryInput.value = country;
+                hideDropdown();
+            });
+            dropdown.appendChild(option);
+        });
+        dropdown.style.display = 'block';
+        dropdown.classList.add('open');
     }
-    // Set input type and attributes
-    countryInput.setAttribute('list', 'country-list-datalist');
-    countryInput.setAttribute('autocomplete', 'on');
-    // Create datalist for browser autocomplete
-    let datalist = document.getElementById('country-list-datalist');
-    if (!datalist) {
-        datalist = document.createElement('datalist');
-        datalist.id = 'country-list-datalist';
-        document.body.appendChild(datalist);
+    function hideDropdown() {
+        dropdown.style.display = 'none';
+        dropdown.classList.remove('open');
+        activeIndex = -1;
     }
-    datalist.innerHTML = '';
-    staticCountries.forEach(country => {
-        const option = document.createElement('option');
-        option.value = country;
-        datalist.appendChild(option);
+    function filterCountries(val) {
+        if (!val) return staticCountries;
+        return staticCountries.filter(c => c.toLowerCase().includes(val.toLowerCase()));
+    }
+    countryInput.addEventListener('input', function() {
+        filtered = filterCountries(countryInput.value);
+        activeIndex = -1;
+        renderDropdown(filtered);
+    });
+    countryInput.addEventListener('focus', function() {
+        filtered = filterCountries(countryInput.value);
+        renderDropdown(filtered);
+    });
+    countryInput.addEventListener('blur', function() {
+        setTimeout(hideDropdown, 120); // Delay to allow click
+    });
+    countryInput.addEventListener('keydown', function(e) {
+        if (!dropdown.classList.contains('open')) return;
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % filtered.length;
+            renderDropdown(filtered);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + filtered.length) % filtered.length;
+            renderDropdown(filtered);
+        } else if (e.key === 'Enter') {
+            if (activeIndex >= 0 && filtered[activeIndex]) {
+                countryInput.value = filtered[activeIndex];
+                hideDropdown();
+                e.preventDefault();
+            }
+        } else if (e.key === 'Escape') {
+            hideDropdown();
+        }
+    });
+    document.addEventListener('mousedown', function(e) {
+        if (!dropdown.contains(e.target) && e.target !== countryInput) {
+            hideDropdown();
+        }
     });
 })(); 

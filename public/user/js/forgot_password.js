@@ -55,19 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
         notification.className = `notification notification-${type}`;
         notification.textContent = message;
         notificationContainer.appendChild(notification);
-
-        // Add 'show' class after a short delay to trigger the transition
         setTimeout(() => {
             notification.classList.add('show');
         }, 10);
-
-        // Remove the notification after 5 seconds
         setTimeout(() => {
             notification.classList.remove('show');
-            // Wait for the transition to finish before removing the element
             notification.addEventListener('transitionend', () =>
                 notification.remove()
             );
         }, 5000);
     }
+});
+
+// Set up back to login link
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('back-to-login-link').href = ROUTES.LOGIN;
 });

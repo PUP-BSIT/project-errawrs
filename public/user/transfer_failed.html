@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    
         <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transfer Failed - StackOvercash</title>
-    <link rel="icon" type="image/png" href="assets/images/soc-logo.png" />
-    <link rel="stylesheet" href="user/css/user_dashboard.css" />
-    <link rel="stylesheet" href="user/css/transfer.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
-<body>
-    <div class="result-container">
-        <div class="result-icon">
-            <i class="fas fa-times-circle"></i>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Transfer Failed - StackOvercash</title>
+        <link rel="icon" type="image/png" href="assets/images/soc-logo.png" />
+        <link rel="stylesheet" href="user/css/user_dashboard.css" />
+        <link rel="stylesheet" href="user/css/transfer.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="result-container">
+            <div class="result-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="result-title">Transfer Failed</div>
+            <div class="result-message" id="fail-message">
+                An error occurred while processing your transfer.
+            </div>
+            <a href="user/transfer" class="back-btn">Back to Transfer</a>
         </div>
-        <div class="result-title">Transfer Failed</div>
-        <div class="result-message" id="fail-message">An error occurred while processing your transfer.</div>
-        <a href="user/transfer" class="back-btn">Back to Transfer</a>
-    </div>
-    <div class="notification-container"></div>
+        <div class="notification-container"></div>
 
-    <script src="user/js/config.js"></script>
-    <script src="user/js/transfer_failed.js"></script>
-    <script>
-        // Show error message from URL if present
-        const params = new URLSearchParams(window.location.search);
-        const errorMsg = params.get('error_message');
-        if (errorMsg) {
-            document.getElementById('fail-message').textContent = decodeURIComponent(errorMsg.replace(/\+/g, ' '));
-        }
-    </script>
-</body>
-</html> 
+        <script src="user/js/config.js"></script>
+        <script src="user/js/transfer_failed.js"></script>
+    </body>
+</html>

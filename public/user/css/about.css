@@ -91,7 +91,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     margin-top: 2.5rem;
-    margin-bottom: 0; /* remove bottom margin */
+    margin-bottom: 0;
 }
 
 .large-hero-image {
