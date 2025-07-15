@@ -107,33 +107,25 @@ function setupSearch() {
 
     if (!searchInput) return;
 
-    // Handle input changes with debouncing
+    // Handle input changes instantly (no debounce, no spinner)
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.trim();
-        
-        // Clear previous timeout
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
 
         // Hide results if search term is empty
         if (searchTerm.length === 0) {
             searchResults.classList.add('hidden');
             searchResults.classList.remove('block');
+            searchResults.innerHTML = '';
             return;
         }
 
-        // Show loading state
+        // Show results container (no spinner)
         searchResults.classList.remove('hidden');
         searchResults.classList.add('block');
-        searchResults.innerHTML = `
-            <div class="loading-results">
-                <i class="fas fa-spinner fa-spin"></i>
-                Searching...
-            </div>`;
+        // Do not set any loading HTML
 
-        // Debounce search (wait 300ms after user stops typing)
-        searchTimeout = setTimeout(() => performSearch(searchTerm), 300);
+        // Call performSearch instantly
+        performSearch(searchTerm);
     });
 
     // Show results again on focus if input is not empty
