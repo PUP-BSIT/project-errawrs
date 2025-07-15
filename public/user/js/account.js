@@ -519,6 +519,7 @@ async function handleProceedAddAccount() {
 
 // Handle verify OTP
 async function handleVerifyOtp() {
+    console.log('DEBUG: handleVerifyOtp called');
     const otp = DOM.inputs.otp.value;
     const accountType = sessionStorage.getItem(
         STORAGE_KEY.PENDING_ACCOUNT_TYPE

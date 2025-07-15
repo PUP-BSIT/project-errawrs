@@ -96,6 +96,14 @@ try {
     );
     $profileQuery->fetch();
     $profileQuery->close();
+
+    // Debug log for phone number and user ID
+    error_log('Add Account Debug: user_id=' . $userId . ', phone_number=' . $phoneNumber);
+
+    // Add a check for missing phone number
+    if (empty($phoneNumber)) {
+        throw new Exception('Your profile is missing a phone number. Please update your profile before adding an account.');
+    }
     
     // CREATE ACCOUNT REQUEST
     $requestQuery = $db->prepare('
@@ -134,14 +142,14 @@ try {
         $mail->Port = (int)$_ENV['GMAIL_PORT'];
 
         $emailTemplate = file_get_contents(__DIR__ . '/email-templates/additional-account-email.html');
-        $emailCSS = file_get_contents(__DIR__ . '/email-templates/additional-account-email.css');
+        $emailCSS = file_get_contents(__DIR__ . '/email-templates/email-template.css');
         
         $emailTemplate = str_replace('{{FIRST_NAME}}', $firstName, $emailTemplate);
         $emailTemplate = str_replace('{{LAST_NAME}}', $lastName, $emailTemplate);
         $emailTemplate = str_replace('{{ACCOUNT_TYPE}}', ucfirst($requestedAccountType), $emailTemplate);
         
         $emailTemplate = str_replace(
-            '<link rel="stylesheet" href="additional-account-email.css">',
+            '<link rel="stylesheet" href="email-template.css">',
             '<style>' . $emailCSS . '</style>',
             $emailTemplate
         );

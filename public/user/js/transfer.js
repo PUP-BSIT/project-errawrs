@@ -1132,14 +1132,14 @@ async function handleLogout() {
         }
 
         // Redirect to login page after successful logout
-        window.location.href = './index.html';
+        window.location.href = '/login';
     } catch (error) {
         console.error('Error during logout:', error);
         // Show a notification that logout might not have been clean
         showNotification(TEXT.LOGOUT_ERROR, CLASS.WARNING);
         // Redirect anyway after a short delay
         setTimeout(() => {
-            window.location.href = './index.html';
+            window.location.href = '/login';
         }, 1500);
     }
 }
