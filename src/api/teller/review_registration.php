@@ -362,9 +362,21 @@ try {
             // The status is already updated above in the common update section
             // No additional action needed here for denial
 
-            // Send email
+            // Send denial email using HTML template
             $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
             $dotenv->load();
+
+            $emailTemplate = file_get_contents(__DIR__ . '/../user/email-templates/registration-denied-email.html');
+            $emailCSS = file_get_contents(__DIR__ . '/../user/email-templates/email-template.css');
+            $emailTemplate = str_replace([
+                '{{FIRST_NAME}}',
+                '{{LAST_NAME}}',
+                '<link rel="stylesheet" href="email-template.css">'
+            ], [
+                htmlspecialchars($registration['first_name']),
+                htmlspecialchars($registration['last_name']),
+                '<style>' . $emailCSS . '</style>'
+            ], $emailTemplate);
 
             $mail = new PHPMailer(true);
             $mail->SMTPOptions = [
@@ -385,10 +397,9 @@ try {
             $mail->setFrom($_ENV['GMAIL_FROM_EMAIL'], $_ENV['GMAIL_FROM_NAME']);
             $mail->addAddress($registration['email']);
             $mail->Subject = 'Registration Denied';
-            $mail->Body = "Hello {$registration['first_name']},\n\n"
-                . "We regret to inform you that your registration has been denied.\n"
-                . "Please contact our support team for more information.\n\n"
-                . "Thank you for your interest in our bank.";
+            $mail->isHTML(true);
+            $mail->Body = $emailTemplate;
+            $mail->AltBody = "Hello {$registration['first_name']},\n\nWe regret to inform you that your registration has been denied. Please contact our support team for more information.\n\nThank you for your interest in our bank.";
 
             try {
                 $mail->send();

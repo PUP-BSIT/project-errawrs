@@ -4,7 +4,6 @@ import { API_ENDPOINTS } from '/api_config.js';
 let loginForm;
 let usernameInput;
 let passwordInput;
-let errorMsg;
 
 // Initialization
 
@@ -13,54 +12,68 @@ document.addEventListener('DOMContentLoaded', () => {
     usernameInput = document.getElementById('username');
     passwordInput = document.getElementById('password');
 
-    // Create error message element if not present
-    errorMsg = document.getElementById('error_msg');
-    if (!errorMsg && loginForm) {
-        errorMsg = document.createElement('div');
-        errorMsg.id = 'error_msg';
-        errorMsg.style.color = 'red';
-        errorMsg.style.marginTop = '10px';
-        loginForm.appendChild(errorMsg);
-    }
-
     if (loginForm) {
         loginForm.addEventListener('submit', handleLoginSubmit);
     }
 });
 
+function showNotification(message, type = 'error') {
+    // Remove any existing notification
+    const existing = document.querySelector('.notification');
+    if (existing) existing.remove();
+
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Trigger slide-in
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    // Hide after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
 async function handleLoginSubmit(e) {
-		e.preventDefault();
+    e.preventDefault();
     if (!usernameInput || !passwordInput) return;
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
     if (!username || !password) {
-        showError('Please enter both username and password.');
-			return;
-		}
-		try {
-        showError('');
+        showNotification('Please enter both username and password.', 'error');
+        return;
+    }
+    try {
         const response = await fetch(API_ENDPOINTS.ADMIN_LOGIN, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             },
             credentials: 'include',
             body: JSON.stringify({ username, password, login_type: 'admin' })
         });
         const data = await response.json();
         if (data.success) {
-            window.location.href = '/admin/dashboard.html';
-			} else {
-            showError(data.message || 'Login failed.');
+            showNotification('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = '/admin/dashboard.html';
+            }, 1200);
+        } else {
+            showNotification(data.message || 'Login failed.', 'error');
         }
     } catch (err) {
-        showError('An error occurred. Please try again.');
-    }
-}
-
-function showError(message) {
-    if (errorMsg) {
-        errorMsg.textContent = message;
-        errorMsg.style.display = message ? 'block' : 'none';
+        showNotification('An error occurred. Please try again.', 'error');
     }
 }
