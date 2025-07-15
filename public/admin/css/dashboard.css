@@ -1,4 +1,3 @@
-/* Reset and Base Styles */
 :root {
     --color-primary-black: #111111;
     --color-lime-green: #b6ff4a;
@@ -740,7 +739,6 @@ body {
 }
 
 /* Search Section Styles */
-/* Center the search section and improve search bar design */
 .search-section {
     display: flex;
     flex-direction: column;
@@ -830,7 +828,6 @@ body {
     padding-right: 3.2rem;
 }
 
-/* Remove previous .unified-search-box input and .search-input-icon absolute styles if present */
 .unified-search-box input {
     border: none;
     border-radius: 0 8px 8px 0;
@@ -839,11 +836,12 @@ body {
     background: #f8fafc;
     outline: none;
     font-weight: 500;
-    /* Remove padding-right and other icon-related styles */
 }
+
 .unified-search-box input:focus {
     background: #eef6ee;
 }
+
 .search-input-icon {
     position: unset;
     right: unset;
@@ -855,29 +853,11 @@ body {
     z-index: unset;
 }
 
-@media (max-width: 600px) {
-    .unified-search-box {
-        flex-direction: column;
-        max-width: 100%;
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-    .search-type-select,
-    .unified-search-box input {
-        border-radius: 8px;
-        width: 100%;
-        min-width: 0;
-    }
-    .search-input-icon {
-        right: 16px;
-    }
-}
-
-/* Remove grid/flex from search-container and search-column for centering */
 .search-container {
     display: block;
     height: auto;
 }
+
 .search-column {
     border-radius: 12px;
     padding: 1.25rem;
@@ -906,7 +886,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Results container: fixed height, scrolls only if >6 cards */
 .results-container {
     display: flex;
     justify-content: center;
@@ -920,15 +899,16 @@ body {
 .results-container::-webkit-scrollbar {
     width: 8px;
 }
+
 .results-container::-webkit-scrollbar-thumb {
     background: #cbd5e0;
     border-radius: 4px;
 }
+
 .results-container::-webkit-scrollbar-track {
     background: #f8fafc;
 }
 
-/* Card grid: 3 columns, center content if less than 3 */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -951,7 +931,6 @@ body {
     margin-right: auto;
 }
 
-/* User card: ensure consistent width */
 .user-card {
     width: 380px;
     max-width: 100%;
@@ -1172,11 +1151,13 @@ body {
     transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
     pointer-events: none;
 }
+
 .notification.show {
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
 }
+
 .notification-content {
     display: flex;
     align-items: center;
@@ -1185,19 +1166,21 @@ body {
     font-size: 1rem;
     color: var(--color-primary-black);
 }
+
 .notification-error {
     border-left: 5px solid #e74c3c;
 }
+
 .notification-error i {
     color: #e74c3c;
 }
 
-/* Unified Search Bar Styles */
 .unified-search-box {
     display: flex;
     align-items: center;
     position: relative;
 }
+
 .search-type-select {
     height: 40px;
     border: 1px solid #e2e8f0;
@@ -1208,6 +1191,7 @@ body {
     margin-right: 0.5rem;
     outline: none;
 }
+
 .unified-search-box input {
     border-radius: 0 8px 8px 0;
     height: 40px;
@@ -1218,7 +1202,7 @@ body {
     padding: 0.75rem 1rem;
     flex: 1;
 }
-/* Magnifying glass inside search input */
+
 .search-input-icon {
     position: absolute;
     left: 50%;
@@ -1233,46 +1217,10 @@ body {
     padding-right: 2.2rem;
     text-align: center;
 }
-@media (max-width: 768px) {
-    .search-container {
-        grid-template-columns: 1fr;
-    }
-    .search-column {
-        height: auto;
-        min-height: 300px;
-    }
-    .unified-search-box {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .search-type-select, .unified-search-box input {
-        border-radius: 8px;
-        margin: 0 0 0.5rem 0;
-        width: 100%;
-    }
-    .unified-search-box input {
-        border-left: 1px solid #e2e8f0;
-    }
-}
 
 .unified-search-box {
     max-width: 650px;
     min-height: 60px;
-}
-
-.search-type-select,
-.search-type-select:focus,
-.search-type-select:active {
-    height: 54px;
-    font-size: 1.2rem;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: #f8fafc url("data:image/svg+xml;utf8,<svg fill='black' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5.5 8l4.5 4.5L14.5 8' stroke='black' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 1rem center/1.25em 1.25em;
-    padding-right: 2.8rem;
-    background-color: #f8fafc;
-    background-blend-mode: multiply;
-    transition: none;
 }
 
 .search-type-select:focus {
