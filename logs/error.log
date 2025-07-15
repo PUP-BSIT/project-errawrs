@@ -39489,3 +39489,711 @@ Stack trace:
 )
 
 [15-Jul-2025 09:12:55 Asia/Manila] Submit Registration - OTP verified flag: 1
+[15-Jul-2025 09:31:01 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752542981
+            [last_activity] => 1752543060
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:31:02 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:31:03 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:34:39 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752543279
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 09:34:39 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 09:34:39
+)
+
+[15-Jul-2025 09:34:39 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752543279
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:34:46 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752543285
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:34:47 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:34:47 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:40:12 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752543611
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:40:13 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:40:13 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:45:07 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752543906
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:45:08 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:45:08 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:48:24 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752544103
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:48:25 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:48:25 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:49:09 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752544148
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:49:10 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:49:10 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:49:57 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752544196
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:49:58 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:49:58 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:52:23 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752543279
+            [last_activity] => 1752544342
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200000.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:52:24 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:52:24 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
