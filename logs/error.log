@@ -3923,3 +3923,31 @@
 [15-Jul-2025 13:03:28 Asia/Manila] Denial email sent successfully
 [15-Jul-2025 13:03:28 Asia/Manila] Transaction committed successfully
 [15-Jul-2025 13:03:28 Asia/Manila] Review process completed
+[15-Jul-2025 07:06:40 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 07:06:40 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 07:06:40 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 07:06:40 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 07:06:40 Europe/Berlin] Session ID: 
+[15-Jul-2025 07:06:40 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => a95pn985le91feirt49tg16dh0
+    [STACKOVERCASH_SESSID_ADMIN] => 3nlv4plfm7hnosm0tdk1nckv79
+    [STACKOVERCASH_SESSID_TELLER] => jhofbnct0gd6suu9jrgpe22eng
+)
+
+[15-Jul-2025 07:06:40 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 07:06:40 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752555261
+    [last_activity] => 1752555999
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 07:06:40 Europe/Berlin] Is admin: true
+[15-Jul-2025 07:06:40 Europe/Berlin] ✅ Admin session check successful
