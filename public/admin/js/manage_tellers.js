@@ -194,7 +194,7 @@ const tellerManager = {
           <button class="action-btn action-edit ${
             teller.status === 'pending' ? 'disabled' : ''
           }"
-            onclick="$${
+            onclick="${
               teller.status === 'pending'
                 ? 'return false;'
                 : `tellerManager.editTeller(${teller.teller_id})`
@@ -207,7 +207,7 @@ const tellerManager = {
           <button class="action-btn action-reset ${
             teller.status === 'pending' ? 'disabled' : ''
           }"
-            onclick="$${
+            onclick="${
               teller.status === 'pending'
                 ? 'return false;'
                 : `tellerManager.resetPassword(${teller.teller_id})`
@@ -220,12 +220,12 @@ const tellerManager = {
           <button class="action-btn ${
             teller.status === 'active' ? 'warning' : 'success'
           } ${teller.status === 'pending' ? 'disabled' : ''}"
-            onclick="$${
+            onclick="${
               teller.status === 'pending'
                 ? 'return false;'
                 : `tellerManager.toggleTellerStatus(${teller.teller_id}, '${teller.status}')`
             }"
-            title="$${
+            title="${
               teller.status === 'active' ? 'Deactivate' : 'Activate'
             }"
             ${teller.status === 'pending' ? 'disabled' : ''}>
