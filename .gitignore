@@ -10,11 +10,9 @@ techblinders_api.md
 stackovercash_api_doc.md
 
 # Logs
-/logs/*
-*.log
-error.log
-error_log
-debug.log
+/logs/error.log
+/logs/password_reset_error.log
+/logs/*.log
 
 tmp/
 !tmp/.gitkeep
