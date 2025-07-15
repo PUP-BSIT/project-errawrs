@@ -35895,3 +35895,3474 @@ Stack trace:
 
 [15-Jul-2025 00:24:32 Europe/Berlin] Is admin: true
 [15-Jul-2025 00:24:32 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 08:25:25 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539125
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 08:25:25 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 08:25:25
+)
+
+[15-Jul-2025 08:25:25 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539125
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:25:32 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539131
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:25:33 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:25:33 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:28:52 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539331
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:28:53 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:28:53 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:28:59 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539338
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:28:59 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:29:00 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:31:07 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539462
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:31:08 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:31:08 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:35:09 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539708
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:35:10 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:35:10 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 225040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:35:52 Asia/Manila] Send OTP - Raw request data: {"phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:35:52 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:35:52 Asia/Manila] Send OTP - Normalized phone: 09876543210
+[15-Jul-2025 08:35:54 Asia/Manila] Send OTP - Formatted phone for API: +639876543210
+[15-Jul-2025 08:35:54 Asia/Manila] Storing OTP - Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:35:54 Asia/Manila] Session ID before storing: n8asba2hbhbksnbg8pdovk1b3g
+[15-Jul-2025 08:35:54 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 08:35:54 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539739
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 5000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer_success
+            [created_at] => 1752539752
+        )
+
+)
+
+[15-Jul-2025 08:35:54 Asia/Manila] OTP stored successfully
+[15-Jul-2025 08:35:54 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539739
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 5000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer_success
+            [created_at] => 1752539752
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752539754
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Raw request data: {"otp":"123456","phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Input data: Array
+(
+    [otp] => 123456
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Purpose: fund_transfer
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539739
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 5000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer_success
+            [created_at] => 1752539752
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752539754
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:36:06 Asia/Manila] Verifying OTP - Input: 123456, Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:36:06 Asia/Manila] Session ID before verify: n8asba2hbhbksnbg8pdovk1b3g
+[15-Jul-2025 08:36:06 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 08:36:06 Asia/Manila] Full session data before verify: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539739
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 5000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer_success
+            [created_at] => 1752539752
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752539754
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:36:06 Asia/Manila] OTP verified successfully
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Successful verification for phone: 09876543210
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752539125
+            [last_activity] => 1752539739
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 225040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 5000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer_success
+            [created_at] => 1752539752
+        )
+
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 08:36:06 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 08:36:07 Asia/Manila] DB transaction started
+[15-Jul-2025 08:36:07 Asia/Manila] Source account verified
+[15-Jul-2025 08:36:07 Asia/Manila] Recipient account verified
+[15-Jul-2025 08:36:08 Asia/Manila] Source account debited
+[15-Jul-2025 08:36:08 Asia/Manila] Recipient account credited
+[15-Jul-2025 08:36:08 Asia/Manila] Transaction record inserted, ID: 420
+[15-Jul-2025 08:36:08 Asia/Manila] DB transaction committed
+[15-Jul-2025 08:44:39 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540279
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 08:44:39 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 08:44:39
+)
+
+[15-Jul-2025 08:44:39 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540279
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:44:52 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540291
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:44:53 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:44:53 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 220040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 5500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:45:16 Asia/Manila] Send OTP - Raw request data: {"phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:45:16 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:45:16 Asia/Manila] Send OTP - Normalized phone: 09876543210
+[15-Jul-2025 08:45:16 Asia/Manila] Send OTP - Formatted phone for API: +639876543210
+[15-Jul-2025 08:45:16 Asia/Manila] Storing OTP - Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:45:16 Asia/Manila] Session ID before storing: pmuji2oorlrnmm8rbju722l3e1
+[15-Jul-2025 08:45:16 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 08:45:16 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540294
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 20000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540316
+        )
+
+)
+
+[15-Jul-2025 08:45:16 Asia/Manila] OTP stored successfully
+[15-Jul-2025 08:45:16 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540294
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 20000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540316
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540316
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Raw request data: {"otp":"123456","phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Input data: Array
+(
+    [otp] => 123456
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Purpose: fund_transfer
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540294
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 20000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540316
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540316
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:45:21 Asia/Manila] Verifying OTP - Input: 123456, Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:45:21 Asia/Manila] Session ID before verify: pmuji2oorlrnmm8rbju722l3e1
+[15-Jul-2025 08:45:21 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 08:45:21 Asia/Manila] Full session data before verify: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540294
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 20000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540316
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540316
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:45:21 Asia/Manila] OTP verified successfully
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Successful verification for phone: 09876543210
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540279
+            [last_activity] => 1752540294
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 220040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 20000
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540316
+        )
+
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 08:45:21 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 08:45:22 Asia/Manila] DB transaction started
+[15-Jul-2025 08:45:22 Asia/Manila] Source account verified
+[15-Jul-2025 08:45:22 Asia/Manila] Recipient account verified
+[15-Jul-2025 08:45:22 Asia/Manila] Source account debited
+[15-Jul-2025 08:45:23 Asia/Manila] Recipient account credited
+[15-Jul-2025 08:45:23 Asia/Manila] Transaction record inserted, ID: 421
+[15-Jul-2025 08:45:23 Asia/Manila] DB transaction committed
+[15-Jul-2025 08:48:44 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540524
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 08:48:44 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 08:48:44
+)
+
+[15-Jul-2025 08:48:44 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540524
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:48:52 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540531
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:48:52 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:48:53 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:48:53 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540531
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:48:53 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:48:53 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:48:53 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:48:54 Asia/Manila] Database connection successful
+[15-Jul-2025 08:48:54 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:48:54 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:48:54 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:48:54 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:48:54 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:48:54 Asia/Manila] Connection closed
+[15-Jul-2025 08:49:24 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540563
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:49:25 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:49:25 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:49:25 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540563
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:49:25 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:49:25 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:49:25 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:49:26 Asia/Manila] Database connection successful
+[15-Jul-2025 08:49:26 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:49:26 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:49:26 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:49:26 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:49:26 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:49:26 Asia/Manila] Connection closed
+[15-Jul-2025 08:49:54 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540593
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:49:55 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:49:55 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:49:55 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540593
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:49:55 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:49:55 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:49:55 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:49:56 Asia/Manila] Database connection successful
+[15-Jul-2025 08:49:56 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:49:56 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:49:56 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:49:56 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:49:56 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:49:56 Asia/Manila] Connection closed
+[15-Jul-2025 08:50:24 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540623
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:50:25 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:50:25 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:50:25 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540623
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:50:25 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:50:25 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:50:25 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:50:26 Asia/Manila] Database connection successful
+[15-Jul-2025 08:50:26 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:50:26 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:50:26 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:50:26 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:50:26 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:50:26 Asia/Manila] Connection closed
+[15-Jul-2025 08:50:54 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540653
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:50:55 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:50:55 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:50:55 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540653
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:50:55 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:50:55 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:50:55 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:50:56 Asia/Manila] Database connection successful
+[15-Jul-2025 08:50:56 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:50:56 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:50:56 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:50:56 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:50:56 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:50:56 Asia/Manila] Connection closed
+[15-Jul-2025 08:51:24 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540683
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:51:25 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:51:25 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:51:25 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540683
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:51:25 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:51:25 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:51:25 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:51:26 Asia/Manila] Database connection successful
+[15-Jul-2025 08:51:26 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:51:26 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:51:26 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:51:26 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:51:26 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:51:26 Asia/Manila] Connection closed
+[15-Jul-2025 08:51:54 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540713
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:51:55 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:51:55 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:51:55 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540713
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:51:55 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 08:51:55 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 08:51:55 Asia/Manila] Attempting database connection
+[15-Jul-2025 08:51:56 Asia/Manila] Database connection successful
+[15-Jul-2025 08:51:56 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 08:51:56 Asia/Manila] Total transactions found: 9
+[15-Jul-2025 08:51:56 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 08:51:56 Asia/Manila] Query executed successfully
+[15-Jul-2025 08:51:56 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 08:51:56 Asia/Manila] Connection closed
+[15-Jul-2025 08:52:10 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540729
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:52:11 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:52:11 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200040.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25500.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:52:48 Asia/Manila] Send OTP - Raw request data: {"phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:52:48 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:52:48 Asia/Manila] Send OTP - Normalized phone: 09876543210
+[15-Jul-2025 08:52:48 Asia/Manila] Send OTP - Formatted phone for API: +639876543210
+[15-Jul-2025 08:52:48 Asia/Manila] Storing OTP - Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:52:48 Asia/Manila] Session ID before storing: 5mc5ut15cr032e9am6evv0jh82
+[15-Jul-2025 08:52:48 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 08:52:48 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540759
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 40
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540768
+        )
+
+)
+
+[15-Jul-2025 08:52:48 Asia/Manila] OTP stored successfully
+[15-Jul-2025 08:52:48 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540759
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 40
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540768
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540768
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Raw request data: {"otp":"123456","phone_number":"09876543210","purpose":"fund_transfer"}
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Input data: Array
+(
+    [otp] => 123456
+    [phone_number] => 09876543210
+    [purpose] => fund_transfer
+)
+
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Purpose: fund_transfer
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540759
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 40
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540768
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540768
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:52:51 Asia/Manila] Verifying OTP - Input: 123456, Phone: 09876543210, Purpose: fund_transfer
+[15-Jul-2025 08:52:51 Asia/Manila] Session ID before verify: 5mc5ut15cr032e9am6evv0jh82
+[15-Jul-2025 08:52:51 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 08:52:51 Asia/Manila] Full session data before verify: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540759
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 40
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540768
+        )
+
+    [otp] => Array
+        (
+            [code] => 123456
+            [phone_number] => 09876543210
+            [created_at] => 1752540768
+            [attempts] => 0
+            [purpose] => fund_transfer
+        )
+
+)
+
+[15-Jul-2025 08:52:51 Asia/Manila] OTP verified successfully
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Successful verification for phone: 09876543210
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752540759
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+    [pending_transfer] => Array
+        (
+            [amount] => 40
+            [source_account_no] => 544250000002
+            [recipient_account_no] => 544250000003
+            [redirect_url] => http://stackovercash.site.local/user/transfer/success
+            [created_at] => 1752540768
+        )
+
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 08:52:51 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 08:52:52 Asia/Manila] DB transaction started
+[15-Jul-2025 08:52:53 Asia/Manila] Source account verified
+[15-Jul-2025 08:52:53 Asia/Manila] Recipient account verified
+[15-Jul-2025 08:52:53 Asia/Manila] Source account debited
+[15-Jul-2025 08:52:53 Asia/Manila] Recipient account credited
+[15-Jul-2025 08:52:54 Asia/Manila] Transaction record inserted, ID: 422
+[15-Jul-2025 08:52:54 Asia/Manila] DB transaction committed
+[15-Jul-2025 08:56:26 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 08:56:26 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 08:56:27 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 08:56:27 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 08:59:06 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 08:59:07 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 08:59:08 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 08:59:08 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 08:59:09 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541148
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 08:59:10 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 08:59:10 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 08:59:14 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 08:59:15 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 08:59:15 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 08:59:15 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:00:52 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 09:00:53 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 09:00:53 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:00:53 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:00:57 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 09:00:57 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 09:00:58 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:00:58 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:02:52 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 09:02:53 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 09:02:53 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:02:53 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:02:56 Asia/Manila] Transfer Success API called for transaction_id: 422
+[15-Jul-2025 09:02:57 Asia/Manila] Fetching transaction data for ID: 422
+[15-Jul-2025 09:02:57 Asia/Manila] Transaction found. Data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:02:57 Asia/Manila] Row data: Array
+(
+    [transaction_id] => 422
+    [sender_account_id] => 13
+    [receiver_account_id] => 14
+    [amount] => 40.00
+    [transaction_type] => transfer_internal
+    [status] => completed
+    [created_at] => 2025-07-15 08:52:54
+    [completed_at] => 2025-07-15 08:52:54
+    [external_bank_code] => 
+    [external_account_number] => 
+    [description] => Transfer to account 544250000003
+    [teller_id] => 
+    [sender_account_number] => 544250000002
+    [receiver_account_number] => 544250000003
+)
+
+[15-Jul-2025 09:03:05 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541384
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:06 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:03:06 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:03:07 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541384
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:07 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 09:03:07 Asia/Manila] Account filter: 544250000002
+[15-Jul-2025 09:03:07 Asia/Manila] Attempting database connection
+[15-Jul-2025 09:03:07 Asia/Manila] Database connection successful
+[15-Jul-2025 09:03:07 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 14, 544250000002
+[15-Jul-2025 09:03:08 Asia/Manila] Total transactions found: 10
+[15-Jul-2025 09:03:08 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 544250000002, 2, 0
+[15-Jul-2025 09:03:08 Asia/Manila] Query executed successfully
+[15-Jul-2025 09:03:08 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 09:03:08 Asia/Manila] Connection closed
+[15-Jul-2025 09:03:16 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541395
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:17 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:03:17 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:03:20 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541399
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:21 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:03:21 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
+[15-Jul-2025 09:03:23 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541402
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:23 Asia/Manila] Processing transactions for user_id: 14
+[15-Jul-2025 09:03:23 Asia/Manila] Account filter: None
+[15-Jul-2025 09:03:23 Asia/Manila] Attempting database connection
+[15-Jul-2025 09:03:24 Asia/Manila] Database connection successful
+[15-Jul-2025 09:03:24 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 14
+[15-Jul-2025 09:03:24 Asia/Manila] Total transactions found: 16
+[15-Jul-2025 09:03:24 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 14, 5, 0
+[15-Jul-2025 09:03:24 Asia/Manila] Query executed successfully
+[15-Jul-2025 09:03:24 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 09:03:24 Asia/Manila] Connection closed
+[15-Jul-2025 09:03:27 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 14
+            [identifier] => danielvictorioso
+            [type] => user
+            [logged_in_at] => 1752540524
+            [last_activity] => 1752541405
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 14
+            [username] => danielvictorioso
+            [first_name] => Daniel
+            [last_name] => Victorioso
+            [phone_number] => 09876543210
+            [account] => Array
+                (
+                    [account_id] => 13
+                    [account_number] => 544250000002
+                    [balance] => 200040.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 09:03:27 Asia/Manila] Fetching accounts for user ID: 14
+[15-Jul-2025 09:03:28 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 13
+            [account_number] => 544250000002
+            [balance] => 200000.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:33:38
+        )
+
+    [1] => Array
+        (
+            [account_id] => 14
+            [account_number] => 544250000003
+            [balance] => 25540.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 12:47:04
+        )
+
+    [2] => Array
+        (
+            [account_id] => 16
+            [account_number] => 544250000005
+            [balance] => 15000.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:04:55
+        )
+
+    [3] => Array
+        (
+            [account_id] => 17
+            [account_number] => 544250000006
+            [balance] => 0.00
+            [status] => active
+            [account_type] => credit
+            [created_at] => 2025-07-13 01:18:56
+        )
+
+)
+
