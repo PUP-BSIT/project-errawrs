@@ -61,7 +61,7 @@ jobs:
 
           # Clear PHP opcache (server cache)
           echo "Clearing PHP opcache..."
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "php -r 'if(function_exists(\'opcache_reset\')){opcache_reset(); echo \"OPcache reset.\\n\";}else{echo \"OPcache not enabled.\\n\";}';"
+          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "php -r \"if(function_exists('opcache_reset')){opcache_reset(); echo 'OPcache reset.\\n';}else{echo 'OPcache not enabled.\\n';}\""
 
           # Clean up temporary backup path
           ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${REMOTE_USER}@${REMOTE_HOST} "sudo rm -rf ${ENV_BACKUP_PATH}"
