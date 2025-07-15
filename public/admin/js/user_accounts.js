@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from '/api_config.js';
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 3;
 let currentPage = 1;
 let allUsers = [];
 let filteredUsers = [];
@@ -124,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="detail-label">Joined:</span>
                         <span class="detail-value">${new Date(user.user_created_at).toLocaleDateString()}</span>
                     </div>
+                </div>
+                <div class="view-detail-btn-wrapper">
+                    <button class="view-detail-btn"><i class='fas fa-eye'></i> View Details</button>
                 </div>
             `;
             card.setAttribute('data-user-id', user.user_id); // Add data-user-id
@@ -251,27 +254,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Delegate click event to user cards
     document.getElementById('user_cards').addEventListener('click', async (e) => {
-        const card = e.target.closest('.user-card');
-        if (!card) return;
-        const userId = card.getAttribute('data-user-id');
-        if (!userId) return;
-        // Fetch user details
-        try {
-            const response = await fetch(`${API_ENDPOINTS.ADMIN_GET_USER}/${userId}`, { credentials: 'include' });
-            if (!response.ok) {
-                let msg = 'Failed to load user details.';
-                if (response.status === 404) msg = 'User not found.';
-                showToast(msg, 'error');
-                return;
+        if (e.target.classList.contains('view-detail-btn')) {
+            const card = e.target.closest('.user-card');
+            if (!card) return;
+            const userId = card.getAttribute('data-user-id');
+            if (!userId) return;
+            // Fetch user details
+            try {
+                const response = await fetch(`${API_ENDPOINTS.ADMIN_GET_USER}/${userId}`, { credentials: 'include' });
+                if (!response.ok) {
+                    let msg = 'Failed to load user details.';
+                    if (response.status === 404) msg = 'User not found.';
+                    showToast(msg, 'error');
+                    return;
+                }
+                const data = await response.json();
+                if (data.success && data.user) {
+                    showUserDetailsCard(data.user);
+                } else {
+                    showToast(data.error || 'Failed to load user details.', 'error');
+                }
+            } catch (err) {
+                showToast('Network error: Could not load user details.', 'error');
             }
-            const data = await response.json();
-            if (data.success && data.user) {
-                showUserDetailsCard(data.user);
-            } else {
-                showToast(data.error || 'Failed to load user details.', 'error');
-            }
-        } catch (err) {
-            showToast('Network error: Could not load user details.', 'error');
         }
     });
 
@@ -279,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const idImageModal = document.getElementById('idImageModal');
     const idImageModalClose = document.getElementById('idImageModalClose');
     if (idImageModal && idImageModalClose) {
+        // Move the close button inside the modal div in HTML (handled in HTML file)
         idImageModalClose.onclick = function() {
             idImageModal.style.display = 'none';
             document.getElementById('idImageModalImg').src = '';

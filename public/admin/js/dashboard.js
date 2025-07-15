@@ -4,24 +4,21 @@ let searchTimeout = null;
 
 // DOM Elements
 let adminNameElement;
-let tellerSearch;
-let userSearch;
-let tellerResults;
-let userResults;
+let searchType, unifiedSearch, unifiedResults;
 
 // Initialization
 
 document.addEventListener('DOMContentLoaded', () => {
     adminNameElement = document.getElementById('admin_name');
-    tellerSearch = document.getElementById('teller_search');
-    userSearch = document.getElementById('user_search');
-    tellerResults = document.getElementById('teller_results');
-    userResults = document.getElementById('user_results');
+    searchType = document.getElementById('search_type');
+    unifiedSearch = document.getElementById('unified_search');
+    unifiedResults = document.getElementById('unified_results');
 
     loadAdminInfo();
     setupEventListeners();
     loadDashboardStats();
     setupSidebarToggle();
+    setupUnifiedSearch();
 });
 
 function setupEventListeners() {
@@ -66,41 +63,6 @@ function setupEventListeners() {
             });
         }
 
-        // Search event listeners with debounce
-        if (tellerSearch) {
-            tellerSearch.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-                const searchTerm = e.target.value.trim();
-                if (searchTerm.length === 0) {
-                tellerResults.innerHTML = '';
-                    return;
-                }
-                tellerResults.innerHTML = '';
-                const loadingState = tellerResults.querySelector('.loading-state');
-                if (loadingState) loadingState.style.display = 'block';
-            searchTimeout = setTimeout(() => {
-                handleTellerSearch(searchTerm);
-                }, 300);
-            });
-        }
-
-        if (userSearch) {
-            userSearch.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-                const searchTerm = e.target.value.trim();
-                if (searchTerm.length === 0) {
-                userResults.innerHTML = '';
-                    return;
-                }
-                userResults.innerHTML = '';
-                const loadingState = userResults.querySelector('.loading-state');
-                if (loadingState) loadingState.style.display = 'block';
-            searchTimeout = setTimeout(() => {
-                handleUserSearch(searchTerm);
-                }, 300);
-            });
-        }
-
         // Password toggle functionality
         const passwordToggles = document.querySelectorAll('.password-toggle');
         if (passwordToggles.length > 0) {
@@ -134,6 +96,35 @@ function setupSidebarToggle() {
             });
         }
     }
+
+function setupUnifiedSearch() {
+    if (searchType && unifiedSearch) {
+        searchType.addEventListener('change', () => {
+            unifiedSearch.value = '';
+            unifiedResults.innerHTML = '';
+            unifiedSearch.placeholder = searchType.value === 'teller'
+                ? 'Search teller by name, ID or email...'
+                : 'Search user by name or account number...';
+        });
+
+        unifiedSearch.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const searchTerm = e.target.value.trim();
+            if (searchTerm.length === 0) {
+                unifiedResults.innerHTML = '';
+                return;
+            }
+            unifiedResults.innerHTML = '';
+            searchTimeout = setTimeout(() => {
+                if (searchType.value === 'teller') {
+                    handleTellerSearch(searchTerm, unifiedResults);
+                } else {
+                    handleUserSearch(searchTerm, unifiedResults);
+                }
+            }, 300);
+        });
+    }
+}
 
 async function loadAdminInfo() {
         try {
@@ -244,125 +235,125 @@ function getNotificationIcon(type) {
         }
     }
 
-async function handleTellerSearch(searchTerm) {
-        try {
-            tellerResults.innerHTML = `
-                <div class="loading-state">
-                    <p>Searching tellers...</p>
+async function handleTellerSearch(searchTerm, resultsContainer = unifiedResults) {
+    try {
+        resultsContainer.innerHTML = `
+            <div class="loading-state">
+                <p>Searching tellers...</p>
+            </div>`;
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Failed to fetch tellers');
+        const data = await response.json();
+        if (!data.success) {
+            resultsContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load tellers</p>
                 </div>`;
-            const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_TELLERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
-            if (!response.ok) throw new Error('Failed to fetch tellers');
-            const data = await response.json();
-            if (!data.success) {
-                tellerResults.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Failed to load tellers</p>
-                    </div>`;
-                return;
-            }
-            if (data.tellers.length === 0) {
-                tellerResults.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-search"></i>
-                        <p>No tellers found</p>
-                    </div>`;
-                return;
-            }
-            const cardsHtml = data.tellers.map(teller => `
-                <div class="user-card">
-                    <div class="user-header">
-                        <div class="user-info">
-                            <h3 class="user-name">${teller.first_name} ${teller.last_name}</h3>
-                            <span class="account-number">${teller.teller_number}</span>
-                        </div>
-                        <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
-                            ${teller.status}
-                        </span>
+            return;
+        }
+        if (data.tellers.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No tellers found</p>
+                </div>`;
+            return;
+        }
+        const cardsHtml = data.tellers.map(teller => `
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-info">
+                        <h3 class="user-name">${teller.first_name} ${teller.last_name}</h3>
+                        <span class="account-number">${teller.teller_number}</span>
                     </div>
-                    <div class="user-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Email</span>
-                            <span class="detail-value">${teller.email}</span>
-                        </div>
+                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                        ${teller.status}
+                    </span>
+                </div>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">${teller.email}</span>
                     </div>
                 </div>
-            `).join('');
-            tellerResults.innerHTML = cardsHtml;
-        } catch (error) {
-            console.error('Error searching tellers:', error);
-            tellerResults.innerHTML = `
+            </div>
+        `).join('');
+        resultsContainer.innerHTML = `<div class="card-grid">${cardsHtml}</div>`;
+    } catch (error) {
+        console.error('Error searching tellers:', error);
+        resultsContainer.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>An error occurred while searching</p>
+            </div>`;
+    }
+}
+
+async function handleUserSearch(searchTerm, resultsContainer = unifiedResults) {
+    try {
+        resultsContainer.innerHTML = `
+            <div class="loading-state">
+                <p>Searching accounts...</p>
+            </div>`;
+        const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Failed to fetch users');
+        const data = await response.json();
+        if (!data.success) {
+            resultsContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load users</p>
+                </div>`;
+            return;
+        }
+        if (!Array.isArray(data.list) || data.list.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No users found</p>
+                </div>`;
+            return;
+        }
+        const cardsHtml = data.list.map(user => `
+            <div class="user-card">
+                <div class="user-header">
+                    <div class="user-info">
+                        <h3 class="user-name">${user.first_name} ${user.last_name}</h3>
+                        <span class="account-number">${user.account_number || 'No Account'}</span>
+                    </div>
+                    <span class="status-badge ${(user.account_status === 'active' ? 'status-active' : 'status-inactive')}">
+                        ${user.account_status || 'active'}
+                    </span>
+                </div>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Username</span>
+                        <span class="detail-value">${user.username}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">${user.phone_number || 'N/A'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Created</span>
+                        <span class="detail-value">${formatDate(user.user_created_at)}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        resultsContainer.innerHTML = `<div class="card-grid">${cardsHtml}</div>`;
+    } catch (error) {
+        console.error('Error searching users:', error);
+        if (resultsContainer) {
+            resultsContainer.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-circle"></i>
                     <p>An error occurred while searching</p>
                 </div>`;
         }
     }
-
-async function handleUserSearch(searchTerm) {
-        try {
-            userResults.innerHTML = `
-                <div class="loading-state">
-                    <p>Searching accounts...</p>
-                </div>`;
-            const response = await fetch(`${API_ENDPOINTS.ADMIN_LIST_USERS}?search=${encodeURIComponent(searchTerm)}`, { credentials: 'include' });
-            if (!response.ok) throw new Error('Failed to fetch users');
-            const data = await response.json();
-            if (!data.success) {
-                userResults.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Failed to load users</p>
-                    </div>`;
-                return;
-            }
-            if (!Array.isArray(data.list) || data.list.length === 0) {
-                userResults.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-search"></i>
-                        <p>No users found</p>
-                    </div>`;
-                return;
-            }
-            const cardsHtml = data.list.map(user => `
-                <div class="user-card">
-                    <div class="user-header">
-                        <div class="user-info">
-                            <h3 class="user-name">${user.first_name} ${user.last_name}</h3>
-                            <span class="account-number">${user.account_number || 'No Account'}</span>
-                        </div>
-                        <span class="status-badge ${(user.account_status === 'active' ? 'status-active' : 'status-inactive')}">
-                            ${user.account_status || 'active'}
-                        </span>
-                    </div>
-                    <div class="user-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Username</span>
-                            <span class="detail-value">${user.username}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Phone</span>
-                            <span class="detail-value">${user.phone_number || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Created</span>
-                            <span class="detail-value">${formatDate(user.user_created_at)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            userResults.innerHTML = cardsHtml;
-        } catch (error) {
-            console.error('Error searching users:', error);
-            if (userResults) {
-                userResults.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>An error occurred while searching</p>
-                    </div>`;
-            }
-        }
-    }
+}
 
 function hideAllSections() {
     document.querySelectorAll('.content-section').forEach(section => {

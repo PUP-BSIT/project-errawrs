@@ -1,102 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>StackOvercash - Login Account Holder</title>
+        <link rel="icon" type="image/png" href="assets/images/soc-logo.png" />
+        <link rel="stylesheet" href="user/css/login_acc_holder.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
+    </head>
 
-<head>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StackOvercash - Login Account Holder</title>
-    <link rel="icon" type="image/png" href="assets/images/soc-logo.png" />
-    <link rel="stylesheet" href="user/css/login_acc_holder.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-</head>
+    <body class="login-page">
+        <div class="notification-container"></div>
+        <div class="login-container">
+            <div class="login-form-container">
+                <div class="login-header-top">
+                    <h1 class="login-logo">
+                        Stack<span class="green">Overcash</span>
+                    </h1>
+                    <p class="welcome-text">Welcome!</p>
+                </div>
 
-<body class="login-page">
-    <div class="notification-container"></div>
-    <div class="login-container">
-        <div class="login-form-container">
-            <div class="login-header-top">
-                <h1 class="login-logo">
-                    Stack<span class="green">Overcash</span>
-                </h1>
-                <p class="welcome-text">Welcome!</p>
+                <form id="login_form" class="login-form">
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Username"
+                            class="login-input"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Password"
+                            class="login-input"
+                            required
+                        />
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            data-target="password"
+                        >
+                            <i class="fas fa-eye-slash"></i>
+                        </button>
+                    </div>
+
+                    <button type="submit" class="login-button">Login</button>
+
+                    <div class="forgot-links">
+                        <span>Forgot</span>
+                        <a href="forgot-password" class="forgot-link"
+                            >Password</a
+                        >
+                    </div>
+
+                    <div class="divider">
+                        <span class="divider-line"></span>
+                        <span class="divider-text">or</span>
+                        <span class="divider-line"></span>
+                    </div>
+
+                    <a href="register" class="register-button">Register now</a>
+                </form>
             </div>
 
-            <form id="login_form" class="login-form">
-                <div class="form-group">
-                    <input type="text" id="username" name="username" placeholder="Username" class="login-input" required />
-                </div>
-
-                <div class="form-group">
-                    <input type="password" id="password" name="password" placeholder="Password" class="login-input" required />
-                    <button type="button" class="password-toggle" data-target="password">
-                        <i class="fas fa-eye-slash"></i>
-                    </button>
-                </div>
-
-                <button type="submit" class="login-button">Login</button>
-
-                <div class="forgot-links">
-                    <span>Forgot</span>
-                    <a href="forgot-password" class="forgot-link">Password</a>
-                </div>
-
-                <div class="divider">
-                    <span class="divider-line"></span>
-                    <span class="divider-text">or</span>
-                    <span class="divider-line"></span>
-                </div>
-
-                <a href="register" class="register-button">Register now</a>
-            </form>
+            <div class="login-illustration">
+                <header>
+                    <nav class="nav">
+                        <ul class="nav-links">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="contact-us">Contact Us</a></li>
+                            <li><a href="privacy-policy">Privacy Policy</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                <img
+                    src="assets/images/vector_person_acc_holder.png"
+                    alt="Person with account statistics"
+                />
+            </div>
         </div>
 
-        <div class="login-illustration">
-            <header>
-                <nav class="nav">
-                    <ul class="nav-links">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/contact-us">Contact Us</a></li>
-                        <li><a href="privacy-policy">Privacy Policy</a></li>
-                    </ul>
-                </nav>
-            </header>
-            <img src="assets/images/vector_person_acc_holder.png" alt="Person with account statistics" />
-        </div>
-    </div>
+        <!-- Add notification styles -->
+        <!-- Styles moved to css/login_acc_holder.css -->
 
-    <!-- Add notification styles -->
-    <!-- Styles moved to css/login_acc_holder.css -->
-
-    <!-- Session Expired Modal -->
-    <div id="session-expired-modal" class="modal" style="display:none;">
-      <div class="modal-content">
-        <h3>Session Expired</h3>
-        <p>You were logged out due to inactivity. Please log in again to continue.</p>
-        <button id="session-expired-ok" class="primary-btn" style="margin-top: 20px;">Okay</button>
-      </div>
-    </div>
-
-            <script src="user/js/config.js"></script>
+        <script src="user/js/config.js"></script>
         <script src="user/js/login.js"></script>
-    <script>
-    // Show session expired modal if redirected with ?expired=true
-    if (window.location.search.includes('expired=true')) {
-      document.addEventListener('DOMContentLoaded', function() {
-        var modal = document.getElementById('session-expired-modal');
-        var okBtn = document.getElementById('session-expired-ok');
-        if (modal) {
-          modal.style.display = 'flex';
-          if (okBtn) {
-            okBtn.onclick = function() {
-              modal.style.display = 'none';
-            };
-          }
-        }
-      });
-    }
-    </script>
-</body>
-
+    </body>
 </html>
