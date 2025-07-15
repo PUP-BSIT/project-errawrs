@@ -48782,3 +48782,59 @@ Stack trace:
 
 [15-Jul-2025 05:03:11 Europe/Berlin] Is admin: true
 [15-Jul-2025 05:03:11 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 05:04:10 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 05:04:10 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 05:04:10 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 05:04:10 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 05:04:10 Europe/Berlin] Session ID: 
+[15-Jul-2025 05:04:10 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => cam3gqp6dqv87smcc0flbh1a4f
+    [STACKOVERCASH_SESSID_TELLER] => a7mvl3ubd3umk107de6vbnim3e
+    [STACKOVERCASH_SESSID_ADMIN] => s0pgsc8a98jkt8hjll5qo25ijs
+)
+
+[15-Jul-2025 05:04:11 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 05:04:11 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752542927
+    [last_activity] => 1752548650
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 05:04:11 Europe/Berlin] Is admin: true
+[15-Jul-2025 05:04:11 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 05:16:53 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 05:16:53 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 05:16:53 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 05:16:53 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 05:16:53 Europe/Berlin] Session ID: 
+[15-Jul-2025 05:16:53 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => cam3gqp6dqv87smcc0flbh1a4f
+    [STACKOVERCASH_SESSID_TELLER] => a7mvl3ubd3umk107de6vbnim3e
+    [STACKOVERCASH_SESSID_ADMIN] => s0pgsc8a98jkt8hjll5qo25ijs
+)
+
+[15-Jul-2025 05:16:54 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 05:16:54 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752542927
+    [last_activity] => 1752549413
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 05:16:54 Europe/Berlin] Is admin: true
+[15-Jul-2025 05:16:54 Europe/Berlin] ✅ Admin session check successful
