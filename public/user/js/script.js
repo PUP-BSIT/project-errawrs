@@ -157,4 +157,26 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function() {
     var loginLink = document.getElementById('login-link');
     if (loginLink) loginLink.href = ROUTES.LOGIN;
+    
+    // Progressive Image Loading with Blur Effect for ALL images
+    const allImages = document.querySelectorAll('img');
+    
+    allImages.forEach(function(img) {
+        // Check if image is already loaded
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            // Add event listeners for when image loads
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+            
+            // Fallback: if image fails to load or takes too long
+            setTimeout(function() {
+                if (!img.classList.contains('loaded')) {
+                    img.classList.add('loaded');
+                }
+            }, 3000); // Remove blur after 3 seconds even if load event doesn't fire
+        }
+    });
 });

@@ -20,6 +20,28 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePasswordVisibility(passwordToggle)
         );
     }
+    
+    // Progressive Image Loading with Blur Effect
+    const allImages = document.querySelectorAll('img');
+    
+    allImages.forEach(function(img) {
+        // Check if image is already loaded
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            // Add event listeners for when image loads
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+            
+            // Fallback: if image fails to load or takes too long
+            setTimeout(function() {
+                if (!img.classList.contains('loaded')) {
+                    img.classList.add('loaded');
+                }
+            }, 3000);
+        }
+    });
 });
 
 const API_LOGIN = API_ENDPOINTS.AUTH.LOGIN;

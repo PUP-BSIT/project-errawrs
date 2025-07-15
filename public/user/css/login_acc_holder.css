@@ -249,6 +249,33 @@ header {
     margin: 0 auto;
 }
 
+/* Progressive Image Loading with Blur Effect */
+.login-illustration img {
+    filter: blur(10px);
+    transition: filter 0.5s ease-out, opacity 0.5s ease-out;
+    opacity: 0.8;
+}
+
+.login-illustration img.loaded {
+    filter: blur(0);
+    opacity: 1;
+}
+
+/* Responsive blur effects for different screen sizes */
+@media (max-width: 768px) {
+    .login-illustration img {
+        filter: blur(8px);
+        transition: filter 0.4s ease-out, opacity 0.4s ease-out;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-illustration img {
+        filter: blur(6px);
+        transition: filter 0.3s ease-out, opacity 0.3s ease-out;
+    }
+}
+
 /* Notification Styles */
 /* Compact Toast Notification Style */
 .notification-container {
