@@ -307,8 +307,8 @@ try {
                 $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
                 $dotenv->load();
 
-                $emailTemplate = file_get_contents(__DIR__ . '/../user/email-templates/registration-approved-email.html');
-                $emailCSS = file_get_contents(__DIR__ . '/../user/email-templates/registration-email.css');
+                $emailTemplate = file_get_contents(__DIR__ . '/email-templates/registration-approved-email.html');
+                $emailCSS = file_get_contents(__DIR__ . '/email-templates/registration-email.css');
                 $emailTemplate = str_replace([
                   '{{FIRST_NAME}}',
                   '{{LAST_NAME}}',

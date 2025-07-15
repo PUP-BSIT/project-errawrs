@@ -1,40 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/png" href="/assets/images/soc-logo.png" />
         <title>StackOvercash - Profile</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet"/>
+            rel="stylesheet"
+        />
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-        <link rel="stylesheet" href="/user/css/user_dashboard.css"/> <!-- Keep some base styles -->
-        <link rel="stylesheet" href="/user/css/profile.css"/> <!-- New profile specific styles -->
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="/user/css/user_dashboard.css" />
+        <!-- Keep some base styles -->
+        <link rel="stylesheet" href="/user/css/profile.css" />
+        <!-- New profile specific styles -->
     </head>
     <body class="authenticated-page">
         <!-- Mobile Header -->
         <header class="main-header mobile-header hidden">
             <div class="mobile-logo" id="mobile_logo">
-                <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+                <span class="logo-stackovercash"
+                    ><span class="logo-stack">Stack</span
+                    ><span class="logo-overcash">Overcash</span></span
+                >
             </div>
-            <button id="hamburger_btn" class="hamburger-btn" aria-label="Open navigation">
+            <button
+                id="hamburger_btn"
+                class="hamburger-btn"
+                aria-label="Open navigation"
+            >
                 <i class="fas fa-bars"></i>
             </button>
         </header>
         <!-- Topnav Dropdown Nav (mobile/tablet) -->
-        <nav class="topnav-dropdown" id="topnav_dropdown" aria-label="Mobile navigation">
-            <a href="/user/dashboard" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-            <a href="/user/transfer" class="nav-link" data-page="transfer"><i class="fas fa-exchange-alt"></i>Transfer</a>
-            <a href="/user/transactions" class="nav-link" data-page="transaction"><i class="fas fa-receipt"></i>Transactions</a>
-            <a href="/user/account" class="nav-link" data-page="account"><i class="fas fa-wallet"></i>Account</a>
-            <a href="/user/profile" class="nav-link" data-page="profile"><i class="fas fa-user-circle"></i>Profile</a>
-            <button class="logout-btn" id="logout_btn_mobile" aria-label="Log out of account"><i class="fas fa-sign-out-alt"></i>Log out</button>
+        <nav
+            class="topnav-dropdown"
+            id="topnav_dropdown"
+            aria-label="Mobile navigation"
+        >
+            <a href="/user/dashboard" class="nav-link" data-page="dashboard"
+                ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+            >
+            <a href="/user/transfer" class="nav-link" data-page="transfer"
+                ><i class="fas fa-exchange-alt"></i>Transfer</a
+            >
+            <a
+                href="/user/transactions"
+                class="nav-link"
+                data-page="transaction"
+                ><i class="fas fa-receipt"></i>Transactions</a
+            >
+            <a href="/user/account" class="nav-link" data-page="account"
+                ><i class="fas fa-wallet"></i>Account</a
+            >
+            <a href="/user/profile" class="nav-link" data-page="profile"
+                ><i class="fas fa-user-circle"></i>Profile</a
+            >
+            <button
+                class="logout-btn"
+                id="logout_btn_mobile"
+                aria-label="Log out of account"
+            >
+                <i class="fas fa-sign-out-alt"></i>Log out
+            </button>
         </nav>
         <div class="mobile-top-row hidden" id="mobile_top_row"></div>
         <div class="dashboard-container">
@@ -42,53 +75,102 @@
             <div class="sidebar sidebar-black" id="sidebar_nav">
                 <div class="popup-header popup-header-style">
                     <span class="logo logo-large">
-                        <span class="logo-stackovercash"><span class="logo-stack">Stack</span><span class="logo-overcash">Overcash</span></span>
+                        <span class="logo-stackovercash"
+                            ><span class="logo-stack">Stack</span
+                            ><span class="logo-overcash">Overcash</span></span
+                        >
                     </span>
                 </div>
                 <div class="user-profile flex-center">
-                    <div class="avatar" id="user_avatar_container" aria-label="User avatar">
+                    <div
+                        class="avatar"
+                        id="user_avatar_container"
+                        aria-label="User avatar"
+                    >
                         <!-- User initial will go here -->
                         <div class="edit-icon hidden" id="edit_profile_icon">
                             <i class="fas fa-pen"></i>
                         </div>
                     </div>
+                    <span id="user_name" class="sidebar-user-name"></span>
                 </div>
                 <nav class="sidebar-nav" aria-label="Main navigation">
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="/user/dashboard" class="nav-link" data-page="dashboard" aria-label="Dashboard">
-                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                            <a
+                                href="/user/dashboard"
+                                class="nav-link"
+                                data-page="dashboard"
+                                aria-label="Dashboard"
+                            >
+                                <i
+                                    class="fas fa-tachometer-alt"
+                                    aria-hidden="true"
+                                ></i>
                                 Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/user/transfer" class="nav-link" data-page="transfer" aria-label="Transfer funds">
-                                <i class="fas fa-exchange-alt" aria-hidden="true"></i>
+                            <a
+                                href="/user/transfer"
+                                class="nav-link"
+                                data-page="transfer"
+                                aria-label="Transfer funds"
+                            >
+                                <i
+                                    class="fas fa-exchange-alt"
+                                    aria-hidden="true"
+                                ></i>
                                 Transfer
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/user/transactions" class="nav-link" data-page="transaction" aria-label="View transactions">
-                                <i class="fas fa-receipt" aria-hidden="true"></i>
+                            <a
+                                href="/user/transactions"
+                                class="nav-link"
+                                data-page="transaction"
+                                aria-label="View transactions"
+                            >
+                                <i
+                                    class="fas fa-receipt"
+                                    aria-hidden="true"
+                                ></i>
                                 Transactions
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/user/account" class="nav-link" data-page="account" aria-label="Manage accounts">
+                            <a
+                                href="/user/account"
+                                class="nav-link"
+                                data-page="account"
+                                aria-label="Manage accounts"
+                            >
                                 <i class="fas fa-wallet" aria-hidden="true"></i>
                                 Account
                             </a>
                         </li>
                         <li class="nav-item active">
-                            <a href="/user/profile" class="nav-link" data-page="profile" aria-label="User profile">
-                                <i class="fas fa-user-circle" aria-hidden="true"></i>
+                            <a
+                                href="/user/profile"
+                                class="nav-link"
+                                data-page="profile"
+                                aria-label="User profile"
+                            >
+                                <i
+                                    class="fas fa-user-circle"
+                                    aria-hidden="true"
+                                ></i>
                                 Profile
                             </a>
                         </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
-                    <button class="logout-btn" id="logout_btn" aria-label="Log out of account">
+                    <button
+                        class="logout-btn"
+                        id="logout_btn"
+                        aria-label="Log out of account"
+                    >
                         <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                         Log out
                     </button>
@@ -98,21 +180,30 @@
             <!-- Main Content -->
             <div class="main-content">
                 <!-- Header -->
-                <header class="main-header">
-                </header>
+                <header class="main-header"></header>
 
                 <!-- Profile Content -->
                 <div class="profile-form-container">
-                    <div class="profile-form-progress" id="profile_form_progress">
+                    <div
+                        class="profile-form-progress"
+                        id="profile_form_progress"
+                    >
                         <span class="progress-step active" data-step="0"></span>
                         <span class="progress-step" data-step="1"></span>
                         <span class="progress-step" data-step="2"></span>
+                        <span class="progress-step" data-step="3"></span>
                     </div>
                     <div class="profile-header-block">
                         <!-- Avatar removed for minimalist look -->
                         <div class="profile-minimal-user-info">
-                            <div class="profile-minimal-fullname" id="profile_fullname"></div>
-                            <div class="profile-minimal-username" id="profile_username"></div>
+                            <div
+                                class="profile-minimal-fullname"
+                                id="profile_fullname"
+                            ></div>
+                            <div
+                                class="profile-minimal-username"
+                                id="profile_username"
+                            ></div>
                         </div>
                     </div>
                     <hr class="profile-header-divider" />
@@ -122,73 +213,378 @@
                             <h3>Basic Information</h3>
                             <div class="form-group">
                                 <label for="edit_first_name">First Name</label>
-                                <input type="text" id="edit_first_name" class="form-input" autocomplete="given-name" readonly>
+                                <input
+                                    type="text"
+                                    id="edit_first_name"
+                                    class="form-input"
+                                    autocomplete="given-name"
+                                    readonly
+                                />
                             </div>
                             <div class="form-group">
                                 <label for="edit_last_name">Last Name</label>
-                                <input type="text" id="edit_last_name" class="form-input" autocomplete="family-name" readonly>
+                                <input
+                                    type="text"
+                                    id="edit_last_name"
+                                    class="form-input"
+                                    autocomplete="family-name"
+                                    readonly
+                                />
                             </div>
                             <div class="form-group">
                                 <label for="edit_username">Username</label>
-                                <input type="text" id="edit_username" class="form-input" readonly autocomplete="username">
+                                <input
+                                    type="text"
+                                    id="edit_username"
+                                    class="form-input"
+                                    readonly
+                                    autocomplete="username"
+                                />
                             </div>
                             <div class="form-group">
                                 <label for="edit_email">Email</label>
-                                <input type="email" id="edit_email" class="form-input" autocomplete="email">
+                                <input
+                                    type="email"
+                                    id="edit_email"
+                                    class="form-input"
+                                    autocomplete="email"
+                                />
                             </div>
                         </div>
                         <!-- Step 2: Contact & Address -->
-                        <div class="profile-form-step" data-step="1" style="display:none;">
+                        <div
+                            class="profile-form-step"
+                            data-step="1"
+                            style="display: none"
+                        >
                             <h3>Contact & Address</h3>
-                            <div class="form-group">
-                                <label for="edit_phone_number">Phone Number</label>
-                                <input type="tel" id="edit_phone_number" class="form-input" autocomplete="tel">
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="edit_phone_number"
+                                            >Phone Number</label
+                                        >
+                                        <input
+                                            type="tel"
+                                            id="edit_phone_number"
+                                            class="form-input"
+                                            autocomplete="tel"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_date_of_birth"
+                                            >Date of Birth</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="edit_date_of_birth"
+                                            class="form-input"
+                                            autocomplete="bday"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_nationality"
+                                            >Nationality</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="edit_nationality"
+                                            class="form-input"
+                                            readonly
+                                            autocomplete="country-name"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="edit_street"
+                                            >Street Address</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="edit_street"
+                                            class="form-input"
+                                            autocomplete="street-address"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_city">City</label>
+                                        <input
+                                            type="text"
+                                            id="edit_city"
+                                            class="form-input"
+                                            autocomplete="address-level2"
+                                        />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edit_zip_code"
+                                            >ZIP Code</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="edit_zip_code"
+                                            class="form-input"
+                                            autocomplete="postal-code"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="edit_date_of_birth">Date of Birth</label>
-                                <input type="date" id="edit_date_of_birth" class="form-input" autocomplete="bday">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_nationality">Nationality</label>
-                                <input type="text" id="edit_nationality" class="form-input" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_street">Street Address</label>
-                                <input type="text" id="edit_street" class="form-input" autocomplete="street-address">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_city">City</label>
-                                <input type="text" id="edit_city" class="form-input" autocomplete="address-level2">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_zip_code">ZIP Code</label>
-                                <input type="text" id="edit_zip_code" class="form-input" autocomplete="postal-code">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_country">Country</label>
-                                <input type="text" id="edit_country" class="form-input" autocomplete="country-name">
+                            <div
+                                class="form-group floating-label-group form-group-country"
+                            >
+                                <input
+                                    type="text"
+                                    id="edit_country"
+                                    class="form-input"
+                                    autocomplete="country"
+                                    placeholder=" "
+                                />
+                                <label for="edit_country" class="floating-label"
+                                    >Country</label
+                                >
+                                <div
+                                    id="country-dropdown"
+                                    class="country-dropdown"
+                                    style="display: none"
+                                ></div>
                             </div>
                         </div>
-                        <!-- Step 3: Account Settings -->
-                        <div class="profile-form-step" data-step="2" style="display:none;">
+                        <!-- Step 3: ID Information -->
+                        <div
+                            class="profile-form-step"
+                            data-step="2"
+                            style="display: none"
+                        >
+                            <h3>ID Information</h3>
+                            <div
+                                class="id-info-card"
+                                style="
+                                    background: #f8fafc;
+                                    border-radius: 14px;
+                                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                                    padding: 22px 18px 18px 18px;
+                                    margin-bottom: 18px;
+                                "
+                            >
+                                <div
+                                    class="form-group"
+                                    id="id_type_display_group"
+                                    style="margin-bottom: 12px"
+                                >
+                                    <label
+                                        style="
+                                            font-size: 1.08rem;
+                                            font-weight: 700;
+                                        "
+                                        >ID Type</label
+                                    >
+                                    <div
+                                        id="current_id_type_text"
+                                        style="
+                                            font-size: 1.08rem;
+                                            color: #222;
+                                            margin-top: 2px;
+                                        "
+                                    ></div>
+                                </div>
+                                <div
+                                    class="form-group"
+                                    id="id_type_edit_group"
+                                    style="display: none; margin-bottom: 12px"
+                                >
+                                    <label for="edit_id_type">ID Type</label>
+                                    <select
+                                        id="edit_id_type"
+                                        class="form-input"
+                                    >
+                                        <option value="passport">
+                                            Passport
+                                        </option>
+                                        <option value="national_id">
+                                            National ID
+                                        </option>
+                                        <option value="driver_license">
+                                            Driver's License
+                                        </option>
+                                        <option value="student_id">
+                                            Student ID
+                                        </option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div
+                                    class="form-group"
+                                    style="margin-bottom: 12px"
+                                >
+                                    <label>Current ID Image</label>
+                                    <div
+                                        id="current_id_image_container"
+                                        style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                        "
+                                    >
+                                        <img
+                                            id="current_id_image"
+                                            src=""
+                                            alt="Current ID Image"
+                                            style="
+                                                max-width: 220px;
+                                                border: 1.5px solid #e0e0e0;
+                                                border-radius: 8px;
+                                                background: #fafbfc;
+                                                margin-bottom: 6px;
+                                                display: none;
+                                                box-shadow: 0 2px 8px
+                                                    rgba(0, 0, 0, 0.06);
+                                            "
+                                        />
+                                        <span
+                                            id="no_id_image_text"
+                                            style="
+                                                color: #888;
+                                                font-size: 0.98rem;
+                                                display: none;
+                                            "
+                                            >No ID image uploaded</span
+                                        >
+                                    </div>
+                                </div>
+                                <div
+                                    class="form-group"
+                                    id="id_image_edit_group"
+                                    style="display: none; margin-bottom: 18px"
+                                >
+                                    <label for="edit_id_image"
+                                        >Upload New ID Image</label
+                                    >
+                                    <input
+                                        type="file"
+                                        id="edit_id_image"
+                                        class="form-input"
+                                        accept="image/*"
+                                        aria-label="Upload new ID image"
+                                    />
+                                    <div
+                                        class="helper-text"
+                                        style="margin-top: 6px; color: #888"
+                                    >
+                                        Max file size: 500KB. Only images are
+                                        allowed.
+                                    </div>
+                                </div>
+                                <div
+                                    class="button-group"
+                                    style="
+                                        margin-top: 18px;
+                                        justify-content: flex-end;
+                                        gap: 16px;
+                                    "
+                                >
+                                    <button
+                                        type="button"
+                                        class="btn secondary-btn"
+                                        id="view_id_image_btn"
+                                        aria-label="View ID Image"
+                                    >
+                                        View
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn secondary-btn"
+                                        id="cancel_edit_id_btn"
+                                        style="display: none"
+                                        aria-label="Cancel Edit"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Step 4: Account Settings (increment data-step to 3) -->
+                        <div
+                            class="profile-form-step"
+                            data-step="3"
+                            style="display: none"
+                        >
                             <h3>Account Settings</h3>
                             <div class="form-group">
                                 <label for="edit_password">New Password</label>
-                                <input type="password" id="edit_password" class="form-input" autocomplete="new-password">
-                                <div class="helper-text">Leave blank to keep current password</div>
+                                <input
+                                    type="password"
+                                    id="edit_password"
+                                    class="form-input"
+                                    autocomplete="new-password"
+                                />
+                                <div class="helper-text">
+                                    Leave blank to keep current password
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="edit_confirm_password">Confirm New Password</label>
-                                <input type="password" id="edit_confirm_password" class="form-input" autocomplete="new-password">
-                                <div class="helper-text">Re-enter your new password to confirm</div>
+                                <label for="edit_confirm_password"
+                                    >Confirm New Password</label
+                                >
+                                <input
+                                    type="password"
+                                    id="edit_confirm_password"
+                                    class="form-input"
+                                    autocomplete="new-password"
+                                />
+                                <div class="helper-text">
+                                    Re-enter your new password to confirm
+                                </div>
                             </div>
                         </div>
                         <!-- Navigation Buttons -->
                         <div class="profile-form-actions">
-                            <button type="button" class="btn secondary-btn" id="profile_prev_btn" style="display:none;">Back</button>
-                            <button type="button" class="btn primary-btn" id="profile_next_btn">Next</button>
-                            <button type="submit" class="btn primary-btn" id="save_profile_button" style="display:none;">Save Changes</button>
-                            <button type="button" class="btn secondary-btn" id="reset_profile_button">Reset</button>
+                            <button
+                                type="button"
+                                class="btn secondary-btn"
+                                id="profile_prev_btn"
+                                style="display: none"
+                            >
+                                Back
+                            </button>
+                            <button
+                                type="button"
+                                class="btn next-btn"
+                                id="profile_next_btn"
+                            >
+                                Next
+                            </button>
+                            <!-- Save buttons for each step -->
+                            <button
+                                type="submit"
+                                class="btn primary-btn"
+                                id="save_profile_button_step1"
+                                style="display: none"
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn primary-btn"
+                                id="save_profile_button_step2"
+                                style="display: none"
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="submit"
+                                class="btn primary-btn"
+                                id="save_profile_button"
+                                style="display: none"
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                class="btn secondary-btn"
+                                id="reset_profile_button"
+                            >
+                                Reset
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -198,73 +594,129 @@
 
         <!-- Profile Change Confirmation Modal -->
         <div id="profile-confirm-modal" class="modal hidden">
-          <div class="modal-content">
-            <h3>Confirm Changes</h3>
-            <p>To save changes to your profile, please enter your current password:</p>
-            <input type="password" id="profile_confirm_password" class="form-input" placeholder="Current password" autocomplete="current-password">
-            <div id="profile-confirm-error" class="text-error hidden"></div>
-            <div class="button-group mt-18">
-              <button id="profile_confirm_btn" class="btn primary-btn">Confirm</button>
-              <button id="profile_cancel_btn" class="btn secondary-btn">Cancel</button>
+            <div class="modal-content">
+                <h3>Confirm Changes</h3>
+                <p>
+                    To save changes to your profile, please enter your current
+                    password:
+                </p>
+                <input
+                    type="password"
+                    id="profile_confirm_password"
+                    class="form-input"
+                    placeholder="Current password"
+                    autocomplete="current-password"
+                />
+                <div id="profile-confirm-error" class="text-error hidden"></div>
+                <div class="button-group mt-18">
+                    <button id="profile_confirm_btn" class="btn primary-btn">
+                        Confirm
+                    </button>
+                    <button id="profile_cancel_btn" class="btn secondary-btn">
+                        Cancel
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
 
         <!-- ID Image Modal -->
         <div id="id-image-modal" class="modal hidden">
-          <div class="modal-content">
-            <span id="close-id-image-modal" class="close-modal">&times;</span>
-            <h3>ID Image Preview</h3>
-            <img id="id-image-preview" src="" alt="ID Image" class="modal-img-preview">
-          </div>
+            <div class="modal-content">
+                <span id="close-id-image-modal" class="close-modal"
+                    >&times;</span
+                >
+                <h3>ID Image Preview</h3>
+                <img
+                    id="id-image-preview"
+                    src=""
+                    alt="ID Image"
+                    class="modal-img-preview"
+                />
+            </div>
         </div>
 
         <!-- Update ID Modal -->
         <div id="update-id-modal" class="modal hidden">
-          <div class="modal-content">
-            <h3>Update My ID</h3>
-            <div class="form-group">
-              <label for="modal_id_type">ID Type</label>
-              <select id="modal_id_type" class="form-input">
-                <option value="passport">Passport</option>
-                <option value="driver_license">Driver's License</option>
-                <option value="national_id">National ID</option>
-                <option value="sss">SSS</option>
-                <option value="gsis">GSIS</option>
-                <option value="prc">PRC</option>
-                <option value="other">Other</option>
-              </select>
+            <div class="modal-content">
+                <h3>Update My ID</h3>
+                <div class="form-group">
+                    <label for="modal_id_type">ID Type</label>
+                    <select id="modal_id_type" class="form-input">
+                        <option value="passport">Passport</option>
+                        <option value="driver_license">Driver's License</option>
+                        <option value="national_id">National ID</option>
+                        <option value="sss">SSS</option>
+                        <option value="gsis">GSIS</option>
+                        <option value="prc">PRC</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal_id_image_input">Upload ID Image</label>
+                    <input
+                        type="file"
+                        id="modal_id_image_input"
+                        accept="image/*"
+                    />
+                </div>
+                <div class="form-group hide" id="modal_password_group">
+                    <label for="modal_current_password">Current Password</label>
+                    <input
+                        type="password"
+                        id="modal_current_password"
+                        class="form-input"
+                        placeholder="Enter your current password"
+                        autocomplete="current-password"
+                    />
+                </div>
+                <div
+                    id="modal_id_error"
+                    class="hide text-error text-center mb-10"
+                ></div>
+                <div class="button-group mt-18 flex gap-8">
+                    <button
+                        id="modal_upload_id_btn"
+                        class="btn primary-btn"
+                        type="button"
+                    >
+                        Upload
+                    </button>
+                    <button
+                        id="modal_confirm_id_btn"
+                        class="btn primary-btn hide"
+                        type="button"
+                    >
+                        Confirm
+                    </button>
+                    <button
+                        id="modal_cancel_id_btn"
+                        class="btn secondary-btn"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+                </div>
+                <div class="mt-12 text-center">
+                    <img
+                        id="modal_id_image_preview"
+                        src=""
+                        alt="ID Preview"
+                        class="hide modal-img-preview"
+                    />
+                </div>
             </div>
-            <div class="form-group">
-              <label for="modal_id_image_input">Upload ID Image</label>
-              <input type="file" id="modal_id_image_input" accept="image/*">
-            </div>
-            <div class="form-group hide" id="modal_password_group">
-              <label for="modal_current_password">Current Password</label>
-              <input type="password" id="modal_current_password" class="form-input" placeholder="Enter your current password" autocomplete="current-password">
-            </div>
-            <div id="modal_id_error" class="hide text-error text-center mb-10"></div>
-            <div class="button-group mt-18 flex gap-8">
-              <button id="modal_upload_id_btn" class="btn primary-btn" type="button">Upload</button>
-              <button id="modal_confirm_id_btn" class="btn primary-btn hide" type="button">Confirm</button>
-              <button id="modal_cancel_id_btn" class="btn secondary-btn" type="button">Cancel</button>
-            </div>
-            <div class="mt-12 text-center">
-              <img id="modal_id_image_preview" src="" alt="ID Preview" class="hide modal-img-preview" />
-            </div>
-          </div>
         </div>
 
         <!-- Load configuration first -->
         <script src="/user/js/config.js"></script>
         <script src="/user/js/auth-guard.js"></script>
         <script src="/user/js/session-manager.js"></script>
-        
+
         <!-- Load API and session management -->
         <script src="/user/js/api.js"></script>
-        
+
         <!-- Load page-specific scripts -->
         <script src="/user/js/profile.js"></script>
         <script src="/user/js/logout.js"></script>
     </body>
-</html> 
+</html>

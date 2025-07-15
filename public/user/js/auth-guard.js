@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(API_ENDPOINT, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (response.status === 401) {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function checkSession() {
     try {
         const resp = await fetch(API_ENDPOINTS.AUTH.SESSION_CHECK, {
-            credentials: 'include'
+            credentials: 'include',
         });
         const data = await resp.json();
         if (!data.success || !data.authenticated) {
@@ -73,8 +73,11 @@ checkSession();
 // On the login page, show a notification if redirected due to session expiry
 if (window.location.search.includes('expired=true')) {
     if (typeof showNotification === 'function') {
-        showNotification('Your session has expired. Please log in again.', 'error');
+        showNotification(
+            'Your session has expired. Please log in again.',
+            'error'
+        );
     } else {
         alert('Your session has expired. Please log in again.');
     }
-} 
+}

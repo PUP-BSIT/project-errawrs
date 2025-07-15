@@ -359,6 +359,7 @@ const tellerManager = {
       tellerManager.showToast(error.message, 'error');
     }
   },
+  },
 
   async saveTeller() {
     try {

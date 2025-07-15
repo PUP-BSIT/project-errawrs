@@ -183,6 +183,8 @@ $router->get('/registration', 'public/user/registration.html');
 $router->get('/forgot-password', 'public/user/forgot_password.html');
 $router->get('/forgot-username', 'public/user/forgot_username.html');
 $router->get('/reset-password', 'public/user/reset_password.html');
+// Serve the pretty URL for password reset
+$router->get('/user/reset-password', 'src/api/user/email-templates/reset_password.html');
 
 // =====================================================
 // USER ROUTES (Account Holders)
@@ -429,5 +431,30 @@ $router->forbidden(function() {
 //     </body>
 //     </html>';
 // });
+
+// Serve registration uploads (ID images, etc.)
+$router->get('/uploads/registration/{userId}/{file}', function($userId, $file) {
+    $path = "public/uploads/registration/$userId/$file";
+    if (file_exists($path)) {
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $mimeTypes = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'pdf' => 'application/pdf',
+        ];
+        if (isset($mimeTypes[$extension])) {
+            header("Content-Type: {$mimeTypes[$extension]}");
+            readfile($path);
+        } else {
+            http_response_code(404);
+            echo "File type not supported";
+        }
+    } else {
+        http_response_code(404);
+        echo "File not found";
+    }
+});
 
 return $router; 
