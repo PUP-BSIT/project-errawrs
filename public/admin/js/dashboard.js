@@ -34,7 +34,7 @@ function setupEventListeners() {
             profileBtn.addEventListener('click', () => {
                 const dropdown = document.querySelector('.dropdown-content');
                 if (dropdown) {
-                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                    dropdown.classList.toggle('show');
                 }
             });
         }
@@ -44,7 +44,8 @@ function setupEventListeners() {
         if (dashboardLink) {
             dashboardLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(item => 
+                      item.classList.remove('active'));
                 e.target.closest('.nav-item').classList.add('active');
                 hideAllSections();
                 const dashboardSection = document.querySelector('.dashboard-section');
@@ -188,6 +189,18 @@ function formatNumber(number) {
         return new Intl.NumberFormat().format(number);
     }
 
+function formatDate(dateString) {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 async function handleLogout(e) {
         e.preventDefault();
         try {
@@ -267,7 +280,8 @@ async function handleTellerSearch(searchTerm, resultsContainer = unifiedResults)
                         <h3 class="user-name">${teller.first_name} ${teller.last_name}</h3>
                         <span class="account-number">${teller.teller_number}</span>
                     </div>
-                    <span class="status-badge ${teller.status === 'active' ? 'status-active' : 'status-inactive'}">
+                    <span class="status-badge ${teller.status === 'active' ? 
+                              'status-active' : 'status-inactive'}">
                         ${teller.status}
                     </span>
                 </div>
@@ -354,44 +368,3 @@ async function handleUserSearch(searchTerm, resultsContainer = unifiedResults) {
         }
     }
 }
-
-function hideAllSections() {
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-    });
-}
-
-function formatDate(dateString) {
-    if (!dateString) return 'Never';
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-// Session check on page load
-(async function() {
-    try {
-        const res = await fetch(API_ENDPOINTS.ADMIN_SESSION_CHECK, { credentials: 'include' });
-        const data = await res.json();
-        if (!data.success) {
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 3000);
-        }
-    } catch (e) {
-        setTimeout(() => {
-            window.location.href = '/login';
-        }, 3000);
-    }
-})();
-
-window.addEventListener('pageshow', function(event) {
-    if (event.persisted) {
-        window.location.reload();
-    }
-});
