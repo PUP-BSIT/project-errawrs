@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Failed to initialize dashboard:', error);
         show_notification('Failed to initialize dashboard', 'error');
     });
-    displayFinancialTip(); // Display initial tip
+    displayFinancialTip(); // Ensure tip is shown on load
 
     // --- MOBILE NOTICE + TIP FLEX ROW LOGIC ---
     function moveNoticeAndTipForMobile() {
@@ -994,4 +994,25 @@ function fallbackCopyToClipboard(text, resolve, reject) {
     } catch (err) {
         reject(err);
     }
+}
+
+// Function to display a random financial tip
+function displayFinancialTip() {
+    const tipContainer = document.getElementById('financial_tip_container');
+    if (!tipContainer) return;
+    if (!Array.isArray(FINANCIAL_TIPS) || FINANCIAL_TIPS.length === 0) {
+        tipContainer.innerHTML = '';
+        return;
+    }
+    const tip = FINANCIAL_TIPS[Math.floor(Math.random() * FINANCIAL_TIPS.length)];
+    tipContainer.innerHTML = `
+        <div class="tip-header">
+            <i class="fas ${tip.icon}"></i>
+            <h3>Financial Tip</h3>
+        </div>
+        <div class="tip-content">
+            <h4>${tip.title}</h4>
+            <p>${tip.content}</p>
+        </div>
+    `;
 }
