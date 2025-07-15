@@ -2638,3 +2638,1288 @@
 [15-Jul-2025 11:45:38 Asia/Manila] Query executed successfully
 [15-Jul-2025 11:45:38 Asia/Manila] Processed 2 transactions
 [15-Jul-2025 11:45:38 Asia/Manila] Connection closed
+[15-Jul-2025 12:41:58 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752554518
+            [last_activity] => 1752554518
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[15-Jul-2025 12:41:58 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-15 12:41:58
+)
+
+[15-Jul-2025 12:41:58 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752554518
+            [last_activity] => 1752554518
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[15-Jul-2025 06:41:59 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:41:59 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:41:59 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:41:59 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:41:59 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:41:59 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:41:59 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:41:59 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554518
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:41:59 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:41:59 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:02 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:02 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:02 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:02 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:02 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:02 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:02 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:02 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554518
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:02 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:02 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:19 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:19 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:19 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:19 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:19 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:19 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:21 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:21 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554522
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:21 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:21 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:21 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:21 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:21 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:21 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:21 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:21 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:21 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:21 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554522
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:21 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:21 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:24 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:24 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:24 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:24 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:24 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:24 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:24 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:24 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554541
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:24 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:24 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:26 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:26 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:26 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:26 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:26 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:26 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:26 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:26 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554544
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:26 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:26 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:42:40 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:42:40 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:42:40 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:42:40 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:42:40 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:42:40 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID_TELLER] => nkvrr4hn0n46j9bv87q17cdv2r
+    [STACKOVERCASH_SESSID] => t7cf9ph8ac688jcbdmctahn08l
+    [STACKOVERCASH_SESSID_ADMIN] => p2pu4g9jjmc82uetu0n1c7hvkv
+)
+
+[15-Jul-2025 06:42:41 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:42:41 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752554518
+    [last_activity] => 1752554560
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:42:41 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:42:41 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 12:45:02 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554702
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+)
+
+[15-Jul-2025 12:45:02 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [login_type] => user
+    [timestamp] => 2025-07-15 12:45:02
+)
+
+[15-Jul-2025 12:45:02 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554702
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:45:10 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554708
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:45:10 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:45:11 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:45:14 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554713
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:45:14 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:45:15 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:45:58 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 68
+            [identifier] => T000009
+            [type] => teller
+            [logged_in_at] => 1752554758
+            [last_activity] => 1752554758
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [phone_number] => 
+            [email] => geraldkasan163@gmail.com
+        )
+
+)
+
+[15-Jul-2025 12:45:58 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 68
+            [teller_number] => T000009
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [email] => geraldkasan163@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-15 12:45:58
+)
+
+[15-Jul-2025 12:45:58 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 68
+            [identifier] => T000009
+            [type] => teller
+            [logged_in_at] => 1752554758
+            [last_activity] => 1752554758
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [phone_number] => 
+            [email] => geraldkasan163@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 68
+            [teller_number] => T000009
+            [first_name] => Gerald
+            [last_name] => Kasan
+            [email] => geraldkasan163@gmail.com
+            [status] => active
+        )
+
+)
+
+[15-Jul-2025 12:46:15 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554774
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:46:16 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:46:16 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:47:09 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554828
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:09 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:47:10 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:47:10 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554828
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:10 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 12:47:10 Asia/Manila] Account filter: 544250000001
+[15-Jul-2025 12:47:10 Asia/Manila] Attempting database connection
+[15-Jul-2025 12:47:10 Asia/Manila] Database connection successful
+[15-Jul-2025 12:47:10 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? AND a.account_number = ? with params: 13, 544250000001
+[15-Jul-2025 12:47:11 Asia/Manila] Total transactions found: 14
+[15-Jul-2025 12:47:11 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ? AND a.account_number = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 544250000001, 2, 0
+[15-Jul-2025 12:47:11 Asia/Manila] Query executed successfully
+[15-Jul-2025 12:47:11 Asia/Manila] Processed 2 transactions
+[15-Jul-2025 12:47:11 Asia/Manila] Connection closed
+[15-Jul-2025 12:47:17 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554835
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:17 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:47:18 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:47:22 Asia/Manila] Session state: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554841
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:22 Asia/Manila] Processing transactions for user_id: 13
+[15-Jul-2025 12:47:22 Asia/Manila] Account filter: None
+[15-Jul-2025 12:47:22 Asia/Manila] Attempting database connection
+[15-Jul-2025 12:47:23 Asia/Manila] Database connection successful
+[15-Jul-2025 12:47:23 Asia/Manila] Count query: SELECT COUNT(*) as total 
+                   FROM transaction t
+                   JOIN account a ON (t.sender_account_id = a.account_id OR 
+                                    t.receiver_account_id = a.account_id)
+                   WHERE a.user_id = ? with params: 13
+[15-Jul-2025 12:47:23 Asia/Manila] Total transactions found: 14
+[15-Jul-2025 12:47:23 Asia/Manila] Main query: SELECT 
+                t.transaction_id, 
+                t.amount, 
+                t.transaction_type as type, 
+                t.description, 
+                t.created_at as transaction_date, 
+                t.status,
+                t.external_bank_code,
+                t.external_account_number,
+                sender.account_number as sender_account_number,
+                receiver.account_number as receiver_account_number,
+                a.account_number,
+                CASE 
+                    WHEN t.sender_account_id = a.account_id THEN -t.amount
+                    ELSE t.amount
+                END as adjusted_amount
+              FROM transaction t
+              JOIN account a ON (t.sender_account_id = a.account_id OR 
+                               t.receiver_account_id = a.account_id)
+              LEFT JOIN account sender ON t.sender_account_id = sender.account_id
+              LEFT JOIN account receiver ON t.receiver_account_id = receiver.account_id
+              WHERE a.user_id = ?
+              ORDER BY t.created_at DESC
+              LIMIT ? OFFSET ? with params: 13, 5, 0
+[15-Jul-2025 12:47:23 Asia/Manila] Query executed successfully
+[15-Jul-2025 12:47:23 Asia/Manila] Processed 5 transactions
+[15-Jul-2025 12:47:23 Asia/Manila] Connection closed
+[15-Jul-2025 12:47:25 Asia/Manila] Session data in accounts.php: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554844
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:26 Asia/Manila] Fetching accounts for user ID: 13
+[15-Jul-2025 12:47:26 Asia/Manila] Found accounts: Array
+(
+    [0] => Array
+        (
+            [account_id] => 12
+            [account_number] => 544250000001
+            [balance] => 1960.00
+            [status] => active
+            [account_type] => savings
+            [created_at] => 2025-07-12 01:11:28
+        )
+
+)
+
+[15-Jul-2025 12:47:35 Asia/Manila] Send OTP - Raw request data: {"phone_number":"+639708070447","purpose":"create_account"}
+[15-Jul-2025 12:47:35 Asia/Manila] Send OTP - Decoded input: Array
+(
+    [phone_number] => +639708070447
+    [purpose] => create_account
+)
+
+[15-Jul-2025 12:47:35 Asia/Manila] Send OTP - Normalized phone: 09708070447
+[15-Jul-2025 12:47:35 Asia/Manila] Send OTP - Formatted phone for API: +639708070447
+[15-Jul-2025 12:47:36 Asia/Manila] Storing OTP - Phone: 09708070447, Purpose: create_account
+[15-Jul-2025 12:47:36 Asia/Manila] Session ID before storing: a95pn985le91feirt49tg16dh0
+[15-Jul-2025 12:47:36 Asia/Manila] Session name before storing: STACKOVERCASH_SESSID
+[15-Jul-2025 12:47:36 Asia/Manila] Session data before storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554849
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+)
+
+[15-Jul-2025 12:47:36 Asia/Manila] OTP stored successfully
+[15-Jul-2025 12:47:36 Asia/Manila] Session data after storing: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554849
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp] => Array
+        (
+            [code] => 801826
+            [phone_number] => 09708070447
+            [created_at] => 1752554856
+            [attempts] => 0
+            [purpose] => create_account
+        )
+
+)
+
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Raw request data: {"otp":"801826","phone_number":"+639708070447","purpose":"create_account"}
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Input data: Array
+(
+    [otp] => 801826
+    [phone_number] => +639708070447
+    [purpose] => create_account
+)
+
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Purpose: create_account
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Session data before verification: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554875
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp] => Array
+        (
+            [code] => 801826
+            [phone_number] => 09708070447
+            [created_at] => 1752554856
+            [attempts] => 0
+            [purpose] => create_account
+        )
+
+)
+
+[15-Jul-2025 12:47:59 Asia/Manila] Verifying OTP - Input: 801826, Phone: +639708070447, Purpose: create_account
+[15-Jul-2025 12:47:59 Asia/Manila] Session ID before verify: a95pn985le91feirt49tg16dh0
+[15-Jul-2025 12:47:59 Asia/Manila] Session name before verify: STACKOVERCASH_SESSID
+[15-Jul-2025 12:47:59 Asia/Manila] Full session data before verify: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554875
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp] => Array
+        (
+            [code] => 801826
+            [phone_number] => 09708070447
+            [created_at] => 1752554856
+            [attempts] => 0
+            [purpose] => create_account
+        )
+
+)
+
+[15-Jul-2025 12:47:59 Asia/Manila] OTP verified successfully
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - SessionManager verifyOTP result: true
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Successful verification for phone: +639708070447
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - Final session data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554875
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 12:47:59 Asia/Manila] Verify OTP - otp_verified flag: 1
+[15-Jul-2025 12:47:59 Asia/Manila] Session ID in create_additional_account: a95pn985le91feirt49tg16dh0
+[15-Jul-2025 12:47:59 Asia/Manila] Full SESSION data: Array
+(
+    [auth] => Array
+        (
+            [id] => 13
+            [identifier] => janedee
+            [type] => user
+            [logged_in_at] => 1752554702
+            [last_activity] => 1752554875
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [email] => 
+        )
+
+    [userInfo] => Array
+        (
+            [id] => 13
+            [username] => janedee
+            [first_name] => Jane
+            [last_name] => Dee
+            [phone_number] => +639708070447
+            [account] => Array
+                (
+                    [account_id] => 12
+                    [account_number] => 544250000001
+                    [balance] => 1960.00
+                    [status] => active
+                )
+
+        )
+
+    [otp_verified] => 1
+)
+
+[15-Jul-2025 12:48:01 Asia/Manila] PHP Warning:  file_get_contents(C:\project-errawrs\src\api\user/email-templates/additional-account-email.css): Failed to open stream: No such file or directory in C:\project-errawrs\src\api\user\create_additional_account.php on line 137
+[15-Jul-2025 12:48:06 Asia/Manila] Additional account request email sent successfully to: geraldmamasalanang8@gmail.com
+[15-Jul-2025 06:49:26 Europe/Berlin] Logout request received. User: T000009
+[15-Jul-2025 12:54:21 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752555261
+            [last_activity] => 1752555261
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[15-Jul-2025 12:54:21 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+    [login_type] => admin
+    [timestamp] => 2025-07-15 12:54:21
+)
+
+[15-Jul-2025 12:54:21 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 1
+            [identifier] => admin
+            [type] => admin
+            [logged_in_at] => 1752555261
+            [last_activity] => 1752555261
+            [first_name] => System
+            [last_name] => Administrator
+            [phone_number] => 
+            [email] => errawrs@gmail.com
+        )
+
+    [adminInfo] => Array
+        (
+            [id] => 1
+            [username] => admin
+            [first_name] => System
+            [last_name] => Administrator
+            [email] => errawrs@gmail.com
+        )
+
+)
+
+[15-Jul-2025 06:54:23 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:54:23 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:54:23 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:54:23 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:54:23 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:54:23 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => a95pn985le91feirt49tg16dh0
+    [STACKOVERCASH_SESSID_ADMIN] => 3nlv4plfm7hnosm0tdk1nckv79
+)
+
+[15-Jul-2025 06:54:23 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:54:23 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752555261
+    [last_activity] => 1752555261
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:54:23 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:54:23 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 06:54:28 Europe/Berlin] === ADMIN SESSION CHECK DEBUG ===
+[15-Jul-2025 06:54:28 Europe/Berlin] Request URL: /api/auth/admin-session-check
+[15-Jul-2025 06:54:28 Europe/Berlin] HTTP Host: admin.stackovercash.site.local
+[15-Jul-2025 06:54:28 Europe/Berlin] Session name: PHPSESSID
+[15-Jul-2025 06:54:28 Europe/Berlin] Session ID: 
+[15-Jul-2025 06:54:28 Europe/Berlin] All cookies: Array
+(
+    [STACKOVERCASH_SESSID] => a95pn985le91feirt49tg16dh0
+    [STACKOVERCASH_SESSID_ADMIN] => 3nlv4plfm7hnosm0tdk1nckv79
+)
+
+[15-Jul-2025 06:54:28 Europe/Berlin] Is authenticated: true
+[15-Jul-2025 06:54:28 Europe/Berlin] Session data: Array
+(
+    [id] => 1
+    [identifier] => admin
+    [type] => admin
+    [logged_in_at] => 1752555261
+    [last_activity] => 1752555261
+    [first_name] => System
+    [last_name] => Administrator
+    [phone_number] => 
+    [email] => errawrs@gmail.com
+)
+
+[15-Jul-2025 06:54:28 Europe/Berlin] Is admin: true
+[15-Jul-2025 06:54:28 Europe/Berlin] ✅ Admin session check successful
+[15-Jul-2025 12:54:44 Asia/Manila] Teller reset password - Teller ID: 64
+[15-Jul-2025 12:54:45 Asia/Manila] Attempting to send reset email to: juliemaelumawag@gmail.com
+[15-Jul-2025 12:54:49 Asia/Manila] Reset email sent successfully to: juliemaelumawag@gmail.com
+[15-Jul-2025 12:55:34 Asia/Manila] Teller Password Setup Error: Account is already active. Use password reset if you forgot your password.
+[15-Jul-2025 13:02:51 Asia/Manila] Session created with data: Array
+(
+    [auth] => Array
+        (
+            [id] => 64
+            [identifier] => T000007
+            [type] => teller
+            [logged_in_at] => 1752555771
+            [last_activity] => 1752555771
+            [first_name] => Jane
+            [last_name] => Dong
+            [phone_number] => 
+            [email] => juliemaelumawag@gmail.com
+        )
+
+)
+
+[15-Jul-2025 13:02:51 Asia/Manila] Login successful. Response data: Array
+(
+    [success] => 1
+    [message] => Login successful
+    [user] => Array
+        (
+            [id] => 64
+            [teller_number] => T000007
+            [first_name] => Jane
+            [last_name] => Dong
+            [email] => juliemaelumawag@gmail.com
+            [status] => active
+        )
+
+    [login_type] => teller
+    [timestamp] => 2025-07-15 13:02:51
+)
+
+[15-Jul-2025 13:02:51 Asia/Manila] Session data after login: Array
+(
+    [auth] => Array
+        (
+            [id] => 64
+            [identifier] => T000007
+            [type] => teller
+            [logged_in_at] => 1752555771
+            [last_activity] => 1752555771
+            [first_name] => Jane
+            [last_name] => Dong
+            [phone_number] => 
+            [email] => juliemaelumawag@gmail.com
+        )
+
+    [tellerInfo] => Array
+        (
+            [id] => 64
+            [teller_number] => T000007
+            [first_name] => Jane
+            [last_name] => Dong
+            [email] => juliemaelumawag@gmail.com
+            [status] => active
+        )
+
+)
+
+[15-Jul-2025 13:03:23 Asia/Manila] Starting registration review process
+[15-Jul-2025 13:03:23 Asia/Manila] Processing registration ID: 44, Action: deny
+[15-Jul-2025 13:03:24 Asia/Manila] Database connection established
+[15-Jul-2025 13:03:24 Asia/Manila] Transaction started
+[15-Jul-2025 13:03:24 Asia/Manila] Found registration for: Jane Dee
+[15-Jul-2025 13:03:25 Asia/Manila] Updated registration status to: rejected
+[15-Jul-2025 13:03:28 Asia/Manila] Denial email sent successfully
+[15-Jul-2025 13:03:28 Asia/Manila] Transaction committed successfully
+[15-Jul-2025 13:03:28 Asia/Manila] Review process completed
