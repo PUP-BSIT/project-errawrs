@@ -54,6 +54,10 @@ Use the following credentials to explore the different roles in the application:
 
 > ⚠️ *Note: These demo accounts are for testing purposes only. Please do not store sensitive information.*
 
+## 📹 Video Recording of our Presentation
+🔗 [https://youtu.be/YT7I0XK5CX4?si=BuJGyQo68l6O63Xt](https://youtu.be/YT7I0XK5CX4?si=BuJGyQo68l6O63Xt)
+
+
 ---
 
 ## 🛠️ Tech Stack
@@ -104,7 +108,7 @@ Use the following credentials to explore the different roles in the application:
 - │   └── 📂/logs <!-- System logs -->
 - └── 📄README.md
 
----
+
 
 # 🗂️ Git Workflow Guidelines
 

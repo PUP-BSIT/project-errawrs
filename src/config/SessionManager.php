@@ -8,14 +8,7 @@ class SessionManager {
     private $isInitialized = false;
 
     private function __construct() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
-            $this->sessionTimeout = 0; // Never expire for admin
-        } elseif (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
-            $this->sessionTimeout = 0; // Never expire for teller
-        } else {
-            $this->sessionTimeout = 300; // 5 minutes for users
-        }
+        $this->sessionTimeout = 3600;      // 1 hour
         $this->sessionRefreshTime = 1800;  // 30 minutes
         $this->sessionWarnTime = 300;      // 5 minute warning
     }
@@ -65,24 +58,6 @@ class SessionManager {
         }
 
         $this->isInitialized = true;
-    }
-
-    private function getCookieDomain() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, '.local') !== false) {
-            return '.stackovercash.site.local';
-        }
-        return '.stackovercash.site';
-    }
-
-    private function getSessionName() {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (strpos($host, 'admin.') === 0 || strpos($host, 'dev-admin.') === 0) {
-            return 'STACKOVERCASH_SESSID_ADMIN';
-        } elseif (strpos($host, 'teller.') === 0 || strpos($host, 'dev-teller.') === 0) {
-            return 'STACKOVERCASH_SESSID_TELLER';
-        }
-        return 'STACKOVERCASH_SESSID';
     }
 
     public function storeOTP(string $otp, string $phone, string $purpose = 'general'): bool {
@@ -189,12 +164,15 @@ class SessionManager {
         $currentTime = time();
         $lastActivity = $_SESSION['auth']['last_activity'] ?? 0;
         $timeDiff = $currentTime - $lastActivity;
+        
         // Don't expire new sessions
         $isNewSession = isset($_SESSION['auth']['logged_in_at']) && 
                        ($currentTime - $_SESSION['auth']['logged_in_at'] <= 5);
+        
         if ($isNewSession) {
             return false;
         }
+        
         // Auto-refresh session if within refresh window
         if ($timeDiff <= $this->sessionRefreshTime) {
             $this->updateActivity();

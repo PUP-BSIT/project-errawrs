@@ -15,6 +15,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', handleLoginSubmit);
     }
+
+    // Password visibility toggle logic
+    const toggleBtn = document.querySelector('.password-toggle');
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function() {
+            const icon = toggleBtn.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            } else {
+                passwordInput.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            }
+        });
+    }
 });
 
 function showNotification(message, type = 'error') {

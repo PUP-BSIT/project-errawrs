@@ -96,7 +96,7 @@ async function fetchUsers() {
         });
         filteredUsers = [...allUsers];
         renderUsers();
-        renderPagination();
+        updatePagination();
         updatePageTitle();
     } catch (error) {
         showToast(`Error: ${error.message}`, 'error');
@@ -161,47 +161,56 @@ function renderUsers() {
     });
 }
 
-function renderPagination() {
-    paginationContainer.innerHTML = '';
-    const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
-    if (totalPages <= 1) return;
+// --- Pagination Logic (from review_registrations.js style) ---
+function updatePagination() {
+    const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE) || 1;
+    const pagination = document.getElementById('pagination');
+    if (!pagination) return;
+    let html = '';
+    const maxVisible = 5;
     // Previous button
-    const prevBtn = createPaginationButton('Previous', currentPage === 1, () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderUsers();
-            renderPagination();
+    html += `<button class="page-number" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">&laquo; Prev</button>`;
+    if (totalPages <= maxVisible + 1) {
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-number ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
         }
-    });
-    paginationContainer.appendChild(prevBtn);
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = createPaginationButton(i, i === currentPage, () => {
-            currentPage = i;
-            renderUsers();
-            renderPagination();
-        });
-        if (i === currentPage) pageBtn.classList.add('active');
-        paginationContainer.appendChild(pageBtn);
+    } else {
+        html += `<button class="page-number ${1 === currentPage ? 'active' : ''}" onclick="goToPage(1)">1</button>`;
+        let start = Math.max(2, currentPage - 1);
+        let end = Math.min(totalPages - 1, currentPage + 1);
+        if (currentPage <= 3) {
+            start = 2;
+            end = 5;
+        } else if (currentPage >= totalPages - 2) {
+            start = totalPages - 4;
+            end = totalPages - 1;
+        }
+        if (start > 2) {
+            html += '<span class="pagination-ellipsis">...</span>';
+        }
+        for (let i = start; i <= end; i++) {
+            html += `<button class="page-number ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        }
+        if (end < totalPages - 1) {
+            html += '<span class="pagination-ellipsis">...</span>';
+        }
+        html += `<button class="page-number ${totalPages === currentPage ? 'active' : ''}" onclick="goToPage(${totalPages})">${totalPages}</button>`;
     }
     // Next button
-    const nextBtn = createPaginationButton('Next', currentPage === totalPages, () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            renderUsers();
-            renderPagination();
-        }
-    });
-    paginationContainer.appendChild(nextBtn);
+    html += `<button class="page-number" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next &raquo;</button>`;
+    pagination.innerHTML = html;
 }
 
-function createPaginationButton(text, disabled, onClick) {
-    const button = document.createElement('button');
-    button.textContent = text;
-    button.disabled = disabled;
-    button.addEventListener('click', onClick);
-    return button;
+function goToPage(page) {
+    const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE) || 1;
+    if (page < 1 || page > totalPages) return;
+    currentPage = page;
+    renderUsers();
+    updatePagination();
 }
+
+// Expose goToPage globally for inline onclick
+window.goToPage = goToPage;
 
 function handleSearch(e) {
     const searchTerm = e.target.value.toLowerCase();
@@ -213,7 +222,7 @@ function handleSearch(e) {
     );
     currentPage = 1;
     renderUsers();
-    renderPagination();
+    updatePagination();
     updatePageTitle(); // Update title when filtering
 }
 

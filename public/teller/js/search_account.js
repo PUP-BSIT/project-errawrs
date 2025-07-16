@@ -449,6 +449,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Remove Enter key search (now handled by input event)
+    // searchInput.addEventListener("keyup", (e) => {
+    //     if (e.key === "Enter") {
+    //         searchAccount();
+    //     }
+    // });
+
     // Check for account parameter in URL
     const accountParam = getQueryParam('account');
     if (accountParam) {

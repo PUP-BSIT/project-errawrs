@@ -205,6 +205,7 @@ function createPaginationButton(type, content, enabled, isActive = false) {
                 currentPage = parseInt(content);
             }
             displayTransactionsPaginated();
+            updatePagination(); // <-- Ensure pagination controls update after page change
         });
     }
     return button;
