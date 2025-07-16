@@ -1,11 +1,4 @@
-// Bank Teller Search Account - Main JavaScript File
-// This file handles account search functionality for bank tellers
-
 import { API_ENDPOINTS, ROUTES } from '/api_config.js';
-
-// ============================================================================
-// INITIALIZATION AND CONFIGURATION
-// ============================================================================
 
 // Check if teller is logged in
 const tellerInfo = JSON.parse(sessionStorage.getItem("tellerInfo"));
@@ -14,18 +7,10 @@ if (!tellerInfo || !tellerInfo.teller_number) {
     window.location.href = "/login";
 }
 
-// ============================================================================
-// DOM ELEMENTS
-// ============================================================================
-
 const searchInput = document.getElementById("search_input");
 const clearBtn = document.getElementById('clear_search_btn');
 const accountContainer = document.querySelector(".account-container");
 const contentArea = document.querySelector(".content-area");
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
 
 // Format currency to Philippine Peso
 function formatCurrency(amount) {
@@ -103,9 +88,76 @@ function getQueryParam(name) {
     return url.searchParams.get(name);
 }
 
-// ============================================================================
-// ACCOUNT DISPLAY FUNCTIONS
-// ============================================================================
+// === Modal and Overlay Helpers ===
+function showConfirmationModal(message, onConfirm) {
+    let modal = document.getElementById('confirmation_modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'confirmation_modal';
+        modal.className = 'confirmation-modal-overlay';
+        modal.innerHTML = `
+            <div class="confirmation-modal-content">
+                <div class="confirmation-label" id="confirmation_message"></div>
+                <div id="confirmation_actions" class="confirmation-actions"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    const questionDiv = document.getElementById('confirmation_message');
+    questionDiv.textContent = message;
+    questionDiv.style.display = '';
+    modal.style.display = 'flex';
+    const actionsDiv = document.getElementById('confirmation_actions');
+    actionsDiv.innerHTML = `
+        <button id="confirm_btn" class="confirm-btn">Confirm</button>
+        <button id="cancel_btn" class="cancel-btn">Cancel</button>
+    `;
+    document.getElementById('confirm_btn').onclick = function() {
+        // Hide the question, show only spinner and processing
+        questionDiv.style.display = 'none';
+        actionsDiv.innerHTML = `
+            <div class='processing-container'>
+                <div class='spinner mint-spinner'></div>
+                <div class='processing-text'>Processing...</div>
+            </div>
+        `;
+        onConfirm(() => { modal.style.display = 'none'; questionDiv.style.display = ''; });
+    };
+    document.getElementById('cancel_btn').onclick = function() {
+        modal.style.display = 'none';
+        questionDiv.style.display = '';
+    };
+}
+
+function showSuccessOverlay(message) {
+    let overlay = document.getElementById('success_overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'success_overlay';
+        overlay.innerHTML = `
+            <div class="overlay-content">
+                <div class="spinner" style="display:none;"></div>
+                <div class="overlay-message" id="success_overlay_message" style="font-weight: 800;"></div>
+            </div>
+        `;
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.background = 'rgba(0,0,0,0.6)';
+        overlay.style.zIndex = '10001';
+        overlay.style.display = 'flex';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        document.body.appendChild(overlay);
+    }
+    const msgDiv = document.getElementById('success_overlay_message');
+    msgDiv.textContent = message;
+    msgDiv.style.fontWeight = '800';
+    overlay.style.display = 'flex';
+    setTimeout(() => { overlay.style.display = 'none'; }, 1800);
+}
 
 // Update account details in the UI
 function updateAccountDetails(accounts) {
@@ -201,16 +253,12 @@ function handleActionButtonClick(button, account, balance) {
         window.location.href = ROUTES.TELLER_WITHDRAW;
     } else if (button.classList.contains('close')) {
         sessionStorage.setItem("currentAccount", JSON.stringify(accountData));
-        closeAccount();
+        showConfirmationModal('Are you sure you want to close this account?', (done) => closeAccount(done));
     } else if (button.classList.contains('reopen')) {
         sessionStorage.setItem("currentAccount", JSON.stringify(accountData));
-        reopenAccount();
+        showConfirmationModal('Are you sure you want to re-open this account?', (done) => reopenAccount(done));
     }
 }
-
-// ============================================================================
-// SEARCH FUNCTIONALITY
-// ============================================================================
 
 // Search for accounts
 async function searchAccount() {
@@ -267,27 +315,21 @@ async function searchAccount() {
     }
 }
 
-// ============================================================================
-// ACCOUNT OPERATIONS
-// ============================================================================
-
 // Close account
-async function closeAccount() {
+async function closeAccount(done) {
     const account = JSON.parse(sessionStorage.getItem("currentAccount"));
     if (!account) {
         showNotification("No account selected", true);
+        if (done) done();
         return;
     }
-
-    // Check if account has balance
     const balance = parseFloat(account.balance.toString().replace(/[^0-9.-]+/g, ""));
     if (balance > 0) {
         showNotification("Account must have zero balance before closing", true);
+        if (done) done();
         return;
     }
-
-    showLoadingOverlay("Closing account...");
-
+    showLoadingOverlay("Processing...");
     try {
         const response = await fetch(`${API_ENDPOINTS.TELLER_CLOSE_ACCOUNT}`, {
             method: "POST",
@@ -297,36 +339,32 @@ async function closeAccount() {
                 teller_number: tellerInfo.teller_number,
             }),
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             throw new Error(data.error || "Failed to close account");
         }
-
-        // Update account status and UI
         account.status = "closed";
         sessionStorage.setItem("currentAccount", JSON.stringify(account));
         updateAccountDetails([account]);
-        showNotification("Account closed successfully");
-    } catch (error) {
-        console.error("Close account error:", error);
-        showNotification(error.message, true);
-    } finally {
         hideLoadingOverlay();
+        if (done) done();
+        showSuccessOverlay("Account Closed Successfully");
+    } catch (error) {
+        hideLoadingOverlay();
+        if (done) done();
+        showNotification(error.message, true);
     }
 }
 
 // Reopen account
-async function reopenAccount() {
+async function reopenAccount(done) {
     const account = JSON.parse(sessionStorage.getItem("currentAccount"));
     if (!account) {
         showNotification("No account selected", true);
+        if (done) done();
         return;
     }
-
-    showLoadingOverlay("Reopening account...");
-
+    showLoadingOverlay("Processing...");
     try {
         const response = await fetch(`${API_ENDPOINTS.TELLER_REOPEN_ACCOUNT}`, {
             method: "POST",
@@ -336,38 +374,28 @@ async function reopenAccount() {
                 teller_number: tellerInfo.teller_number,
             }),
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             throw new Error(data.error || "Failed to reopen account");
         }
-
-        // Update account status
         account.status = "active";
         sessionStorage.setItem("currentAccount", JSON.stringify(account));
-
-        // Fetch updated account data to refresh the UI
         const searchResponse = await fetch(
             `${API_ENDPOINTS.TELLER_SEARCH_ACCOUNT}?search=${encodeURIComponent(account.account_number)}&teller_number=${encodeURIComponent(tellerInfo.teller_number)}`
         );
         const searchData = await searchResponse.json();
-
         if (searchData.success && searchData.accounts && searchData.accounts.length > 0) {
             updateAccountDetails([searchData.accounts[0]]);
-            showNotification("Account reopened successfully");
         }
-    } catch (error) {
-        console.error("Reopen account error:", error);
-        showNotification(error.message, true);
-    } finally {
         hideLoadingOverlay();
+        if (done) done();
+        showSuccessOverlay("Account Re-open Successfully");
+    } catch (error) {
+        hideLoadingOverlay();
+        if (done) done();
+        showNotification(error.message, true);
     }
 }
-
-// ============================================================================
-// EVENT LISTENERS
-// ============================================================================
 
 // Initialize the page
 document.addEventListener("DOMContentLoaded", () => {

@@ -425,7 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
 
     if (hamburgerBtn && topnavDropdown) {
         hamburgerBtn.addEventListener('click', (e) => {
@@ -470,23 +469,21 @@ async function handleLogout() {
         localStorage.removeItem('token');
 
         // Call backend logout API
-        await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
+        await fetch(API_ENDPOINTS.LOGOUT || API_ENDPOINTS.AUTH.LOGOUT, {
             method: 'POST',
             credentials: 'same-origin',
         });
 
         // Redirect to login page after successful logout
-        window.location.href = './index.html';
+        window.location.href = '/login';
     } catch (error) {
         console.error('Error during logout:', error);
-        // Show a notification that logout might not have been clean
         showNotification(
             'Logout might not have been fully successful.',
             CLASS.WARNING
         );
-        // Redirect anyway after a short delay
         setTimeout(() => {
-            window.location.href = './index.html';
+            window.location.href = '/login';
         }, 1500);
     }
 }

@@ -704,7 +704,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MOBILE/TABLET TOPNAV DROPDOWN LOGIC (copied from dashboard) ---
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
 
     // Mobile/tablet nav logic
     if (hamburgerBtn && topnavDropdown) {
@@ -731,13 +730,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ) {
                 topnavDropdown.classList.remove('open');
             }
-        });
-    }
-    // Mobile logout button uses same handler
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            handleLogout();
         });
     }
 
@@ -1132,14 +1124,14 @@ async function handleLogout() {
         }
 
         // Redirect to login page after successful logout
-        window.location.href = './index.html';
+        window.location.href = '/login';
     } catch (error) {
         console.error('Error during logout:', error);
         // Show a notification that logout might not have been clean
         showNotification(TEXT.LOGOUT_ERROR, CLASS.WARNING);
         // Redirect anyway after a short delay
         setTimeout(() => {
-            window.location.href = './index.html';
+            window.location.href = '/login';
         }, 1500);
     }
 }

@@ -34,6 +34,26 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Add logout functionality
+    const logoutBtn = document.getElementById('logout_btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
+            try {
+                // Call backend logout API
+                await fetch(API_ENDPOINTS.LOGOUT || API_ENDPOINTS.AUTH.LOGOUT, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                });
+                // Redirect to login page
+                window.location.href = '/login';
+            } catch (error) {
+                // Redirect anyway on error
+                window.location.href = '/login';
+            }
+        });
+    }
+
     if (transactionId) {
         const apiUrl =
             API_ENDPOINTS.TRANSFER_SUCCESS + '?transaction_id=' + transactionId;

@@ -80,11 +80,11 @@ try {
     $apiUrl = $_ENV['SEMAPHORE_API_URL'];
 
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    $isDev = (strpos($host, 'dev') !== false);
+    $isDev = (($host === 'dev.stackovercash.site') !== false);
     $isProduction = ($host === 'stackovercash.site' || $host === 'www.stackovercash.site');
     $isLocal = (strpos($host, '.local') !== false);
 
-    if ($isDev) {
+    if ($isDev || $isLocal ) {
         // Use fixed OTP and do NOT call Semaphore API for dev subdomains only
         $otp = '123456';
         // Store OTP using SessionManager
@@ -99,7 +99,7 @@ try {
         ];
         echo json_encode($responseArr);
         exit();
-    } else if ($isProduction || $isLocal) {
+    } else if ( $isProduction) {
         // Generate random OTP and send via Semaphore API for production and local
         $otp = str_pad(strval(random_int(0, 999999)), 6, '0', STR_PAD_LEFT);
         $ch = curl_init();

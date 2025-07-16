@@ -16,18 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Clear session storage
                 sessionStorage.clear();
                 // Redirect to login page
-                window.location.href = ROUTES.LOGIN;
+                window.location.href = "/login";
             } else {
                 console.error('Logout failed:', result.error);
                 // Even if server-side logout fails, force redirect
                 sessionStorage.clear();
-                window.location.href = ROUTES.LOGIN;
+                window.location.href = "/login";
             }
         } catch (error) {
             console.error('An error occurred during logout:', error);
             // Force redirect on error
             sessionStorage.clear();
-            window.location.href = ROUTES.LOGIN;
+            window.location.href = "/login";
         }
     };
 

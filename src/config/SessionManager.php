@@ -33,12 +33,27 @@ class SessionManager {
             $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
             ini_set('session.cookie_secure', $secure ? 1 : 0);
             ini_set('session.cookie_samesite', 'Lax');
-            ini_set('session.gc_maxlifetime', 3600); // 1 hour
+            // Set session lifetime based on timeout (1 year if never expire)
+            $sessionName = $this->getSessionName();
+            session_name($sessionName);
+            if ($sessionName === 'STACKOVERCASH_SESSID') {
+                ini_set('session.gc_maxlifetime', 300); // 5 minutes for users
+            } else {
+                ini_set('session.gc_maxlifetime', 31536000); // 1 year for admin/teller
+            }
             ini_set('session.cookie_lifetime', 0); // Until browser closes
 
-            // Session name
-            session_name('STACKOVERCASH_SESSID');
-            
+            // Set cookie domain for cross-subdomain support
+            $cookieDomain = $this->getCookieDomain();
+            session_set_cookie_params([
+                'lifetime' => 0,
+                'path' => '/',
+                'domain' => $cookieDomain,
+                'secure' => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+
             session_start();
         }
 
@@ -141,7 +156,11 @@ class SessionManager {
         if (!$this->isAuthenticated()) {
             return true;
         }
-
+        $sessionName = $this->getSessionName();
+        // Never expire for admin/teller
+        if ($sessionName !== 'STACKOVERCASH_SESSID') {
+            return false;
+        }
         $currentTime = time();
         $lastActivity = $_SESSION['auth']['last_activity'] ?? 0;
         $timeDiff = $currentTime - $lastActivity;
@@ -159,8 +178,7 @@ class SessionManager {
             $this->updateActivity();
             return false;
         }
-        
-        return $timeDiff > $this->sessionTimeout;
+        return $timeDiff > 300; // 5 minutes for users
     }
 
     public function updateActivity() {

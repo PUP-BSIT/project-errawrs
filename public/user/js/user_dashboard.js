@@ -177,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Declare all shared DOM variables ONCE
     const hamburgerBtn = document.getElementById('hamburger_btn');
     const topnavDropdown = document.getElementById('topnav_dropdown');
-    const logoutBtnMobile = document.getElementById('logout_btn_mobile');
     const sidebar = document.getElementById('sidebar_nav');
     const closeSidebarBtn = document.getElementById('close_sidebar_btn');
     const sidebarOverlay = document.getElementById('sidebar_overlay');
@@ -211,13 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // Mobile logout button uses same handler
-    if (logoutBtnMobile) {
-        logoutBtnMobile.addEventListener('click', (event) => {
-            event.preventDefault();
-            handleLogout();
-        });
-    }
     // Sidebar logic for desktop only
     function openSidebar() {
         if (window.innerWidth > 1024) {
@@ -233,10 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeSidebar() {
         if (sidebar) sidebar.classList.remove('open');
         if (sidebarOverlay) sidebarOverlay.style.display = 'none';
-        document.body.classList.remove('sidebar-open');
-        if (closeSidebarBtn) closeSidebarBtn.style.display = 'none';
-        sidebar.classList.remove('open');
-        sidebarOverlay.style.display = 'none';
         document.body.classList.remove('sidebar-open');
         closeSidebarBtn.style.display = 'none';
     }
@@ -459,11 +447,6 @@ async function init_dashboard() {
         setup_smooth_animations();
         setup_profile_edit();
         setupDropdownStateManagement();
-
-        // Set up logout handler
-        if (logout_btn) {
-            logout_btn.addEventListener('click', handleLogout);
-        }
 
         // Set up periodic data refresh
         setInterval(() => {
@@ -783,53 +766,6 @@ function populate_profile_form() {
     if (edit_confirm_password_input) edit_confirm_password_input.value = '';
 }
 
-// Function to handle logout
-async function handleLogout() {
-    try {
-        const response = await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
-            method: 'POST',
-        });
-        const data = await response.json();
-        if (data.success) {
-            show_notification('Successfully logged out.', 'success');
-            window.location.href = ROUTES.LOGIN;
-        } else {
-            show_notification(data.error || 'Logout failed.', 'error');
-        }
-    } catch (error) {
-        show_notification('An error occurred during logout.', 'error');
-        console.error('Logout error:', error);
-    }
-}
-
-// Event listener for logout button
-if (logout_btn) {
-    logout_btn.addEventListener('click', (event) => {
-        event.preventDefault();
-        handleLogout();
-    });
-}
-
-// Display random financial tip
-function displayFinancialTip() {
-    const tipContainer = document.getElementById('financial_tip_container');
-    if (!tipContainer) return;
-
-    const tip =
-        FINANCIAL_TIPS[Math.floor(Math.random() * FINANCIAL_TIPS.length)];
-
-    tipContainer.innerHTML = `
-        <div class="tip-header">
-            <i class="fas ${tip.icon}"></i>
-            <h3>Financial Tip</h3>
-        </div>
-        <div class="tip-content">
-            <h4>${tip.title}</h4>
-            <p>${tip.content}</p>
-        </div>
-    `;
-}
-
 // --- Account Dropdown Logic for Balance Card ---
 function setupAccountDropdown(accounts, selectedAccountNumber) {
     // Helper to mask/unmask
@@ -1057,5 +993,25 @@ function fallbackCopyToClipboard(text, resolve, reject) {
         }
     } catch (err) {
         reject(err);
+    }
+}
+
+function displayFinancialTip() {
+    const tips = [
+        "Pay yourself first: Save before you spend.",
+        "Track your expenses to find hidden leaks.",
+        "Set financial goals and review them regularly.",
+        "Avoid impulse purchases—wait 24 hours before buying.",
+        "Build an emergency fund for unexpected expenses.",
+        "Review your subscriptions and cancel unused ones.",
+        "Automate your savings for consistency.",
+        "Use a budget to control your spending.",
+        "Compare prices before making big purchases.",
+        "Invest early to take advantage of compounding."
+    ];
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    const tipContainer = document.getElementById('financial_tip_container');
+    if (tipContainer) {
+        tipContainer.textContent = tip;
     }
 }
