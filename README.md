@@ -41,12 +41,12 @@ Visit the application here:
 Use the following credentials to explore the different roles in the application:
 
 ### 👤 User Account
-- **Username:** `Errawrs`  
-- **Password:** `Errawrs123`
+- **Username:** `simonejakereyes`  
+- **Password:** `DNSZtebjOFlaTdgy`
 
 ### 🧾 Teller Account
-- **Username:** `Errawrs`  
-- **Password:** `Errawrs123`
+- **Username:** `T000006`  
+- **Password:** `123456789`
 
 ### 🛠️ Admin Account
 - **Username:** `admin`  
